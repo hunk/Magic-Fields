@@ -54,6 +54,7 @@ class RCCWP_WritePostPage {
 .row_mf { float:left;}
 .add_mf{float:right;}
 .mf_counter{ display:none;}
+.magicfield_group th { width: 30%;}
 			
 			.magicfields{
 				display: block;
