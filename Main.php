@@ -35,7 +35,7 @@ global $FIELD_TYPES;
 // Classes
 require_once 'PanelFields.php';
 
-// Include Flutter API related files
+// Include Magic Fields API related files
 
 require_once 'RCCWP_CustomGroup.php';
 
@@ -43,12 +43,12 @@ require_once 'RCCWP_CustomGroup.php';
 
 require_once 'RCCWP_Constant.php';
 
-// Include Flutter API related files
+// Include Magic Fields API related files
 
 require_once 'RCCWP_CustomField.php';
 require_once 'RCCWP_CustomWritePanel.php';
 
-// Include files containing Flutter public functions
+// Include files containing Magic Fields public functions
 require_once 'get-custom.php';
 
 // Include other files used in this script
@@ -114,7 +114,7 @@ if (is_admin()) {
 }
 
 add_action('admin_print_scripts', array('RCCWP_Menu', 'AddThickbox'));
-add_action('admin_menu', array('RCCWP_Menu', 'AttachFlutterMenus'));
+add_action('admin_menu', array('RCCWP_Menu', 'AttachMagicFieldsMenus'));
 
 require_once ('RCCWP_EditnPlace.php');
 add_action('wp_head', array('RCCWP_EditnPlace', 'EditnHeader'));

@@ -15,10 +15,10 @@ define('RC_CWP_POST_WRITE_PANEL_ID_META_KEY', '_mf_write_panel_id');
 define('RC_CWP_OPTION_KEY', 'mf_custom_write_panel');
 
 
-// Flutter paths
+// Magic Fields paths
 preg_match('/wp-content(.*)(RCCWP_Constant\.php)$/',__FILE__,$mfpath);
 $mfpath = str_replace('\\', '/', $mfpath);
-define('MF_PLUGIN_DIR', dirname(plugin_basename(__FILE__))); // returns Flutter
+define('MF_PLUGIN_DIR', dirname(plugin_basename(__FILE__))); 
 define("MF_PATH", dirname(__FILE__));
 
 define("MF_URI", get_bloginfo('wpurl').'/wp-content'.$mfpath[1]); 
@@ -115,5 +115,5 @@ define('MF_IMAGES_CACHE_DIR',
 MF_PATH.DIRECTORY_SEPARATOR.'thirdparty'.DIRECTORY_SEPARATOR.'phpthumb'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR);
 
 // Capabilities names
-define('MF_CAPABILITY_PANELS', "Create Flutter Panels");
+define('MF_CAPABILITY_PANELS', "Create Magic Fields Panels");
 ?>

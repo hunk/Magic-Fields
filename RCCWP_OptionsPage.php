@@ -11,9 +11,9 @@ function Main()
 	$customWritePanelOptions = RCCWP_Options::Get();
 
 	if (function_exists('is_site_admin') && !is_site_admin())
-		update_option("Flutter_notTopAdmin", true);
+		update_option("Magic_Fields_notTopAdmin", true);
 	else
-		update_option("Flutter_notTopAdmin", false);
+		update_option("Magic_Fields_notTopAdmin", false);
 
 	?>
 	

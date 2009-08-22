@@ -1,6 +1,6 @@
 <?php
     /**
-     * Uninstall file for FLutter
+     * Uninstall file for Magic Fields
      * 
      * @todo do this page :p
      *

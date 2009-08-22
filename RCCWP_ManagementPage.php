@@ -56,25 +56,25 @@ class RCCWP_ManagementPage
 	
 	function GetCustomFieldEditUrl($customWriteModuleId, $customGroupId, $customFieldId)
 	{
-		$url = '?page=' . 'FlutterManageModules' . '&edit-custom-field=' . $customFieldId . '&custom-group-id=' . $customGroupId . '&custom-write-module-id='. $customWriteModuleId ;
+		$url = '?page=' . 'Magic_FieldsManageModules' . '&edit-custom-field=' . $customFieldId . '&custom-group-id=' . $customGroupId . '&custom-write-module-id='. $customWriteModuleId ;
 		return $url;
 	}
 	
 	function GetCustomFieldDeleteUrl($customGroupId, $customFieldId)
 	{
-		$url = '?page=' . 'FlutterManageModules' . '&delete-custom-field=' . $customFieldId . '&custom-group-id=' . $customGroupId;
+		$url = '?page=' . 'Magic_FieldsManageModules' . '&delete-custom-field=' . $customFieldId . '&custom-group-id=' . $customGroupId;
 		return $url;
 	}
 
 	function GetModuleDuplicateEditUrl($customWriteModuleId, $duplicateId)
 	{
-		$url = '?page=' . 'FlutterManageModules' . '&edit-module-duplicate=' . $duplicateId . '&module-duplicate-id=' . $duplicateId . '&custom-write-module-id='. $customWriteModuleId ;
+		$url = '?page=' . 'Magic_FieldsManageModules' . '&edit-module-duplicate=' . $duplicateId . '&module-duplicate-id=' . $duplicateId . '&custom-write-module-id='. $customWriteModuleId ;
 		return $url;
 	}
 	
 	function GetModuleDuplicateDeleteUrl($customWriteModuleId, $duplicateId)
 	{
-		$url = '?page=' . 'FlutterManageModules' . '&delete-module-duplicate=' . $duplicateId . '&module-duplicate-id=' . $duplicateId . '&custom-write-module-id='. $customWriteModuleId ;
+		$url = '?page=' . 'Magic_FieldsManageModules' . '&delete-module-duplicate=' . $duplicateId . '&module-duplicate-id=' . $duplicateId . '&custom-write-module-id='. $customWriteModuleId ;
 		return $url;
 	}
 	
@@ -94,13 +94,13 @@ class RCCWP_ManagementPage
 
 	function GetCustomWriteModuleEditUrl($moduleId)
 	{
-		$url = '?page=' . 'FlutterManageModules' . '&view-custom-write-module=' . $moduleId . '&custom-write-module-id=' . $moduleId;
+		$url = '?page=' . 'Magic_FieldsManageModules' . '&view-custom-write-module=' . $moduleId . '&custom-write-module-id=' . $moduleId;
 		return $url;
 	}
 	
 	function GetCustomWriteModuleDeleteUrl($moduleId)
 	{
-		$url = '?page=' . 'FlutterManageModules' . '&delete-custom-write-module=' . $moduleId . '&custom-write-module-id=' . $moduleId;
+		$url = '?page=' . 'Magic_FieldsManageModules' . '&delete-custom-write-module=' . $moduleId . '&custom-write-module-id=' . $moduleId;
 		return $url;
 	}
 
@@ -113,7 +113,7 @@ class RCCWP_ManagementPage
 	
 	function GetCustomGroupDeleteUrl($groupId)
 	{
-		$url = '?page=' . 'FlutterManageModules' . '&delete-custom-group=' . $groupId . '&custom-group-id=' . $groupId;
+		$url = '?page=' . 'Magic_FieldsManageModules' . '&delete-custom-group=' . $groupId . '&custom-group-id=' . $groupId;
 		return $url;
 	}
 
@@ -166,7 +166,7 @@ class RCCWP_ManagementPage
 	}
 	
 	function GetModulePage(){
-		return '?page=FlutterManageModules';
+		return '?page=Magic_FieldsManageModules';
 	}
 }
 ?>

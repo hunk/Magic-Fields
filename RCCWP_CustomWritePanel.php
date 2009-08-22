@@ -46,7 +46,7 @@ class RCCWP_CustomWritePanel
 	 * 							in the panel. Use $STANDARD_FIELDS defined in RCCWP_Constant.php
 	 * @param array $categories array of category ids that are checked by default when the user
 	 * 							opens Write tab for that panel.
-	 * @param integer $display_order the order of the panel in Flutter > Write Panels tab
+	 * @param integer $display_order the order of the panel in Magic Fields > Write Panels tab
 	 * @param string $type 'post' or 'page'
 	 * @param boolean $createDefaultGroup indicates whether to create a default group.
 	 * @return the id of the write panel
@@ -319,7 +319,7 @@ class RCCWP_CustomWritePanel
 	 * 							in the panel. Use $STANDARD_FIELDS defined in RCCWP_Constant.php
 	 * @param array $categories array of category ids that are checked by default when the user
 	 * 							opens Write tab for that panel.
-	 * @param integer $display_order the order of the panel in Flutter > Write Panels tab
+	 * @param integer $display_order the order of the panel in Magic Fields > Write Panels tab
 	 * @param string $type 'post' or 'page'
 	 */
 	function Update($customWritePanelId, $name, $description = '', $standardFields = array(), $categories = array(), $display_order = 1, $type = FALSE, $createDefaultGroup=true,$single_post = 0, $default_theme_page)

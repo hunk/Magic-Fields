@@ -1,9 +1,9 @@
 <?php 
 /**
- * Flutter's debug Class 
+ * Magic Fields's debug Class 
  *
  *  @author David Valdez <me@gnuget.org>
- *  @package Flutter
+ *  @package Magic Fields
  *  @subpackage  tools
  */
 class Debug{

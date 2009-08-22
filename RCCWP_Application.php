@@ -26,7 +26,7 @@ class RCCWP_Application
 			$role = get_role('administrator');
 			if (!(RCCWP_Application::IsWordpressMu()) || is_site_admin()){
 				$role->add_cap(MF_CAPABILITY_PANELS);
-				$role->add_cap(FLUTTER_CAPABILITY_MODULES);
+				$role->add_cap(MAGIC_FIELDS_CAPABILITY_MODULES);
 			}
 			
 		}
@@ -293,15 +293,15 @@ class RCCWP_Application
 		
 		//Import Default modules 
 		if (RCCWP_Application::IsWordpressMu()){
-			if (get_site_option('FLUTTER_fist_time') == ''){
+			if (get_site_option('MAGIC_FIELDS_fist_time') == ''){
 				
-				update_site_option('FLUTTER_fist_time', '1');
+				update_site_option('MAGIC_FIELDS_fist_time', '1');
 			}
 		}
 		else{
-			if (get_option('FLUTTER_fist_time') == ''){
+			if (get_option('MAGIC_FIELDS_fist_time') == ''){
 			
-				update_option('FLUTTER_fist_time', '1');
+				update_option('MAGIC_FIELDS_fist_time', '1');
 			}
 		}
 	}
@@ -328,7 +328,7 @@ class RCCWP_Application
 		$sql = "DELETE FROM $wpdb->postmeta WHERE meta_key = '" . RC_CWP_POST_WRITE_PANEL_ID_META_KEY . "'";
  		$wpdb->query($sql);
 
-		if (get_option("Flutter_notTopAdmin")) return;
+		if (get_option("Magic_Fields_notTopAdmin")) return;
 
 
 		
@@ -368,10 +368,10 @@ class RCCWP_Application
 		$wpdb->query($sql);
 
 		if (RCCWP_Application::is_mu_top_admin()){
-			update_site_option('FLUTTER_fist_time', '');
+			update_site_option('MAGIC_FIELDS_fist_time', '');
 		}
 		else{
-			update_option('FLUTTER_fist_time', '');
+			update_option('MAGIC_FIELDS_fist_time', '');
 		}
 	
 		
@@ -410,7 +410,7 @@ class RCCWP_Application
 	function CheckInstallation(){
 		global $mf_domain;
 	
-		if (!empty($_GET['page']) && stripos($_GET['page'], "flutter") === false && $_GET['page'] != "RCCWP_OptionsPage.php" && !isset($_GET['custom-write-panel-id'])) return;
+		if (!empty($_GET['page']) && stripos($_GET['page'], "mf") === false && $_GET['page'] != "RCCWP_OptionsPage.php" && !isset($_GET['custom-write-panel-id'])) return;
 		
 		$dir_list = "";
 		$dir_list2 = "";

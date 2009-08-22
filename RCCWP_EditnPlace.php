@@ -1,6 +1,6 @@
 <?php
 
-// Flutter paths
+// Magic Fields paths
 require_once "RCCWP_Constant.php";
 
 class RCCWP_EditnPlace

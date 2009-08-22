@@ -190,7 +190,7 @@ class RCCWP_Menu
      *
      *
      */
-	function AttachFlutterMenus()
+	function AttachMagicFieldsMenus()
 	{
 		global $mf_domain;
 		require_once ('RCCWP_OptionsPage.php');
@@ -440,7 +440,7 @@ class RCCWP_Menu
 
 	function AddThickbox()
 	{
-        if (!empty($GET['page']) && $_GET['page']=='FlutterManageModules') {
+        if (!empty($GET['page']) && $_GET['page']=='Magic_FieldsManageModules') {
 			// Overcome bug (http://wordpress.org/support/topic/196884)
 			$thickBoxCSS = get_bloginfo('url').'/wp-includes/js/thickbox/thickbox.css';
 			?>

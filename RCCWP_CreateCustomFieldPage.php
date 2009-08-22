@@ -47,9 +47,9 @@ class RCCWP_CreateCustomFieldPage
 					
 				</p>
 				<p>
-					<?php _e('As you type the name, Flutter will display fields from other
+					<?php _e('As you type the name, Magic Fields will display fields from other
 					panels that are similar to the name you typed. If you selected one of them,
-					Flutter will create a field similar to the chosen one.',$mf_domain);?>
+					Magic Fields will create a field similar to the chosen one.',$mf_domain);?>
 				</p>
 			</td>
 		</tr>

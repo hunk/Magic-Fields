@@ -122,9 +122,9 @@ class RCCWP_WritePostPage {
 		else
 			$requiredCap = $requiredPagesCap;
 		
-		if (!current_user_can($requiredCap)) wp_die( __('You do not have sufficient permissions to access this custom write panel.',$flutter_domain) );
+		if (!current_user_can($requiredCap)) wp_die( __('You do not have sufficient permissions to access this custom write panel.',$mf_domain) );
 
-		// --- Apply Flutter CSS and javascript
+		// --- Apply Magic Fields CSS and javascript
 		?>
 		
 		<script language="JavaScript" type="text/javascript" src="<?php echo MF_URI; ?>js/prototype.js"></script>
@@ -211,9 +211,9 @@ class RCCWP_WritePostPage {
 				}
 			}
 		</script>
-		<link rel='stylesheet' href='<?php echo FLUTTER_URI?>css/epoch_styles.css' type='text/css' />
+		<link rel='stylesheet' href='<?php echo MF_URI?>css/epoch_styles.css' type='text/css' />
 		
-		<script language="JavaScript" type="text/javascript" src="<?php echo FLUTTER_URI; ?>js/prototype.js"></script>
+		<script language="JavaScript" type="text/javascript" src="<?php echo MF_URI; ?>js/prototype.js"></script>
 		
 		<script type="text/javascript">
 		var JS_MF_FILES_PATH = '<?php echo MF_FILES_PATH ?>';
@@ -1372,7 +1372,7 @@ padding:4px 5px 2px;
 	function AudioInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		global $mf_domain;
         $customFieldId = '';
-		$freshPageFolderName = (dirname(plugin_basename(__FILE__))); //Flutter
+		$freshPageFolderName = (dirname(plugin_basename(__FILE__))); 
 		if ($customField->required_field) $requiredClass = "field_required";
 		
 		if (isset($_REQUEST['post']))

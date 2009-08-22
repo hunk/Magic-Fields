@@ -78,7 +78,7 @@ function completed(file,server_data)
 
 function call_thickbox(url)
 {
-	tb_show("Flutter",url,false) ;
+	tb_show("Magic_Fields",url,false) ;
 }
 
 
