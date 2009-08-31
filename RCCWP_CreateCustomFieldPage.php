@@ -46,11 +46,6 @@ class RCCWP_CreateCustomFieldPage
 					the field value later.',$mf_domain);?>
 					
 				</p>
-				<p>
-					<?php _e('As you type the name, Magic Fields will display fields from other
-					panels that are similar to the name you typed. If you selected one of them,
-					Magic Fields will create a field similar to the chosen one.',$mf_domain);?>
-				</p>
 			</td>
 		</tr>
 
