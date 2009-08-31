@@ -664,8 +664,8 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		}
 		?>
 		
-		<input type="hidden" name="<?php echo $inputName?>" value="false" />
-		<input tabindex="3" class="checkbox" name="<?php echo $inputName?>" value="true" id="<?php echo $inputName?>" type="checkbox" <?php echo $checked?> />
+		<input  type="hidden" name="<?php echo $inputName?>" value="false" />
+		<input tabindex="3" class="checkbox checkbox_mf" name="<?php echo $inputName?>" value="true" id="<?php echo $inputName?>" type="checkbox" <?php echo $checked?> />
 		
 		<?php
 	}
@@ -690,7 +690,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 			$option = attribute_escape(trim($option));
 		?>
 		
-		    <input tabindex="3" id="<?php echo $option?>" name="<?php echo $inputName?>[]" value="<?php echo $option?>" type="checkbox" <?php echo $checked?> />
+		    <input tabindex="3" class="checkbox_list_mf" id="<?php echo $option?>" name="<?php echo $inputName?>[]" value="<?php echo $option?>" type="checkbox" <?php echo $checked?> />
 			<label for="" class="selectit mf-checkbox-list">
 				<?php echo attribute_escape($option)?>
 			</label><br />
@@ -720,7 +720,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		if ($customField->required_field) $requiredClass = "field_required";
 		?>
 		
-		<select tabindex="3"  class="<?php echo $requiredClass;?>"  name="<?php echo $inputName?>">
+		<select tabindex="3"  class="<?php echo $requiredClass;?> listbox_mf" name="<?php echo $inputName?>">
 			<option value=""><?php _e('--Select--', $mf_domain); ?></option>
 		
 		<?php
@@ -747,8 +747,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		if (isset($_REQUEST['post'])){
 			$customFieldId = $customField->id;
 			$values = (array) RCCWP_CustomField::GetCustomFieldValues(false, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
-	
-
+			
         }else{
 			$values = $customField->default_value;
 		}
@@ -757,18 +756,20 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
         $requiredClass = "mf_listbox";
 		if ($customField->required_field) $requiredClass = "mf_listbox field_required";
 		?>
-		
-		<select  class="<?php echo $requiredClass;?>"  tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>[]" multiple size="<?php echo $inputSize?>" style="height: 6em;">
+		<select  class="<?php echo $requiredClass;?> listbox_mf"  tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>[]" multiple size="<?php echo $inputSize?>" style="height: 6em;">
 		
 		<?php
 		foreach ($customField->options as $option) :
-			$selected = in_array($option, (array)$values) ? 'selected="selected"' : '';
-			$option = attribute_escape(trim($option));
+			if(!empty($option)):
+				$selected = in_array($option, (array)$values) ? 'selected="selected"' : '';
+				$option = attribute_escape(trim($option));
+				
 		?>
 			
 			<option value="<?php echo $option?>" <?php echo $selected?>><?php echo $option?></option>
 			
 		<?php
+			endif;
 		endforeach;
 		?>
 		
@@ -1240,7 +1241,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		</script>	
 
 		
-		<input tabindex="3" id="display_date_field_<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>" READONLY />
+		<input tabindex="3" id="display_date_field_<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>"  class="datepicker_mf" READONLY />
 		<input tabindex="3" id="date_field_<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="hidden" />
 		<input type="button" value="Pick..." onclick="dp_cal['<?php echo $inputName?>'].toggle();" />
 		<input type="button" value="Today" onclick="today_date('<?php echo $inputName?>', '<?php echo $dateFormat?>');" />
