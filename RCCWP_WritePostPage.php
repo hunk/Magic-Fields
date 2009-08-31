@@ -37,87 +37,18 @@ class RCCWP_WritePostPage {
 
     function CustomFieldsCSS(){
 	?>
-	<link rel='stylesheet' href='<?php echo MF_URI ?>css/epoch_styles.css' type='text/css' />
-
+	<link 	
+			rel='stylesheet' 
+			href='<?php echo MF_URI;?>css/epoch_styles.css'
+			type='text/css' 
+	/>
+	<link 
+			rel="stylesheet" 
+			href="<?php echo MF_URI;?>css/base.css" 
+			type="text/css" media="screen" charset="utf-8"
+	/>
 	
-		<style type="text/css">
-			.mf_toolbox {
-				text-align: right;
-			/*	border: 1px dashed #000;*/
-			}
-.mf_duplicate_group{
-	border-style:solid;
-	border-width:1px;
-	margin-bottom:8px;
-	border-color:#DFDFDF;
-}
-.row_mf { float:left;}
-.add_mf{float:right;}
-.mf_counter{ display:none;}
-.magicfield_group th { width: 30%;}
-			
-			.magicfields{
-				display: block;
-    			margin-left: auto;
-    			margin-right: auto ;
-			}
-				
-			.photo_edit_link{
-				clear:both;
-				margin: 0px 0px 0px 0px;
-				width:150px;
-				text-align:center;
-			}			
-		</style>
-        
-		<style type="text/css">
-
-				.tr_inside{
-					background-color:transparent !important;
-				}
-
-				.magicfields{
-					display: block;
-	    			margin-left: auto;
-	    			margin-right: auto ;
-				}
-
-				.photo_edit_link{
-					clear:both;
-					margin: 0px 0px 0px 0px;
-					width:150px;
-					text-align:center;
-				}
-
-				.error_msg_txt{
-					font-weight: bold;
-					overflow: auto;
-				}
-
-				.duplicate_image{
-					vertical-align:middle;
-					padding-right:3px;
-				}
-				
-				
-				.mf-checkbox-list {
-					display: inline !important;
-				}
-				
-				.mf-field label {
-					font-weight: bold;
-					margin-top: 10px;
-					margin-bottom: 10px;
-					display: block;
-				}
-				
-				.textboxinterface{
-					width: 100%;
-				}
-
-				 
-		</style>
-		<?php
+	<?php
 	}
 		
 	function ApplyCustomWritePanelHeader()
@@ -901,45 +832,6 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 			
 			</script>
 		<?php } ?>
-		<style>
-		.tab_multi_mf {
-		    padding-bottom:30px;
-		    display: block;
-		    margin-right:10px;
-		}
-		.edButtonHTML_mf {
-		    background-color:#F1F1F1;
-		    border-color:#DFDFDF;
-		    color:#999999;
-		    margin-right:15px;
-		    border-style:solid;
-		    border-style:solid;
-border-width:1px;
-cursor:pointer;
-display:block;
-float:right;
-height:18px;
-margin:5px 5px 0 0;
-padding:4px 5px 2px;
-
-		}
-		
-		.edButtonPreview_mf {
-		    background-color:#F1F1F1;
-		    border-color:#DFDFDF;
-		    color:#999999;
-		    margin-right:15px;
-		    border-style:solid;
-		    border-style:solid;
-            border-width:1px;
-            cursor:pointer;
-            display:block;
-            float:right;
-            height:18px;
-            margin:5px 5px 0 0;
-            padding:4px 5px 2px;
-		}
-		</style>
 		<?php if ($hide_visual_editor == '' || $hide_visual_editor == 0){ ?>
 		<div class="tab_multi_mf">
 		    <a onclick="del_editor('<?php echo $inputName?>');" class="edButtonHTML_mf">HTML</a>		
