@@ -16,7 +16,7 @@
     switch($_GET['action']){
         case  "delete":
         $file = addslashes($_GET['file']);
-        $exists = $wpdb->get_row("select * from wp_postmeta where meta_value =  '{$file}'");
+        $exists = $wpdb->get_row("select * from {$wpdb->postmeta} where meta_value =  '{$file}'");
         
         if(!empty($exists->meta_id)){
             $wpdb->query("DELETE FROM  wp_postmeta where meta_id = {$exists->meta_id}");
