@@ -98,6 +98,24 @@ class RCCWP_WritePostPage {
 					vertical-align:middle;
 					padding-right:3px;
 				}
+				
+				
+				.mf-checkbox-list {
+					display: inline !important;
+				}
+				
+				.mf-field label {
+					font-weight: bold;
+					margin-top: 10px;
+					margin-bottom: 10px;
+					display: block;
+				}
+				
+				.textboxinterface{
+					width: 100%;
+				}
+
+				 
 		</style>
 		<?php
 	}
@@ -536,7 +554,6 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		 $customGroup->id.'_'.$groupCounter;?>">	
             <div>
             <div class="inside">
-			<table class="form-table" style="width: 100%;" cellspacing="2" cellpadding="5">
 			    <?php	
 	        		foreach ($customFields as $field) {
 
@@ -567,16 +584,10 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
                     }
 
                 ?>
-               <tr style="display:none" id="<?php echo "c".$inputName."Duplicate"?>">
-					<th valign="top" scope="row">
-					</th>
-					<td>
-						<img class="duplicate_image"  src="<?php echo MF_URI; ?>images/spinner.gif" alt=""/> <?php _e('Loading', $mf_domain); ?> ... 
+               <span style="display:none" id="<?php echo "c".$inputName."Duplicate"?>">
 						<input type="text" name="c<?php echo $inputName ?>Counter" id="c<?php echo $inputName ?>Counter" value='<?php echo $top ?>' /> 
-					</td>
-			    </tr>
+				</span>
                 <?php } ?>
-		    </table>
     		<br />
 				<?php
 		        	if( $customGroup->duplicate != 0 ){
@@ -630,25 +641,11 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
  		$field_group = RCCWP_CustomGroup::Get($customField->group_id);
 
 		?>
-		<tr class="form-field" id="row_<?php echo $inputName?>">
-			<?php
-				// If the field is at right, put the header over the field
-				if ($field_group->at_right){
-			?>
-			<td>
-				<label style="font-weight:bold" for="<?php echo $inputName?>"><?php echo $customFieldTitle.$titleCounter?></label>
-				<br />
-			<?php
-				} else {
-			?>
-			<th valign="top" scope="row">
-				<label for="<?php echo $inputName?>"><?php echo $customFieldTitle.$titleCounter?></label>
-			</th>
-			<td>
-			<?php
-				}
-			?>
-				
+		<div class="mf-field" id="row_<?php echo $inputName?>">
+			<label for="<?php echo $inputName?>">
+				<?php echo $customFieldTitle.$titleCounter?>
+			</label>
+			<span>
 				<p class="error_msg_txt" id="fieldcellerror_<?php echo $inputName?>" style="display:none"></p>
 				<?php		
 					switch ($customField->type)
@@ -695,8 +692,6 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 						default:
 							;
 					}
-
-
 				if($fieldCounter == 1)
 				{
 					?>
@@ -722,8 +717,8 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 				}
 				?>
 				<input type="hidden" name="rc_cwp_meta_keys[]" value="<?php echo $inputName?>" />
-			</td>
-		</tr>
+		</span>
+		</div>
 	<?php
 	}
 	
@@ -764,8 +759,8 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 			$option = attribute_escape(trim($option));
 		?>
 		
-		    <input tabindex="3" id="<?php echo $option?>" name="<?php echo $inputName?>[]" value="<?php echo $option?>" type="checkbox" <?php echo $checked?> style="width:40px;"/>
-			<label for="" class="selectit">
+		    <input tabindex="3" id="<?php echo $option?>" name="<?php echo $inputName?>[]" value="<?php echo $option?>" type="checkbox" <?php echo $checked?> />
+			<label for="" class="selectit mf-checkbox-list">
 				<?php echo attribute_escape($option)?>
 			</label><br />
 		
@@ -983,7 +978,7 @@ padding:4px 5px 2px;
 		}
 		?>
 		
-		<input class="<?php echo $requiredClass;?>" tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>" />
+		<input class="<?php echo $requiredClass;?> textboxinterface" tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>" />
 		
 		<?php
 	}
