@@ -203,12 +203,41 @@ class RCCWP_CustomField
 		if (!$fieldMetaID){
 			return get_post_meta($postId, $customFieldName, $single);
 		}
-		
+
 		// Get meta value
 		$mid = (int) $fieldMetaID;
 		$meta = $wpdb->get_row( "SELECT * FROM $wpdb->postmeta WHERE meta_id = '$mid'" );
 		if (!$single) return unserialize($meta->meta_value);
 		return $meta->meta_value;
+	}
+	
+	/**
+	 * Retrieves the value of a custom field for a specified post
+	 *
+	 * @param boolean $single
+	 * @param integer $postId
+	 * @param string $customFieldName
+	 * @param integer $groupIndex
+	 * @param integer $fieldIndex
+	 * @return int|string Value of the custom field
+	 * @author Edgar García - hunk <ing.edgar@gmail.com>
+	 */
+	function GetValues($single, $postId, $customFieldName, $groupIndex=1, $fieldIndex=1)
+	{
+		global $wpdb;
+		$customFieldName = str_replace(" ","_",$customFieldName);
+		
+		$meta = $wpdb->get_var("SELECT pm.meta_value 
+								FROM ".MF_TABLE_POST_META." mf_pm, ".$wpdb->postmeta." pm 
+								WHERE mf_pm.field_name = '$customFieldName' 
+									AND mf_pm.group_count = $groupIndex 
+									AND mf_pm.field_count = $fieldIndex 
+									AND mf_pm.post_id = $postId 
+									AND mf_pm.id = pm.meta_id" );
+		
+		if(!$meta) return;
+		if (!$single) return unserialize($meta);
+		return $meta;
 	}
 	
 	/**
@@ -315,13 +344,46 @@ class RCCWP_CustomField
 		
 		// Get Panel ID
 		$customWritePanelId = get_post_meta($post->ID, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, true);
+		
 		if (empty($customWritePanelId)) return false;
 		
 		$customFieldId = $wpdb->get_var("SELECT cf.id FROM ". MF_TABLE_GROUP_FIELDS . " cf" .
 										" WHERE cf.name = '$customFieldName' AND ".
 										" cf.group_id in (SELECT mg.id FROM ". MF_TABLE_PANEL_GROUPS . " mg ".
 														"  WHERE mg.panel_id = $customWritePanelId)");
+														
+														
 		return $customFieldId;
+	}
+	
+	/**
+	 * Retrieves the id and type of a custom field given field name for the current post.
+	 *
+	 * @param string $customFieldName
+	 * @return array with custom field id and custom field type
+	 * @author Edgar García - hunk  <ing.edgar@gmail.com>
+	 */
+	function GetInfoByName($customFieldName){
+		global $wpdb, $post, $FIELD_TYPES;
+		
+		$customFieldvalues = $wpdb->get_row(
+			"SELECT cf.id, cf.type,cf.CSS,fp.properties 
+				FROM ". MF_TABLE_GROUP_FIELDS . " cf 
+					LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
+					WHERE cf.name = '$customFieldName' 
+						AND cf.group_id in (
+							SELECT mg.id 
+								FROM ". MF_TABLE_PANEL_GROUPS . " mg, ".$wpdb->postmeta." pm 
+									WHERE mg.panel_id = pm.meta_value
+									AND pm.meta_key = '".RC_CWP_POST_WRITE_PANEL_ID_META_KEY."' 
+									AND pm.post_id = $post->ID)",ARRAY_A);
+													
+		if (empty($customFieldvalues)) return false;
+		if($customFieldvalues['type'] == $FIELD_TYPES["date"] OR $customFieldvalues['type'] == $FIELD_TYPES["image"] )
+			$customFieldvalues['properties'] = unserialize($customFieldvalues['properties']);
+		else $customFieldvalues['properties']=null;
+										
+		return $customFieldvalues;
 	}
 	
 	

@@ -47,9 +47,13 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true) {
 	require_once("RCCWP_CustomField.php");
 	global $wpdb, $post, $FIELD_TYPES;
 	
-	$fieldID = RCCWP_CustomField::GetIDByName($fieldName);
-	$fieldObject = GetFieldInfo($fieldID);
-	$fieldType = $wpdb->get_var("SELECT type FROM ".MF_TABLE_GROUP_FIELDS." WHERE id='".$fieldID."'");
+	$field = RCCWP_CustomField::GetInfoByName($fieldName);
+	if(!$field) return FALSE;
+	
+	$fieldType = $field['type'];
+	$fieldID = $field['id'];
+	$fieldObject = $field['properties'];
+	
 	$single = true;
 	switch($fieldType){
 		case $FIELD_TYPES["checkbox_list"]:
@@ -58,10 +62,10 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true) {
 			break;
 	} 
 	
-	$fieldValues = (array) RCCWP_CustomField::GetCustomFieldValues($single, $post->ID, $fieldName, $groupIndex, $fieldIndex);
-	$fieldMetaID = RCCWP_CustomField::GetMetaID($post->ID, $fieldName, $groupIndex, $fieldIndex);
-    
-	$results = GetProcessedFieldValue($fieldValues, $fieldType, $fieldObject->properties);
+	$fieldValues = (array) RCCWP_CustomField::GetValues($single, $post->ID, $fieldName, $groupIndex, $fieldIndex);
+    if(empty($fieldValues)) return FALSE;
+
+	$results = GetProcessedFieldValue($fieldValues, $fieldType, $fieldObject);
     
 	//filter for multine line
 	if($fieldType == $FIELD_TYPES['multiline_textbox']){
@@ -137,21 +141,19 @@ function GetProcessedFieldValue($fieldValues, $fieldType, $fieldProperties=array
 // Get Image. 
 function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1) {
 	require_once("RCCWP_CustomField.php");
-	global $wpdb, $post, $FIELD_TYPES;
-
-	$fieldID = RCCWP_CustomField::GetIDByName($fieldName);
-	$fieldObject = GetFieldInfo($fieldID);
-	$fieldType = $wpdb->get_var("SELECT type FROM ".MF_TABLE_GROUP_FIELDS." WHERE id='".$fieldID."'");
-	$single = true;
-	switch($fieldType){
-		case $FIELD_TYPES["checkbox_list"]:
-		case $FIELD_TYPES["listbox"]:
-			$single = false;
-			break;
-	} 
+	global $wpdb, $post;
 	
-	$fieldValues = (array) RCCWP_CustomField::GetCustomFieldValues($single, $post->ID, $fieldName, $groupIndex, $fieldIndex);
-	 
+	$field = RCCWP_CustomField::GetInfoByName($fieldName);
+	if(!$field) return FALSE;
+	
+	$fieldType = $field['type'];
+	$fieldID = $field['id'];
+	$fieldCSS = $field['CSS'];
+	$fieldObject = $field['properties'];
+	
+	$fieldValues = (array) RCCWP_CustomField::GetValues(true, $post->ID, $fieldName, $groupIndex, $fieldIndex);
+    if(empty($fieldValues)) return FALSE;
+
 	if(!empty($fieldValues[0]))
 		$fieldValue = $fieldValues[0];
 	else 
@@ -159,20 +161,20 @@ function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1) {
 	$url_params= explode("&",$fieldValue,2);
 	
 	if(count($url_params) >= 2){
-		$fieldObject->properties['params'] .="&". $url_params[1];
+		$fieldObject['params'] .="&". $url_params[1];
 		$fieldValue= $url_params[0];
 	}
 	
-	if (substr($fieldObject->properties['params'], 0, 1) == "?"){
-			$fieldObject->properties['params'] = substr($fieldObject->properties['params'], 1);
+	if (substr($fieldObject['params'], 0, 1) == "?"){
+			$fieldObject['params'] = substr($fieldObject['params'], 1);
 		}
 	
 	 //check if exist params, if not exist params, return original image
-	if (empty($fieldObject->properties['params']) && (FALSE == strstr($fieldValue, "&"))){
+	if (empty($fieldObject['params']) && (FALSE == strstr($fieldValue, "&"))){
 		$fieldValue = MF_FILES_URI.$fieldValue;
 	}else{
 		//check if exist thumb image, if exist return thumb image
-		$md5_params = md5($fieldObject->properties['params']);
+		$md5_params = md5($fieldObject['params']);
 		if (file_exists(MF_FILES_PATH.'th_'.$md5_params."_".$fieldValue)) {
 			$fieldValue = MF_FILES_URI.'th_'.$md5_params."_".$fieldValue;
 		}else{
@@ -185,7 +187,7 @@ function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1) {
 			$output_filename = MF_FILES_PATH.$create_md5_filename;
 			$final_filename = MF_FILES_URI.$create_md5_filename;
 
-			$params_image = explode("&",$fieldObject->properties['params']);
+			$params_image = explode("&",$fieldObject['params']);
 			foreach($params_image as $param){
 				if($param){
 					$p_image=explode("=",$param);
@@ -201,11 +203,10 @@ function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1) {
 	}
 	
 	if($tag_img){
-		$cssClass = $wpdb->get_results("SELECT CSS FROM ".MF_TABLE_GROUP_FIELDS." WHERE name='".$fieldName."'");
-		if (empty($cssClass[0]->CSS)){
+		if (empty($fieldCSS)){
 			$finalString = stripslashes(trim("\<img src=\'".$fieldValue."\' /\>"));
 		}else{
-			$finalString = stripslashes(trim("\<img src=\'".$fieldValue."\' class=\"".$cssClass[0]->CSS."\" \/\>"));
+			$finalString = stripslashes(trim("\<img src=\'".$fieldValue."\' class=\"".$fieldCSS."\" \/\>"));
 		}
 	}else{
 		$finalString=$fieldValue;
@@ -213,77 +214,19 @@ function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1) {
 	return $finalString;
 }
 
-// Get Image function old version. 
-function get_image_old ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1) {
-	require_once("RCCWP_CustomField.php");
-	global $wpdb, $post, $FIELD_TYPES;
-	
-	$fieldID = RCCWP_CustomField::GetIDByName($fieldName);
-	$fieldObject = GetFieldInfo($fieldID);
-	$fieldType = $wpdb->get_var("SELECT type FROM ".MF_TABLE_GROUP_FIELDS." WHERE id='".$fieldID."'");
-	$single = true;
-	switch($fieldType){
-		case $FIELD_TYPES["checkbox_list"]:
-		case $FIELD_TYPES["listbox"]:
-			$single = false;
-			break;
-	} 
-	
-	$fieldValues = (array) RCCWP_CustomField::GetCustomFieldValues($single, $post->ID, $fieldName, $groupIndex, $fieldIndex);
-	 
-	if(!empty($fieldValues[0]))
-		$fieldValue = $fieldValues[0];
-	else 
-		return "";
-	
-    
-	if (substr($fieldObject->properties['params'], 0, 1) == "?"){
-		$fieldObject->properties['params'] = substr($fieldObject->properties['params'], 1);
-	}
-
-
-	if (empty($fieldObject->properties['params']) && (FALSE == strstr($fieldValue, "&"))){
-		$fieldValue = MF_FILES_PATH.$fieldValue; 
-	}
-	else{
-        $path = MF_FILES_PATH;
-		$fieldValue = $path.$fieldValue.$fieldObject->properties['params'];
-	}
-        
-        $fieldValue= PHPTHUMB."?src=".$fieldValue;
-    if($tag_img){
-	
-        $cssClass = $wpdb->get_results("SELECT CSS FROM ".MF_TABLE_GROUP_FIELDS." WHERE name='".$fieldName."'");
-        
-	    if (empty($cssClass[0]->CSS)){
-		    $finalString = stripslashes(trim("\<img src=\'".$fieldValue."\' /\>"));
-    	}
-	    else{
-		    $finalString = stripslashes(trim("\<img src=\'".$fieldValue."\' class=\"".$cssClass[0]->CSS."\" \/\>"));
-    	}
-   }else{
-        $finalString=$fieldValue;
-   }
-	    return $finalString;
-}
-
 // Get Audio. 
 function get_audio ($fieldName, $groupIndex=1, $fieldIndex=1) {
 	require_once("RCCWP_CustomField.php");
-	global $wpdb, $post, $FIELD_TYPES;
+	global $wpdb, $post;
 	
-	$fieldID = RCCWP_CustomField::GetIDByName($fieldName);
-	$fieldObject = GetFieldInfo($fieldID);
-	$fieldType = $wpdb->get_var("SELECT type FROM ".MF_TABLE_GROUP_FIELDS." WHERE id='".$fieldID."'");
-	$single = true;
-	switch($fieldType){
-		case $FIELD_TYPES["checkbox_list"]:
-		case $FIELD_TYPES["listbox"]:
-			$single = false;
-			break;
-	} 
+	$field = RCCWP_CustomField::GetInfoByName($fieldName);
+	if(!$field) return FALSE;
 	
-	$fieldValues = (array) RCCWP_CustomField::GetCustomFieldValues($single, $post->ID, $fieldName, $groupIndex, $fieldIndex);
+	$fieldType = $field['type'];
+	$fieldID = $field['id'];
+	
+	$fieldValues = (array) RCCWP_CustomField::GetValues(true, $post->ID, $fieldName, $groupIndex, $fieldIndex);
+    if(empty($fieldValues)) return FALSE;
 	
 	if(!empty($fieldValues))
 		$fieldValue = $fieldValues[0];
