@@ -12,8 +12,8 @@ class RCCWP_SWFUpload
 			$iframeInputSize = $urlInputSize;
 			$iframeWidth = 380;
 			$iframeHeight = 40;
-		}
-		else{
+			$inputSizeParam  = '';
+		}else{
 			$isCanvas = 1;
 			$iframeWidth = 150;
 			$iframeHeight = 60;

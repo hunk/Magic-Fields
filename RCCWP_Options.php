@@ -20,10 +20,11 @@ class RCCWP_Options
 		else
 			$options = unserialize(get_option(RC_CWP_OPTION_KEY));
 
-		if (!empty($key))
+		if (!empty($key)){
 			return $options[$key];
-		else
+		}else{
 			return $options;
+		}
 	}
 
 	function Set($key, $val)

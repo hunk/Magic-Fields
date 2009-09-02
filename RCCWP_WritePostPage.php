@@ -574,6 +574,12 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		?>
 		<div class="mf-field" id="row_<?php echo $inputName?>">
 			<label for="<?php echo $inputName?>">
+				<?php
+					if(empty($titleCounter)){
+						$titleCounter = "";
+					}
+					
+				?>
 				<?php echo $customFieldTitle.$titleCounter?>
 			</label>
 			<span>
@@ -661,6 +667,8 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 			$customFieldId = $customField->id;
 			$value = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 			$checked = $value == 'true' ? 'checked="checked"' : '';
+		}else{
+			$checked = "";
 		}
 		?>
 		
@@ -790,7 +798,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 			$value = apply_filters('the_editor_content', $value);
 
 		}else{
-			$value = $customField->value;
+			$value = "";
 		}
 		
 		$inputHeight = (int)$customField->properties['height'];
@@ -851,16 +859,13 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 	{
 		$customFieldId = '';
 		
-		if (isset($_REQUEST['post']))
-		{
+		if (isset($_REQUEST['post'])) {
 			$customFieldId = $customField->id;
 			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
 		}else{
-            $value = $customField->value;
+			$value = "";
         }
 
-		
-		
 		$inputSize = (int)$customField->properties['size'];
 		if ($customField->required_field) $requiredClass = "field_required";
 		
@@ -896,6 +901,8 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 			$path = MF_FILES_URI;
 			$valueRelative = $value;
 			$value = $path.$value;
+		}else{
+			$valueRelative = '';
 		}
 		
 		// If the field is at right, set a constant width to the text box
@@ -955,8 +962,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 	}
 
 
-	function PhotoInterface($customField, $inputName, $groupCounter, $fieldCounter)
-	{
+	function PhotoInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		global $mf_domain;
 		$customFieldId 	= ''; // <---- ¿?
 		$filepath 		= $inputName . '_filepath'; /// <---- ¿?
@@ -969,8 +975,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		$imageThumbID = "img_thumb_".$inputName; 
 
 
-		if (isset($_REQUEST['post']))
-		{
+		if (isset($_REQUEST['post'])) {
 			$customFieldId = $customField->id;
 			$value = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 
@@ -994,8 +999,8 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
         }else{
 			$noimage = "<img src='".MF_URI."images/noimage.jpg' id='".$imageThumbID."'/>";
 		}
-		if($valueRelative == '')
-		{
+		
+		if(!empty($valueRelative) && $valueRelative == '') {
 			$noimage = "<img src='".MF_URI."images/noimage.jpg' id='".$imageThumbID."'/>";
 		}
 
@@ -1062,16 +1067,14 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		<div id="image_photo" style="width:150px;">
 		
 			<?php
-				if($valueRelative != "")
-				{ 
-					if(!(strpos($value, '<img src') === FALSE))
-					{
+				if(!empty($valueRelative) && $valueRelative != "") { 
+					if(!(strpos($value, '<img src') === FALSE)) {
 						$valueLinkArr = explode("'", $value);
 						$valueLink = $valueLinkArr[1];
-						//$valueLink = $value;
+						
+					
 
-						if(!(strpos($value, '&sw') === FALSE))
-						{
+						if(!(strpos($value, '&sw') === FALSE)) {
 							// Calculating Image Width/Height
 							$arrSize = explode("=",$value);
 							$arrSize1 = explode("&",$arrSize[3]);
@@ -1084,9 +1087,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 							$valueArr = explode("&sw", $value);
 							$valueArr = explode("'", $valueArr[1]);
 							$value = str_replace("&sw".$valueArr[0]."'", "&sw".$valueArr[0]."&w=150&h=120' align='center' id='".$imageThumbID."'", $value);
-						}
-						else if(!(strpos($value, '&w') === FALSE))
-						{
+						} else if(!(strpos($value, '&w') === FALSE)) {
 							// Calculating Image Width/Height
 							$arrSize = explode("=",$value);
 							$arrSize1 = explode("&",$arrSize[3]);
@@ -1099,14 +1100,18 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 							$valueArr = explode("&", $value);
 							$valueArr = explode("'", $valueArr[2]);
 							$value = str_replace($valueArr[0], "&w=150&h=120' align='left' id='".$imageThumbID."'", $value);
-						}
-						else
-						{
+						} else {
 							// Calculating Image Width/Height
+							if(!empty($params)){
 							$arrSize = explode("&",$params);
 							$arrSize1 = explode("=",$arrSize[1]);
 							$arrSize2 = explode("=",$arrSize[2]);
-
+							}else{
+								$arrSize = '';
+								$arrSize1 = array('','');
+								$arrSize2 = array('','');
+							}
+							
 							$imageWidth = $arrSize1[1];
 							$imageHeight = $arrSize2[1];
 							// END
@@ -1114,23 +1119,28 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 							$valueArr = explode("'", $value);
 							$value = str_replace($valueArr[1], $valueArr[1]."&w=150' id='".$imageThumbID."' align='", $value);
 						}
-						if(!empty($imageWidth))
-						{
-						?>
-
-						<?php
+						
+						echo '<a style="display: block;margin-left: auto;margin-right: auto " href="' . $valueLink . '" target="_blank">' . $value .'</a>';
 						}
-							echo '<a style="display: block;margin-left: auto;margin-right: auto " href="' . $valueLink . '" target="_blank">' . $value .'</a>';
-						}
+					}else{
+						$valueLink = '';
 					}
 					echo $noimage;
 					$arrSize = explode("phpThumb.php?src=",$valueLink);
-					$fileLink = $arrSize[1];
-					$andPos = strpos($arrSize[1],"?");
-					if ($andPos === FALSE)	 $andPos = strpos($arrSize[1],"&");
+					
+					if(!empty($arrSize[1])){
+						$fileLink = $arrSize[1];
+					}else{
+						$fileLink = '';
+					}
+					
+					$andPos = strpos($fileLink,"?");
+					
+					
+					if ($andPos === FALSE)	 $andPos = strpos($fileLink,"&");
 				
 					// Remove & parameters from file path
-					if ($andPos>0)	$fileLink = substr($arrSize[1], 0, $andPos);
+					if ($andPos>0)	$fileLink = substr($fileLink, 0, $andPos);
 				
 					$ext = substr($fileLink, -3, 3);	
 	    ?>	
@@ -1269,6 +1279,14 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 			$customFieldId = $customField->id;
 			$valueOriginal = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 			$path = MF_FILES_URI;
+			if(empty($valueOriginal)){
+				$valueOriginal = '';
+			}
+			
+			if(empty($valueOriginalRelative)){
+				$valueOriginalRelative = '';
+			}
+			
 			$$valueOriginalRelative = $valueOriginal;
 			$valueOriginal = $path.$valueOriginal;
 			if (!empty($valueOriginal))
@@ -1308,10 +1326,14 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
                 jQuery("#remove-<?php echo $inputName;?>").click(remove_audio);
             });
         </script>
-		<?php if( $$valueOriginalRelative ){ 
+		<?php if( !empty($$valueOriginalRelative)){ 
                                                 echo $value; 
                                                 echo "<div id='actions-{$inputName}'><a href='javascript:void(0);' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a></div>";
-                                            } ?>
+                                            } 
+			if(empty($$valueOriginalRelative)){
+				$$valueOriginalRelative = '';
+			}
+		?>
 		
 		
 		<input tabindex="3" 
@@ -1334,7 +1356,11 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		if($fieldValue){
 			$value=$fieldValue;
 		}else{
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+			if(!empty($_REQUEST['post'])){
+				$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+			}else{
+				$value = '#c0c0c0';
+			}
 		}
 		?>
 		<script type='text/javascript' src='<?=MF_URI?>js/sevencolorpicker.js'></script>
@@ -1349,13 +1375,21 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 	
 	function SliderInterface($customField, $inputName, $groupCounter, $fieldCounter,$fieldValue = NULL){
 		$customFieldId = $customField->id;
+		if(!empty($_REQUEST['post'])){
 		$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+		}else{
+			$value = 0;
+		}
 		
 		
 		if($fieldValue){
 			$value=$fieldValue;
 		}else{
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+			if(!empty($_REQUEST['post'])){			
+				$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+			}else{
+				$value = 0;
+			}
 		}
 		
 		if(!$customField->properties['min']){

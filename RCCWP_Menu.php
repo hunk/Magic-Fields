@@ -341,6 +341,10 @@ class RCCWP_Menu
 	function HighlightCustomPanel(){
 		global $wpdb, $submenu_file, $post; 
 		
+		if(empty($post)){
+			return True;
+		}
+		
 		$result = $wpdb->get_results( " SELECT meta_value
 						FROM $wpdb->postmeta
 						WHERE post_id = '".$post->ID."' and meta_key = '_mf_write_panel_id'", ARRAY_A );
@@ -378,13 +382,13 @@ class RCCWP_Menu
 		
 		$options = RCCWP_Options::Get();
 		
-			if($options['hide-write-post'] == '1'){
+			if(!empty($options['hide-write-post']) == '1'){
 				unset($submenu['edit.php'][5]);
 				unset($submenu['edit.php'][10]);
 			}
 	
 	
-			if ($options['hide-write-page'] == '1'){
+			if (!empty($options['hide-write-page']) && $options['hide-write-page'] == '1'){
 				foreach ($menu as $k => $v){ 
 					if ($v[2] == "edit-pages.php"){
 						unset($menu[$k]);
@@ -403,7 +407,7 @@ class RCCWP_Menu
 		require_once ('RCCWP_Options.php');
 		$options = RCCWP_Options::Get();
 		
-		if ($options['default-custom-write-panel'] != '')
+		if (!empty($options['default-custom-write-panel']))
 		{
 			require_once ('RCCWP_CustomWritePanel.php');
 			
