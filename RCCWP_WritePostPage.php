@@ -691,7 +691,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		?>
 		
 		    <input tabindex="3" class="checkbox_list_mf" id="<?php echo $option?>" name="<?php echo $inputName?>[]" value="<?php echo $option?>" type="checkbox" <?php echo $checked?> />
-			<label for="" class="selectit mf-checkbox-list">
+			<label for="<?php echo $inputName;?>" class="selectit mf-checkbox-list">
 				<?php echo attribute_escape($option)?>
 			</label><br />
 		
@@ -1194,7 +1194,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 			$checked = $option == $value ? 'checked="checked"' : '';
 			$option = attribute_escape(trim($option));
 		?>
-			<label for="" class="selectit">
+			<label for="<?php echo $inputName;?>" class="selectit">
 				<input tabindex="3" id="<?php echo $option?>" name="<?php echo $inputName?>" value="<?php echo $option?>" type="radio" <?php echo $checked?>/>
 				<?php echo $option?>
 			</label><br />
