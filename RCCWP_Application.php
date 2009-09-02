@@ -111,7 +111,7 @@ class RCCWP_Application
 				post_id integer NOT NULL,
 				field_name text NOT NULL,
                 order_id integer NOT NULL,
-				PRIMARY KEY (id) )" ;
+				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci" ;
 	
 
 			// try to get around
@@ -166,7 +166,7 @@ class RCCWP_Application
 				display_order tinyint,
 				capability_name varchar(255) NOT NULL,
 				type varchar(255) NOT NULL,
-				PRIMARY KEY (id) )";
+				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 			
 			$qst_tables[] = "CREATE TABLE " . MF_TABLE_CUSTOM_FIELD_TYPES . " (
 				id tinyint(11) NOT NULL auto_increment,
@@ -175,7 +175,7 @@ class RCCWP_Application
 				has_options enum('true', 'false') NOT NULL,
 				has_properties enum('true', 'false') NOT NULL,
 				allow_multiple_values enum('true', 'false') NOT NULL,
-				PRIMARY KEY (id) )";
+				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 				
 			$qst_tables[] = "CREATE TABLE " . MF_TABLE_GROUP_FIELDS . " (
 				id int(11) NOT NULL auto_increment,
@@ -189,30 +189,30 @@ class RCCWP_Application
 				CSS varchar(100),
 				required_field tinyint,
 				duplicate tinyint(1) NOT NULL,
-				PRIMARY KEY (id) )";
+				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 				
 			$qst_tables[] = "CREATE TABLE " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " (
 				custom_field_id int(11) NOT NULL,
 				options text,
 				default_option text,
-				PRIMARY KEY (custom_field_id) )";
+				PRIMARY KEY (custom_field_id) ) DEFAULT CHARACTER SET utf8 COLLATE";
 			
 			$qst_tables[] = "CREATE TABLE " . MF_TABLE_PANEL_CATEGORY . " (
 				panel_id int(11) NOT NULL,
 				cat_id int(11) NOT NULL,
-				PRIMARY KEY (panel_id, cat_id) )";
+				PRIMARY KEY (panel_id, cat_id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 				
 						
 			$qst_tables[] = "CREATE TABLE " . MF_TABLE_PANEL_STANDARD_FIELD . " (
 				panel_id int(11) NOT NULL,
 				standard_field_id int(11) NOT NULL,
-				PRIMARY KEY (panel_id, standard_field_id) )";
+				PRIMARY KEY (panel_id, standard_field_id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 			
 			$qst_tables[] = "CREATE TABLE " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " (
 				custom_field_id int(11) NOT NULL AUTO_INCREMENT,
 				properties TEXT,
 				PRIMARY KEY (custom_field_id)
-				);";
+				) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
 	
 			$qst_tables[] = "CREATE TABLE " . MF_TABLE_PANEL_GROUPS . " (
 				id int(11) NOT NULL auto_increment,
@@ -220,7 +220,7 @@ class RCCWP_Application
 				name varchar(255) NOT NULL,
 				duplicate tinyint(1) NOT NULL,
 				at_right tinyint(1) NOT NULL,
-				PRIMARY KEY (id) )";
+				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 
 			// try to get around
 			// these includes like http://trac.mu.wordpress.org/ticket/384 

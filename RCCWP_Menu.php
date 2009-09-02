@@ -207,6 +207,7 @@ class RCCWP_Menu
 
 	function AttachOptionsMenuItem()
 	{
+		global $mf_domain;
 
 		require_once ('RCCWP_OptionsPage.php');
 		add_options_page(__('Magic Fields Options',$mf_domain), __('Magic Fields',$mf_domain), 'manage_options', 'RCCWP_OptionsPage.php', array('RCCWP_OptionsPage', 'Main'));
