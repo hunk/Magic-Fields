@@ -128,11 +128,14 @@ class RCCWP_CustomWritePanelPage
 						if ($customWritePanelAllFieldIds->single == 0)
 						{
 							$multiple_checked='checked="checked"';
+							$single_checked='';
 						}else{
 							$single_checked='checked="checked"';
+							$multiple_checked='';
 						}
 					}else{
 						$multiple_checked='checked="checked"';
+						$single_checked='';
 					}
 				?>
 				<input type="radio" name="single" id="radPostPage" value="1" <?php echo $single_checked?>  /> <strong><?php _e('Single', $mf_domain); ?> </strong> &nbsp; &nbsp; &nbsp; 

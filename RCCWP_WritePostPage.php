@@ -967,10 +967,8 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		$customFieldId 	= ''; // <---- ¿?
 		$filepath 		= $inputName . '_filepath'; /// <---- ¿?
 		$noimage 		= ""; // <---- if no exists image? 
-		$freshPageFolderName = (dirname(plugin_basename(__FILE__)));
-		if ($customField->required_field) $requiredClass = "field_required";
 
-		//global $countImageThumbID;
+		if ($customField->required_field) $requiredClass = "field_required";
 		$imageThumbID = "";
 		$imageThumbID = "img_thumb_".$inputName; 
 
@@ -1020,25 +1018,6 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 
         <!--- This Script is for remove the image -->
 	    <script type="text/javascript">
-             remove_photo2 = function(ide){
-                if(confirm("<?php _e('Are you sure?', $mf_domain); ?>")){
-                        //get the  name to the image
-                        //id = ide.split("-")[1];
-                        id = ide;
-                        image = jQuery('#'+id).val();
-                        jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':image},
-                                    function(message){
-                                        if(message == "true"){
-                                            photo = "img_thumb_" + id;
-                                            jQuery("#"+photo).attr("src","<?php echo  MF_URI."images/noimage.jpg"?>");
-                                            jQuery("#photo_edit_link_"+id).empty();
-                                            jQuery("#"+id).val("");
-
-                                        }
-                                    });
-                    }
-            }
-
             remove_photo = function(){
                 if(confirm("<?php _e('Are you sure?', $mf_domain); ?>")){
                         //get the  name to the image
@@ -1058,7 +1037,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
             }
 
             jQuery(document).ready(function(){
-                jQuery(".remove").click(remove_photo);
+                jQuery(".remove").live('click',remove_photo);
             });
         </script>
         <!-- Here finish -->
@@ -1157,7 +1136,11 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		</div>
 		<br />
 		<div id="image_input">
-					
+			<?php
+				if(empty($requiredClass)){
+					$requiredClass ='';
+				}
+			?>		
 			<input tabindex="3" 
 				id="<?php echo $inputName?>" 
 				name="<?php echo $inputName?>" 
@@ -1330,8 +1313,8 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
                                                 echo $value; 
                                                 echo "<div id='actions-{$inputName}'><a href='javascript:void(0);' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a></div>";
                                             } 
-			if(empty($$valueOriginalRelative)){
-				$$valueOriginalRelative = '';
+			if(empty($valueOriginalRelative)){
+				$valueOriginalRelative = '';
 			}
 		?>
 		
