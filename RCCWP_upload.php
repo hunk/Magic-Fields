@@ -94,7 +94,7 @@ if (isset($_POST['fileframe']))
 			//Set image
 			<?php
 				//$newImagePath = MF_URI.'phpThumb.php
-                $newImagePath = PHPTHUMB.'?&w=150&h=120&src='.MF_FILES_PATH.$filename;
+                $newImagePath = PHPTHUMB.'?&w=150&h=120&src='.MF_FILES_URI.$filename;
 				
 				if (isset($_POST['imageThumbID'])){ 
 			?>

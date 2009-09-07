@@ -86,7 +86,7 @@ class RCCWP_WritePostPage {
 		
 		<script type="text/javascript">
 			var mf_path = "<?php echo MF_URI ?>" ;
-			var JS_MF_FILES_PATH = '<?php echo MF_FILES_PATH ?>';
+			var JS_MF_FILES_PATH = '<?php echo MF_FILES_URI ?>';
 			var swf_authentication = "<?php if ( function_exists('is_ssl') && is_ssl() ) echo $_COOKIE[SECURE_AUTH_COOKIE]; else echo $_COOKIE[AUTH_COOKIE]; ?>" ;
 			var swf_nonce = "<?php echo wp_create_nonce('media-form'); ?>" ;
 		</script>
@@ -166,7 +166,7 @@ class RCCWP_WritePostPage {
 		<script language="JavaScript" type="text/javascript" src="<?php echo MF_URI; ?>js/prototype.js"></script>
 		
 		<script type="text/javascript">
-		var JS_MF_FILES_PATH = '<?php echo MF_FILES_PATH ?>';
+		var JS_MF_FILES_PATH = '<?php echo MF_FILES_URI ?>';
 			var wp_root         = "<?php echo get_bloginfo('wpurl');?>";
 			var mf_path    = "<?php echo MF_URI; ?>";
 			var mf_relative = "<?php echo MF_URI_RELATIVE;?>";
@@ -973,12 +973,12 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 			$customFieldId = $customField->id;
 			$value = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 
-            $path = PHPTHUMB."?src=".MF_FILES_PATH;
+            $path = PHPTHUMB."?src=".MF_FILES_URI;
 			$valueRelative = $value;
 			$value = $path.$value;
 			if(!(strpos($value, 'http') === FALSE))
 				$hidValue = str_replace('"', "'", $valueRelative);
-			$value = stripslashes(trim("\<img src=\'".$value."\' class=\"magicfields\" \/\>"));
+			$value = "<img src='".$value."' class='magicfields' />"; 
 		} else if( !empty($customField->value)){
             $path = PHPTHUMB."?src=".MF_FILES_PATH;
             $valueRelative = $customField->value;
@@ -986,7 +986,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 
             if(!(strpos($value, 'http') === FALSE)){
     		    $hidValue = str_replace('"', "'", $valueRelative);
-	    	    $value = stripslashes(trim("\<img src=\'".$value."\' class=\"magicfields\" \/\>"));
+	    	    $value = "<img src='".$value."' class='magicfields' />";
             }
 
 
