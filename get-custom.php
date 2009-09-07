@@ -158,12 +158,6 @@ function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1) {
 		$fieldValue = $fieldValues[0];
 	else 
 		return "";
-	$url_params= explode("&",$fieldValue,2);
-	
-	if(count($url_params) >= 2){
-		$fieldObject['params'] .="&". $url_params[1];
-		$fieldValue= $url_params[0];
-	}
 	
 	if (substr($fieldObject['params'], 0, 1) == "?"){
 			$fieldObject['params'] = substr($fieldObject['params'], 1);
@@ -213,6 +207,67 @@ function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1) {
 	}
 	return $finalString;
 }
+
+// generate image
+function gen_image ($fieldName, $groupIndex=1, $fieldIndex=1,$param=NULL,$attr=NULL) {
+	require_once("RCCWP_CustomField.php");
+	global $wpdb, $post;
+	
+	$field = RCCWP_CustomField::GetInfoByName($fieldName);
+	if(!$field) return FALSE;
+	
+	$fieldType = $field['type'];
+	$fieldID = $field['id'];
+	$fieldCSS = $field['CSS'];
+	$fieldObject = $field['properties'];
+	
+	$fieldValue = RCCWP_CustomField::GetValues(true, $post->ID, $fieldName, $groupIndex, $fieldIndex);
+    if(empty($fieldValue)) return FALSE;
+	
+	 //check if exist params, if not exist params, return original image
+	if (!count($param)){
+		$fieldValue = MF_FILES_URI.$fieldValue;
+	}else{
+		//check if exist thumb image, if exist return thumb image
+		$name_md5="";
+		foreach($param as $k => $v){
+			$name_md5.= $k."=".$v;
+		}
+		$md5_params = md5($name_md5);
+		if (file_exists(MF_FILES_PATH.'th_'.$md5_params."_".$fieldValue)) {
+			$fieldValue = MF_FILES_URI.'th_'.$md5_params."_".$fieldValue;
+		}else{
+			//generate thumb
+			include_once(dirname(__FILE__)."/thirdparty/phpthumb/phpthumb.class.php");
+			$phpThumb = new phpThumb();
+			$phpThumb->setSourceFilename(MF_FILES_PATH.$fieldValue);
+			$create_md5_filename = 'th_'.$md5_params."_".$fieldValue;
+			$output_filename = MF_FILES_PATH.$create_md5_filename;
+			$final_filename = MF_FILES_URI.$create_md5_filename;
+
+			foreach($param as $k => $v){
+					$phpThumb->setParameter($k, $v);
+			}
+			if ($phpThumb->GenerateThumbnail()) {
+				if ($phpThumb->RenderToFile($output_filename)) {
+					$fieldValue = $final_filename;
+				}
+			}
+		}
+	}
+	
+	if(count($attr)){
+		foreach($attr as $k => $v){
+			$add_attr .= $k."='".$v."' ";
+		}
+		$finalString = "<img src='".$fieldValue."' ".$add_attr." />";
+	}else{
+		$finalString = "<img src='".$fieldValue."' />";
+	}
+	
+	return $finalString;
+}
+
 
 // Get Audio. 
 function get_audio ($fieldName, $groupIndex=1, $fieldIndex=1) {
