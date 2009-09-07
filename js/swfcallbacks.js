@@ -100,7 +100,7 @@ function uploadurl(input_name,file_type)
 			if( document.getElementById( "img_thumb_"+input_name ) )
 			{
 				document.getElementById("img_thumb_"+input_name).src = phpthumb+"?&w=150&h=120&src="+JS_MF_FILES_PATH+h[1];
-				var b = "&nbsp;<strong><a href='#remove' class='remove' onclick='remove_photo2(\""+input_name+"\")'>Delete</a></strong>";
+				var b = "&nbsp;<strong><a href='#remove' class='remove' id='remove-"+input_name+"'>Delete</a></strong>";
  				document.getElementById( "photo_edit_link_"+input_name ).innerHTML = b;
 			}
 			},

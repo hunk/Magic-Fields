@@ -102,7 +102,7 @@ if (isset($_POST['fileframe']))
 				{ 
 					par.getElementById('<?php echo $_POST['imageThumbID']; ?>').src = "<?php echo $newImagePath;?>";
 					
-                    var b = "&nbsp;<strong><a href='#remove' class='remove' onclick='remove_photo2(\"<?php echo $_POST['input_name'];?>\")'>Delete</a></strong>";
+                    var b = "&nbsp;<strong><a href='#remove' class='remove' id='remove-<?php echo $_POST['input_name'];?>'>Delete</a></strong>";
 
 					par.getElementById("photo_edit_link_<?php echo $_POST['input_name'] ?>").innerHTML = b ;
 				}

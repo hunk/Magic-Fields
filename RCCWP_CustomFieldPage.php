@@ -74,7 +74,6 @@ class RCCWP_CustomFieldPage
 		</tr>
 		
 		<?php } ?>
-		
 		<?php if (in_array($custom_field->type, array('Textbox', 'Listbox'))) : ?>
 		<tr valign="top">
 			<th scope="row"><?php _e('Size',$mf_domain); ?>:</th>
@@ -129,7 +128,7 @@ class RCCWP_CustomFieldPage
 
 		<?php
 		if ($custom_field->has_options == "true") :
-			$options = implode("\n", (array)$custom_field->options)
+			$options = implode("\n", (array)$custom_field->options);
 		?>
 		<tr valign="top">
 			<th scope="row"><?php _e('Options',$mf_domain); ?>:</th>
@@ -159,7 +158,6 @@ class RCCWP_CustomFieldPage
 		<?php
 		endif;
 		?>
-		
 		<tr valign="top">
 			<th scope="row"><?php _e('Type',$mf_domain); ?>:</th>
 			<td>
@@ -220,7 +218,6 @@ class RCCWP_CustomFieldPage
 		?>
 		<?php 
 			$size = explode("&",$custom_field->properties['params']);
-
 if(isset($size[3])){
 $c=$size[3];
 }

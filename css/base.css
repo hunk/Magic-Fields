@@ -105,3 +105,22 @@
     padding:4px 5px 2px;
 }
 /**  css for the editor **/
+
+.checkbox_mf{
+    margin-left: 15%;
+}
+
+.checkbox_list_mf{
+    margin-top:5px;
+    margin-left: 15%;
+}
+
+.listbox_mf{
+    margin-top: 5px;
+    margin-left: 15%;
+    width: 20%;
+}
+
+.datepicker_mf{
+    margin-left: 15%;
+}
