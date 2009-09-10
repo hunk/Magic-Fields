@@ -112,15 +112,15 @@ class RCCWP_CustomFieldPage
 		
 		<?php if (in_array($custom_field->type, array('Slider'))) : ?>	
 		<tr valign="top">
-			<th scope="row"><?=_e('Value min', $mf_domain)?>:</th>
+			<th scope="row"><?php echo _e('Value min', $mf_domain)?>:</th>
 			<td><input type="text" name="custom-field-slider-min" id="custom-field-slider-min" size="2" value="<?php echo $custom_field->properties['min']?>" /></td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><?=_e('Value max', $mf_domain)?>:</th>
+			<th scope="row"><?php echo _e('Value max', $mf_domain)?>:</th>
 			<td><input type="text" name="custom-field-slider-max" id="custom-field-slider-max" size="2" value="<?php echo $custom_field->properties['max']?>" /></td>
 		</tr>		
 		<tr valign="top">
-			<th scope="row"><?=_e('Stepping', $mf_domain)?>:</th>
+			<th scope="row"><?php echo _e('Stepping', $mf_domain)?>:</th>
 			<td><input type="text" name="custom-field-slider-step" id="custom-field-slider-step" size="2" value="<?php echo $custom_field->properties['step']?>" /></td>
 		</tr>
 		<?php endif; ?>

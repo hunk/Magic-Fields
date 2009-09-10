@@ -240,7 +240,6 @@ class RCCWP_Menu
 			$offset=0;
 			$add_post =  false;
 			
-
 			foreach ($customWritePanels as $panel){
 				//exists a single write panel? and if exists  this write panel have posts?
 				if($panel->single == 1){

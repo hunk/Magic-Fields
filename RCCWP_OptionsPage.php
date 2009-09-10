@@ -108,7 +108,7 @@ function Main()
 			&nbsp; <?php _e('Edit posts instantly from the post page.', $mf_domain); ?></label> 
 		</td>
         </tr>
-	<script type='text/javascript' src='<?=MF_URI?>js/sevencolorpicker.js'></script>
+	<script type='text/javascript' src='<?php echo MF_URI?>js/sevencolorpicker.js'></script>
 	<script type="text/javascript">
 		jQuery('document').ready(function(){
 			jQuery('#eip-highlight-color').SevenColorPicker();

@@ -1346,7 +1346,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 			}
 		}
 		?>
-		<script type='text/javascript' src='<?=MF_URI?>js/sevencolorpicker.js'></script>
+		<script type='text/javascript' src='<?php echo MF_URI?>js/sevencolorpicker.js'></script>
 		<script type="text/javascript">
 			jQuery('document').ready(function(){
 				jQuery('#<?php echo $inputName?>').SevenColorPicker();
@@ -1389,17 +1389,17 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		}
 		global $wp_version;
 		if($wp_version <= 2.7){ ?>
-		<link rel="stylesheet" href="<?=MF_URI?>css/flora.slider.css" type="text/css" media="screen" title="Flora (Default)">
-		<script type="text/javascript" src="<?=MF_URI?>js/ui.slider.js"></script>
+		<link rel="stylesheet" href="<?php echo MF_URI?>css/flora.slider.css" type="text/css" media="screen" title="Flora (Default)">
+		<script type="text/javascript" src="<?php echoMF_URI?>js/ui.slider.js"></script>
 		<?php }else{ ?>
-			<link rel="stylesheet" href="<?=MF_URI?>css/base/ui.all.css" type="text/css" media="screen" />
-			<script type="text/javascript" src="<?=MF_URI?>js/ui.core_WP28.js"></script>
-			<script type="text/javascript" src="<?=MF_URI?>js/ui.slider_WP28.js"></script>
+			<link rel="stylesheet" href="<?php echo MF_URI?>css/base/ui.all.css" type="text/css" media="screen" />
+			<script type="text/javascript" src="<?php echo MF_URI?>js/ui.core_WP28.js"></script>
+			<script type="text/javascript" src="<?php echo MF_URI?>js/ui.slider_WP28.js"></script>
 		<?php } ?>
 			<script>
 				jQuery('document').ready(function(){
-					jQuery('#slider_<?php echo $inputName?>').slider({range: false, value: <?=$value?> , min: <?=$customField->properties['min']?>, max: <?=$customField->properties['max']?>, stepping: <?=$customField->properties['step']?>,
-					handles: [ {start: <?=$value?>, stepping: <?=$customField->properties['step']?>,min: <?=$customField->properties['min']?>, max: <?=$customField->properties['max']?>, id: 'slider_<?php echo $inputName?>'} ]
+					jQuery('#slider_<?php echo $inputName?>').slider({range: false, value: <?php echo $value?> , min: <?php echo $customField->properties['min']?>, max: <?php echo $customField->properties['max']?>, stepping: <?php echo $customField->properties['step']?>,
+					handles: [ {start: <?php echo $value?>, stepping: <?php echo $customField->properties['step']?>,min: <?php echo $customField->properties['min']?>, max: <?php echo $customField->properties['max']?>, id: 'slider_<?php echo $inputName?>'} ]
 					
 
 								,'slide': function(e, ui){ 
@@ -1423,7 +1423,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		</style>
 			<div id='slider_<?php echo $inputName?>' class='ui-slider-2' style="margin:40px;">
 				<div class='ui-slider-handle'><div class="slider_numeber_show" id="slide_value_<?php echo $inputName?>">
-				<?=$value?>
+				<?php echo $value?>
 				</div></div>	
 			</div>
 			<input  type="hidden" id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>"  />		

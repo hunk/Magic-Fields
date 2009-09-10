@@ -112,7 +112,7 @@ class RCCWP_CustomWritePanelPage
 							$theme_select=NULL;
 							if($customThemePage == $k){ $theme_select='SELECTED';}
 						}?>
-					<option value='<?=$k?>' <?=$theme_select?> ><?=$v?></option>
+					<option value='<?php echo $k?>' <?php echo $theme_select?> ><?php echo $v?></option>
 					<?php } ?>
 					<?php  ?>
 				</select>
