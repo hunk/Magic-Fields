@@ -230,7 +230,7 @@ class RCCWP_Menu
 		
 		
 			$new_menu = array();
-		
+			ksort($menu); 
 			foreach ($menu as $k => $v) {
 				if($k > 5) break;
 				$new_menu[$k]=$v;
