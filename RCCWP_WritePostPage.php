@@ -37,26 +37,41 @@ class RCCWP_WritePostPage {
 
     function CustomFieldsCSS(){
 	?>
-	<link 	
-			rel='stylesheet' 
-			href='<?php echo MF_URI;?>css/epoch_styles.css'
-			type='text/css' 
-	/>
 	<link 
 			rel="stylesheet" 
 			href="<?php echo MF_URI;?>css/base.css" 
 			type="text/css" media="screen" charset="utf-8"
 	/>
-	
+	<link
+			rel="stylesheet"
+			href="<?php echo MF_URI;?>css/datepicker/ui.datepicker.css"
+			type="text/css" media="screen" charset="utf-8"
+	/>
 	<?php
 	}
 		
-	function ApplyCustomWritePanelHeader()
-	{
+	function CustomFieldsJavascript(){
+		//loading  jquery ui datepicker
+		wp_enqueue_script(	'datepicker',
+							MF_URI.'js/ui.datepicker.js',
+							array('jquery','jquery-ui-core')
+						);
+				
+		//loading core of the datepicker
+		wp_enqueue_script(	'mf_datepicker',
+							MF_URI.'js/custom_fields/datepicker.js'
+						);
+				
+		//TODO: Remove this line
+		wp_enqueue_script('protoype');
+						
+	}	
+	
+	function ApplyCustomWritePanelHeader() {
 		global $CUSTOM_WRITE_PANEL;
 		global $mf_domain;
-
-		// Validate capability
+		
+		// Validate	 capability
 		require_once ('RCCWP_Options.php');
 		$assignToRole = RCCWP_Options::Get('assign-to-role');
 		$requiredPostsCap = 'edit_posts';
@@ -74,15 +89,7 @@ class RCCWP_WritePostPage {
 		
 		if (!current_user_can($requiredCap)) wp_die( __('You do not have sufficient permissions to access this custom write panel.',$mf_domain) );
 
-		// --- Apply Magic Fields CSS and javascript
 		?>
-		
-		<script language="JavaScript" type="text/javascript" src="<?php echo MF_URI; ?>js/prototype.js"></script>
-		
-		<!-- Calendar Control -->
-
-		<script type="text/javascript" src="<?php echo MF_URI?>js/epoch_classes.js"></script> <!--Epoch's Code-->
-		<!-- Calendar Control -->
 		
 		<script type="text/javascript">
 			var mf_path = "<?php echo MF_URI ?>" ;
@@ -90,7 +97,7 @@ class RCCWP_WritePostPage {
 			var swf_authentication = "<?php if ( function_exists('is_ssl') && is_ssl() ) echo $_COOKIE[SECURE_AUTH_COOKIE]; else echo $_COOKIE[AUTH_COOKIE]; ?>" ;
 			var swf_nonce = "<?php echo wp_create_nonce('media-form'); ?>" ;
 		</script>
-        <script type="text/javascript" src="<?php echo MF_URI?>js/groups.js"></script>
+ 		<script type="text/javascript" src="<?php echo MF_URI?>js/groups.js"></script>
         
 		<script type="text/javascript">
 				function isset(  ) {
@@ -118,55 +125,15 @@ class RCCWP_WritePostPage {
             // -------------
 			// Edit Photo functions
 			function prepareUpdatePhoto(inputName){	
-				document.getElementById(inputName+'_dorename').value = '1';
+				jQuery('#'+inputName+'_dorename').val(1);
 				return true;
-			}	
-			
-			// -------------
-			// Date Functions
-
-			var dp_cal = new Array(); // declare the calendars as global variables
-			
-			function pickDate(inputName){
-				if (dp_cal[inputName] && dp_cal[inputName].selectedDates[0]) document.getElementById('date_field_'+inputName).value = dp_cal[inputName].selectedDates[0].dateFormat('Y-m-d');
-			}
-			
-			function InitializeDateObject(inputName, dateFormat, currentValue){
-				if (!Object.isElement($('display_date_field_' + inputName))) return;
-				
-				dp_cal[inputName]  = new Epoch('dp_cal_'+inputName,'popup',document.getElementById('display_date_field_'+inputName), false, 'pickDate', inputName, dateFormat);
-				
-				var d = new Date();
-				
-				if (currentValue.length > 0){
-					d.setYear(parseInt(currentValue.substr(0,4),10));
-					d.setMonth(parseInt(currentValue.substr(5,2),10)-1);
-					d.setDate(parseInt(currentValue.substr(8,2),10));
-				}
-				d.selected = true;
-				d.canSelect = true;
-				var tmpDatesArray = new Array(d);
-				dp_cal[inputName].selectDates(tmpDatesArray, true, true, true);
-				if (dp_cal[inputName] && dp_cal[inputName].selectedDates[0]) 
-					document.getElementById('display_date_field_'+inputName).value = dp_cal[inputName].selectedDates[0].dateFormat(dateFormat);
-			}	
-
-			function today_date(inputName, dateFormat){
-				var d = new Date();
-				var tmpDatesArray = new Array(d);
-				dp_cal[inputName].selectDates(tmpDatesArray, true, true, true);
-				if (dp_cal[inputName] && dp_cal[inputName].selectedDates[0]){ 
-					document.getElementById('display_date_field_'+inputName).value = dp_cal[inputName].selectedDates[0].dateFormat(dateFormat);
-					document.getElementById('date_field_' + inputName).value = dp_cal[inputName].selectedDates[0].dateFormat('Y-m-d');
-				}
 			}
 		</script>
-		<link rel='stylesheet' href='<?php echo MF_URI?>css/epoch_styles.css' type='text/css' />
 		
 		<script language="JavaScript" type="text/javascript" src="<?php echo MF_URI; ?>js/prototype.js"></script>
 		
 		<script type="text/javascript">
-		var JS_MF_FILES_PATH = '<?php echo MF_FILES_URI ?>';
+			var JS_MF_FILES_PATH = '<?php echo MF_FILES_URI ?>';
 			var wp_root         = "<?php echo get_bloginfo('wpurl');?>";
 			var mf_path    = "<?php echo MF_URI; ?>";
 			var mf_relative = "<?php echo MF_URI_RELATIVE;?>";
@@ -199,9 +166,12 @@ class RCCWP_WritePostPage {
 					return true;
 				}
 				
+			/**
+			 * Pay Attention on this.
+			 */
 			function checkForm(event){
 				var stopPublish = false;
-				$$('input.field_required','textarea.field_required').each(
+				jQuery('input.field_required','textarea.field_required').each(
 						function(inputField){
                             <?php  
 		                        $hide_visual_editor = RCCWP_Options::Get('hide-visual-editor');
@@ -267,56 +237,6 @@ class RCCWP_WritePostPage {
 			Event.observe(window, 'load', function() {
 				Event.observe('post', 'submit', checkForm);
 			});
-			
-			// -------------
-			// Edit Photo functions
-			
-			function prepareUpdatePhoto(inputName){	
-				document.getElementById(inputName+'_dorename').value = '1';
-				return true;
-			}	
-	
-			
-			// -------------
-			// Date RCCPW_WritePostPage::Functions
-
-			var dp_cal = new Array(); // declare the calendars as global variables
-			
-			function pickDate(inputName){
-				if (dp_cal[inputName] && dp_cal[inputName].selectedDates[0]) document.getElementById('date_field_'+inputName).value = dp_cal[inputName].selectedDates[0].dateFormat('Y-m-d');
-			}
-			
-			function InitializeDateObject(inputName, dateFormat, currentValue){
-				if (!Object.isElement($('display_date_field_' + inputName))) return;
-				
-				dp_cal[inputName]  = new Epoch('dp_cal_'+inputName,'popup',document.getElementById('display_date_field_'+inputName), false, 'pickDate', inputName, dateFormat);
-				
-				var d = new Date();
-				
-				if (currentValue.length > 0){
-					d.setYear(parseInt(currentValue.substr(0,4),10));
-					d.setMonth(parseInt(currentValue.substr(5,2),10)-1);
-					d.setDate(parseInt(currentValue.substr(8,2),10));
-				}
-				d.selected = true;
-				d.canSelect = true;
-				var tmpDatesArray = new Array(d);
-				dp_cal[inputName].selectDates(tmpDatesArray, true, true, true);
-				if (dp_cal[inputName] && dp_cal[inputName].selectedDates[0]) 
-					document.getElementById('display_date_field_'+inputName).value = dp_cal[inputName].selectedDates[0].dateFormat(dateFormat);
-			}	
-
-			function today_date(inputName, dateFormat){
-				var d = new Date();
-				var tmpDatesArray = new Array(d);
-				dp_cal[inputName].selectDates(tmpDatesArray, true, true, true);
-				if (dp_cal[inputName] && dp_cal[inputName].selectedDates[0]){ 
-					document.getElementById('display_date_field_'+inputName).value = dp_cal[inputName].selectedDates[0].dateFormat(dateFormat);
-					document.getElementById('date_field_' + inputName).value = dp_cal[inputName].selectedDates[0].dateFormat('Y-m-d');
-				}
-			}
-			
-
 		</script>
 
 		<?php
@@ -1198,8 +1118,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		<?php
 	}
 
-	function DateInterface($customField, $inputName, $groupCounter, $fieldCounter)
-	{
+	function DateInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		global $wpdb;
 		$customFieldId = '';
 		
@@ -1207,41 +1126,51 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		{
 			$customFieldId = $customField->id;
 			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+			
+			$value = date($customField->properties['format'],strtotime($value));
+			
+		} else { 
+			$value =  date($customField->properties['format']);
 		}
-		else
-			$value = strftime("%Y-%m-%d");
 		
 		$dateFormat = $customField->properties['format'];
-
-		// If the field is at right, set a constant width to the text box
+		
+		
 		$field_group = RCCWP_CustomGroup::Get($customField->group_id);
 		$inputSize = 25;
 		if ($field_group->at_right){
 			$inputSize = 15;
 		}
+?>	
+		<div id="format_date_field_<?php echo $inputName;?>" style="display:none"><?php echo $dateFormat;?></div>
+			
+		<input 	id="display_date_field_<?php echo $inputName?>"
+		 		value="<?php echo $value?>" 
+				type="text" 
+				size="<?php echo $inputSize?>" 
+				class="datepicker_mf"   
+		READONLY/>
 		
+		<input 	id="date_field_<?php echo $inputName?>" 
+				name="<?php echo $inputName?>" 
+				value="<?php echo $value?>" type="hidden" 
+		/>
+		<input 	type="button" 
+				value="Pick..." 
+				id="pick_<?php echo $inputName;?>" 
+				class="datebotton_mf"
+		/>
+		<input 	type="button" 
+				id="today_<?php echo $inputName;?>"
+				value="Today" 
+				class="todaybotton_mf"
+		/>
 
-?>
-		<script type="text/javascript">
-			
-			addEventHandler(window, 'load',function () {
-				InitializeDateObject('<?php echo $inputName?>', '<?php echo $dateFormat?>', '<?php echo $value?>');
-			}); 
-			
-			InitializeDateObject('<?php echo $inputName?>', '<?php echo $dateFormat?>', '<?php echo $value?>');
-			
-			
-		</script>	
-
-		
-		<input tabindex="3" id="display_date_field_<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>"  class="datepicker_mf" READONLY />
-		<input tabindex="3" id="date_field_<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="hidden" />
-		<input type="button" value="Pick..." onclick="dp_cal['<?php echo $inputName?>'].toggle();" />
-		<input type="button" value="Today" onclick="today_date('<?php echo $inputName?>', '<?php echo $dateFormat?>');" />
-
-		<input type="hidden" name="rc_cwp_meta_date[]" value="<?php echo $inputName?>" 	/>
-
-		
+		<input 
+				type="hidden" 
+				name="rc_cwp_meta_date[]" 
+				value="<?php echo $inputName?>" 	
+		/>
 		<?php
 	}
 

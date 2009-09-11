@@ -332,7 +332,12 @@ class RCCWP_Processor
 								  );	
 								
 						//adding javascripts files for the custom fields
-//						add_action('admin_print_scripts',
+						add_action('admin_print_scripts',
+									array(	'RCCWP_WritePostPage',
+											'CustomFieldsJavascript'
+										)
+									);
+									
 						add_action('admin_head',
 						 			array(	'RCCWP_WritePostPage',
 						 					'ApplyCustomWritePanelHeader'
