@@ -118,6 +118,8 @@ add_action('admin_menu', array('RCCWP_Menu', 'AttachMagicFieldsMenus'));
 
 require_once ('RCCWP_EditnPlace.php');
 add_action('wp_head', array('RCCWP_EditnPlace', 'EditnHeader'));
+//Adding  javascript for the editnplace in the public pages
+add_action('template_redirect',array('RCCWP_EditnPlace','EditnPlaceJavascript'));
 
 require_once ('RCCWP_Query.php');
 add_action('pre_get_posts', array('RCCWP_Query', 'FilterPrepare'));

@@ -3,8 +3,22 @@
 // Magic Fields paths
 require_once "RCCWP_Constant.php";
 
-class RCCWP_EditnPlace
-{
+class RCCWP_EditnPlace {
+	
+	
+	/**
+	 * This function load all the necessary scripts for the 
+	 * editnplace feature
+	 */
+	function EditnPlaceJavascript(){
+			wp_enqueue_script(	'EditnPlace',
+								MF_URI.'js/editnplace.js',
+								array('prototype')
+							);
+			wp_enqueue_script(	'nicEdit',
+								MF_URI.'js/nicEdit.js'
+							);
+	}
 
 	function EditnHeader (){
 		global $post, $wp_version;
@@ -19,9 +33,6 @@ class RCCWP_EditnPlace
 		$post_id = $post->ID;
 
 		$MF_URI = MF_URI;
-		$nicedit_path = MF_URI."js/nicEdit.js";
-		$prototype_path = MF_URI."js/prototype.js";
-		$editnplace_path = MF_URI."js/editnplace.js";
 		$arrow_image_path = MF_URI."images/arrow.gif";
 		
 	
@@ -34,9 +45,6 @@ class RCCWP_EditnPlace
 			<script language="JavaScript" type="text/javascript" > 
 				var JS_MF_URI = '$MF_URI';
 			</script>
-			<script type="text/javascript" src="$nicedit_path"></script>
-			<script type="text/javascript" src="$prototype_path"></script>
-			<script type="text/javascript" src="$editnplace_path"></script>
 			
 			<style type="text/css">
 				

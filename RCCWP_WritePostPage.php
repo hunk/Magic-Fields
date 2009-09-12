@@ -61,9 +61,9 @@ class RCCWP_WritePostPage {
 		wp_enqueue_script(	'mf_datepicker',
 							MF_URI.'js/custom_fields/datepicker.js'
 						);
-				
-		//TODO: Remove this line
-		wp_enqueue_script('protoype');
+						
+		//loading Prototype framework
+		wp_enqueue_script('prototype');
 						
 	}	
 	
@@ -129,8 +129,6 @@ class RCCWP_WritePostPage {
 				return true;
 			}
 		</script>
-		
-		<script language="JavaScript" type="text/javascript" src="<?php echo MF_URI; ?>js/prototype.js"></script>
 		
 		<script type="text/javascript">
 			var JS_MF_FILES_PATH = '<?php echo MF_FILES_URI ?>';
