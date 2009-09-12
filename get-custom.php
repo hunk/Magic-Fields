@@ -43,11 +43,13 @@ function getFieldDuplicates ($fieldName, $groupIndex) {
  * 				in a div that is ready for EIP. The default value is true
  * @return a string or array based on field type
  */
-function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true) {
+function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_id=NULL) {
 	require_once("RCCWP_CustomField.php");
 	global $wpdb, $post, $FIELD_TYPES;
 	
-	$field = RCCWP_CustomField::GetInfoByName($fieldName);
+	if(!$post_id){ $post_id = $post->ID; }
+	
+	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
 	if(!$field) return FALSE;
 	
 	$fieldType = $field['type'];
@@ -62,7 +64,7 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true) {
 			break;
 	} 
 	
-	$fieldValues = (array) RCCWP_CustomField::GetValues($single, $post->ID, $fieldName, $groupIndex, $fieldIndex);
+	$fieldValues = (array) RCCWP_CustomField::GetValues($single, $post_id, $fieldName, $groupIndex, $fieldIndex);
     if(empty($fieldValues)) return FALSE;
 
 	$results = GetProcessedFieldValue($fieldValues, $fieldType, $fieldObject);
@@ -139,11 +141,12 @@ function GetProcessedFieldValue($fieldValues, $fieldType, $fieldProperties=array
 }
 
 // Get Image. 
-function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1) {
+function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1,$post_id=NULL) {
 	require_once("RCCWP_CustomField.php");
 	global $wpdb, $post;
 	
-	$field = RCCWP_CustomField::GetInfoByName($fieldName);
+	if(!$post_id){ $post_id = $post->ID; }
+	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
 	if(!$field) return FALSE;
 	
 	$fieldType = $field['type'];
@@ -151,7 +154,7 @@ function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1) {
 	$fieldCSS = $field['CSS'];
 	$fieldObject = $field['properties'];
 	
-	$fieldValues = (array) RCCWP_CustomField::GetValues(true, $post->ID, $fieldName, $groupIndex, $fieldIndex);
+	$fieldValues = (array) RCCWP_CustomField::GetValues(true, $post_id, $fieldName, $groupIndex, $fieldIndex);
     if(empty($fieldValues)) return FALSE;
 
 	if(!empty($fieldValues[0]))
@@ -209,11 +212,12 @@ function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1) {
 }
 
 // generate image
-function gen_image ($fieldName, $groupIndex=1, $fieldIndex=1,$param=NULL,$attr=NULL) {
+function gen_image ($fieldName, $groupIndex=1, $fieldIndex=1,$param=NULL,$attr=NULL,$post_id=NULL) {
 	require_once("RCCWP_CustomField.php");
 	global $wpdb, $post;
 	
-	$field = RCCWP_CustomField::GetInfoByName($fieldName);
+	if(!$post_id){ $post_id = $post->ID; }
+	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
 	if(!$field) return FALSE;
 	
 	$fieldType = $field['type'];
@@ -221,7 +225,7 @@ function gen_image ($fieldName, $groupIndex=1, $fieldIndex=1,$param=NULL,$attr=N
 	$fieldCSS = $field['CSS'];
 	$fieldObject = $field['properties'];
 	
-	$fieldValue = RCCWP_CustomField::GetValues(true, $post->ID, $fieldName, $groupIndex, $fieldIndex);
+	$fieldValue = RCCWP_CustomField::GetValues(true, $post_id, $fieldName, $groupIndex, $fieldIndex);
     if(empty($fieldValue)) return FALSE;
 	
 	 //check if exist params, if not exist params, return original image
@@ -270,17 +274,18 @@ function gen_image ($fieldName, $groupIndex=1, $fieldIndex=1,$param=NULL,$attr=N
 
 
 // Get Audio. 
-function get_audio ($fieldName, $groupIndex=1, $fieldIndex=1) {
+function get_audio ($fieldName, $groupIndex=1, $fieldIndex=1,$post_id=NULL) {
 	require_once("RCCWP_CustomField.php");
 	global $wpdb, $post;
 	
-	$field = RCCWP_CustomField::GetInfoByName($fieldName);
+	if(!$post_id){ $post_id = $post->ID; }
+	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
 	if(!$field) return FALSE;
 	
 	$fieldType = $field['type'];
 	$fieldID = $field['id'];
 	
-	$fieldValues = (array) RCCWP_CustomField::GetValues(true, $post->ID, $fieldName, $groupIndex, $fieldIndex);
+	$fieldValues = (array) RCCWP_CustomField::GetValues(true, $post_id, $fieldName, $groupIndex, $fieldIndex);
     if(empty($fieldValues)) return FALSE;
 	
 	if(!empty($fieldValues))
@@ -316,10 +321,11 @@ function pt(){
  *
  * @param string $groupName 
  */
-function getGroupOrder($field_name){
+function getGroupOrder($field_name,$post_id=NULL){
     global $post,$wpdb;
-    
-    $elements  = $wpdb->get_results("SELECT group_count FROM ".MF_TABLE_POST_META." WHERE post_id = ".$post->ID."  AND field_name = '{$field_name}' ORDER BY order_id ASC");
+
+    if(!$post_id){ $post_id = $post->ID; }
+    $elements  = $wpdb->get_results("SELECT group_count FROM ".MF_TABLE_POST_META." WHERE post_id = ".$post_id."  AND field_name = '{$field_name}' ORDER BY order_id ASC");
    
     foreach($elements as $element){
        $order[] =  $element->group_count;
@@ -331,10 +337,11 @@ function getGroupOrder($field_name){
 /**
  *  Return a array with the order of a  field
  */
-function getFieldOrder($field_name,$group){ 
+function getFieldOrder($field_name,$group=1,$post_id=NULL){ 
 	global $post,$wpdb; 
 	
-	$elements = $wpdb->get_results("SELECT field_count FROM ".MF_TABLE_POST_META." WHERE post_id = ".$post->ID." AND field_name = '{$field_name}' AND group_count = {$group} ORDER BY order_id DESC",ARRAY_A);  
+	if(!$post_id){ $post_id = $post->ID; }
+	$elements = $wpdb->get_results("SELECT field_count FROM ".MF_TABLE_POST_META." WHERE post_id = ".$post_id." AND field_name = '{$field_name}' AND group_count = {$group} ORDER BY order_id DESC",ARRAY_A);  
 
 	foreach($elements as $element){ 
 		$order[] = $element['field_count']; 

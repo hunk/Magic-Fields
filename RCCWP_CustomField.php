@@ -363,8 +363,8 @@ class RCCWP_CustomField
 	 * @return array with custom field id and custom field type
 	 * @author Edgar García - hunk  <ing.edgar@gmail.com>
 	 */
-	function GetInfoByName($customFieldName){
-		global $wpdb, $post, $FIELD_TYPES;
+	function GetInfoByName($customFieldName,$post_id){
+		global $wpdb, $FIELD_TYPES;
 		
 		$customFieldvalues = $wpdb->get_row(
 			"SELECT cf.id, cf.type,cf.CSS,fp.properties 
@@ -376,7 +376,7 @@ class RCCWP_CustomField
 								FROM ". MF_TABLE_PANEL_GROUPS . " mg, ".$wpdb->postmeta." pm 
 									WHERE mg.panel_id = pm.meta_value
 									AND pm.meta_key = '".RC_CWP_POST_WRITE_PANEL_ID_META_KEY."' 
-									AND pm.post_id = $post->ID)",ARRAY_A);
+									AND pm.post_id = $post_id)",ARRAY_A);
 													
 		if (empty($customFieldvalues)) return false;
 		if($customFieldvalues['type'] == $FIELD_TYPES["date"] OR $customFieldvalues['type'] == $FIELD_TYPES["image"] )
