@@ -195,7 +195,7 @@ class RCCWP_Application
 				custom_field_id int(11) NOT NULL,
 				options text,
 				default_option text,
-				PRIMARY KEY (custom_field_id) ) DEFAULT CHARACTER SET utf8 COLLATE";
+				PRIMARY KEY (custom_field_id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 			
 			$qst_tables[] = "CREATE TABLE " . MF_TABLE_PANEL_CATEGORY . " (
 				panel_id int(11) NOT NULL,
@@ -318,70 +318,60 @@ class RCCWP_Application
 	{
  		global $wpdb;
 
-		// Delete blog tables
-		$sql = "DROP TABLE " . MF_TABLE_POST_META; $wpdb->query($sql);
-     
+		if (get_option("Magic_Fields_notTopAdmin")) return;	
+		
 		// Remove options
 		delete_option(RC_CWP_OPTION_KEY);
+		delete_option('MAGIC_FIELDS_fist_time');
+		delete_option('RC_CWP_DB_VERSION');
+		delete_option('RC_CWP_BLOG_DB_VERSION');
+		
+		//delete post_meta WP and WP MF
+		$sql = "delete a.* from $wpdb->postmeta as a, ".wp_mf_post_meta." as b where b.id = a.meta_id";
+		$wpdb->query($sql);
 
 		// Delete meta data
 		$sql = "DELETE FROM $wpdb->postmeta WHERE meta_key = '" . RC_CWP_POST_WRITE_PANEL_ID_META_KEY . "'";
  		$wpdb->query($sql);
 
-		if (get_option("Magic_Fields_notTopAdmin")) return;
-
-
-		
-		RCCWP_Application::DeleteModulesFolders();	
-
-		$sql = "DROP TABLE " . MF_TABLE_PANELS;
-		$wpdb->query($sql);
-		
 		$sql = "DROP TABLE " . MF_TABLE_CUSTOM_FIELD_TYPES;
-		$wpdb->query($sql);
-		
-		$sql = "DROP TABLE " . MF_TABLE_GROUP_FIELDS;
-		$wpdb->query($sql);
-		
-		$sql = "DROP TABLE " . MF_TABLE_CUSTOM_FIELD_OPTIONS;
-		$wpdb->query($sql);
-		
-		$sql = "DROP TABLE " . MF_TABLE_PANEL_CATEGORY;
 		$wpdb->query($sql);
 		
 		$sql = "DROP TABLE " . MF_TABLE_STANDARD_FIELDS;
 		$wpdb->query($sql);
 		
-		$sql = "DROP TABLE " . MF_TABLE_PANEL_STANDARD_FIELD;
-		$wpdb->query($sql);
-		
-		$sql = "DROP TABLE " . MF_TABLE_CUSTOM_FIELD_PROPERTIES;
+		$sql = "DROP TABLE " . MF_TABLE_PANELS;
 		$wpdb->query($sql);
 		
 		$sql = "DROP TABLE " . MF_TABLE_PANEL_GROUPS;
 		$wpdb->query($sql);
-
-		$sql = "DROP TABLE " . MF_TABLE_PANEL_HIDDEN_EXTERNAL_FIELD; 
-		$wpdb->query($sql);
-
-		$sql = "DROP TABLE " . RC_CWP_TABLE_PANEL_MODULES; 
-		$wpdb->query($sql);
-
-		if (RCCWP_Application::is_mu_top_admin()){
-			update_site_option('MAGIC_FIELDS_fist_time', '');
-		}
-		else{
-			update_option('MAGIC_FIELDS_fist_time', '');
-		}
-	
 		
-	}
+		$sql = "DROP TABLE " . MF_TABLE_GROUP_FIELDS;
+		$wpdb->query($sql);
+		
+		$sql = "DROP TABLE " . MF_TABLE_PANEL_CATEGORY;
+		$wpdb->query($sql);
+		
+		$sql = "DROP TABLE " . MF_TABLE_PANEL_STANDARD_FIELD;
+		$wpdb->query($sql);
+		
+		$sql = "DROP TABLE " . MF_TABLE_PANEL_HIDDEN_EXTERNAL_FIELD;
+		$wpdb->query($sql);
+		
+		$sql = "DROP TABLE " . MF_TABLE_CUSTOM_FIELD_OPTIONS;
+		$wpdb->query($sql);
 
-	function DeleteModulesFolders()
-	{
-		$customModules = RCCWP_CustomWriteModule::GetCustomModules();
-		foreach($customModules as $customModule)
-			RCCWP_CustomWriteModule::Delete($customModule->id);
+		$sql = "DROP TABLE " . MF_TABLE_CUSTOM_FIELD_PROPERTIES; 
+		$wpdb->query($sql);
+
+		$sql = "DROP TABLE " . MF_TABLE_POST_META; 
+		$wpdb->query($sql);
+
+		$current = get_option('active_plugins');
+		$plugin = plugin_basename(MF_PLUGIN_DIR.'/Main.php');
+		array_splice($current, array_search( $plugin, $current), 1 );
+		do_action('deactivate_' . trim( $plugin ));
+		update_option('active_plugins', $current);
 	}
 	
 	function InCustomWritePanel()
