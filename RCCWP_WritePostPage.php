@@ -723,28 +723,10 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		$inputWidth = (int)$customField->properties['width'];
 		if ($customField->required_field) $requiredClass = "field_required";
 		
-		?>
-		<?php
-		
-		
-		
-		$wp_default_editor = wp_default_editor();
-		if ( 'html' == $wp_default_editor ) { ?>
-		    <script type="text/javascript">
-			jQuery(document).ready(function(){	   
-			    tinyMCE.execCommand('mceAddControl', true, "content");
-			    switchEditors.go('content', 'html');
-			});
-		    </script>
-	    <?php	} 
-		
-		
 		$hide_visual_editor = RCCWP_Options::Get('hide-visual-editor');
 		if ($hide_visual_editor == '' || $hide_visual_editor == 0){
 		?>
 		<script type="text/javascript">
-		jQuery(document).ready(function(){ 
-		    });
 			jQuery(document).ready(function(){	 
 			    tinyMCE.execCommand('mceAddControl', true, "<?php echo $inputName?>");
 			});

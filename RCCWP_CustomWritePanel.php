@@ -491,6 +491,8 @@ class RCCWP_CustomWritePanel
 	 */
 	function Import($panelFilePath, $writePanelName = false)
 	{
+		global $wpdb;
+		
 		include_once('RCCWP_CustomGroup.php');
 		include_once('RCCWP_CustomField.php');
 		include_once('RCCWP_Application.php');
@@ -501,9 +503,13 @@ class RCCWP_CustomWritePanel
 
 		if ($writePanelName == '') return false;
 
-		// Append a number if the panel already exists,
+		// Append a number if the panel already exists,	
 		$i = 1;
-		$newWritePanelName = $writePanelName;
+		$temp_name = $writePanelName;
+		while ($wpdb->get_var("SELECT id FROM ".MF_TABLE_PANELS." WHERE name='".$temp_name."'")){
+		    $temp_name = $writePanelName. "_" . $i++;
+		}
+		$writePanelName = $temp_name;
 
 		// Unserialize file
 		$imported_data = unserialize(file_get_contents($panelFilePath));
@@ -552,7 +558,7 @@ class RCCWP_CustomWritePanel
 	 * @param string $exportedFilename the full path of the file to which the panel will be exported
 	 */
 	function Export($panelID, $exportedFilename){
-		include_once('RCCWP_CustomWriteModule.php');
+		
 		include_once('RCCWP_CustomGroup.php');
 		include_once('RCCWP_CustomField.php');
 	
