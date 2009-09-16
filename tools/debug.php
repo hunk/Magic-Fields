@@ -13,7 +13,6 @@ class Debug{
      *  Writes logging info to a file.
      *
      *  @var $string  message 
-     *  @author David Valdez  <me@gnuget.org>
      */
      function log($msg,$path = "") {
          if(empty($path)){

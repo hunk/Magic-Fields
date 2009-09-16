@@ -67,8 +67,10 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 	$fieldValues = (array) RCCWP_CustomField::GetValues($single, $post_id, $fieldName, $groupIndex, $fieldIndex);
     if(empty($fieldValues)) return FALSE;
 
+	$fieldMetaID = RCCWP_CustomField::GetMetaID($post->ID, $fieldName, $groupIndex, $fieldIndex);
+	
 	$results = GetProcessedFieldValue($fieldValues, $fieldType, $fieldObject);
-    
+	
 	//filter for multine line
 	if($fieldType == $FIELD_TYPES['multiline_textbox']){
 		$results = apply_filters('the_content', $results);
