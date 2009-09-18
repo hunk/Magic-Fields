@@ -132,53 +132,6 @@ add_filter('posts_join_paged', array('RCCWP_Query', 'FilterCustomPostsJoin'));
 add_action('edit_page_form','cwp_add_pages_identifiers');
 add_action('edit_form_advanced','cwp_add_type_identifier');
 
-// -- KSES filter
-add_filter('pre_comment_content','mf_kses');
-add_filter('title_save_pre','mf_kses');
-//add_filter('content_save_pre','mf_kses');
-add_filter('excerpt_save_pre','mf_kses');
-add_filter('content_filtered_save_pre','mf_kses');
-
-
-
-/**
- *This only one wrapper function for wp_kses
- *this will be used for  passed  and empty array  to the wp_kses function
- *(probably this function will be deprecated soon just i need found a best way to-do this)
- *
- */
-function mf_kses($string){
-
-    /**
-     * Tags can't be used
-     */
-     $used_tags = array('select','script','b'); 
-
-
-    /**
-     * List of tags
-     */
-     $html_tags  = array(
-                            'address','applet','area','a','base','basefont','big','blockquote',
-                            'body','br','b','caption','center','cite','code','dd','dfn','dir',
-                            'div','dl','dt','em','font','form','h1','h2','h3','h4','h5','h6',
-                            'head','hr','html','img','input','isindex','i','kbd','link','li',
-                            'map','menu','meta','ol','option','param','pre','p','samp','script',
-                            'select','small','strike','strong','style','sub','sup','table','td',
-                            'textarea','th','title','tr','tt','ul','u','var'
-                        );
-
-     //remove that tag to the html_tag list
-     foreach($html_tags as $key => $value){
-         if(in_array($value,$used_tags)){
-            unset($html_tags[$key]);
-         }
-     }
-
-    return  wp_kses($string,array($html_tags));
-
-}
-
 function cwp_add_type_identifier(){
 
 	global $wpdb;
@@ -218,6 +171,7 @@ function cwp_add_pages_identifiers(){
 		
 EOF;
 }
+
 
 if ( !function_exists('sys_get_temp_dir')) {
   function sys_get_temp_dir() {
