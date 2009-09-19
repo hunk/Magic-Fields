@@ -10,13 +10,13 @@ class RCCWP_Processor
 		
 		if (isset($_POST['edit-with-no-custom-write-panel']))
 		{
-			
-			wp_redirect('post.php?action=edit&post=' . $_POST['post-id'] . '&no-custom-write-panel=' . $_POST['custom-write-panel-id']);
+			$type = RCCWP_Post::GetCustomWritePanel();
+			wp_redirect($type->type.'.php?action=edit&post=' . $_POST['post-id'] . '&no-custom-write-panel=' . $_POST['custom-write-panel-id']);
 		}
 		else if (isset($_POST['edit-with-custom-write-panel']))
 		{
-			
-			wp_redirect('post.php?action=edit&post=' . $_POST['post-id'] . '&custom-write-panel-id=' . $_POST['custom-write-panel-id']);
+			$type = RCCWP_Post::GetCustomWritePanel();
+			wp_redirect($type->type.'.php?action=edit&post=' . $_POST['post-id'] . '&custom-write-panel-id=' . $_POST['custom-write-panel-id']);
 		}
 	
         if(empty($_REQUEST['mf_action'])){
