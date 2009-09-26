@@ -112,7 +112,8 @@ GetGroupDuplicate = function(div,customGroupID,order){
                     groupCounter =  kids[i].id.split("_")[2];
                     ids = kids[i].id.split("_")[3];
                     jQuery("#order_"+groupCounter+"_"+ids).val(i+1);
-                    jQuery("#counter_"+groupCounter+"_"+ids).text(i+1);
+                    value =  i + 1;
+                    jQuery("#counter_"+groupCounter+"_"+ids).text("(" + value + ")");
                 }
         }
     });

@@ -367,7 +367,7 @@ class RCCWP_WritePostPage {
             ?>
                 <div class="write_panel_wrapper" id="write_panel_wrap_<?php echo $group->id;?>">
                 <?php
-             		      RCCWP_WritePostPage::GroupDuplicate($group,1,1,false) ;
+             		      RCCWP_WritePostPage::GroupDuplicate($group,1,1,false);
                           $gc = 1;
                 ?>
                 <input type='hidden' name='g<?php echo $group->id?>counter' id='g<?php echo $group->id?>counter' value='<?php echo $gc?>' />
@@ -442,13 +442,12 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		        	if( $customGroup->duplicate != 0 ){
 				?>
 			<div class="mf_toolbox">
-	    	
-				<span class="mf_counter" id="counter_<?php echo $customGroup->id;?>_<?php echo $groupCounter;?>">
-					(<?php echo $order;?>)
-				</span>
 				<span class="hndle sortable_mf row_mf">
 					<img title="Order" src="<?php echo MF_URI;?>/images/move.png"/>
 			    </span>
+				<span class="mf_counter" id="counter_<?php echo $customGroup->id;?>_<?php echo $groupCounter;?>">
+					(<?php echo $order;?>)
+				</span>
 			<span class="add_mf">
 				<?php
                     if($groupCounter != 1):?>

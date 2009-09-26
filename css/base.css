@@ -10,7 +10,7 @@
 }
 .row_mf { float:left;}
 .add_mf{float:right;}
-.mf_counter{ display:none;}
+.mf_counter{ display:inline;}
 .magicfield_group th { width: 30%;}
 		
 .magicfields{

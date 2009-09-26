@@ -27,10 +27,7 @@ Author URI: http://magicfields.org
 
 
 // Globals
-global $wpdb, $main_page, $table_prefix, $zones, $parents, $installed, $main_page, $post;
-global $current_user;
-global $wp_filesystem;
-global $FIELD_TYPES;
+global $wpdb,$post,$current_user,$FIELD_TYPES,$current_user;
 
 // Classes
 require_once 'PanelFields.php';
@@ -136,6 +133,7 @@ function cwp_add_type_identifier(){
 
 	global $wpdb;
 	global $post;
+	
 	
 	if( isset($_GET['custom-write-panel-id']) && !empty($_GET['custom-write-panel-id']))
 	{
