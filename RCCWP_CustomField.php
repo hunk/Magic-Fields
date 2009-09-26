@@ -29,6 +29,7 @@ class RCCWP_CustomField
 
 		$name = stripslashes(stripslashes($name));
 		$name = addslashes($name);
+		$name = str_replace(" ","_",$name);
 
 		$label = stripslashes(stripslashes($label));
 		$label = addslashes($label);
@@ -419,7 +420,7 @@ class RCCWP_CustomField
 	function Update($customFieldId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null, $duplicate)
 	{
 		global $wpdb;
-		
+		$name = str_replace(" ","_",$name);
 		$oldCustomField = RCCWP_CustomField::Get($customFieldId);
 		
 		if ($oldCustomField->name != $name)
