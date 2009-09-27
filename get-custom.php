@@ -146,143 +146,6 @@ function GetProcessedFieldValue($fieldValues, $fieldType, $fieldProperties=array
 		return $results[0];
 }
 
-// Get Image. 
-function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1,$post_id=NULL,$override_params=NULL) {
-	require_once("RCCWP_CustomField.php");
-	global $wpdb, $post;
-	
-	if(!$post_id){ $post_id = $post->ID; }
-	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
-	if(!$field) return FALSE;
-	
-	$fieldType = $field['type'];
-	$fieldID = $field['id'];
-	$fieldCSS = $field['CSS'];
-	$fieldObject = $field['properties'];
-	
-	$fieldValues = (array) RCCWP_CustomField::GetValues(true, $post_id, $fieldName, $groupIndex, $fieldIndex);
-    if(empty($fieldValues)) return FALSE;
-
-	if(!empty($fieldValues[0]))
-		$fieldValue = $fieldValues[0];
-	else 
-		return "";
-	
-	if (substr($fieldObject['params'], 0, 1) == "?"){
-			$fieldObject['params'] = substr($fieldObject['params'], 1);
-		}
-
-	if($override_params) {
-		$fieldObject['params'] = $override_params;
-	}
-
-	 //check if exist params, if not exist params, return original image
-	if (empty($fieldObject['params']) && (FALSE == strstr($fieldValue, "&"))){
-		$fieldValue = MF_FILES_URI.$fieldValue;
-	}else{
-		//check if exist thumb image, if exist return thumb image
-		$md5_params = md5($fieldObject['params']);
-		if (file_exists(MF_FILES_PATH.'th_'.$md5_params."_".$fieldValue)) {
-			$fieldValue = MF_FILES_URI.'th_'.$md5_params."_".$fieldValue;
-		}else{
-			//generate thumb
-			//include_once(MF_URI_RELATIVE.'thirdparty/phpthumb/phpthumb.class.php');
-			include_once(dirname(__FILE__)."/thirdparty/phpthumb/phpthumb.class.php");
-			$phpThumb = new phpThumb();
-			$phpThumb->setSourceFilename(MF_FILES_PATH.$fieldValue);
-			$create_md5_filename = 'th_'.$md5_params."_".$fieldValue;
-			$output_filename = MF_FILES_PATH.$create_md5_filename;
-			$final_filename = MF_FILES_URI.$create_md5_filename;
-
-			$params_image = explode("&",$fieldObject['params']);
-			foreach($params_image as $param){
-				if($param){
-					$p_image=explode("=",$param);
-					$phpThumb->setParameter($p_image[0], $p_image[1]);
-				}
-			}
-			if ($phpThumb->GenerateThumbnail()) {
-				if ($phpThumb->RenderToFile($output_filename)) {
-					$fieldValue = $final_filename;
-				}
-			}
-		}
-	}
-	
-	if($tag_img){
-		if (empty($fieldCSS)){
-			$finalString = stripslashes(trim("\<img src=\'".$fieldValue."\' /\>"));
-		}else{
-			$finalString = stripslashes(trim("\<img src=\'".$fieldValue."\' class=\"".$fieldCSS."\" \/\>"));
-		}
-	}else{
-		$finalString=$fieldValue;
-	}
-	return $finalString;
-}
-
-// generate image
-function gen_image ($fieldName, $groupIndex=1, $fieldIndex=1,$param=NULL,$attr=NULL,$post_id=NULL) {
-	require_once("RCCWP_CustomField.php");
-	global $wpdb, $post;
-	
-	if(!$post_id){ $post_id = $post->ID; }
-	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
-	if(!$field) return FALSE;
-	
-	$fieldType = $field['type'];
-	$fieldID = $field['id'];
-	$fieldCSS = $field['CSS'];
-	$fieldObject = $field['properties'];
-	
-	$fieldValue = RCCWP_CustomField::GetValues(true, $post_id, $fieldName, $groupIndex, $fieldIndex);
-    if(empty($fieldValue)) return FALSE;
-	
-	 //check if exist params, if not exist params, return original image
-	if (!count($param)){
-		$fieldValue = MF_FILES_URI.$fieldValue;
-	}else{
-		//check if exist thumb image, if exist return thumb image
-		$name_md5="";
-		foreach($param as $k => $v){
-			$name_md5.= $k."=".$v;
-		}
-		$md5_params = md5($name_md5);
-		if (file_exists(MF_FILES_PATH.'th_'.$md5_params."_".$fieldValue)) {
-			$fieldValue = MF_FILES_URI.'th_'.$md5_params."_".$fieldValue;
-		}else{
-			//generate thumb
-			include_once(dirname(__FILE__)."/thirdparty/phpthumb/phpthumb.class.php");
-			$phpThumb = new phpThumb();
-			$phpThumb->setSourceFilename(MF_FILES_PATH.$fieldValue);
-			$create_md5_filename = 'th_'.$md5_params."_".$fieldValue;
-			$output_filename = MF_FILES_PATH.$create_md5_filename;
-			$final_filename = MF_FILES_URI.$create_md5_filename;
-
-			foreach($param as $k => $v){
-					$phpThumb->setParameter($k, $v);
-			}
-			if ($phpThumb->GenerateThumbnail()) {
-				if ($phpThumb->RenderToFile($output_filename)) {
-					$fieldValue = $final_filename;
-				}
-			}
-		}
-	}
-	
-	if(count($attr)){
-		foreach($attr as $k => $v){
-			$add_attr .= $k."='".$v."' ";
-		}
-		$finalString = "<img src='".$fieldValue."' ".$add_attr." />";
-	}else{
-		$finalString = "<img src='".$fieldValue."' />";
-	}
-	
-	return $finalString;
-}
-
-
 // Get Audio. 
 function get_audio ($fieldName, $groupIndex=1, $fieldIndex=1,$post_id=NULL) {
 	require_once("RCCWP_CustomField.php");
@@ -380,6 +243,158 @@ function get_panel_name($safe=true)
 		return false;
 
 	return ($safe) ? sanitize_title_with_dashes($panel_name) : $panel_name;
+}
+
+// Get Image. 
+function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1,$post_id=NULL,$override_params=NULL) {
+	return create_image(array(
+		'fieldName' => $fieldName, 
+		'groupIndex' => $groupIndex, 
+		'fieldIndex' => $fieldIndex,
+		'param' => $override_params,
+		'post_id' => $post_id,
+		'tag_img' => (boolean) $tag_img
+	));
+}
+
+// generate image
+function gen_image ($fieldName, $groupIndex=1, $fieldIndex=1,$param=NULL,$attr=NULL,$post_id=NULL) {
+	return create_image(array(
+		'fieldName' => $fieldName, 
+		'groupIndex' => $groupIndex, 
+		'fieldIndex' => $fieldIndex,
+		'param' => $param,
+		'attr' => $attr,
+		'post_id' => $post_id
+	));
+}
+
+/*
+ * Generate an image from a field value
+ *
+ * Accepts a single options, an array of settings. 
+ * These are the parameteres it supports:
+ *
+ *   'fieldName' => (string) the name of the field which holds the image value, 
+ *   'groupIndex' => (int) which group set to display, 
+ *   'fieldIndex' => (int) which field set to display,
+ *   'param' => (string) a html parameter string to use with PHPThumb for the image,
+ *   'attr' => (array) an array of extra attributes and values for the image tag,
+ *   'post_id' => (int) a specific post id to fetch,
+ *   'tag_img' => (boolean) a flag to determine if an img tag should be created, or just return the link to the image file
+ *
+ */
+function create_image($options)
+{
+	require_once("RCCWP_CustomField.php");
+	global $wpdb, $post;
+	
+	// establish the default values, then override them with 
+	// whatever the user has passed in
+	$options = array_merge(array(
+		// the default options
+		'fieldName' => '', 
+		'groupIndex' => 1, 
+		'fieldIndex' => 1,
+		'param' => NULL,
+		'attr' => NULL,
+		'post_id' => NULL,
+		'tag_img' => true
+	), (array) $options);
+	
+	// finally extract them into variables for this function
+	extract($options);
+	
+	// check for a specified post id, or see if the $post global has one
+	if(!$post_id && isset($post->ID)){ 
+		$post_id = $post->ID; 
+	} else {
+		return false;
+	}
+	
+	// basic check
+	if(empty($fieldName)) return FALSE;
+	
+	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
+	if(!$field) return FALSE;
+	
+	$fieldType = $field['type'];
+	$fieldID = $field['id'];
+	$fieldCSS = $field['CSS'];
+	$fieldObject = $field['properties'];
+	
+	$fieldValues = (array) RCCWP_CustomField::GetValues(true, $post_id, $fieldName, $groupIndex, $fieldIndex);
+	if(empty($fieldValues)) return FALSE;
+
+	if(!empty($fieldValues[0]))
+		$fieldValue = $fieldValues[0];
+	else 
+		return "";
+	
+	// override the default phpthumb parameters if needed
+	if(!empty($param)) {
+		$fieldObject['params'] = $param;
+	}
+	
+	// remove the ? on the params if it happened to be there
+	if (substr($fieldObject['params'], 0, 1) == "?"){
+		$fieldObject['params'] = substr($fieldObject['params'], 1);
+	}
+
+	// check if exist params, if not exist params, return original image
+	if (empty($fieldObject['params']) && (FALSE === strstr($fieldValue, "&"))){
+		$fieldValue = MF_FILES_URI.$fieldValue;
+	}else{
+		//check if exist thumb image, if exist return thumb image
+		$md5_params = md5($fieldObject['params']);
+		if (file_exists(MF_FILES_PATH.'th_'.$md5_params."_".$fieldValue)) {
+			$fieldValue = MF_FILES_URI.'th_'.$md5_params."_".$fieldValue;
+		}else{
+			//generate thumb
+			include_once(dirname(__FILE__)."/thirdparty/phpthumb/phpthumb.class.php");
+			$phpThumb = new phpThumb();
+			$phpThumb->setSourceFilename(MF_FILES_PATH.$fieldValue);
+			$create_md5_filename = 'th_'.$md5_params."_".$fieldValue;
+			$output_filename = MF_FILES_PATH.$create_md5_filename;
+			$final_filename = MF_FILES_URI.$create_md5_filename;
+
+			$params_image = explode("&",$fieldObject['params']);
+			foreach($params_image as $param){
+				if($param){
+					$p_image=explode("=",$param);
+					$phpThumb->setParameter($p_image[0], $p_image[1]);
+				}
+			}
+			if ($phpThumb->GenerateThumbnail()) {
+				if ($phpThumb->RenderToFile($output_filename)) {
+					$fieldValue = $final_filename;
+				}
+			}
+		}
+	}
+	
+	if($tag_img){
+		// make sure the attributes are an array
+		if( !is_array($attr) ) $attr = (array) $attr;
+		
+		// we're generating an image tag, but there MAY be a default class. 
+		// if one was defined, however, override it
+		if( !isset($attr['class']) && !empty($fieldCSS) ) 
+			$attr['class'] = $fieldCSS;
+		
+		// ok, put it together now
+		if(count($attr)){
+			foreach($attr as $k => $v){
+				$add_attr .= $k."='".$v."' ";
+			}
+			$finalString = "<img src='".$fieldValue."' ".$add_attr." />";
+		}else{
+			$finalString = "<img src='".$fieldValue."' />";
+	    }
+	}else{
+		$finalString = $fieldValue;
+	}
+	return $finalString;
 }
 
 ?>
