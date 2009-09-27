@@ -11,11 +11,19 @@ class RCCWP_Processor
 		if (isset($_POST['edit-with-no-custom-write-panel']))
 		{
 			$type = RCCWP_Post::GetCustomWritePanel();
-			wp_redirect($type->type.'.php?action=edit&post=' . $_POST['post-id'] . '&no-custom-write-panel=' . $_POST['custom-write-panel-id']);
+			if( is_object($type) )
+				$ptype = $type->type;
+			else
+				$ptype = (strpos($_SERVER['REQUEST_URI'], 'page.php') !== FALSE ) ? 'page' : 'post';
+			wp_redirect($ptype.'.php?action=edit&post=' . $_POST['post-id'] . '&no-custom-write-panel');
 		}
-		else if (isset($_POST['edit-with-custom-write-panel']))
+		else if (isset($_POST['edit-with-custom-write-panel']) && isset($_POST['custom-write-panel-id']) && (int) $_POST['custom-write-panel-id'] > 0)
 		{
 			$type = RCCWP_Post::GetCustomWritePanel();
+			if( is_object($type) )
+				$ptype = $type->type;
+			else
+				$ptype = (strpos($_SERVER['REQUEST_URI'], 'page.php') !== FALSE ) ? 'page' : 'post';
 			wp_redirect($type->type.'.php?action=edit&post=' . $_POST['post-id'] . '&custom-write-panel-id=' . $_POST['custom-write-panel-id']);
 		}
 	
