@@ -64,6 +64,10 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 			break;
 	} 
 	
+    // make sure we're fetching the order correctly
+    $order = RCCWP_CustomField::GetOrderDuplicates($post_id, $fieldName);
+    $groupIndex = $order[$groupIndex];
+    
 	$fieldValues = (array) RCCWP_CustomField::GetValues($single, $post_id, $fieldName, $groupIndex, $fieldIndex);
     if(empty($fieldValues)) return FALSE;
 
