@@ -418,7 +418,7 @@ class RCCWP_Application
 		}
 		
 		if ($dir_list2 != ""){
-			echo "<div id='magic-fields-install-error-message' class='error'><p><strong>".__('Magic Fields is not ready yet.', $mf_domain)."</strong> ".__('must create the following folders (and must be writable):', $mf_domain)."</p><ul>";
+			echo "<div id='magic-fields-install-error-message' class='error'><p><strong>".__('Magic Fields is not ready yet.', $mf_domain)."</strong> ".__('must create the following folders (and must chmod 777):', $mf_domain)."</p><ul>";
 			echo $dir_list2;
 			echo "</ul></div>";
 		}
