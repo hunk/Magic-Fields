@@ -5,7 +5,7 @@ Plugin URI: http://magicfields.org
 Description: Create custom write panels and easily retrieve their values in your templates.
 Author: Hunk and Gnuget
 Version: 1.1
-Author URI: http://magicfields.org/
+Author URI: http://magicfields.org
 */
 
 
