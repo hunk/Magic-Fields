@@ -380,7 +380,6 @@ class RCCWP_WritePostPage {
 	}
 
     /**
-     * This method and   groupduplicated  will be merged in nexts commits
      * 
      * @param object $customGroup
      * @param integer $groupCounter
