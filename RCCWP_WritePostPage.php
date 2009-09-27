@@ -942,7 +942,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
         <!-- Here finish -->
 
 
-		<div id="image_photo" style="width:150px;">
+		<div id="image_photo" style="width:150px; float: left">
 		
 			<?php
 				if(!empty($valueRelative) && $valueRelative != "") { 
@@ -1033,8 +1033,8 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 				?>			
 		    </div>
 		</div>
-		<br />
-		<div id="image_input">
+        
+		<div id="image_input" style="padding-left: 170px;">
 			<?php
 				if(empty($requiredClass)){
 					$requiredClass ='';
@@ -1055,6 +1055,8 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 			?>
 
 		</div>
+        
+        <div style="clear: both; height: 1px;"> </div>
 		
 		<input type="hidden" name="rc_cwp_meta_photos[]" value="<?php echo $inputName?>" 	/>
 		<input type="hidden" name="<?php echo $inputName?>_dorename" id="<?php echo $inputName?>_dorename" value="0" />

@@ -194,7 +194,7 @@ body {
 	?>
 	
 
-	<table border="0" style="width:100%">
+	<table border="0">
 
 		<tr>
 			<?php if($_GET['canvas']!=0){ ?>
