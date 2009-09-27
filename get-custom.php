@@ -354,4 +354,24 @@ function getFieldOrder($field_name,$group=1,$post_id=NULL){
 
 	return $order; 
 }
+/**
+ * Return the name of the write panel the current post uses
+ * 
+ * @param boolean $safe make the return name 'url safe'
+ */
+function get_panel_name($safe=true)
+{
+	global $wpdb, $post;
+
+	$panel_id = $wpdb->get_var("SELECT `meta_value` FROM {$wpdb->postmeta} WHERE post_id = ".$post->ID.' AND meta_key = "'.RC_CWP_POST_WRITE_PANEL_ID_META_KEY.'"');
+	if( (int) $panel_id == 0 )
+		return false;
+	
+	$panel_name = $wpdb->get_var("SELECT `name` FROM ".MF_TABLE_PANELS." WHERE id = ".$panel_id);
+	if( ! $panel_name )
+		return false;
+
+	return ($safe) ? sanitize_title_with_dashes($panel_name) : $panel_name;
+}
+
 ?>
