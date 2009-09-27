@@ -143,7 +143,7 @@ function GetProcessedFieldValue($fieldValues, $fieldType, $fieldProperties=array
 }
 
 // Get Image. 
-function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1,$post_id=NULL) {
+function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1,$post_id=NULL,$override_params=NULL) {
 	require_once("RCCWP_CustomField.php");
 	global $wpdb, $post;
 	
@@ -167,7 +167,11 @@ function get_image ($fieldName, $groupIndex=1, $fieldIndex=1,$tag_img=1,$post_id
 	if (substr($fieldObject['params'], 0, 1) == "?"){
 			$fieldObject['params'] = substr($fieldObject['params'], 1);
 		}
-	
+
+	if($override_params) {
+		$fieldObject['params'] = $override_params;
+	}
+
 	 //check if exist params, if not exist params, return original image
 	if (empty($fieldObject['params']) && (FALSE == strstr($fieldValue, "&"))){
 		$fieldValue = MF_FILES_URI.$fieldValue;
