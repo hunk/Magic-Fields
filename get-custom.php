@@ -302,9 +302,11 @@ function create_image($options)
 	extract($options);
 	
 	// check for a specified post id, or see if the $post global has one
-	if(!$post_id && isset($post->ID)){ 
-		$post_id = $post->ID; 
-	} else {
+	if($post_id){
+		$post_id = $post_id;
+	}elseif(isset($post->ID)){
+		$post_id = $post->ID;
+	} else { echo "well";
 		return false;
 	}
 	
@@ -329,9 +331,11 @@ function create_image($options)
 	
 	// override the default phpthumb parameters if needed
 	if(!empty($param)) {
-		$fieldObject['params'] = $param;
+		$fieldObject['params']="";
+		foreach($param as $k => $v){
+			$fieldObject['params'].= $k."=".$v."&";
+		}
 	}
-	
 	// remove the ? on the params if it happened to be there
 	if (substr($fieldObject['params'], 0, 1) == "?"){
 		$fieldObject['params'] = substr($fieldObject['params'], 1);
@@ -340,7 +344,7 @@ function create_image($options)
 	// check if exist params, if not exist params, return original image
 	if (empty($fieldObject['params']) && (FALSE === strstr($fieldValue, "&"))){
 		$fieldValue = MF_FILES_URI.$fieldValue;
-	}else{
+	}else{ 
 		//check if exist thumb image, if exist return thumb image
 		$md5_params = md5($fieldObject['params']);
 		if (file_exists(MF_FILES_PATH.'th_'.$md5_params."_".$fieldValue)) {
