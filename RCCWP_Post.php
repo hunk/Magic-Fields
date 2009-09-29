@@ -149,14 +149,13 @@ class RCCWP_Post {
 	 * 2. Formats dates (Date Field) 
 	 *
 	 */
-	function PrepareFieldsValues($postId)
-	{
+	function PrepareFieldsValues($postId) {
+		global $wpdb;
 			
 		// Add params to photos
-		if( isset( $_REQUEST['rc_cwp_meta_photos'] ) ) 
-		{
-			foreach( $_REQUEST['rc_cwp_meta_photos'] as $meta_name )
-			{		
+		if( isset( $_REQUEST['rc_cwp_meta_photos'] ) ) {
+			
+			foreach( $_REQUEST['rc_cwp_meta_photos'] as $meta_name ) {		
 				$slashPos = strrpos($_POST[$meta_name], "/");
 				if (!($slashPos === FALSE))
 					$_POST[$meta_name] = substr($_POST[$meta_name], $slashPos+1);
@@ -169,6 +168,19 @@ class RCCWP_Post {
 					$_POST[$meta_name] = $newFilename;
 				}
 				
+				if($_POST[$meta_name.'_deleted'] == 1){	
+					$file = $_POST[$meta_name];
+					
+					$exists = $wpdb->get_row("select * from {$wpdb->postmeta} where meta_value =  '{$file}'");
+
+					if(!empty($exists->meta_id)){
+						//deleting from the wp  post_meta table
+						$wpdb->query("DELETE FROM  wp_postmeta where meta_id = {$exists->meta_id}");
+					}
+					
+					//deleting  the file
+					unlink(MF_FILES_PATH.$file);
+				}
 			}
 		}
 

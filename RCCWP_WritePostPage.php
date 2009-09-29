@@ -61,6 +61,11 @@ class RCCWP_WritePostPage {
 		wp_enqueue_script(	'mf_datepicker',
 							MF_URI.'js/custom_fields/datepicker.js'
 						);
+		
+		//loading the code for delete images
+		wp_enqueue_script(	'mf_image',
+							MF_URI.'js/custom_fields/image.js'
+						);
 						
 		//loading Prototype framework
 		wp_enqueue_script('prototype');
@@ -822,7 +827,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
                     //get  the name to the file
                     id = jQuery(this).attr("id").split("-")[1];
                     file = jQuery('#'+id).val();
-                    jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':file},
+                    jQuery.get('<?php echo MF_URI;?>RCCWP_.php',{'action':'delete','file':file},
                                 function(message){
                                     jQuery('#actions-'+id).empty();
                                     jQuery('#remove-'+id).empty();
@@ -862,7 +867,7 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 
 	function PhotoInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		global $mf_domain;
-		$customFieldId 	= ''; // <---- ¿?
+		
 		$filepath 		= $inputName . '_filepath'; /// <---- ¿?
 		$noimage 		= ""; // <---- if no exists image? 
 
@@ -870,18 +875,26 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		$imageThumbID = "";
 		$imageThumbID = "img_thumb_".$inputName; 
 
-
 		if (isset($_REQUEST['post'])) {
-			$customFieldId = $customField->id;
+
 			$value = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 
             $path = PHPTHUMB."?src=".MF_FILES_URI;
 			$valueRelative = $value;
 			$value = $path.$value;
-			if(!(strpos($value, 'http') === FALSE))
+		
+
+
+			if(!(strpos($value, 'http') === FALSE ) && !empty($valueRelative)){
 				$hidValue = str_replace('"', "'", $valueRelative);
 			$value = "<img src='".$value."' class='magicfields' />"; 
+			
+			}else{
+				$value = "<img src='".MF_URI."images/noimage.jpg' id='".$imageThumbID."'/>";
+			}	
+			
 		} else if( !empty($customField->value)){
+			
             $path = PHPTHUMB."?src=".MF_FILES_PATH;
             $valueRelative = $customField->value;
             $value  = $path.$customField->value;
@@ -890,13 +903,13 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
     		    $hidValue = str_replace('"', "'", $valueRelative);
 	    	    $value = "<img src='".$value."' class='magicfields' />";
             }
-
-
         }else{
 			$noimage = "<img src='".MF_URI."images/noimage.jpg' id='".$imageThumbID."'/>";
 		}
 		
-		if(!empty($valueRelative) && $valueRelative == '') {
+		
+		if(empty($valueRelative) || $valueRelative == '') {
+
 			$noimage = "<img src='".MF_URI."images/noimage.jpg' id='".$imageThumbID."'/>";
 		}
 
@@ -911,36 +924,10 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 	
 		?>
 
-		<p class="error_msg_txt" id="upload_progress_<?php echo $inputName?>" style="visibility:hidden;height:0px"></p>
-		
-
-        <!--- This Script is for remove the image -->
-	    <script type="text/javascript">
-            remove_photo = function(){
-                if(confirm("<?php _e('Are you sure?', $mf_domain); ?>")){
-                        //get the  name to the image
-                        id = jQuery(this).attr('id').split("-")[1];
-                        image = jQuery('#'+id).val();
-                        jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':image},
-                                    function(message){
-                                        if(message == "true"){
-                                            photo = "img_thumb_" + id;
-                                            jQuery("#"+photo).attr("src","<?php echo MF_URI."images/noimage.jpg"?>");
-                                            jQuery("#photo_edit_link_"+id).empty();
-                                            jQuery("#"+id).val("");
-
-                                        }
-                                    });
-                    }
-            }
-
-            jQuery(document).ready(function(){
-                jQuery(".remove").live('click',remove_photo);
-            });
-        </script>
-        <!-- Here finish -->
-
-
+		<p 	class="error_msg_txt" 
+			id="upload_progress_<?php echo $inputName?>"
+			style="visibility:hidden;height:0px"
+		></p>
 		<div id="image_photo" style="width:150px; float: left">
 		
 			<?php
@@ -1059,6 +1046,8 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		
 		<input type="hidden" name="rc_cwp_meta_photos[]" value="<?php echo $inputName?>" 	/>
 		<input type="hidden" name="<?php echo $inputName?>_dorename" id="<?php echo $inputName?>_dorename" value="0" />
+		
+		<input type="hidden" name="<?php echo $inputName?>_deleted" id="<?php echo $inputName;?>_deleted" value="0" />
 		
 
 		<!-- Used to store name of URL Field -->
