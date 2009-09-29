@@ -274,7 +274,7 @@ function gen_image ($fieldName, $groupIndex=1, $fieldIndex=1,$param=NULL,$attr=N
  *   'fieldName' => (string) the name of the field which holds the image value, 
  *   'groupIndex' => (int) which group set to display, 
  *   'fieldIndex' => (int) which field set to display,
- *   'param' => (string) a html parameter string to use with PHPThumb for the image,
+ *   'param' => (string|array) a html parameter string to use with PHPThumb for the image, can also be a key/value array
  *   'attr' => (array) an array of extra attributes and values for the image tag,
  *   'post_id' => (int) a specific post id to fetch,
  *   'tag_img' => (boolean) a flag to determine if an img tag should be created, or just return the link to the image file
@@ -330,11 +330,17 @@ function create_image($options)
 		return "";
 	
 	// override the default phpthumb parameters if needed
+    // works with both strings and arrays
 	if(!empty($param)) {
-		$fieldObject['params']="";
-		foreach($param as $k => $v){
-			$fieldObject['params'].= $k."=".$v."&";
-		}
+        if(is_array($param)){
+            $p = array();
+            foreach($param as $k => $v){
+                $p[] = $k."=".$v;
+            }
+            $fieldObject['params'] = implode('&', $p);
+        } else {
+            $fieldObject['params'] = $param;
+        }
 	}
 	// remove the ? on the params if it happened to be there
 	if (substr($fieldObject['params'], 0, 1) == "?"){
