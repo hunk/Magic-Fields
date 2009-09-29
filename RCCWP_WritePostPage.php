@@ -1048,11 +1048,6 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 		<input type="hidden" name="<?php echo $inputName?>_dorename" id="<?php echo $inputName?>_dorename" value="0" />
 		
 		<input type="hidden" name="<?php echo $inputName?>_deleted" id="<?php echo $inputName;?>_deleted" value="0" />
-		
-
-		<!-- Used to store name of URL Field -->
-		<!--<input type="hidden" name="parent_text_<?php echo $countImageThumbID; ?>" id="parent_text_<?php echo $countImageThumbID; ?>" value="<?php echo $filepath; ?>"/>
-		<input type="hidden" name="hidImgValue<?php echo $countImageThumbID; ?>" id="hidImgValue<?php echo $countImageThumbID; ?>" value="<?php echo $inputName; ?>_last" />-->
 
 		<?php
 	}

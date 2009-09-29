@@ -91,6 +91,7 @@ if (isset($_POST['fileframe']))
 		if (<?php echo $operationSuccess?>){
 			par.getElementById("<?php echo $_POST["input_name"]?>").value = "<?php echo $filename?>";
 			
+			par.getElementById("<?php echo $_POST["input_name"];?>_deleted").value = 0;
 			//Set image
 			<?php
 				//$newImagePath = MF_URI.'phpThumb.php
