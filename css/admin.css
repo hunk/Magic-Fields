@@ -1,0 +1,9 @@
+/* css to style the admin menu nicely */
+
+#adminmenu .mf-menu-edit-posts div.wp-menu-image {
+background:transparent url(../images/menu.png) no-repeat scroll -272px -33px;
+}
+
+#adminmenu .mf-menu-edit-pages div.wp-menu-image {
+background:transparent url(../images/menu.png) no-repeat scroll -151px -33px;
+}
