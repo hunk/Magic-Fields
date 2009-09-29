@@ -91,6 +91,9 @@ if (is_admin()) {
 		add_filter('posts_where', array('RCCWP_Menu', 'FilterPostsPagesList'));
 		add_action('admin_head', array('RCCWP_Menu', 'HighlightCustomPanel'));
 		add_action('admin_head', array('RCCWP_CreateCustomFieldPage', 'AddAjaxDynamicList'));
+        
+        add_action('admin_head', 'mf_admin_style');
+
 
 		// -- Hook all functions related to saving posts in order to save custom fields values
 		require_once ('RCCWP_Post.php');	
@@ -182,4 +185,10 @@ if ( !function_exists('sys_get_temp_dir')) {
     }
   }
 }
+
+function mf_admin_style() {
+    $url = MF_URI.'css/admin.css';
+    echo '<link rel="stylesheet" type="text/css" href="' . $url . '" />';
+}
+
 ?>

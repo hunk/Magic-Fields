@@ -259,7 +259,7 @@ class RCCWP_Menu
 					$type_write_panel="edit-pages";	
 				}
 				
-				$new_menu[$base+$offset] = array( __($panel->name), $type_write_panel, $base+$offset.'.php', '', 'wp-menu-open menu-top', 'menu-pages', 'div' );
+				$new_menu[$base+$offset] = array( __($panel->name), $type_write_panel, $base+$offset.'.php', '', 'wp-menu-open menu-top mf-menu-'.$type_write_panel, 'mf-menu-'.($base+$offset), 'div' );
 				if ($assignToRole == 1){
 					$requiredPostsCap = $panel->capability_name;
 					$requiredPagesCap = $panel->capability_name;
