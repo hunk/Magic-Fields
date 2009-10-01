@@ -10,7 +10,6 @@ remove_photo = function(){
          image = jQuery('#'+id).val();
          jQuery("#"+id+"_deleted").val(1);
          jQuery("#img_thumb_"+id).attr("src",mf_path+"images/noimage.jpg");
-         jQuery("#"+id).val("");
          jQuery("#photo_edit_link_"+id).empty();
     }
 }

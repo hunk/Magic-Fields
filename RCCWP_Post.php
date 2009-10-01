@@ -55,8 +55,7 @@ class RCCWP_Post {
 		$customWritePanelId = $_POST['rc-cwp-custom-write-panel-id'];
 		$customFieldKeys = $_POST['rc_cwp_meta_keys'];
 		
-		if (!empty($customWritePanelId) && !empty($customFieldKeys) )
-		{
+		if (!empty($customWritePanelId) && !empty($customFieldKeys) ) {
 				
 			// --- Delete old values
 			foreach ($customFieldKeys as $key)
@@ -75,12 +74,9 @@ class RCCWP_Post {
 			$wpdb->query("DELETE FROM ". MF_TABLE_POST_META .
 				" WHERE post_id=$postId");
 
-			// --- Make sure all groups/fields duplicates are in sequence, 
-			//		i.e. there is no gap due to removing items
 			
 			$arr = ARRAY();
-			foreach($customFieldKeys as $key=>$value)
-			{
+			foreach($customFieldKeys as $key=>$value) {
 				list($customFieldId, $groupCounter, $fieldCounter, $groupId,$rawCustomFieldName) = split("_", $value, 5);
 				$arr[$key]->id = $customFieldId ;
 				$arr[$key]->gc = $groupCounter ;
@@ -116,7 +112,6 @@ class RCCWP_Post {
 						{
 							$value = stripslashes(trim($value));
 							array_push($finalValue, $value);
-							//add_post_meta($postId, $customFieldName, $value);
 						}
 					}
 					else
@@ -124,7 +119,6 @@ class RCCWP_Post {
 						$finalValue = stripslashes(trim($customFieldValue));
 					}
             
-                   
     				// Add field value meta data
 					add_post_meta($postId, $customFieldName, $finalValue);
 					
@@ -169,17 +163,28 @@ class RCCWP_Post {
 				}
 				
 				if($_POST[$meta_name.'_deleted'] == 1){	
+
 					$file = $_POST[$meta_name];
 					
 					$exists = $wpdb->get_row("select * from {$wpdb->postmeta} where meta_value =  '{$file}'");
 
 					if(!empty($exists->meta_id)){
 						//deleting from the wp  post_meta table
-						$wpdb->query("DELETE FROM  wp_postmeta where meta_id = {$exists->meta_id}");
+						$wpdb->query("DELETE FROM  {$wpdb->postmeta} where meta_id = {$exists->meta_id}");
+						
+						//deleting from the  mf_post_meta table
+						$wpdb->query("DELETE FROM ".MF_TABLE_POST_META." WHERE id = {$exists->meta_id}");
+						
 					}
-					
 					//deleting  the file
 					unlink(MF_FILES_PATH.$file);
+					
+					//removing from the $_POST['rc_cwp_meta_keys']
+					//for avoid to this image be re-inserted
+					$key = array_search($meta_name,$_POST['rc_cwp_meta_keys']);
+					if($key !== false){
+						unset($_POST['rc_cwp_meta_keys'][$key]);	
+					}
 				}
 			}
 		}
