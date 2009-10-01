@@ -1,15 +1,16 @@
 /* css to style the admin menu nicely */
 
-#adminmenu .mf-menu-edit-posts div.wp-menu-image {
-background:transparent url(../images/menu.png) no-repeat scroll -272px -33px;
+#adminmenu .mf-menu-edit-posts div.wp-menu-image,
+#adminmenu .mf-menu-edit-pages div.wp-menu-image  {
+    background:transparent url('../../../../wp-admin/images/menu.png') no-repeat scroll -272px -33px;
 }
 #adminmenu .mf-menu-edit-posts:hover div.wp-menu-image {
-	background: transparent url("../images/menu.png") no-repeat scroll -272px -1px;
+	background-position: -272px -1px;
 }
 
 #adminmenu .mf-menu-edit-pages div.wp-menu-image {
-background:transparent url(../images/menu.png) no-repeat scroll -151px -33px;
+    background-position: -151px -33px;
 }
 #adminmenu .mf-menu-edit-pages:hover div.wp-menu-image {
-	background: transparent url("../images/menu.png") no-repeat scroll -151px -1px;
+	background-position: -151px -1px;
 }
