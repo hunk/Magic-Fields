@@ -35,6 +35,7 @@ if(isset($current_blog)){
 
 // Tables containing somehow constant data
 define('MF_TABLE_CUSTOM_FIELD_TYPES', $mf_prefix  . 'mf_custom_field_types');
+//TODO: check this table
 define('MF_TABLE_STANDARD_FIELDS', $mf_prefix  . 'mf_standard_fields');
 
 // Panels - Groups - Fields
@@ -45,6 +46,7 @@ define('MF_TABLE_GROUP_FIELDS', $mf_prefix  . 'mf_panel_custom_field');
 // Extra information about panels
 define('MF_TABLE_PANEL_CATEGORY', $mf_prefix  . 'mf_panel_category');
 define('MF_TABLE_PANEL_STANDARD_FIELD', $mf_prefix  . 'mf_panel_standard_field');
+// TODO: check this table
 define('MF_TABLE_PANEL_HIDDEN_EXTERNAL_FIELD', $mf_prefix  . 'mf_panel_hidden_external_field');
 
 // Extra information about fields
