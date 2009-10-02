@@ -1091,14 +1091,17 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 			$customFieldId = $customField->id;
 			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
 			
-			$value = date($customField->properties['format'],strtotime($value));
-			
+			if(!empty($value)){
+				$value = date($customField->properties['format'],strtotime($value));
+			}else{	
+				$value =  date($customField->properties['format']);
+			}		
 		} else { 
 			$value =  date($customField->properties['format']);
 		}
 		
 		$dateFormat = $customField->properties['format'];
-		
+		$today = date($dateFormat);
 		
 		$field_group = RCCWP_CustomGroup::Get($customField->group_id);
 		$inputSize = 25;
@@ -1129,7 +1132,11 @@ if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$a
 				value="Today" 
 				class="todaybotton_mf"
 		/>
-
+		<input 	type="hidden"
+				value="<?php echo $today;?>"
+				id="tt_<?php echo $inputName;?>"
+				class="todaydatebutton_mf"
+		/>
 		<input 
 				type="hidden" 
 				name="rc_cwp_meta_date[]" 

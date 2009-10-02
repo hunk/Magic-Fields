@@ -29,18 +29,11 @@ jQuery(document).ready(function(){
 	jQuery('.todaybotton_mf').click(function(){
 	    the_id = jQuery(this).attr('id');
 	    picker = the_id.replace(/today_/,'');
-	    format = jQuery('#format_date_field_'+picker).text();
-        format = switch_formats(format);
-	    picker = 'display_date_field_' + picker;
+	    today = 'tt_' + picker;    
+	    today = jQuery('#'+today);
+	    date = today.val();
 	    
-        field = jQuery('#'+picker);
-        field.datepicker();
-        field.datepicker('option','dateFormat',format);
-	    field.datepicker('option','currentText','Now');
-	    field.datepicker('destroy');
-	    
-	    date = field.val();
-	    
+        jQuery('#display_date_field_'+picker).val(date);
 	    input = picker.replace(/display_/,'');
 	    input = jQuery('#'+input);
 	    input.val(date)

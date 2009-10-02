@@ -26,7 +26,12 @@ Author URI: http://magicfields.org
 
 
 // Globals
-global $wpdb,$post,$current_user,$FIELD_TYPES,$current_user;
+global $wpdb,$post,$current_user,$FIELD_TYPES,$current_user,$flag;
+
+
+//for this save_post action doesn't execute  twice
+$flag = 0;
+
 
 // Classes
 require_once 'PanelFields.php';
