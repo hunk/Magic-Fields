@@ -368,7 +368,7 @@ class RCCWP_CustomField
 		global $wpdb, $FIELD_TYPES;
 		
 		$customFieldvalues = $wpdb->get_row(
-			"SELECT cf.id, cf.type,cf.CSS,fp.properties 
+			"SELECT cf.id, cf.type,cf.CSS,fp.properties,cf.description 
 				FROM ". MF_TABLE_GROUP_FIELDS . " cf 
 					LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
 					WHERE cf.name = '$customFieldName' 

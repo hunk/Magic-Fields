@@ -403,4 +403,100 @@ function create_image($options)
 	return $finalString;
 }
 
+function get_group($name_group,$post_id=NULL){
+	global $wpdb, $post,$FIELD_TYPES;
+	
+	if(!$post_id){ $post_id = $post->ID; }
+	
+	$sql = "SELECT		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
+			FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
+						".MF_TABLE_GROUP_FIELDS." cf 
+			LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
+			WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND 
+						g.name='$name_group' AND pm_wp.meta_id=pm.id 
+			ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
+		$data_groups = $wpdb->get_results($sql);
+
+	$info = null;
+	foreach($data_groups as $data){
+		switch($data->type){
+			case $FIELD_TYPES["textbox"]:
+			case $FIELD_TYPES["radiobutton_list"]:
+			case $FIELD_TYPES["dropdown_list"]:
+			case $FIELD_TYPES["color_picker"]:
+			case $FIELD_TYPES["slider"]:
+				$info[$data->order_id][$data->field_name][$data->field_count] = $data->meta_value;
+				break;
+			case $FIELD_TYPES['multiline_textbox']:
+				$info[$data->order_id][$data->field_name][$data->field_count] = apply_filters('the_content', $data->meta_value);
+				break;
+			case $FIELD_TYPES["checkbox"]: 		
+					if ($data->meta_value == 'true')  $fieldValue = 1; else $fieldValue = 0;
+					$info[$data->order_id][$data->field_name][$data->field_count] = $fieldValue; 
+					break;
+			case $FIELD_TYPES["checkbox_list"]:
+			case $FIELD_TYPES["listbox"]:
+					$info[$data->order_id][$data->field_name][$data->field_count] = unserialize($data->meta_value);
+				break;
+			case $FIELD_TYPES["audio"]:
+			case $FIELD_TYPES["file"]:
+				if ($data->meta_value != ""){ $fieldValue = MF_FILES_URI.$data->meta_value;}else{$fieldValue= null;}
+				$info[$data->order_id][$data->field_name][$data->field_count] = $fieldValue;
+				break;
+			case $FIELD_TYPES['image']:
+				if($data->meta_value != ""){
+					$format = unserialize($data->properties);
+					if($format) $info[$data->order_id][$data->field_name][$data->field_count]['t'] = aux_image($data->meta_value,$format['params']);
+					$info[$data->order_id][$data->field_name][$data->field_count]['o'] = MF_FILES_URI.$data->meta_value;		
+				}
+				break;
+			case $FIELD_TYPES['date']:
+				$format = unserialize($data->properties);
+				$fieldValue = GetProcessedFieldValue($data->meta_value, $data->type, $format);
+				$info[$data->order_id][$data->field_name][$data->field_count] = $fieldValue;
+				break;
+		}
+	}
+	return $info;
+}
+
+function aux_image($fieldValue,$params_image){
+	$md5_params = md5($params_image);
+	if (file_exists(MF_FILES_PATH.'th_'.$md5_params."_".$fieldValue)) {
+		$fieldValue = MF_FILES_URI.'th_'.$md5_params."_".$fieldValue;
+	}else{
+		//generate thumb
+		include_once(dirname(__FILE__)."/thirdparty/phpthumb/phpthumb.class.php");
+		$phpThumb = new phpThumb();
+		$phpThumb->setSourceFilename(MF_FILES_PATH.$fieldValue);
+		$create_md5_filename = 'th_'.$md5_params."_".$fieldValue;
+		$output_filename = MF_FILES_PATH.$create_md5_filename;
+		$final_filename = MF_FILES_URI.$create_md5_filename;
+
+		$params_image = explode("&",$params_image);
+		foreach($params_image as $param){
+			if($param){
+				$p_image=explode("=",$param);
+				$phpThumb->setParameter($p_image[0], $p_image[1]);
+			}
+		}
+		if ($phpThumb->GenerateThumbnail()) {
+			if ($phpThumb->RenderToFile($output_filename)) {
+				$fieldValue = $final_filename;
+			}
+		}
+	}
+	return $fieldValue;
+}
+
+function get_label($fieldName,$post_id=NULL) {
+	require_once("RCCWP_CustomField.php");
+	global $wpdb, $post;
+	
+	if(!$post_id){ $post_id = $post->ID; }
+	
+	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
+	if(!$field) return FALSE;
+	return $field['description'];
+}
 ?>

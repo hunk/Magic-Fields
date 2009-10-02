@@ -69,7 +69,9 @@ $FIELD_TYPES = array(
 					"file" => 8,
 					"image" => 9,
 					"date" => 10,
-					"audio" => 11
+					"audio" => 11,
+					'color_picker' => 12,
+					'slider' => 13
 					);
 
 // Field Types
