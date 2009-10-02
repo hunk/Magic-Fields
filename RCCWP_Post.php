@@ -163,28 +163,10 @@ class RCCWP_Post {
 				}
 				
 				if($_POST[$meta_name.'_deleted'] == 1){	
-
 					$file = $_POST[$meta_name];
-					
-					$exists = $wpdb->get_row("select * from {$wpdb->postmeta} where meta_value =  '{$file}'");
-
-					if(!empty($exists->meta_id)){
-						//deleting from the wp  post_meta table
-						$wpdb->query("DELETE FROM  {$wpdb->postmeta} where meta_id = {$exists->meta_id}");
-						
-						//deleting from the  mf_post_meta table
-						$wpdb->query("DELETE FROM ".MF_TABLE_POST_META." WHERE id = {$exists->meta_id}");
-						
-					}
 					//deleting  the file
 					unlink(MF_FILES_PATH.$file);
-					
-					//removing from the $_POST['rc_cwp_meta_keys']
-					//for avoid to this image be re-inserted
-					$key = array_search($meta_name,$_POST['rc_cwp_meta_keys']);
-					if($key !== false){
-						unset($_POST['rc_cwp_meta_keys'][$key]);	
-					}
+					$_POST[$meta_name] = '';
 				}
 			}
 		}
