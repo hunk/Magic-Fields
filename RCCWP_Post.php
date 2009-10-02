@@ -2,18 +2,30 @@
 class RCCWP_Post {	
 	
 	function SaveCustomFields($postId){
-	
+		global $flag;
+		
+		if($flag == 0){
+			
+			//for this save_post action doesn't execute  twice
+			$flag = 1;
+			
+			
+		//security
 		if(!wp_verify_nonce($_REQUEST['rc-custom-write-panel-verify-key'], 'rc-custom-write-panel'))
 			return $postId;
-        		
-		if (!current_user_can('edit_post', $postId))
+        
+		//the user  can edit posts?
+		if (!current_user_can('edit_post', $postId)){
 			return $postId;
+		}
+		
+		
 		RCCWP_Post::SetCustomWritePanel($postId);
 		RCCWP_Post::PrepareFieldsValues($postId);
 		RCCWP_Post::SetMetaValues($postId);
-		
 
 		return $postId;
+		}
 	}
 	
 		
@@ -147,7 +159,7 @@ class RCCWP_Post {
 		global $wpdb;
 			
 		// Add params to photos
-		if( isset( $_REQUEST['rc_cwp_meta_photos'] ) ) {
+		if( isset( $_REQUEST['rc_cwp_meta_photos'])) {
 			
 			foreach( $_REQUEST['rc_cwp_meta_photos'] as $meta_name ) {		
 				$slashPos = strrpos($_POST[$meta_name], "/");
@@ -162,6 +174,7 @@ class RCCWP_Post {
 					$_POST[$meta_name] = $newFilename;
 				}
 				
+				//if is deleted
 				if($_POST[$meta_name.'_deleted'] == 1){	
 					$file = $_POST[$meta_name];
 					//deleting  the file
@@ -172,12 +185,10 @@ class RCCWP_Post {
 		}
 
 		// Format Dates
-		if( isset( $_REQUEST['rc_cwp_meta_date'] ) )
-		{
-			foreach( $_REQUEST['rc_cwp_meta_date'] as $meta_name )
-			{
+		if( isset( $_REQUEST['rc_cwp_meta_date'])){
+			foreach( $_REQUEST['rc_cwp_meta_date'] as $meta_name ) {
 				$metaDate = strtotime($_POST[$meta_name]);
-				$formatted_date = strftime("%Y-%m-%d", $metaDate);
+				$formatted_date = date('Y-m-d',$metaDate);
 				$_POST[$meta_name] = $formatted_date;
 			}
 		}
@@ -208,8 +219,7 @@ class RCCWP_Post {
 			$customWritePanelId = (int)$_REQUEST['custom-write-panel-id'];
 		}
 		
-		if (isset($customWritePanelId))
-		{
+		if (isset($customWritePanelId)) {
 			include_once('RCCWP_Application.php');
 			$customWritePanel = RCCWP_CustomWritePanel::Get($customWritePanelId);
 		}
@@ -220,8 +230,7 @@ class RCCWP_Post {
 
 	/**
 	 *
-	 *
-	*/
+	 */
 	function DeletePostMetaData($postId)
 	{
 		global $wpdb;
