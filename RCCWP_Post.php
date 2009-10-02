@@ -187,7 +187,7 @@ class RCCWP_Post {
 		// Format Dates
 		if( isset( $_REQUEST['rc_cwp_meta_date'])){
 			foreach( $_REQUEST['rc_cwp_meta_date'] as $meta_name ) {
-				$metaDate = strtotime($_POST[$meta_name])) === false;
+				$metaDate = strtotime($_POST[$meta_name]);
 				$formatted_date = date('Y-m-d',$metaDate);
 				$_POST[$meta_name] = $formatted_date;
 			}
