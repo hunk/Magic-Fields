@@ -121,9 +121,14 @@ add_action('admin_print_scripts', array('RCCWP_Menu', 'AddThickbox'));
 add_action('admin_menu', array('RCCWP_Menu', 'AttachMagicFieldsMenus'));
 
 require_once ('RCCWP_EditnPlace.php');
-add_action('wp_head', array('RCCWP_EditnPlace', 'EditnHeader'));
-//Adding  javascript for the editnplace in the public pages
-add_action('template_redirect',array('RCCWP_EditnPlace','EditnPlaceJavascript'));
+require_once ('RCCWP_Options.php');
+
+// Adding javascript for the editnplace if it is turned on
+$customWritePanelOptions = RCCWP_Options::Get();
+if( $customWritePanelOptions['enable-editnplace'] ) {
+    add_action('wp_head', array('RCCWP_EditnPlace', 'EditnHeader'));
+    add_action('template_redirect',array('RCCWP_EditnPlace','EditnPlaceJavascript'));
+}
 
 require_once ('RCCWP_Query.php');
 add_action('pre_get_posts', array('RCCWP_Query', 'FilterPrepare'));
