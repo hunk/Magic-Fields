@@ -1,6 +1,6 @@
 # Magic Fields
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
-* Contributors: [Freshout](http://freshout.us "Freshout")
+* Contributors: [Freshout](http://freshout.us "Freshout") [Jeff Minard](http://jrm.cc/ "Jeff Minard")
 * Tested up to: Wordpress 2.7
 * Stable tag: 1.1
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
