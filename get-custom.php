@@ -45,29 +45,17 @@ function getFieldDuplicates ($fieldName, $groupIndex) {
  */
 function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_id=NULL) {
 	require_once("RCCWP_CustomField.php");
-	global $wpdb, $post, $FIELD_TYPES;
+	global $post, $FIELD_TYPES;
 	
 	if(!$post_id){ $post_id = $post->ID; }
-	
-	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
+	$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
 	if(!$field) return FALSE;
 	
 	$fieldType = $field['type'];
 	$fieldID = $field['id'];
 	$fieldObject = $field['properties'];
-	
-	$single = true;
-	switch($fieldType){
-		case $FIELD_TYPES["checkbox_list"]:
-		case $FIELD_TYPES["listbox"]:
-			$single = false;
-			break;
-	} 
-	
-	$fieldValues = (array) RCCWP_CustomField::GetValues($single, $post_id, $fieldName, $groupIndex, $fieldIndex);
-    if(empty($fieldValues)) return FALSE;
-
-	$fieldMetaID = RCCWP_CustomField::GetMetaID($post->ID, $fieldName, $groupIndex, $fieldIndex);
+	$fieldValues = (array)$field['meta_value'];
+	$fieldMetaID = $field['meta_id'];
 	
 	$results = GetProcessedFieldValue($fieldValues, $fieldType, $fieldObject);
 	
@@ -145,22 +133,16 @@ function GetProcessedFieldValue($fieldValues, $fieldType, $fieldProperties=array
 // Get Audio. 
 function get_audio ($fieldName, $groupIndex=1, $fieldIndex=1,$post_id=NULL) {
 	require_once("RCCWP_CustomField.php");
-	global $wpdb, $post;
+	global $post;
 	
 	if(!$post_id){ $post_id = $post->ID; }
-	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
+	$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
 	if(!$field) return FALSE;
-	
 	$fieldType = $field['type'];
 	$fieldID = $field['id'];
+	$fieldValue = $field['meta_value'];
 	
-	$fieldValues = (array) RCCWP_CustomField::GetValues(true, $post_id, $fieldName, $groupIndex, $fieldIndex);
-    if(empty($fieldValues)) return FALSE;
-	
-	if(!empty($fieldValues))
-		$fieldValue = $fieldValues[0];
-	else 
-		return "";
+    if(empty($fieldValue)) return FALSE;
 		
 	$path = MF_FILES_URI;
 	$fieldValue = $path.$fieldValue;
@@ -283,7 +265,7 @@ function gen_image ($fieldName, $groupIndex=1, $fieldIndex=1,$param=NULL,$attr=N
 function create_image($options)
 {
 	require_once("RCCWP_CustomField.php");
-	global $wpdb, $post;
+	global $post;
 	
 	// establish the default values, then override them with 
 	// whatever the user has passed in
@@ -306,28 +288,23 @@ function create_image($options)
 		$post_id = $post_id;
 	}elseif(isset($post->ID)){
 		$post_id = $post->ID;
-	} else { echo "well";
+	} else {
 		return false;
 	}
 	
 	// basic check
 	if(empty($fieldName)) return FALSE;
 	
-	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
+	$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
 	if(!$field) return FALSE;
 	
 	$fieldType = $field['type'];
 	$fieldID = $field['id'];
 	$fieldCSS = $field['CSS'];
 	$fieldObject = $field['properties'];
-	
-	$fieldValues = (array) RCCWP_CustomField::GetValues(true, $post_id, $fieldName, $groupIndex, $fieldIndex);
-	if(empty($fieldValues)) return FALSE;
+	$fieldValue = $field['meta_value'];
 
-	if(!empty($fieldValues[0]))
-		$fieldValue = $fieldValues[0];
-	else 
-		return "";
+	if(empty($fieldValue)) return "";
 	
 	// override the default phpthumb parameters if needed
     // works with both strings and arrays
@@ -404,7 +381,7 @@ function create_image($options)
 }
 
 function get_group($name_group,$post_id=NULL){
-	global $wpdb, $post,$FIELD_TYPES;
+	global $wpdb, $post, $FIELD_TYPES;
 	
 	if(!$post_id){ $post_id = $post->ID; }
 	
@@ -491,7 +468,7 @@ function aux_image($fieldValue,$params_image){
 
 function get_label($fieldName,$post_id=NULL) {
 	require_once("RCCWP_CustomField.php");
-	global $wpdb, $post;
+	global $post;
 	
 	if(!$post_id){ $post_id = $post->ID; }
 	

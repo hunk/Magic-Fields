@@ -519,5 +519,25 @@ class RCCWP_CustomField
 			$wpdb->query($sql);	
 		}
 	}
+	
+	function GetDataField($customFieldName, $groupIndex=1, $fieldIndex=1,$postId){
+		global $wpdb, $FIELD_TYPES;
+		$customFieldName = str_replace(" ","_",$customFieldName);
+		
+		$customFieldvalues = $wpdb->get_row(
+			"SELECT pm.meta_id,pm.meta_value, cf.id, cf.type,cf.CSS,fp.properties,cf.description 
+			FROM wp_mf_post_meta pm_mf, wp_postmeta pm, wp_mf_panel_custom_field cf LEFT JOIN wp_mf_custom_field_properties fp ON fp.custom_field_id = cf.id 
+			WHERE cf.name = '$customFieldName' AND cf.name = pm_mf.field_name AND group_count = $groupIndex AND field_count = $fieldIndex AND pm_mf.post_id= $postId AND pm_mf.id = pm.meta_id AND cf.group_id in ( SELECT mg.id FROM wp_mf_module_groups mg, wp_postmeta pm WHERE mg.panel_id = pm.meta_value AND pm.meta_key = '_mf_write_panel_id' AND pm.post_id = $postId)
+			",ARRAY_A);
+										
+		if (empty($customFieldvalues)) return false;
+		$customFieldvalues['properties'] = unserialize($customFieldvalues['properties']);
+		
+		if($customFieldvalues['type'] == $FIELD_TYPES["checkbox_list"] OR $customFieldvalues['type'] == $FIELD_TYPES["listbox"] )
+			$customFieldvalues['meta_value'] = unserialize($customFieldvalues['meta_value']);
+								
+		return $customFieldvalues;
+		
+	}
 }
 ?>
