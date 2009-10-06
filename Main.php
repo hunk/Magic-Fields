@@ -133,6 +133,7 @@ if( $customWritePanelOptions['enable-editnplace'] ) {
 require_once ('RCCWP_Query.php');
 add_action('pre_get_posts', array('RCCWP_Query', 'FilterPrepare'));
 add_filter('posts_where', array('RCCWP_Query', 'FilterCustomPostsWhere'));
+add_filter('posts_where', array('RCCWP_Query','ExcludeWritepanelsPosts'));
 add_filter('posts_orderby', array('RCCWP_Query', 'FilterCustomPostsOrderby'));
 add_filter('posts_fields', array('RCCWP_Query', 'FilterCustomPostsFields'));
 add_filter('posts_join_paged', array('RCCWP_Query', 'FilterCustomPostsJoin'));

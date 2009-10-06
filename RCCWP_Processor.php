@@ -369,16 +369,11 @@ class RCCWP_Processor
 							wp_redirect('?page=' . urlencode(MF_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'RCCWP_Menu.php') . '&assign-custom-write-panel=' . (int)$_GET['post']);
 						}
 					}
-				}
-				else if (isset($_POST['update-custom-write-panel-options']))
-				{
-					if ($_POST['uninstall-custom-write-panel'] == 'uninstall')
-					{
+				} else if (isset($_POST['update-custom-write-panel-options'])) {
+					if ($_POST['uninstall-custom-write-panel'] == 'uninstall') {
 						RCCWP_Application::Uninstall();
 						wp_redirect('options-general.php');
-					}
-					else
-					{
+					} else {
 						include_once('RCCWP_Options.php');
 						
 						$options['hide-write-post'] = $_POST['hide-write-post'];
@@ -398,6 +393,7 @@ class RCCWP_Processor
 						$options['canvas_show_zone_name'] = $_POST['canvas_show_zone_name'];
 						$options['canvas_show'] = $_POST['canvas_show'];
 						$options['ink_show'] = $_POST['ink_show'];
+						$options['hide-non-standart-content'] = $_POST['hide-non-standart-content'];
 		
 						
 						RCCWP_Options::Update($options);

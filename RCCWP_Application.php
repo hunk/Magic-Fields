@@ -71,6 +71,7 @@ class RCCWP_Application
 			$options['canvas_show'] = 1;
 			$options['ink_show'] = 0;
             $options['enable-broserupload'] = 0;
+			$options['hide-non-standart-content'] = 1;
 
 			RCCWP_Options::Update($options);
 			

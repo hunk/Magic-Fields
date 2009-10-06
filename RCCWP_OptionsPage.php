@@ -9,6 +9,7 @@ function Main()
 	global $mf_domain;
 	$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
 	$customWritePanelOptions = RCCWP_Options::Get();
+	
 
 	if (function_exists('is_site_admin') && !is_site_admin())
 		update_option("Magic_Fields_notTopAdmin", true);
@@ -26,7 +27,15 @@ function Main()
 
 	<h3><?php _e('Write Panel Options', $mf_domain); ?></h3>
 	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6"> 
-
+	
+	<tr valign="top">
+		<th scope="row"><?php _e('Hide  non-standart content in Post Panel',$mf_domain);?></th>
+		<td>
+			<label for="hide-non-standart-content" />
+			<input name="hide-non-standart-content" id="hide-write-post-panel" value="1" <?php echo RCCWP_OptionsPage::GetCheckboxState($customWritePanelOptions['hide-non-standart-content']);?> type="checkbox"> &nbsp; <?php _e('Hide posts made with Write panels in the edit section in the Post panel');?></label>
+		</td>
+	</tr>
+	
 	<tr valign="top">
 		<th scope="row"><?php _e('Hide Post Panel', $mf_domain); ?></th>
         	<td>
@@ -69,7 +78,7 @@ function Main()
 			<label for="assign-to-role"> 
 			<input name="assign-to-role" id="assign-to-role" value="1" <?php echo RCCWP_OptionsPage::GetCheckboxState($customWritePanelOptions['assign-to-role'])?> type="checkbox"> 
 			&nbsp; <?php _e('This option will create a capability for each write panel such that the write panel is accessible by the Administrator only by default.
-			 You can assign the write panel to other roles using ', $mf_domain); ?></label><a target="_blank" href="http://sourceforge.net/projects/role-manager">&nbsp; Role Manager Plugin</a>. 
+			 You can assign the write panel to other roles using ', $mf_domain); ?></label><a target="_blank" href="http://sourceforge.net/projects/role-manager">Role Manager Plugin</a>. 
 		</td>
         </tr>
 
@@ -150,12 +159,12 @@ function Main()
 	<?php
 }
 
-function GetCheckboxState($optionValue)
-{
-	if ($optionValue == '' || $optionValue == 0)
+function GetCheckboxState($optionValue) {
+	if (empty($optionValue)){
 		return '';
-	else 
+	} else  {
 		return 'checked="checked"';
+	}
 }
 
 }
