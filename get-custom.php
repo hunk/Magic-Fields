@@ -48,26 +48,14 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 	global $wpdb, $post, $FIELD_TYPES;
 	
 	if(!$post_id){ $post_id = $post->ID; }
-	
-	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
+	$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
 	if(!$field) return FALSE;
 	
 	$fieldType = $field['type'];
 	$fieldID = $field['id'];
 	$fieldObject = $field['properties'];
-	
-	$single = true;
-	switch($fieldType){
-		case $FIELD_TYPES["checkbox_list"]:
-		case $FIELD_TYPES["listbox"]:
-			$single = false;
-			break;
-	} 
-	
-	$fieldValues = (array) RCCWP_CustomField::GetValues($single, $post_id, $fieldName, $groupIndex, $fieldIndex);
-    if(empty($fieldValues)) return FALSE;
-
-	$fieldMetaID = RCCWP_CustomField::GetMetaID($post->ID, $fieldName, $groupIndex, $fieldIndex);
+	$fieldValues = (array)$field['meta_value'];
+	$fieldMetaID = $field['meta_id'];
 	
 	$results = GetProcessedFieldValue($fieldValues, $fieldType, $fieldObject);
 	
@@ -148,19 +136,13 @@ function get_audio ($fieldName, $groupIndex=1, $fieldIndex=1,$post_id=NULL) {
 	global $wpdb, $post;
 	
 	if(!$post_id){ $post_id = $post->ID; }
-	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
+	$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
 	if(!$field) return FALSE;
-	
 	$fieldType = $field['type'];
 	$fieldID = $field['id'];
+	$fieldValue = $field['meta_value'];
 	
-	$fieldValues = (array) RCCWP_CustomField::GetValues(true, $post_id, $fieldName, $groupIndex, $fieldIndex);
-    if(empty($fieldValues)) return FALSE;
-	
-	if(!empty($fieldValues))
-		$fieldValue = $fieldValues[0];
-	else 
-		return "";
+    if(empty($fieldValue)) return FALSE;
 		
 	$path = MF_FILES_URI;
 	$fieldValue = $path.$fieldValue;
@@ -306,28 +288,23 @@ function create_image($options)
 		$post_id = $post_id;
 	}elseif(isset($post->ID)){
 		$post_id = $post->ID;
-	} else { echo "well";
+	} else {
 		return false;
 	}
 	
 	// basic check
 	if(empty($fieldName)) return FALSE;
 	
-	$field = RCCWP_CustomField::GetInfoByName($fieldName,$post_id);
+	$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
 	if(!$field) return FALSE;
 	
 	$fieldType = $field['type'];
 	$fieldID = $field['id'];
 	$fieldCSS = $field['CSS'];
 	$fieldObject = $field['properties'];
-	
-	$fieldValues = (array) RCCWP_CustomField::GetValues(true, $post_id, $fieldName, $groupIndex, $fieldIndex);
-	if(empty($fieldValues)) return FALSE;
+	$fieldValue = $field['meta_value'];
 
-	if(!empty($fieldValues[0]))
-		$fieldValue = $fieldValues[0];
-	else 
-		return "";
+	if(empty($fieldValue)) return "";
 	
 	// override the default phpthumb parameters if needed
     // works with both strings and arrays
