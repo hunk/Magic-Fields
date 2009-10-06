@@ -18,15 +18,16 @@ class RCCWP_Query
 	 *  the posts created using some write panel.
 	 */
 	function ExcludeWritepanelsPosts($where){
-	    global $wpdb;
+	    global $wpdb, $parent_file;
+		
+		if( $parent_file != 'edit.php' ) return $where;
 	
 		require_once ('RCCWP_Options.php');
 		$exclude = RCCWP_Options::Get('hide-non-standart-content');
 
 		if($exclude == false){
-			return false;
+			return $where;
 		}
-
 
 	    if (empty($_GET['filter-posts'])){
 	        $where = $where . " AND 0 = (SELECT count($wpdb->postmeta.meta_value)
