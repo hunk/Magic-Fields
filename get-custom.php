@@ -45,7 +45,7 @@ function getFieldDuplicates ($fieldName, $groupIndex) {
  */
 function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_id=NULL) {
 	require_once("RCCWP_CustomField.php");
-	global $wpdb, $post, $FIELD_TYPES;
+	global $post, $FIELD_TYPES;
 	
 	if(!$post_id){ $post_id = $post->ID; }
 	$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
@@ -133,7 +133,7 @@ function GetProcessedFieldValue($fieldValues, $fieldType, $fieldProperties=array
 // Get Audio. 
 function get_audio ($fieldName, $groupIndex=1, $fieldIndex=1,$post_id=NULL) {
 	require_once("RCCWP_CustomField.php");
-	global $wpdb, $post;
+	global $post;
 	
 	if(!$post_id){ $post_id = $post->ID; }
 	$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
@@ -265,7 +265,7 @@ function gen_image ($fieldName, $groupIndex=1, $fieldIndex=1,$param=NULL,$attr=N
 function create_image($options)
 {
 	require_once("RCCWP_CustomField.php");
-	global $wpdb, $post;
+	global $post;
 	
 	// establish the default values, then override them with 
 	// whatever the user has passed in
@@ -381,7 +381,7 @@ function create_image($options)
 }
 
 function get_group($name_group,$post_id=NULL){
-	global $wpdb, $post,$FIELD_TYPES;
+	global $wpdb, $post, $FIELD_TYPES;
 	
 	if(!$post_id){ $post_id = $post->ID; }
 	
@@ -468,7 +468,7 @@ function aux_image($fieldValue,$params_image){
 
 function get_label($fieldName,$post_id=NULL) {
 	require_once("RCCWP_CustomField.php");
-	global $wpdb, $post;
+	global $post;
 	
 	if(!$post_id){ $post_id = $post->ID; }
 	
