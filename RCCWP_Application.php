@@ -46,9 +46,9 @@ class RCCWP_Application
 		// First time installation
 		if (get_option(RC_CWP_OPTION_KEY) === false){
 	
-			// Giving full rights to folders. 
-			@chmod(MF_UPLOAD_FILES_DIR, 777);
-			@chmod(MF_IMAGES_CACHE_DIR, 777);
+			// Giving full rights to folders. thanks Akis Kesoglou 
+			wp_mkdir_p(MF_UPLOAD_FILES_DIR);
+			wp_mkdir_p(MF_IMAGES_CACHE_DIR);
 			
 			//Initialize options
 			$options['hide-write-post'] = 0;
