@@ -202,4 +202,42 @@ function mf_admin_style() {
     echo '<link rel="stylesheet" type="text/css" href="' . $url . '" />';
 }
 
+/**
+*  Check the mime type of the file for 
+*  avoid upload any dangerous file.
+*/
+function valid_mime($file_path,$file_type){
+	$imagesExts = array(
+						'image/gif',
+						'image/jpeg',
+						'image/pjpeg',
+						'image/png',
+						'image/x-png'
+						);
+	$audioExts = array(
+						'audio/mpeg',
+						'audio/mpg',
+						'audio/x-wav'
+						);
+						
+						
+	$mime = mime_content_type($file_path);
+	preg_match('/[a-z]+\/[a-z]+/i',$mime,$match);
+	$mime = $match[0];
+	
+	if($file_type == "image"){
+		if(in_array($mime,$imagesExts)){
+			return true;
+		}
+	}elseif($file_type == "audio"){
+		if(in_array($mime,$audioExts)){
+			return true;
+		}
+	}else{
+		//TODO: here users should be set what mime types
+		//are safety for the "files" type of field
+		return true;
+	}
+	return false;
+}
 ?>

@@ -2,7 +2,6 @@ jQuery(document).ready(function(){
     jQuery(".remove").live('click',remove_photo);
 });
 
-
 remove_photo = function(){
      if(confirm("Are you sure?")){
          //get the  name to the image

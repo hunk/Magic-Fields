@@ -67,6 +67,11 @@ class RCCWP_WritePostPage {
 							MF_URI.'js/custom_fields/image.js'
 						);
 						
+		//loading handler for upload files
+		wp_enqueue_script( 'mf_upload',
+							MF_URI.'js/upload.js'
+						);
+		
 		//loading Prototype framework
 		wp_enqueue_script('prototype');
 						
@@ -144,7 +149,6 @@ class RCCWP_WritePostPage {
 			var swf_authentication = "<?php if ( function_exists('is_ssl') && is_ssl() ) echo $_COOKIE[SECURE_AUTH_COOKIE]; else echo $_COOKIE[AUTH_COOKIE]; ?>" ;
 			var swf_nonce = "<?php echo wp_create_nonce('media-form'); ?>" ;
 		</script>
-		<script type="text/javascript" src="<?php echo MF_URI; ?>js/swfcallbacks.js" ></script>
 
 		<script type="text/javascript">
 				function isset(  ) {

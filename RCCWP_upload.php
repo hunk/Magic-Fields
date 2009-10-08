@@ -1,5 +1,6 @@
 <?php
-require( dirname(__FILE__) . '/../../../wp-config.php' );
+require_once('../../../wp-load.php');
+
 global $mf_domain,  $wpdb;
 if (!(is_user_logged_in() && current_user_can('edit_posts')))
 	die(__("Athentication failed!",$mf_domain));
@@ -10,9 +11,18 @@ if (!(is_user_logged_in() && current_user_can('edit_posts')))
 
 <?php
 
-if (isset($_POST['fileframe'])) 
-{
+if (isset($_POST['fileframe'])){
 	$operationSuccess = "false";
+	
+	//type of upload
+	if(!empty($_POST['type'])){
+		if ($_POST['type'] == '1'){
+			$acceptedExts = "image";
+		}elseif ($_POST['type'] == '2'){
+			$acceptedExts = "audio"; 
+		}
+	}
+	
 	// A file is uploaded
 	if (isset($_FILES['file']) && (!empty($_FILES['file']['tmp_name'])))  // file was send from browser
 	{
@@ -24,43 +34,56 @@ if (isset($_POST['fileframe']))
 			$filename = time() . $filename;
 			@move_uploaded_file( $_FILES['file']['tmp_name'], MF_FILES_PATH . $filename );
 			@chmod(MF_FILES_PATH . $filename, 0644);
-			$result_msg = "<font color=\"green\"><b>".__("Successful upload!",$mf_domain)."</b></font>" ;
 
+			$result_msg = "<font color=\"green\"><b>".__("Successful upload!",$mf_domain)."</b></font>" ;
+			
+			//Checking the mimetype of the file
+			if(valid_mime(MF_FILES_PATH.$filename,$acceptedExts)){
+				$operationSuccess = "true";
+			}else{
+				$operationSuccess = "false";
+				
+				//deleting unaccepted file
+				$file_delete = MF_FILES_PATH.$filename;
+				unlink($file_delete);
+				
+			}
+
+			if($operationSuccess == "true"){
             //adding the image to  WP media
             $query = "INSERT INTO  ".$wpdb->prefix. 'posts  (
-                                                                post_author,
-                                                                post_date,
-                                                                post_date_gmt,
-                                                                post_content,
-                                                                post_title,
-                                                                post_status,
-                                                                post_name,
-                                                                post_modified,
-                                                                post_modified_gmt,
-                                                                guid,
-                                                                post_type,
-                                                                post_mime_type
-                                                            ) VALUES
-                                                            (
-                                                                1, 
-                                                                now(),
-                                                                now(),
-                                                                "'.$_FILES['file']['name'].'",
-                                                                "'.$_FILES['file']['name'].'",
-                                                                "inherit",
-                                                                "'.$_FILES['file']['name'].'",
-                                                                now(),
-                                                                now(),
-                                                                "'.MF_FILES_URI.$filename.'",
-                                                                "attachment",
-                                                                "'.$_FILES['file']['type'].'"
-                                                            )';
+				post_author,
+				post_date,
+				post_date_gmt,
+ 				post_content,
+				post_title,
+				post_status,
+				post_name,
+ 				post_modified,
+				post_modified_gmt,
+				guid,
+				post_type,
+				post_mime_type
+				) 
+				VALUES (
+					1, 
+					now(),
+					now(), 
+					"'.$_FILES['file']['name'].'",                                            
+					"'.$_FILES['file']['name'].'",
+					"inherit",
+ 					"'.$_FILES['file']['name'].'",
+					now(),
+					now(),					                                            	
+					"'.MF_FILES_URI.$filename.'",
+ 					"attachment",
+					"'.$_FILES['file']['type'].'"
+				)';
              
-            $wpdb->query($query);
+            	$wpdb->query($query);
 
-			$operationSuccess = "true";
-		}
-		elseif ($_FILES['file']['error'] == UPLOAD_ERR_INI_SIZE)
+			}
+		}elseif ($_FILES['file']['error'] == UPLOAD_ERR_INI_SIZE)
 			$result_msg = __('The uploaded file exceeds the maximum upload limit',$mf_domain);
 		else 
 			$result_msg = "<font color=\"red\"><b>".__("Upload Unsuccessful!",$mf_domain)."</b></font>";
@@ -68,6 +91,7 @@ if (isset($_POST['fileframe']))
 	}
 
 	// If operation is success, make sure the file was created properly
+	
 	if ($operationSuccess == "true"){
 		if ($fp_check_file = @fopen(MF_FILES_PATH . $filename, 'rb')) {
 			fclose($fp_check_file);
@@ -77,10 +101,12 @@ if (isset($_POST['fileframe']))
 			$result_msg = __("Failed to upload the file!",$mf_domain);
 		}
 		
+	}else{
+		$result_msg = "<font color=\"red\"><b>".__("Upload Unsuccessful!",$mf_domain)."</b></font>";
 	}
 ?>
 
-	<script language="javascript">
+	<script type="text/javascript" charset="utf-8">		
         
 		// The code that runs after the file is uploaded
     	var par = window.parent.document;
@@ -88,10 +114,10 @@ if (isset($_POST['fileframe']))
 		par.getElementById('upload_progress_<?php echo $_POST["input_name"]?>').innerHTML = '<?php echo $result_msg?>';
 		iframe.style.display="";
 
-		if (<?php echo $operationSuccess?>){
-			par.getElementById("<?php echo $_POST["input_name"]?>").value = "<?php echo $filename?>";
+		if ( "<?php echo $operationSuccess;?>" == "true"){
+			par.getElementById("<?php echo $_POST['input_name']?>").value = "<?php echo $filename?>";
 			
-			par.getElementById("<?php echo $_POST["input_name"];?>_deleted").value = 0;
+			par.getElementById("<?php echo $_POST['input_name'];?>_deleted").value = 0;
 			//Set image
 			<?php
 				//$newImagePath = MF_URI.'phpThumb.php
@@ -109,12 +135,7 @@ if (isset($_POST['fileframe']))
 				}
 			<?php } ?>
 		}
-		
-		
-		
 	</script>
-
-
 <?php
 }
 ?>
