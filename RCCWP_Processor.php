@@ -394,7 +394,7 @@ class RCCWP_Processor
 						$options['canvas_show'] = $_POST['canvas_show'];
 						$options['ink_show'] = $_POST['ink_show'];
 						$options['hide-non-standart-content'] = $_POST['hide-non-standart-content'];
-		
+						$options['condense-menu'] = $_POST['condense-menu'];
 						
 						RCCWP_Options::Update($options);
 					}

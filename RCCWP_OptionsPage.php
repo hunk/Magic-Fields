@@ -1,38 +1,48 @@
 <?php
+//loading javascript file by  the options page.
+wp_enqueue_script( 'mf_options_page',
+					MF_URI.'js/options.js'
+				);
+
+
 include_once('RCCWP_Options.php');
 
-class RCCWP_OptionsPage
-{
+class RCCWP_OptionsPage {
 
-function Main()
-{
-	global $mf_domain;
-	$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
-	$customWritePanelOptions = RCCWP_Options::Get();
+	function Main() {
+		global $mf_domain;
+		$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
+		$customWritePanelOptions = RCCWP_Options::Get();
 	
 
-	if (function_exists('is_site_admin') && !is_site_admin())
-		update_option("Magic_Fields_notTopAdmin", true);
-	else
-		update_option("Magic_Fields_notTopAdmin", false);
-
+		if (function_exists('is_site_admin') && !is_site_admin()){
+			update_option("Magic_Fields_notTopAdmin", true);
+		}else{
+			update_option("Magic_Fields_notTopAdmin", false);
+		}
 	?>
-	
 	<div class="wrap">
 
 	<h2><?php _e('Magic Fields Options', $mf_domain); ?></h2>
 	
-	<form action="" method="post" id="custom-write-panel-options-form">	
+	<form action="#" method="post" id="custom-write-panel-options-form">	
 	
-
 	<h3><?php _e('Write Panel Options', $mf_domain); ?></h3>
 	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6"> 
 	
 	<tr valign="top">
-		<th scope="row"><?php _e('Hide  non-standart content in Post Panel',$mf_domain);?></th>
+		<th scope="row"><?php _e('Condense Menu',$mf_domain);?></th>
 		<td>
-			<label for="hide-non-standart-content" />
-			<input name="hide-non-standart-content" id="hide-write-post-panel" value="1" <?php echo RCCWP_OptionsPage::GetCheckboxState($customWritePanelOptions['hide-non-standart-content']);?> type="checkbox"> &nbsp; <?php _e('Hide posts made with Write panels in the edit section in the Post panel');?></label>
+			<label for="condense-menu">
+				<input name="condense-menu" id="condense-menu" value="1" <?php echo RCCWP_OptionsPage::GetCheckboxState($customWritePanelOptions['condense-menu']);?> type="checkbox"> &nbsp; <?php _e('This option removes the write panel from the main navigation and places them inside of the post and menu pages.');?></label>
+			</td>
+	</tr>
+	
+	<tr valign="top">
+		<th scope="row"><?php _e('Hide non-standart content in Post Panel',$mf_domain);?></th>
+		<td>
+			<label for="hide-non-standart-content" >
+			<input name="hide-non-standart-content" id="hide-non-standart-content" value="1" <?php echo RCCWP_OptionsPage::GetCheckboxState($customWritePanelOptions['hide-non-standart-content']);?> type="checkbox"> &nbsp; <?php _e('Hide posts made with Write panels in the edit section in the Post panel');?></label>
 		</td>
 	</tr>
 	
@@ -157,16 +167,15 @@ function Main()
 	</div>
 	
 	<?php
-}
-
-function GetCheckboxState($optionValue) {
-	if (empty($optionValue)){
-		return '';
-	} else  {
-		return 'checked="checked"';
 	}
-}
 
+	function GetCheckboxState($optionValue) {
+		if (empty($optionValue)){
+			return '';
+		} else  {
+			return 'checked="checked"';
+		}
+	}
 }
 
 ?>

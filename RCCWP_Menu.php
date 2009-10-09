@@ -252,7 +252,8 @@ class RCCWP_Menu
 				}
 
 				$offset++;
-				//thanks a Ashish Puliyel <ashish@gonzobuzz.com> by observing the roles of users
+
+
 				if ($panel->type == "post"){
 					$type_write_panel="edit-posts";
 				}else{
@@ -265,6 +266,10 @@ class RCCWP_Menu
 					$requiredPagesCap = $panel->capability_name;
 				}   
 
+				require_once ('RCCWP_Options.php');
+				$condence = RCCWP_Options::Get('condense-menu');
+
+				if(!$condence){
 				if ($panel->type == "post"){
 					if($panel->single == 1){  //if the post is single
 						if($add_post){ //if the post is single and don't have any related post
@@ -288,8 +293,27 @@ class RCCWP_Menu
 						add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPagesCap, 'edit-pages.php?filter-posts=1&custom-write-panel-id=' . $panel->id);
 					}
 				}
+			
+		}else{
+			if ($panel->type == "post"){
+			 	if($panel->single == 1){ //if the post is single
+			 			if($add_post){ //if the post is single and don't have any related post
+			 				add_submenu_page('post-new.php', __($panel->name), __($panel->name), $requiredPostsCap, 'post-new.php?custom-write-panel-id=' . $panel->id);
+			 			}
+			 	}else{
+			 		add_submenu_page('post-new.php', __($panel->name), __($panel->name), $requiredPostsCap, 'post-new.php?custom-write-panel-id=' . $panel->id);
+			 	}
+			}else {
+			 	if($panel->single == 1){ //if the page is single
+			 		if($add_post){ //if the page is single and don't have any related post
+			 			add_submenu_page('page-new.php', __($panel->name), __($panel->name), $requiredPagesCap, 'page-new.php?custom-write-panel-id=' . $panel->id);
+			 		}
+				}else{
+			 		add_submenu_page('page-new.php', __($panel->name), __($panel->name), $requiredPagesCap, 'page-new.php?custom-write-panel-id=' . $panel->id);
+			 	}
 			}
-		
+		}
+	}
 			foreach ($menu as $k => $v) {
 				if($k > 5) $new_menu[$k+$offset]=$v;
 			}
@@ -320,17 +344,16 @@ class RCCWP_Menu
 
 		$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
 
-		foreach ($customWritePanels as $panel)
-		{
+		foreach ($customWritePanels as $panel) {
 			if ($assignToRole == 1){
 				$requiredPostsCap = $panel->capability_name;
 				$requiredPagesCap = $panel->capability_name;
 			}
 
-			if ($panel->type == "post"){
-				$actions['post-new.php?custom-write-panel-id=' . $panel->id] = array('New '.__($panel->name), 'edit_posts');
-			}
-			else {
+		
+				if ($panel->type == "post"){
+					$actions['post-new.php?custom-write-panel-id=' . 	$panel->id] = array('New '.__($panel->name), 'edit_posts');
+				} else {
 				$actions['page-new.php?custom-write-panel-id=' . $panel->id] = array('New '.__($panel->name), 'edit_pages');
 			}
 		}
