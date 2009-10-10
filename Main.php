@@ -138,6 +138,12 @@ add_filter('posts_orderby', array('RCCWP_Query', 'FilterCustomPostsOrderby'));
 add_filter('posts_fields', array('RCCWP_Query', 'FilterCustomPostsFields'));
 add_filter('posts_join_paged', array('RCCWP_Query', 'FilterCustomPostsJoin'));
 
+if($customWritePanelOptions['condense-menu']){
+	add_filter('manage_posts_columns',array('RCCWP_Query','ColumnWritePanel'));
+	add_action('manage_posts_custom_column',array('RCCWP_Query','ColumnWritePanelData'));
+}
+
+
 
 add_action('edit_page_form','cwp_add_pages_identifiers');
 add_action('edit_form_advanced','cwp_add_type_identifier');
