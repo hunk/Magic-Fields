@@ -1,5 +1,13 @@
 <?php
-require_once('../../../wp-load.php');
+$wp_load = '../../../wp-load.php';
+if( file_exists($wp_load) )
+{
+	require_once($wp_load);
+}
+else
+{
+	die('Could not load wp-load.php, please edit RCCWP_upload.php and point to the correct path.');
+}
 
 global $mf_domain,  $wpdb;
 if (!(is_user_logged_in() && current_user_can('edit_posts')))
