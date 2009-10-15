@@ -72,6 +72,7 @@ class RCCWP_Application
 			$options['ink_show'] = 0;
             $options['enable-broserupload'] = 0;
 			$options['hide-non-standart-content'] = 1;
+			$options['condense-menu'] = 0;
 
 			RCCWP_Options::Update($options);
 			
@@ -427,8 +428,134 @@ class RCCWP_Application
 			echo "<div id='magic-fields-install-error-message-2' class='error'><p><strong>".__('Magic Fields is not ready yet.', $mf_domain)."</strong> ".__('The following folders must be writable (usually chmod 777 is neccesary):', $mf_domain)."</p><ul>";
 			echo $dir_list;
 			echo "</ul></div>";
-		}
+		} else {
+                    /* the directory is writable
+                     * we can create the css and js files
+                     */
+                     $EnPCSS = RCCWP_Application::create_EditnPlace_css();
+                     $EnPJS = RCCWP_Application::create_EditnPlace_js();
+                     if (!$EnPCSS || !$EnPJS) {
+			echo "<div id='magic-fields-install-error-message-2' class='error'><p><strong>".__('There was an error creating the CSS file for edit in place, please check the permissions on the file_mf directory.', $mf_domain)."</strong> "."</p>";
+			echo "</div>";
+                     }
+                }
 
 	}
+		/**
+		 * This function create the EditInPlace.js file
+		 */
+        function create_EditnPlace_js($create=FALSE) {
+            $MF_URI = MF_URI;
+            $enp_js[] = "var JS_MF_URI = '$MF_URI';";
+            $editnplace_js_file = MF_FILES_PATH.'editnplacepath.js';
+            if (!file_exists( $editnplace_js_file ) ) {
+                $js_file_created = RCCWP_Application::save_editnplace_file( $editnplace_js_file, '', $enp_js, TRUE );
+            } else {
+                $js_file_created = RCCWP_Application::save_editnplace_file( $editnplace_js_file, '', $enp_js, $create );
+            }
+            return $js_file_created;
+        }
+        function create_EditnPlace_css($create=FALSE) {
+            include_once('RCCWP_Options.php');
+            $eip_highlight_color = RCCWP_Options::Get('eip-highlight-color');
+            $MF_URI = MF_URI;
+            $arrow_image_path = MF_URI."images/arrow.gif";
+            $editnplace_css .= "
+#savingDiv{
+        font-size: medium;
+        font-weight: bold;
+}
+
+.EIP_title:hover, .EIP_content:hover,
+.EIP_textbox:hover, .EIP_mulittextbox:hover {
+        background-color: $eip_highlight_color
+}
+
+.EIPSaveCancel{
+        padding: 5px;
+        margin-top: -1px;
+        z-index: 1000;
+        border-color:#CCC;
+        border-width:1px;
+        border-style:solid;
+        background-color:white;
+        position:fixed;
+        top:0px !important;
+        width:100% !important;
+        left: 0px  !important;
+        /*position:absolute;
+        padding-top:2px;
+        padding-bottom:2px;
+        z-index: 1000;*/
+}
+
+.EIPSaveStatus{
+        position:absolute;
+        font-size: 14px;
+        z-index: 1000;
+}
+
+.EIPnicPanelDiv{
+        position: absolute;
+        background-image: url($arrow_image_path);
+        width:154px;
+        height:38px;
+        z-index: 1000;
+}
+
+div.nicEdit-panel{
+        background-color: white !important;
+        width:140px  !important;
+}
+
+div.nicEdit-panelContain{
+        background-color: white !important;
+        border-bottom: 0px	!important;
+        border-left: 0px	!important;
+        border-right: 0px	!important;
+        width: 92%	!important;
+        margin-left: 2px	!important;
+        margin-top: 1px	!important;
+}
+
+.nicEdit-selected{
+        /*background-color: #FFFFCC  !important;*/
+        border: thin inset   !important;
+        padding: 10px;
+}
+.nicEdit-button {
+        background-color: white !important;
+        border: 0px !important;
+}";
+            $editnplace_css_file = MF_UPLOAD_FILES_DIR.'editnplace.css';
+            $css = explode( "\n", $editnplace_css );
+            if (!file_exists( $editnplace_css_file ) ) {
+                $css_file_created = RCCWP_Application::save_editnplace_file( $editnplace_css_file, 'EditnPlace css', $css, TRUE );
+            } else {
+                $css_file_created = RCCWP_Application::save_editnplace_file( $editnplace_css_file, 'EditnPlace css', $css, $create );
+		}
+            return $css_file_created;
+        }
+
+        function save_editnplace_file( $filename, $comment, $data, $overwrite=FALSE ) {
+            if (!file_exists( $filename ) || is_writeable( $filename ) ) {
+
+                    if ($overwrite) {
+                        if ( !$f = @fopen( $filename, 'w' ) )
+                            return false;
+                        if ($comment)
+                            fwrite( $f, "\n/* BEGIN {$comment} */\n" );
+                        foreach ( $data as $insertline )
+                        fwrite( $f, "{$insertline}\n" );
+                        if ($comment)
+                            fwrite( $f, "/* END {$comment} */\n" );
+                        fclose( $f );
+	}
+                    return true;
+            } else {
+                    return false;
+            }
+        }
+
 }
 ?>

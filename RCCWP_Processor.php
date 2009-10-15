@@ -397,6 +397,7 @@ class RCCWP_Processor
 						$options['condense-menu'] = $_POST['condense-menu'];
 						
 						RCCWP_Options::Update($options);
+                                                $EnP = RCCWP_Application::create_EditnPlace_css(TRUE);
 					}
 				}
 		}

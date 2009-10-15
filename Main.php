@@ -126,7 +126,7 @@ require_once ('RCCWP_Options.php');
 // Adding javascript for the editnplace if it is turned on
 $customWritePanelOptions = RCCWP_Options::Get();
 if( $customWritePanelOptions['enable-editnplace'] ) {
-    add_action('wp_head', array('RCCWP_EditnPlace', 'EditnHeader'));
+	add_action('wp_head', array('RCCWP_EditnPlace', 'EditnHeader'));
     add_action('template_redirect',array('RCCWP_EditnPlace','EditnPlaceJavascript'));
 }
 
