@@ -139,8 +139,13 @@ add_filter('posts_fields', array('RCCWP_Query', 'FilterCustomPostsFields'));
 add_filter('posts_join_paged', array('RCCWP_Query', 'FilterCustomPostsJoin'));
 
 if($customWritePanelOptions['condense-menu']){
+	//adding Column for posts
 	add_filter('manage_posts_columns',array('RCCWP_Query','ColumnWritePanel'));
 	add_action('manage_posts_custom_column',array('RCCWP_Query','ColumnWritePanelData'));
+	
+	//adding Column for pages
+	add_filter('manage_pages_columns',array('RCCWP_Query','ColumnWritePanel'));
+	add_action('manage_pages_custom_column',array('RCCWP_Query','ColumnWritePanelData'));
 }
 
 
