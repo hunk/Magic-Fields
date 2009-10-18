@@ -1,12 +1,20 @@
 <?php
-$wp_load = '../../../wp-load.php';
-if( file_exists($wp_load) )
+
+// use wp-load. Normally right here, but if it's not...
+if( file_exists('../../../wp-load.php') )
 {
-	require_once($wp_load);
+	require_once('../../../wp-load.php');
+	$loaded = true;
+} // ...then look over here
+elseif( file_exists('./mf-config.php') )
+{
+	include_once('./mf-config.php');
+	require_once(MF_WP_LOAD);
+	$loaded = true;
 }
-else
-{
-	die('Could not load wp-load.php, please edit RCCWP_upload.php and point to the correct path.');
+
+if( $loaded !== true ){
+	die('Could not load wp-load.php, edit/add mf-config.php and define MF_WP_LOAD to point to a valid wp-load file.');
 }
 
 global $mf_domain,  $wpdb;
