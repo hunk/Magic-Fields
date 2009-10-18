@@ -72,21 +72,18 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 	include_once('RCCWP_Options.php');
 	$enableEditnplace = RCCWP_Options::Get('enable-editnplace');
 	if ($readyForEIP && $enableEditnplace == 1 && current_user_can('edit_posts', $post->ID)){
-	
-	    switch($fieldType){
-	        case $FIELD_TYPES["textbox"]:
-			if(!$results) $results="&nbsp";
-			$results = "<div class='".EIP_textbox($fieldMetaID)."' >".$results."</div>";
-			break;
-
-	        case $FIELD_TYPES["multiline_textbox"]:
-			if(!$results) $results="&nbsp";
-			$results = "<div class='".EIP_mulittextbox($fieldMetaID)."' >".$results."</div>";
-			break;
-        }
-
-    }
-    return $results;
+		switch($fieldType){
+			case $FIELD_TYPES["textbox"]:
+				if(!$results) $results="&nbsp";
+				$results = "<div class='".EIP_textbox($fieldMetaID)."' >".$results."</div>";
+				break;
+			case $FIELD_TYPES["multiline_textbox"]:
+				if(!$results) $results="&nbsp";
+				$results = "<div class='".EIP_mulittextbox($fieldMetaID)."' >".$results."</div>";
+				break;
+		}
+	}
+	return $results;
 
 }
 
@@ -142,7 +139,7 @@ function get_audio ($fieldName, $groupIndex=1, $fieldIndex=1,$post_id=NULL) {
 	$fieldID = $field['id'];
 	$fieldValue = $field['meta_value'];
 	
-    if(empty($fieldValue)) return FALSE;
+	if(empty($fieldValue)) return FALSE;
 		
 	$path = MF_FILES_URI;
 	$fieldValue = $path.$fieldValue;
@@ -150,20 +147,19 @@ function get_audio ($fieldName, $groupIndex=1, $fieldIndex=1,$post_id=NULL) {
 	return $finalString;
 }
 
-function GetFieldInfo($customFieldId)
-	{
-		global $wpdb;
-		$sql = "SELECT properties FROM " . MF_TABLE_CUSTOM_FIELD_PROPERTIES  .
-			" WHERE custom_field_id = '" . $customFieldId."'";
-		$results = $wpdb->get_row($sql);
-		//$results->options = unserialize($results->options);
-		$results->properties = unserialize($results->properties);
-		//$results->default_value = unserialize($results->default_value);
-		return $results;
-	}
-        
+function GetFieldInfo($customFieldId){
+	global $wpdb;
+	$sql = "SELECT properties FROM " . MF_TABLE_CUSTOM_FIELD_PROPERTIES  .
+		" WHERE custom_field_id = '" . $customFieldId."'";
+	$results = $wpdb->get_row($sql);
+	//$results->options = unserialize($results->options);
+	$results->properties = unserialize($results->properties);
+	//$results->default_value = unserialize($results->default_value);
+	return $results;
+}
+
 function pt(){
-    return PHPTHUMB;
+	return PHPTHUMB;
 }
 
 
@@ -173,16 +169,16 @@ function pt(){
  * @param string $groupName 
  */
 function getGroupOrder($field_name,$post_id=NULL){
-    global $post,$wpdb;
+	global $post,$wpdb;
 
-    if(!$post_id){ $post_id = $post->ID; }
-    $elements  = $wpdb->get_results("SELECT group_count FROM ".MF_TABLE_POST_META." WHERE post_id = ".$post_id."  AND field_name = '{$field_name}' ORDER BY order_id ASC");
+	if(!$post_id){ $post_id = $post->ID; }
+	$elements  = $wpdb->get_results("SELECT group_count FROM ".MF_TABLE_POST_META." WHERE post_id = ".$post_id."  AND field_name = '{$field_name}' ORDER BY order_id ASC");
    
-    foreach($elements as $element){
-       $order[] =  $element->group_count;
-    }
-     
-    return $order;
+	foreach($elements as $element){
+		$order[] =  $element->group_count;
+	}
+	 
+	return $order;
 }
 
 /**
@@ -307,17 +303,17 @@ function create_image($options)
 	if(empty($fieldValue)) return "";
 	
 	// override the default phpthumb parameters if needed
-    // works with both strings and arrays
+	// works with both strings and arrays
 	if(!empty($param)) {
-        if(is_array($param)){
-            $p = array();
-            foreach($param as $k => $v){
-                $p[] = $k."=".$v;
-            }
-            $fieldObject['params'] = implode('&', $p);
-        } else {
-            $fieldObject['params'] = $param;
-        }
+		if(is_array($param)){
+			$p = array();
+			foreach($param as $k => $v){
+				$p[] = $k."=".$v;
+			}
+			$fieldObject['params'] = implode('&', $p);
+		} else {
+			$fieldObject['params'] = $param;
+		}
 	}
 	// remove the ? on the params if it happened to be there
 	if (substr($fieldObject['params'], 0, 1) == "?"){
@@ -373,7 +369,7 @@ function create_image($options)
 			$finalString = "<img src='".$fieldValue."' ".$add_attr." />";
 		}else{
 			$finalString = "<img src='".$fieldValue."' />";
-	    }
+		}
 	}else{
 		$finalString = $fieldValue;
 	}
@@ -476,4 +472,3 @@ function get_label($fieldName,$post_id=NULL) {
 	if(!$field) return FALSE;
 	return $field['description'];
 }
-?>

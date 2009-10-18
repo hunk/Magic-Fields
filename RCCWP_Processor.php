@@ -1,4 +1,5 @@
 <?php
+
 class RCCWP_Processor
 {
 	function Main()
@@ -6,7 +7,7 @@ class RCCWP_Processor
 		require_once('RC_Format.php');
 		global $CUSTOM_WRITE_PANEL;
 		
-        wp_enqueue_script('jquery-ui-sortable');
+		wp_enqueue_script('jquery-ui-sortable');
 		
 		if (isset($_POST['edit-with-no-custom-write-panel']))
 		{
@@ -27,11 +28,11 @@ class RCCWP_Processor
 			wp_redirect($type->type.'.php?action=edit&post=' . $_POST['post-id'] . '&custom-write-panel-id=' . $_POST['custom-write-panel-id']);
 		}
 	
-        if(empty($_REQUEST['mf_action'])){
-            $currentAction = "";
-        }else{
-            $currentAction = $_REQUEST['mf_action'];
-        }
+		if(empty($_REQUEST['mf_action'])){
+			$currentAction = "";
+		}else{
+			$currentAction = $_REQUEST['mf_action'];
+		}
 		switch ($currentAction){
 			
 			// ------------ Write Panels
@@ -319,7 +320,7 @@ class RCCWP_Processor
 	
 				break;
 
-            default:
+			default:
 								
 				if (RCCWP_Application::InWritePostPanel())
 				{
@@ -397,14 +398,12 @@ class RCCWP_Processor
 						$options['condense-menu'] = $_POST['condense-menu'];
 						
 						RCCWP_Options::Update($options);
-                                                $EnP = RCCWP_Application::create_EditnPlace_css(TRUE);
+						$EnP = RCCWP_Application::create_EditnPlace_css(TRUE);
 					}
 				}
 		}
 		
 	}
-	
-	
 	
 	function FlushAllOutputBuffer() 
 	{ 
@@ -447,4 +446,3 @@ class RCCWP_Processor
 	}
 
 }
-?>

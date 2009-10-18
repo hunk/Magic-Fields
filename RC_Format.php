@@ -1,4 +1,5 @@
 <?php
+
 class RC_Format {
 
 	function GetInputName($fieldName) {
@@ -24,4 +25,3 @@ class RC_Format {
 		$value = trim($value);
 	}
 }
-?>

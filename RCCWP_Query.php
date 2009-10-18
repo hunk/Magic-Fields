@@ -60,7 +60,7 @@ class RCCWP_Query
 	 *  the posts created using some write panel.
 	 */
 	function ExcludeWritepanelsPosts($where){
-	    global $wpdb, $parent_file;
+		global $wpdb, $parent_file;
 		
 		if( $parent_file != 'edit.php' ) return $where;
 	
@@ -71,11 +71,10 @@ class RCCWP_Query
 			return $where;
 		}
 
-	    if (empty($_GET['filter-posts'])){
-	        $where = $where . " AND 0 = (SELECT count($wpdb->postmeta.meta_value)
-					     FROM $wpdb->postmeta WHERE $wpdb->postmeta.post_id = $wpdb->posts.ID and $wpdb->postmeta.meta_key = '_mf_write_panel_id')";
-	    }	
-	    return $where;
+		if (empty($_GET['filter-posts'])){
+			$where = $where . " AND 0 = (SELECT count($wpdb->postmeta.meta_value) FROM $wpdb->postmeta WHERE $wpdb->postmeta.post_id = $wpdb->posts.ID and $wpdb->postmeta.meta_key = '_mf_write_panel_id')";
+		}	
+		return $where;
 	}
 
 	function FilterCustomPostsWhere($where)
@@ -140,4 +139,3 @@ class RCCWP_Query
 	}
 
 }
-?>

@@ -1,4 +1,5 @@
 <?php
+
 class RCCWP_Options
 {
 	function Delete()
@@ -34,4 +35,3 @@ class RCCWP_Options
 		RCCWP_Options::Update($options);
 	}
 }
-?>

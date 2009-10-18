@@ -270,67 +270,57 @@ class RCCWP_CustomField
 
 		return $wpdb->get_var("SELECT count(DISTINCT field_count) FROM " . MF_TABLE_POST_META . 
 						" WHERE field_name = '$fieldName' AND post_id = $postId AND group_count = $groupIndex");
-    }
+	}
 
-    /**
-    * Get field duplicates
-    *
-    *
-    */ 
-    function GetFieldsOrder($postId,$fieldName,$groupId){
-        global $wpdb;
+	/**
+	* Get field duplicates
+	*/ 
+	function GetFieldsOrder($postId,$fieldName,$groupId){
+		global $wpdb;
 
-        $tmp =  $wpdb->get_col(
-                                "SELECT field_count FROM ".MF_TABLE_POST_META." WHERE field_name = '{$fieldName}' AND post_id = {$postId} AND group_count = {$groupId} GROUP BY field_count ORDER BY field_count ASC"
-                              );
+		$tmp =  $wpdb->get_col("SELECT field_count FROM ".MF_TABLE_POST_META." WHERE field_name = '{$fieldName}' AND post_id = {$postId} AND group_count = {$groupId} GROUP BY field_count ORDER BY field_count ASC");
 
+		// if the array is  empty is because this field is new and don't have
+		// a data related with this post 
+		// then we just create with the index 1
+		if(empty($tmp)){
+			$tmp[0] = 1;
+		}
 
-        //if the array is  empty is because this field is new and don't have
-        //a data related with this post 
-        //then we just create with the index 1
-        if(empty($tmp)){
-            $tmp[0] = 1;
-        }
+		return $tmp;
+	}
 
-        return $tmp;
-     }
+	/**
+	 * Get the order of group duplicates given the  field name. The function returns a
+	 * array  with the orden  
+	 *
+	 * @param integer  $postId post id
+	 * @param integer $fieldID  the name of any field in the group
+	 * @return order of one group
+	 */
+	function GetOrderDuplicates($postId,$fieldName){
+		global $wpdb;
 
-    /**
-     * Get the order of group duplicates given the  field name. The function returns a
-     * array  with the orden  
-     *
-     * @param integer  $postId post id
-     * @param integer $fieldID  the name of any field in the group
-     * @return order of one group
-     */
-     function GetOrderDuplicates($postId,$fieldName){
-         global $wpdb;
+		$tmp =  $wpdb->get_col("SELECT group_count  FROM ".MF_TABLE_POST_META." WHERE field_name = '{$fieldName}' AND   post_id = {$postId} GROUP BY group_count ORDER BY order_id asc");
 
-        
-         $tmp =  $wpdb->get_col(
-                                   "SELECT group_count  FROM ".MF_TABLE_POST_META." WHERE field_name = '{$fieldName}' AND   post_id = {$postId} GROUP BY group_count ORDER BY order_id asc"
-                                 );
+		// if the array is  empty is because this field is new and don't have
+		// a data related with this post 
+		// then we just create with the index 1
+		if(empty($tmp)){
+			$tmp[0] = 1;
+		}
 
+		 
+		// the order start to 1  and the arrays start to 0
+		// then i just sum one element in each array key for 
+		// the  order and the array keys  be the same
+		$order  = array();
+		foreach($tmp as $key => $value){
+			$order[$key+1]  = $value;
+		} 
+		return $order;
 
-
-         //if the array is  empty is because this field is new and don't have
-         //a data related with this post 
-         //then we just create with the index 1
-         if(empty($tmp)){
-             $tmp[0] = 1;
-         }
-
-         
-         //the order start to 1  and the arrays start to 0
-         //then i just sum one element in each array key for 
-         //the  order and the array keys  be the same
-         $order  = array();
-         foreach($tmp as $key => $value){
-            $order[$key+1]  = $value;
-         } 
-         return $order;
-
-     }
+	}
 
 	
 	/**
@@ -352,7 +342,6 @@ class RCCWP_CustomField
 										" WHERE cf.name = '$customFieldName' AND ".
 										" cf.group_id in (SELECT mg.id FROM ". MF_TABLE_PANEL_GROUPS . " mg ".
 														"  WHERE mg.panel_id = $customWritePanelId)");
-														
 														
 		return $customFieldId;
 	}
@@ -379,11 +368,14 @@ class RCCWP_CustomField
 									AND pm.meta_key = '".RC_CWP_POST_WRITE_PANEL_ID_META_KEY."' 
 									AND pm.post_id = $post_id)",ARRAY_A);
 													
-		if (empty($customFieldvalues)) return false;
+		if (empty($customFieldvalues)) 
+			return false;
+
 		if($customFieldvalues['type'] == $FIELD_TYPES["date"] OR $customFieldvalues['type'] == $FIELD_TYPES["image"] )
 			$customFieldvalues['properties'] = unserialize($customFieldvalues['properties']);
-		else $customFieldvalues['properties']=null;
-										
+		else 
+			$customFieldvalues['properties']=null;
+		
 		return $customFieldvalues;
 	}
 	
@@ -530,14 +522,14 @@ class RCCWP_CustomField
 			WHERE cf.name = '$customFieldName' AND cf.name = pm_mf.field_name AND group_count = $groupIndex AND field_count = $fieldIndex AND pm_mf.post_id= $postId AND pm_mf.id = pm.meta_id AND cf.group_id in ( SELECT mg.id FROM wp_mf_module_groups mg, wp_postmeta pm WHERE mg.panel_id = pm.meta_value AND pm.meta_key = '_mf_write_panel_id' AND pm.post_id = $postId)
 			",ARRAY_A);
 										
-		if (empty($customFieldvalues)) return false;
+		if (empty($customFieldvalues)) 
+			return false;
+		
 		$customFieldvalues['properties'] = unserialize($customFieldvalues['properties']);
 		
 		if($customFieldvalues['type'] == $FIELD_TYPES["checkbox_list"] OR $customFieldvalues['type'] == $FIELD_TYPES["listbox"] )
 			$customFieldvalues['meta_value'] = unserialize($customFieldvalues['meta_value']);
 								
 		return $customFieldvalues;
-		
 	}
 }
-?>

@@ -131,4 +131,3 @@ class RCCWP_CustomGroup
 		
 	}
 }
-?>

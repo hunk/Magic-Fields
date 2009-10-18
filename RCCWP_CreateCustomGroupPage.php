@@ -1,5 +1,7 @@
 <?php
+
 include_once('RCCWP_CustomGroupPage.php');
+
 class RCCWP_CreateCustomGroupPage
 {
 	function Main()
@@ -27,4 +29,3 @@ class RCCWP_CreateCustomGroupPage
 		<?php
 	}
 }
-?>

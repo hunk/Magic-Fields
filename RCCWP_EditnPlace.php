@@ -1,11 +1,9 @@
 <?php
 
-// Magic Fields paths
 require_once "RCCWP_Constant.php";
 
-class RCCWP_EditnPlace {
-	
-	
+class RCCWP_EditnPlace 
+{
 	/**
 	 * This function load all the necessary scripts for the 
 	 * editnplace feature
@@ -51,7 +49,6 @@ EOD;
 	}
 }
 
-
 function EIP_title(){
 	global $post;
 	$post_id = $post->ID;
@@ -75,4 +72,3 @@ function EIP_mulittextbox($meta_id){
 	$post_id = $post->ID;
 	return " EIP_mulittextbox "." EIP_postid$post_id "." EIP_mid_".$meta_id;
 }
-?>

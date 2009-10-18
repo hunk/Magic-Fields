@@ -1,4 +1,5 @@
 <?php
+
 require_once ('RCCWP_Application.php');
 require_once ('RCCWP_ManagementPage.php');
 require_once ('RCCWP_CreateCustomWritePanelPage.php');
@@ -13,10 +14,10 @@ class RCCWP_Menu
 		$sub_menu_is_modules = false;
 		
 		if(empty($_REQUEST['mf_action'])){
-            $currentAction = "";
-        }else{
-            $currentAction = $_REQUEST['mf_action'];
-        }
+			$currentAction = "";
+		}else{
+			$currentAction = $_REQUEST['mf_action'];
+		}
 		
 		switch ($currentAction){
 			
@@ -186,10 +187,10 @@ class RCCWP_Menu
 	}
 
 	/**
-     * Adding menus  
-     *
-     *
-     */
+	 * Adding menus  
+	 *
+	 *
+	 */
 	function AttachMagicFieldsMenus()
 	{
 		global $mf_domain;
@@ -200,10 +201,10 @@ class RCCWP_Menu
 		// Add top menu
 		add_menu_page(__('Magic Fields > Manage',$mf_domain), __('Magic Fields',$mf_domain), 10, __FILE__, $panelsAndModulesFunctions->panelsMenuFunction);
 
-        // Add Magic Fields submenus
+		// Add Magic Fields submenus
 		add_submenu_page(__FILE__, __('Write Panels',$mf_domain), __('Write Panels',$mf_domain), 10, __FILE__, $panelsAndModulesFunctions->panelsMenuFunction);		
 		
-     }
+	}
 
 	function AttachOptionsMenuItem()
 	{
@@ -276,8 +277,8 @@ class RCCWP_Menu
 							add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPostsCap, 'post-new.php?custom-write-panel-id=' . $panel->id);
 						}else{ //if have one related post we just can  edit the post 
 							add_submenu_page($base+$offset.'.php',__($panel->name),"Edit",$requiredPostsCap,'post.php?action=edit&post='.$has_posts);
-						}   
-			                }else{
+						}
+					}else{
 						add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPostsCap, 'post-new.php?custom-write-panel-id=' . $panel->id);
 						add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPostsCap, 'edit.php?filter-posts=1&custom-write-panel-id=' . $panel->id);
 					}
@@ -442,9 +443,9 @@ class RCCWP_Menu
 			
 		}
 		
-        if(empty($_REQUEST['custom-write-panel-id'])){
-            $_REQUEST['custom-write-panel-id'] = "";
-        }
+		if(empty($_REQUEST['custom-write-panel-id'])){
+			$_REQUEST['custom-write-panel-id'] = "";
+		}
 
 		if ($_REQUEST['custom-write-panel-id'])
 		{
@@ -467,7 +468,7 @@ class RCCWP_Menu
 
 	function AddThickbox()
 	{
-        if (!empty($GET['page']) && $_GET['page']=='Magic_FieldsManageModules') {
+		if (!empty($GET['page']) && $_GET['page']=='Magic_FieldsManageModules') {
 			// Overcome bug (http://wordpress.org/support/topic/196884)
 			$thickBoxCSS = get_bloginfo('url').'/wp-includes/js/thickbox/thickbox.css';
 			?>
@@ -497,4 +498,3 @@ class RCCWP_Menu
 		return false;
 	}
 }
-?>

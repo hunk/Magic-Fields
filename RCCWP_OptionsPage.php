@@ -1,9 +1,9 @@
 <?php
+
 //loading javascript file by  the options page.
 wp_enqueue_script( 'mf_options_page',
 					MF_URI.'js/options.js'
 				);
-
 
 include_once('RCCWP_Options.php');
 
@@ -48,21 +48,21 @@ class RCCWP_OptionsPage {
 	
 	<tr valign="top">
 		<th scope="row"><?php _e('Hide Post Panel', $mf_domain); ?></th>
-        	<td>
+			<td>
 			<label for="hide-write-post"> 
 			<input name="hide-write-post" id="hide-write-post" value="1" <?php echo RCCWP_OptionsPage::GetCheckboxState($customWritePanelOptions['hide-write-post'])?> type="checkbox">
 			&nbsp; <?php _e('Hide Wordpress Post panel', $mf_domain); ?></label> 
 		</td>
-        </tr>
+		</tr>
  
-    	<tr valign="top">
+	<tr valign="top">
 		<th scope="row"><?php _e('Hide Page Panel', $mf_domain); ?></th>
 		<td>
 			<label for="hide-write-page"> 
 			<input name="hide-write-page" id="hide-write-page" value="1" <?php echo RCCWP_OptionsPage::GetCheckboxState($customWritePanelOptions['hide-write-page'])?> type="checkbox">
 			&nbsp; <?php _e('Hide Wordpress Page panel', $mf_domain); ?></label> 
  		</td>
-        </tr>
+	</tr>
 	
 	<tr valign="top">
 		<th scope="row"><?php _e('Hide Visual Editor (multiline)', $mf_domain); ?></th>
@@ -71,31 +71,30 @@ class RCCWP_OptionsPage {
 			<input name="hide-visual-editor" id="hide-visual-editor" value="1"  <?php echo RCCWP_OptionsPage::GetCheckboxState($customWritePanelOptions['hide-visual-editor'])?> type="checkbox">
 			&nbsp; <?php _e('Hide Visual Editor (multiline)', $mf_domain); ?></label> 
  		</td>
-        </tr>
+	</tr>
 
-    	<tr valign="top">
+	<tr valign="top">
 		<th scope="row"><?php _e('Editing Prompt', $mf_domain); ?></th>
 		<td>
 			<label for="prompt-editing-post"> 
 			<input name="prompt-editing-post" id="prompt-editing-post" value="1" <?php echo RCCWP_OptionsPage::GetCheckboxState($customWritePanelOptions['prompt-editing-post'])?> type="checkbox"> 
 			&nbsp; <?php _e('Prompt when editing a Post not created with Custom Write Panel.', $mf_domain); ?></label> 
 		</td>
-        </tr>
+	</tr>
 
-    	<tr valign="top">
+	<tr valign="top">
 		<th scope="row"><?php _e('Assign to Role', $mf_domain); ?></th>
-        	<td>
+			<td>
 			<label for="assign-to-role"> 
 			<input name="assign-to-role" id="assign-to-role" value="1" <?php echo RCCWP_OptionsPage::GetCheckboxState($customWritePanelOptions['assign-to-role'])?> type="checkbox"> 
 			&nbsp; <?php _e('This option will create a capability for each write panel such that the write panel is accessible by the Administrator only by default.
 			 You can assign the write panel to other roles using ', $mf_domain); ?></label><a target="_blank" href="http://sourceforge.net/projects/role-manager">Role Manager Plugin</a>. 
 		</td>
-        </tr>
+	</tr>
 
-    	<tr valign="top">
+	<tr valign="top">
 		<th scope="row"><?php _e('Default Panel', $mf_domain); ?></th>
 		<td>
-		
 			<label for="default-custom-write-panel">
 			<select name="default-custom-write-panel" id="default-custom-write-panel">
 				<option value=""><?php _e('(None)', $mf_domain); ?></option>
@@ -110,9 +109,8 @@ class RCCWP_OptionsPage {
 			?>
 			</select>
 			</label>
-		
 		</td>
-        </tr>
+	</tr>
 
 	</table>
 
@@ -126,7 +124,7 @@ class RCCWP_OptionsPage {
 			<input name="enable-editnplace" id="enable-editnplace" value="1" <?php echo RCCWP_OptionsPage::GetCheckboxState($customWritePanelOptions['enable-editnplace'])?> type="checkbox"> 
 			&nbsp; <?php _e('Edit posts instantly from the post page.', $mf_domain); ?></label> 
 		</td>
-        </tr>
+		</tr>
 	<script type='text/javascript' src='<?php echo MF_URI?>js/sevencolorpicker.js'></script>
 	<script type="text/javascript">
 		jQuery('document').ready(function(){
@@ -147,17 +145,14 @@ class RCCWP_OptionsPage {
 	<br />	
 	<h3><?php _e('Uninstall Magic Fields', $mf_domain); ?></h3>
 	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6"> 
-
-    	<tr valign="top">
-		<th scope="row"><?php _e('Uninstall Magic Fields', $mf_domain); ?></th>
-		<td>
-			<input type="text" id="uninstall-custom-write-panel" name="uninstall-custom-write-panel" size="25" /><br />
-			<label for="uninstall-custom-write-panel">
-			&nbsp; <?php _e('Type <strong>uninstall</strong> into the textbox, click <strong>Update Options</strong>, and all the tables created by this plugin will be deleted', $mf_domain); ?></label>
-		
-		</td>
-        </tr>
-
+		<tr valign="top">
+			<th scope="row"><?php _e('Uninstall Magic Fields', $mf_domain); ?></th>
+			<td>
+				<input type="text" id="uninstall-custom-write-panel" name="uninstall-custom-write-panel" size="25" /><br />
+				<label for="uninstall-custom-write-panel">
+				&nbsp; <?php _e('Type <strong>uninstall</strong> into the textbox, click <strong>Update Options</strong>, and all the tables created by this plugin will be deleted', $mf_domain); ?></label>
+			</td>
+		</tr>
 	</table>
 
 	<p class="submit" ><input name="update-custom-write-panel-options" type="submit" value="<?php _e('Update Options', $mf_domain); ?>" /></p>
@@ -177,5 +172,3 @@ class RCCWP_OptionsPage {
 		}
 	}
 }
-
-?>

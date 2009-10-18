@@ -1,4 +1,5 @@
 <?php
+
 global $wpdb;
 
 if (!defined('DIRECTORY_SEPARATOR'))
@@ -30,7 +31,7 @@ if(isset($current_blog)){
 	$mf_prefix=$wpdb->base_prefix;
 }else{
 	$mf_prefix=$wpdb->prefix;
-	}
+}
 // -- Tables names
 
 // Tables containing somehow constant data
@@ -117,4 +118,3 @@ define('MF_IMAGES_CACHE_DIR', MF_FILES_PATH.'phpthumbcache'.DIRECTORY_SEPARATOR)
 
 // Capabilities names
 define('MF_CAPABILITY_PANELS', "Create Magic Fields Panels");
-?>

@@ -68,7 +68,7 @@ class RCCWP_CustomWritePanel
 			$display_order,
 			RC_Format::TextToSql($capabilityName),
 			RC_Format::TextToSql($type),
-            $single_post           
+			$single_post
 		);
 		
 		$wpdb->query($sql);
@@ -507,7 +507,7 @@ class RCCWP_CustomWritePanel
 		$i = 1;
 		$temp_name = $writePanelName;
 		while ($wpdb->get_var("SELECT id FROM ".MF_TABLE_PANELS." WHERE name='".$temp_name."'")){
-		    $temp_name = $writePanelName. "_" . $i++;
+			$temp_name = $writePanelName. "_" . $i++;
 		}
 		$writePanelName = $temp_name;
 
@@ -615,4 +615,3 @@ class RCCWP_CustomWritePanel
 		return $properties->name;
 	}
 }
-?>

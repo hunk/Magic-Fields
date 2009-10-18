@@ -1,4 +1,5 @@
 <?php
+
 include_once('RCCWP_Application.php');
 
 class RCCWP_ManagementPage
@@ -169,4 +170,3 @@ class RCCWP_ManagementPage
 		return '?page=Magic_FieldsManageModules';
 	}
 }
-?>

@@ -66,8 +66,8 @@ if (isset($_POST['fileframe'])){
 			}
 
 			if($operationSuccess == "true"){
-            //adding the image to  WP media
-            $query = "INSERT INTO  ".$wpdb->prefix. 'posts  (
+			//adding the image to  WP media
+			$query = "INSERT INTO  ".$wpdb->prefix. 'posts  (
 				post_author,
 				post_date,
 				post_date_gmt,
@@ -85,25 +85,25 @@ if (isset($_POST['fileframe'])){
 					1, 
 					now(),
 					now(), 
-					"'.$_FILES['file']['name'].'",                                            
+					"'.$_FILES['file']['name'].'",
 					"'.$_FILES['file']['name'].'",
 					"inherit",
  					"'.$_FILES['file']['name'].'",
 					now(),
-					now(),					                                            	
+					now(),
 					"'.MF_FILES_URI.$filename.'",
  					"attachment",
 					"'.$_FILES['file']['type'].'"
 				)';
-             
-            	$wpdb->query($query);
+			 
+				$wpdb->query($query);
 
 			}
-		}elseif ($_FILES['file']['error'] == UPLOAD_ERR_INI_SIZE)
+		}elseif ($_FILES['file']['error'] == UPLOAD_ERR_INI_SIZE){
 			$result_msg = __('The uploaded file exceeds the maximum upload limit',$mf_domain);
-		else 
+		}else{ 
 			$result_msg = "<font color=\"red\"><b>".__("Upload Unsuccessful!",$mf_domain)."</b></font>";
-	
+		}
 	}
 
 	// If operation is success, make sure the file was created properly
@@ -111,21 +111,19 @@ if (isset($_POST['fileframe'])){
 	if ($operationSuccess == "true"){
 		if ($fp_check_file = @fopen(MF_FILES_PATH . $filename, 'rb')) {
 			fclose($fp_check_file);
-		}
-		else{
+		}else{
 			$operationSuccess = "false";
 			$result_msg = __("Failed to upload the file!",$mf_domain);
 		}
-		
 	}else{
 		$result_msg = "<font color=\"red\"><b>".__("Upload Unsuccessful!",$mf_domain)."</b></font>";
 	}
 ?>
 
 	<script type="text/javascript" charset="utf-8">		
-        
+		
 		// The code that runs after the file is uploaded
-    	var par = window.parent.document;
+		var par = window.parent.document;
 		var iframe = par.getElementById('upload_internal_iframe_<?php echo $_POST["input_name"]?>');
 		par.getElementById('upload_progress_<?php echo $_POST["input_name"]?>').innerHTML = '<?php echo $result_msg?>';
 		iframe.style.display="";
@@ -137,7 +135,7 @@ if (isset($_POST['fileframe'])){
 			//Set image
 			<?php
 				//$newImagePath = MF_URI.'phpThumb.php
-                $newImagePath = PHPTHUMB.'?&w=150&h=120&src='.MF_FILES_URI.$filename;
+				$newImagePath = PHPTHUMB.'?&w=150&h=120&src='.MF_FILES_URI.$filename;
 				
 				if (isset($_POST['imageThumbID'])){ 
 			?>
@@ -145,7 +143,7 @@ if (isset($_POST['fileframe'])){
 				{ 
 					par.getElementById('<?php echo $_POST['imageThumbID']; ?>').src = "<?php echo $newImagePath;?>";
 					
-                    var b = "&nbsp;<strong><a href='#remove' class='remove' id='remove-<?php echo $_POST['input_name'];?>'>Delete</a></strong>";
+					var b = "&nbsp;<strong><a href='#remove' class='remove' id='remove-<?php echo $_POST['input_name'];?>'>Delete</a></strong>";
 
 					par.getElementById("photo_edit_link_<?php echo $_POST['input_name'] ?>").innerHTML = b ;
 				}
@@ -159,17 +157,15 @@ if (isset($_POST['fileframe'])){
 <script language="javascript">
 function upload(){
 	// hide old iframe
-    	var par = window.parent.document;
+	var par = window.parent.document;
 
 	var iframe = par.getElementById('upload_internal_iframe_<?php echo $_GET["input_name"]?>');
 	iframe.style.display="none";
 
-		
 	// update progress
 	par.getElementById('upload_progress_<?php echo $_GET["input_name"]?>').style.visibility = "visible";
 	par.getElementById('upload_progress_<?php echo $_GET["input_name"]?>').style.height = "auto";
 	par.getElementById('upload_progress_<?php echo $_GET["input_name"]?>').innerHTML = "Transferring ";
-
 
 	setTimeout("transferring(0)",1000);
 	
@@ -182,8 +178,8 @@ function transferring(dots){
 	
 	newString = "Transferring ";
 	for (var x=1; x<=dots; x++) {
-        	newString = newString + ".";
-    	} 
+		newString = newString + ".";
+	} 
 	
 	var par = window.parent.document;
 
@@ -222,13 +218,13 @@ body {
 	<input type="hidden" name="fileframe" value="true" />
 	
 	<?php	
-		if (isset($_GET['imageThumbID'])) {
-			echo '<input type="hidden" name="imageThumbID" value="'.$_GET['imageThumbID'].'" />';
-		}
+	if (isset($_GET['imageThumbID'])) {
+		echo '<input type="hidden" name="imageThumbID" value="'.$_GET['imageThumbID'].'" />';
+	}
 
-		if (isset($_GET['inputSize'])){
-			$inputSize = $_GET['inputSize'];
-		}
+	if (isset($_GET['inputSize'])){
+		$inputSize = $_GET['inputSize'];
+	}
 	?>
 	
 

@@ -1,33 +1,32 @@
 <?php
-class RCCWP_Post {	
-	
+
+class RCCWP_Post 
+{
 	function SaveCustomFields($postId){
 		global $flag;
 		
 		if($flag == 0){
 			
-			//for this save_post action doesn't execute  twice
+			//for this save_post action doesn't execute twice
 			$flag = 1;
 			
 			
-		//security
-		if(!wp_verify_nonce($_REQUEST['rc-custom-write-panel-verify-key'], 'rc-custom-write-panel'))
+			//security
+			if(!wp_verify_nonce($_REQUEST['rc-custom-write-panel-verify-key'], 'rc-custom-write-panel'))
+				return $postId;
+			
+			//the user  can edit posts?
+			if (!current_user_can('edit_post', $postId)){
+				return $postId;
+			}
+			
+			RCCWP_Post::SetCustomWritePanel($postId);
+			RCCWP_Post::PrepareFieldsValues($postId);
+			RCCWP_Post::SetMetaValues($postId);
+	
 			return $postId;
-        
-		//the user  can edit posts?
-		if (!current_user_can('edit_post', $postId)){
-			return $postId;
-		}
-		
-		
-		RCCWP_Post::SetCustomWritePanel($postId);
-		RCCWP_Post::PrepareFieldsValues($postId);
-		RCCWP_Post::SetMetaValues($postId);
-
-		return $postId;
 		}
 	}
-	
 		
 	/*
 	 * Attach a custom write panel to the current post by saving the custom write panel id
@@ -80,8 +79,8 @@ class RCCWP_Post {
 				}
 			}
 
-            if ( $the_post = wp_is_post_revision($postId) )
-			    $postId = $the_post;
+			if ( $the_post = wp_is_post_revision($postId) )
+				$postId = $the_post;
 
 			$wpdb->query("DELETE FROM ". MF_TABLE_POST_META .
 				" WHERE post_id=$postId");
@@ -93,7 +92,7 @@ class RCCWP_Post {
 				$arr[$key]->id = $customFieldId ;
 				$arr[$key]->gc = $groupCounter ;
 				$arr[$key]->fc = $fieldCounter ;
-                $arr[$key]->gi = $groupId;
+				$arr[$key]->gi = $groupId;
 				$arr[$key]->fn = $rawCustomFieldName ;
 				$arr[$key]->ov = $value ;
 			}
@@ -103,21 +102,21 @@ class RCCWP_Post {
 			{
 				if (!empty($key))
 				{
-                    //order
-                    if($key->gi == 1){
-                        $order = 1;
-                    }else if (!empty($_POST['order_'.$key->gi.'_'.$key->gc])){
-                        $order = $_POST['order_'.$key->gi.'_'.$key->gc];
-                    }else{
-                        $order = 1;
-                    }
-                    
+					//order
+					if($key->gi == 1){
+						$order = 1;
+					}else if (!empty($_POST['order_'.$key->gi.'_'.$key->gc])){
+						$order = $_POST['order_'.$key->gi.'_'.$key->gc];
+					}else{
+						$order = 1;
+					}
+					
 					$customFieldValue = $_POST[$key->ov];
 
 					$customFieldName = $wpdb->escape(stripslashes(trim(RC_Format::GetFieldName($key->fn))));
 					
 					// Prepare field value
-                        if (is_array($customFieldValue))
+					if (is_array($customFieldValue))
 					{
 						$finalValue = array();
 						foreach ($customFieldValue as $value)
@@ -130,8 +129,8 @@ class RCCWP_Post {
 					{
 						$finalValue = stripslashes(trim($customFieldValue));
 					}
-            
-    				// Add field value meta data
+			
+					// Add field value meta data
 					add_post_meta($postId, $customFieldName, $finalValue);
 					
 					// make sure meta is added to the post, not a revision
@@ -141,7 +140,7 @@ class RCCWP_Post {
 					$fieldMetaID = $wpdb->insert_id;
 
 					// Add field extended properties
-        			$wpdb->query("INSERT INTO ". MF_TABLE_POST_META .
+					$wpdb->query("INSERT INTO ". MF_TABLE_POST_META .
 								" (id, field_name, group_count, field_count, post_id,order_id) ".
 								" VALUES ($fieldMetaID, '$customFieldName', ".$key->gc.", ".$key->fc.", $postId,$order)");
 				}
@@ -153,7 +152,6 @@ class RCCWP_Post {
 	 * This function prepares some custom fields before saving it. It reads $_REQUEST and:
 	 * 1. Adds params to photos uploaded (Image field)
 	 * 2. Formats dates (Date Field) 
-	 *
 	 */
 	function PrepareFieldsValues($postId) {
 		global $wpdb;
@@ -227,14 +225,9 @@ class RCCWP_Post {
 		return $customWritePanel;
 	}
 
-
-	/**
-	 *
-	 */
 	function DeletePostMetaData($postId)
 	{
 		global $wpdb;
 		$wpdb->query("DELETE FROM " . MF_TABLE_POST_META . " WHERE post_id =" . $postId) ;
 	}	
 }
-?>

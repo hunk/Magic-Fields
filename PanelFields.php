@@ -1,6 +1,5 @@
 <?php
 
-
 class PanelFields{
 	var $id;
 	var $displayName;
@@ -22,4 +21,3 @@ class PanelFields{
 		$this->excludeVersion = $excludeVersion;
 	}
 }
-?>

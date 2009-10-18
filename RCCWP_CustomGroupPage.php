@@ -1,4 +1,5 @@
 <?php
+
 include_once('RCCWP_CustomGroup.php');
 
 class RCCWP_CustomGroupPage
@@ -49,7 +50,7 @@ class RCCWP_CustomGroupPage
 		?>
 		</tbody>
 		</table>
-        <br />
+		<br />
 		
 		<?php
 	}
@@ -103,4 +104,3 @@ class RCCWP_CustomGroupPage
 		return $results;
 	}
 }
-?>

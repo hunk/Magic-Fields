@@ -87,4 +87,3 @@ if (!empty($_POST['upload_url'])) {
 		echo $result_msg."*"."None";
 	}
 }
-?>

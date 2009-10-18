@@ -1,4 +1,5 @@
 <?php
+
 class RCCWP_CustomFieldPage
 {
 	function Edit()
@@ -215,12 +216,12 @@ class RCCWP_CustomFieldPage
 		<!-- START :: For Image/Photo' Css -->
 		<?php
 			$isDisplay = $custom_field->type == "Image" ? 'display:inline;' : 'display:none;';
-		?>
-		<?php 
+			
 			$size = explode("&",$custom_field->properties['params']);
-if(isset($size[3])){
-$c=$size[3];
-}
+			if(isset($size[3])){
+				$c=$size[3];
+			}
+			
 			if (substr($size[1],0 ,1) == "h"){
 				$h = substr($size[1], 2);
 			}
@@ -278,4 +279,3 @@ $c=$size[3];
   		<?php
 	}
 }
-?>

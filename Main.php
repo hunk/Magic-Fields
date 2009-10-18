@@ -81,8 +81,8 @@ if (is_admin()) {
 
 	if(isset($current_blog)) {
 		RCCWP_Application::Install();
-	    add_action('admin_menu', array('RCCWP_Application', 'ContinueInstallation'));
-    }
+		add_action('admin_menu', array('RCCWP_Application', 'ContinueInstallation'));
+	}
 
 	if (get_option(RC_CWP_OPTION_KEY) !== false) {
 		require_once ('RCCWP_Processor.php');
@@ -96,8 +96,8 @@ if (is_admin()) {
 		add_filter('posts_where', array('RCCWP_Menu', 'FilterPostsPagesList'));
 		add_action('admin_head', array('RCCWP_Menu', 'HighlightCustomPanel'));
 		add_action('admin_head', array('RCCWP_CreateCustomFieldPage', 'AddAjaxDynamicList'));
-        
-        add_action('admin_head', 'mf_admin_style');
+		
+		add_action('admin_head', 'mf_admin_style');
 
 
 		// -- Hook all functions related to saving posts in order to save custom fields values
@@ -113,7 +113,7 @@ if (is_admin()) {
 
 		add_action('admin_notices', array('RCCWP_Application', 'CheckInstallation'));  
 		add_action('admin_notices', array('RCCWP_WritePostPage', 'FormError'));
-	    
+		
 	}
 }
 
@@ -127,7 +127,7 @@ require_once ('RCCWP_Options.php');
 $customWritePanelOptions = RCCWP_Options::Get();
 if( $customWritePanelOptions['enable-editnplace'] ) {
 	add_action('wp_head', array('RCCWP_EditnPlace', 'EditnHeader'));
-    add_action('template_redirect',array('RCCWP_EditnPlace','EditnPlaceJavascript'));
+	add_action('template_redirect',array('RCCWP_EditnPlace','EditnPlaceJavascript'));
 }
 
 require_once ('RCCWP_Query.php');
@@ -197,20 +197,20 @@ EOF;
 
 if ( !function_exists('sys_get_temp_dir')) {
   function sys_get_temp_dir() {
-    if (!empty($_ENV['TMP'])) { return realpath($_ENV['TMP']); }
-    if (!empty($_ENV['TMPDIR'])) { return realpath( $_ENV['TMPDIR']); }
-    if (!empty($_ENV['TEMP'])) { return realpath( $_ENV['TEMP']); }
-    $tempfile=tempnam(uniqid(rand(),TRUE),'');
-    if (file_exists($tempfile)) {
-    unlink($tempfile);
-    return realpath(dirname($tempfile));
-    }
+	if (!empty($_ENV['TMP'])) { return realpath($_ENV['TMP']); }
+	if (!empty($_ENV['TMPDIR'])) { return realpath( $_ENV['TMPDIR']); }
+	if (!empty($_ENV['TEMP'])) { return realpath( $_ENV['TEMP']); }
+	$tempfile=tempnam(uniqid(rand(),TRUE),'');
+	if (file_exists($tempfile)) {
+		unlink($tempfile);
+		return realpath(dirname($tempfile));
+	}
   }
 }
 
 function mf_admin_style() {
-    $url = MF_URI.'css/admin.css';
-    echo '<link rel="stylesheet" type="text/css" href="' . $url . '" />';
+	$url = MF_URI.'css/admin.css';
+	echo '<link rel="stylesheet" type="text/css" href="' . $url . '" />';
 }
 
 /**
@@ -251,4 +251,3 @@ function valid_mime($file_path,$file_type){
 	}
 	return false;
 }
-?>

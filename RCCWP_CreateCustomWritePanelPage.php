@@ -1,5 +1,7 @@
 <?php
+
 include_once('RCCWP_CustomWritePanelPage.php');
+
 class RCCWP_CreateCustomWritePanelPage
 {
 	function Main()
@@ -23,8 +25,7 @@ class RCCWP_CreateCustomWritePanelPage
 		</form>
 
 		</div>
-        <br />
+		<br />
 		<?php
 	}
 }
-?>
