@@ -1,5 +1,4 @@
 <?php
-
 class RCCWP_CustomFieldPage
 {
 	function Edit()
@@ -43,7 +42,10 @@ class RCCWP_CustomFieldPage
 			<th scope="row"><?php _e('Label',$mf_domain); ?>:</th>
 			<td><input name="custom-field-description" id="custom-field-description" size="40" type="text" value="<?php echo htmlspecialchars($custom_field->description)?>" /></td>
 		</tr>
-
+		<tr valign="top">
+			<th scope="row"><?php _e('Help text',$mf_domain); ?>:</th>
+                        <td><input name="custom-field-helptext" id="custom-field-helptext" size="40" type="text" value="<?php echo htmlspecialchars($custom_field->help_text)?>" /><br/><small>If set, this will be displayed in a tooltip next to the field label</small></td>
+		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Can be duplicated',$mf_domain); ?>:</th>
 			<td><input name="custom-field-duplicate" id="custom-field-duplicate" type="checkbox" value="1" <?php echo $custom_field->duplicate==0 ? "":"checked" ?>/></td>
@@ -216,12 +218,12 @@ class RCCWP_CustomFieldPage
 		<!-- START :: For Image/Photo' Css -->
 		<?php
 			$isDisplay = $custom_field->type == "Image" ? 'display:inline;' : 'display:none;';
-			
+		?>
+		<?php 
 			$size = explode("&",$custom_field->properties['params']);
-			if(isset($size[3])){
-				$c=$size[3];
-			}
-			
+if(isset($size[3])){
+$c=$size[3];
+}
 			if (substr($size[1],0 ,1) == "h"){
 				$h = substr($size[1], 2);
 			}
@@ -279,3 +281,4 @@ class RCCWP_CustomFieldPage
   		<?php
 	}
 }
+?>

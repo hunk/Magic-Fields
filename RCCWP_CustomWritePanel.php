@@ -68,7 +68,7 @@ class RCCWP_CustomWritePanel
 			$display_order,
 			RC_Format::TextToSql($capabilityName),
 			RC_Format::TextToSql($type),
-			$single_post
+            $single_post           
 		);
 		
 		$wpdb->query($sql);
@@ -199,7 +199,7 @@ class RCCWP_CustomWritePanel
 	}
 	
 	/**
-	 * Get a list of the ids of the categories assigned to  a write panel
+	 * Get a list of the ids of teh categories assigned to  a write panel
 	 *
 	 * @param integer $customWritePanelId write panel id
 	 * @return array of ids
@@ -507,7 +507,7 @@ class RCCWP_CustomWritePanel
 		$i = 1;
 		$temp_name = $writePanelName;
 		while ($wpdb->get_var("SELECT id FROM ".MF_TABLE_PANELS." WHERE name='".$temp_name."'")){
-			$temp_name = $writePanelName. "_" . $i++;
+		    $temp_name = $writePanelName. "_" . $i++;
 		}
 		$writePanelName = $temp_name;
 
@@ -589,29 +589,5 @@ class RCCWP_CustomWritePanel
 		@fclose($handle);
 	}
 	
-	/**
-	 * Return the name of the write panel giving the post_id
-	 *
-	 * @param integer $post_id
-	 * @return string
-	 */
-	function GetWritePanelName($post_id){
-		global $wpdb;
-		
-		if ($the_post = wp_is_post_revision($post_id)){
-			$post_id = $the_post;
-		}
-		
-		//getting the panel id
-		$panel_id = $wpdb->get_var("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = {$post_id} AND meta_key = '_mf_write_panel_id'");
-		
-		if(empty($panel_id)){
-			return false;
-		}
-		
-		//Getting the write panel name using the id
-		$properties  = RCCWP_CustomWritePanel::Get($panel_id);
-		
-		return $properties->name;
-	}
 }
+?>

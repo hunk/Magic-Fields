@@ -1,5 +1,4 @@
 <?php
-
 include_once('RCCWP_CustomWritePanel.php');
 
 class RCCWP_CustomWritePanelPage
@@ -42,7 +41,7 @@ class RCCWP_CustomWritePanelPage
 		<tbody>
 		<tr valign="top">
 			<th scope="row"><?php _e('Placement', $mf_domain); ?></th>
-				<td>
+        		<td>
 				<!-- START :: Javascript for Image/Photo' Css Class -->
 				<script type="text/javascript" language="javascript">
 					jQuery(document).ready( function() {
@@ -121,29 +120,28 @@ class RCCWP_CustomWritePanelPage
 			</td>
 		</tr>
 		
-		<tr>
-			<th><?php _e('Quantity',$mf_domain);?></th>
-			<td>
-				<?php 
-				if(isset($customWritePanel->id) && !empty($customWritePanel->id))
-				{
-					if ($customWritePanelAllFieldIds->single == 0)
+        <tr>
+            <th><?php _e('Quantity',$mf_domain);?></th>
+            <td>
+				<?php if(isset($customWritePanel->id) && !empty($customWritePanel->id))
 					{
+						if ($customWritePanelAllFieldIds->single == 0)
+						{
+							$multiple_checked='checked="checked"';
+							$single_checked='';
+						}else{
+							$single_checked='checked="checked"';
+							$multiple_checked='';
+						}
+					}else{
 						$multiple_checked='checked="checked"';
 						$single_checked='';
-					}else{
-						$single_checked='checked="checked"';
-						$multiple_checked='';
 					}
-				}else{
-					$multiple_checked='checked="checked"';
-					$single_checked='';
-				}
 				?>
 				<input type="radio" name="single" id="radPostPage" value="1" <?php echo $single_checked?>  /> <strong><?php _e('Single', $mf_domain); ?> </strong> &nbsp; &nbsp; &nbsp; 
 				<input type="radio" name="single" id="radPostPage" value="0" <?php echo $multiple_checked?>  /> <strong><?php _e('Multiple', $mf_domain); ?></strong>
-			</td>
-		</tr>
+             </td>
+        </tr>
 
 		<tr valign="top">
 			<th scope="row" align="right"><?php _e('Standard Fields', $mf_domain); ?>:</th>
@@ -181,6 +179,7 @@ class RCCWP_CustomWritePanelPage
 					</div>
 				<?php
 					endforeach;
+
 				?>
 			</td>
 		</tr>
@@ -227,11 +226,11 @@ class RCCWP_CustomWritePanelPage
 
 		<tr valign="top">
 			<th scope="row" align="right"><?php _e('Order', $mf_domain); ?>:</th>
-			<?php 
-				if(empty($customWritePanelDisplayOrder)){
-					$customWritePanelDisplayOrder = "";
-				}
-			?>
+            <?php 
+                if(empty($customWritePanelDisplayOrder)){
+                    $customWritePanelDisplayOrder = "";
+                }
+            ?>
 			<td><input name="custom-write-panel-order" id="custom-write-panel-order" size="2" type="text" value="<?php echo $customWritePanelDisplayOrder?>" /></td>
 		</tr>
 
@@ -392,7 +391,7 @@ class RCCWP_CustomWritePanelPage
   		</tbody>
   		</table>
 		</div>
-		<br />
+        <br />
 		<?php
 	}
 	
@@ -465,7 +464,7 @@ class RCCWP_CustomWritePanelPage
 				<?php
 				foreach ($customWritePanels as $panel) :
 				?>
-					<tr>
+					<tr">
 						<td><?php echo $panel->name ?></td>			
 						<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('view-custom-write-panel', $panel->id)?>" ><?php _e('Edit Fields/Groups',$mf_domain) ?></a></td>
 						<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $panel->id)?>" ><?php _e('Edit Write Panel',$mf_domain) ?></a></td>
@@ -476,9 +475,10 @@ class RCCWP_CustomWritePanelPage
 				?>
 			</tbody>
 		</table>
-		<br />
+        <br />
 		</div>
 		<?php 
 	}
 	
 }
+?>

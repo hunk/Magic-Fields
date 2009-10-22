@@ -124,3 +124,33 @@
 .datepicker_mf{
     margin-left: 15%;
 }
+.mf-field small.tip {
+    color: #ff0000;
+}
+/*test */
+.mf-field small.tip {
+	position: relative;
+}
+
+.mf-field small.tip span {
+	display: none;
+	position: absolute;
+	top: 20px;
+	left: -10px;
+	width: 125px;
+	padding: 5px;
+	z-index: 100;
+	background: #888;
+	color: #fff;
+        line-height: 1.5em;
+	-moz-border-radius: 5px; /* this works only in camino/firefox */
+	-webkit-border-radius: 5px; /* this is just for Safari */
+}
+
+.mf-field small:hover.tip {
+	font-size: 79%; /* this is just for IE */
+}
+
+.mf-field small:hover.tip span {
+	display: block;
+}

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * This class content all  type of fields for the panels
  */
-class RCCWP_WritePostPage 
-{
-	function ApplyCustomWritePanelAssignedCategories($content){ 
+class RCCWP_WritePostPage {
+    
+    function ApplyCustomWritePanelAssignedCategories($content){ 
 		global $CUSTOM_WRITE_PANEL;
 		global $post,$title;
 		
@@ -13,12 +12,12 @@ class RCCWP_WritePostPage
 		$customThemePage = RCCWP_CustomWritePanel::GetThemePage($CUSTOM_WRITE_PANEL->name);
 		
 		if($_GET['custom-write-panel-id']){
-			foreach ($assignedCategoryIds as $categoryId)
-			{
-				$toReplace = 'id="in-category-' . $categoryId . '"';
-				$replacement = $toReplace . ' checked="checked"';
-				$content = str_replace($toReplace, $replacement, $content);
-			}
+		    foreach ($assignedCategoryIds as $categoryId)
+		    {
+			$toReplace = 'id="in-category-' . $categoryId . '"';
+			$replacement = $toReplace . ' checked="checked"';
+			$content = str_replace($toReplace, $replacement, $content);
+		    }
 		}
 		//set default theme page
 		if($post->ID == 0){
@@ -29,14 +28,14 @@ class RCCWP_WritePostPage
 		return $content;
 	}
 
-	function FormError(){
+    function FormError(){
 		global $mf_domain;
 		if (RCCWP_Application::InWritePostPanel()){
 			echo "<div id='mf-publish-error-message' class='error' style='display:none;'><p><strong>".__("Post was not published - ",$mf_domain)."</strong> ".__("You have errors in some fields, please check the fields below.",$mf_domain)."</p></div>";	
 		}
 	}
 
-	function CustomFieldsCSS(){
+    function CustomFieldsCSS(){
 	?>
 	<link 
 			rel="stylesheet" 
@@ -62,17 +61,7 @@ class RCCWP_WritePostPage
 		wp_enqueue_script(	'mf_datepicker',
 							MF_URI.'js/custom_fields/datepicker.js'
 						);
-		
-		//loading the code for delete images
-		wp_enqueue_script(	'mf_image',
-							MF_URI.'js/custom_fields/image.js'
-						);
 						
-		//loading handler for upload files
-		wp_enqueue_script( 'mf_upload',
-							MF_URI.'js/upload.js'
-						);
-		
 		//loading Prototype framework
 		wp_enqueue_script('prototype');
 						
@@ -109,16 +98,16 @@ class RCCWP_WritePostPage
 			var swf_nonce = "<?php echo wp_create_nonce('media-form'); ?>" ;
 		</script>
  		<script type="text/javascript" src="<?php echo MF_URI?>js/groups.js"></script>
-		
+        
 		<script type="text/javascript">
 				function isset(  ) {
 					// http://kevin.vanzonneveld.net
 					// +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
 					// +   improved by: FremyCompany
-					// *	 example 1: isset( undefined, true);
-					// *	 returns 1: false
-					// *	 example 2: isset( 'Kevin van Zonneveld' );
-					// *	 returns 2: true
+					// *     example 1: isset( undefined, true);
+					// *     returns 1: false
+					// *     example 2: isset( 'Kevin van Zonneveld' );
+					// *     returns 2: true
 					
 					var a=arguments; var l=a.length; var i=0;
 					
@@ -132,8 +121,8 @@ class RCCWP_WritePostPage
 					
 					return true;
 				}
-			
-			// -------------
+            
+            // -------------
 			// Edit Photo functions
 			function prepareUpdatePhoto(inputName){	
 				jQuery('#'+inputName+'_dorename').val(1);
@@ -142,24 +131,25 @@ class RCCWP_WritePostPage
 		</script>
 		
 		<script type="text/javascript">
-			var JS_MF_FILES_PATH   = '<?php echo MF_FILES_URI ?>';
-			var wp_root            = "<?php echo get_bloginfo('wpurl');?>";
-			var mf_path            = "<?php echo MF_URI; ?>";
-			var mf_relative        = "<?php echo MF_URI_RELATIVE;?>";
-			var phpthumb           = "<?php echo PHPTHUMB;?>";
+			var JS_MF_FILES_PATH = '<?php echo MF_FILES_URI ?>';
+			var wp_root         = "<?php echo get_bloginfo('wpurl');?>";
+			var mf_path    = "<?php echo MF_URI; ?>";
+			var mf_relative = "<?php echo MF_URI_RELATIVE;?>";
+			var phpthumb        = "<?php echo PHPTHUMB;?>";
 			var swf_authentication = "<?php if ( function_exists('is_ssl') && is_ssl() ) echo $_COOKIE[SECURE_AUTH_COOKIE]; else echo $_COOKIE[AUTH_COOKIE]; ?>" ;
-			var swf_nonce          = "<?php echo wp_create_nonce('media-form'); ?>" ;
+			var swf_nonce = "<?php echo wp_create_nonce('media-form'); ?>" ;
 		</script>
+		<script type="text/javascript" src="<?php echo MF_URI; ?>js/swfcallbacks.js" ></script>
 
 		<script type="text/javascript">
 				function isset(  ) {
 					// http://kevin.vanzonneveld.net
 					// +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
 					// +   improved by: FremyCompany
-					// *	 example 1: isset( undefined, true);
-					// *	 returns 1: false
-					// *	 example 2: isset( 'Kevin van Zonneveld' );
-					// *	 returns 2: true
+					// *     example 1: isset( undefined, true);
+					// *     returns 1: false
+					// *     example 2: isset( 'Kevin van Zonneveld' );
+					// *     returns 2: true
 					
 					var a=arguments; var l=a.length; var i=0;
 					
@@ -181,16 +171,16 @@ class RCCWP_WritePostPage
 				var stopPublish = false;
 				jQuery('input.field_required','textarea.field_required').each(
 						function(inputField){
-							<?php  
-								$hide_visual_editor = RCCWP_Options::Get('hide-visual-editor');
-								if ($hide_visual_editor == '' || $hide_visual_editor ==  0):
-							?>
-								re = new RegExp(".*_multiline");
-								if(re.match(inputField.id)){
-									inputField.value = tinyMCE.get(inputField.id).getContent();
-								}
+                            <?php  
+		                        $hide_visual_editor = RCCWP_Options::Get('hide-visual-editor');
+                                if ($hide_visual_editor == '' || $hide_visual_editor ==  0):
+                            ?>
+                                re = new RegExp(".*_multiline");
+                                if(re.match(inputField.id)){
+                                    inputField.value = tinyMCE.get(inputField.id).getContent();
+                                }
 
-							<?php endif;?>
+                            <?php endif;?>
 
 							if ($F(inputField) == "" &&
 								!(Object.isElement($(inputField.id+"_last")) && $F(inputField.id+"_last") != "")	){
@@ -203,12 +193,12 @@ class RCCWP_WritePostPage
 								// Update iframe color if it exists
 								if (Object.isElement($("upload_internal_iframe_"+inputField.id))){
 								  	if ($("upload_internal_iframe_"+inputField.id).contentDocument) {
-										// For FF
-										$("upload_internal_iframe_"+inputField.id).contentDocument.body.style.backgroundColor = "#FFEBE8"; 
+								    	// For FF
+								    	$("upload_internal_iframe_"+inputField.id).contentDocument.body.style.backgroundColor = "#FFEBE8"; 
 								  	} else if ($("upload_internal_iframe_"+inputField.id).contentWindow) {
-										// For IE5.5 and IE6
-										$("upload_internal_iframe_"+inputField.id).contentWindow.document.body.style.backgroundColor = "#FFEBE8";
-									}
+									    // For IE5.5 and IE6
+									    $("upload_internal_iframe_"+inputField.id).contentWindow.document.body.style.backgroundColor = "#FFEBE8";
+								    }
 								}
 									
 								$("fieldcellerror_"+inputField.id).style.display = "";
@@ -222,12 +212,12 @@ class RCCWP_WritePostPage
 								// Update iframe color if it exists
 								if (Object.isElement($("upload_internal_iframe_"+inputField.id))){
 								  	if ($("upload_internal_iframe_"+inputField.id).contentDocument) {
-										// For FF
-										$("upload_internal_iframe_"+inputField.id).contentDocument.body.style.backgroundColor = "#EAF3FA"; 
+								    	// For FF
+								    	$("upload_internal_iframe_"+inputField.id).contentDocument.body.style.backgroundColor = "#EAF3FA"; 
 								  	} else if ($("upload_internal_iframe_"+inputField.id).contentWindow) {
-										// For IE5.5 and IE6
-										$("upload_internal_iframe_"+inputField.id).contentWindow.document.body.style.backgroundColor = "#EAF3FA";
-									}
+									    // For IE5.5 and IE6
+									    $("upload_internal_iframe_"+inputField.id).contentWindow.document.body.style.backgroundColor = "#EAF3FA";
+								    }
 								}
 									
 							}
@@ -328,153 +318,157 @@ class RCCWP_WritePostPage
 		
 	}
 	function metaboxContent($temp,$group) {
-		global $mf_domain;
-		global $wpdb;
-		global $post;
+        global $mf_domain;
+        global $wpdb;
+        global $post;
 		global $CUSTOM_WRITE_PANEL;
 		
 		//we are passing the group_id in the args of the add_meta_box
 		$group = $group['args'];
 		
-			//render the elements
-			$customFields = RCCWP_CustomGroup::GetCustomFields($group->id);
-			
-			//when will be edit the  Post
+            //render the elements
+    		$customFields = RCCWP_CustomGroup::GetCustomFields($group->id);
+            
+            //when will be edit the  Post
 			if(isset( $_REQUEST['post'] ) && count($customFields) > 0){
-				//using the first field name we can know 
-				//the order  of the groups
-				$firstFieldName = $customFields[0]->name;
+                //using the first field name we can know 
+                //the order  of the groups
+                $firstFieldName = $customFields[0]->name;
 
-				$order = RCCWP_CustomField::GetOrderDuplicates($_REQUEST['post'],$firstFieldName);
+                $order = RCCWP_CustomField::GetOrderDuplicates($_REQUEST['post'],$firstFieldName);
 
-				?> 
-				<div class="write_panel_wrapper"  id="write_panel_wrap_<?php echo $group->id;?>"><?php
-				
-				//build the group duplicates 
-				foreach($order as $key => $element){
-					RCCWP_WritePostPage::GroupDuplicate($group,$element,$key,false);
-				}
-				//knowing what is the biggest duplicate group
-				if(!empty($order)){
-					$tmp =  $order;
-					sort($tmp);
-					$top = $tmp[count($tmp) -1];
-				}else{
-					$top = 0;
-				}
+                ?> 
+                <div class="write_panel_wrapper"  id="write_panel_wrap_<?php echo $group->id;?>"><?php
+                
+                //build the group duplicates 
+                foreach($order as $key => $element){
 				?>
-				<input type='hidden' name='g<?php echo $group->id?>counter' id='g<?php echo $group->id?>counter' value='<?php echo $top ?>' />
-				<input type="hidden" name="rc-custom-write-panel-verify-key" id="rc-custom-write-panel-verify-key" value="<?php echo wp_create_nonce('rc-custom-write-panel')?>" />
-				<input type="hidden" name="rc-cwp-custom-write-panel-id" value="<?php echo $CUSTOM_WRITE_PANEL->id?>" />
-				</div>
-			<?php
+                    <?php RCCWP_WritePostPage::GroupDuplicate($group,$element,$key,false);?>
+                   <?php 
+				}
+                ?>
+                <?php 
+                    //knowing what is the biggest duplicate group
+                    if(!empty($order)){
+                        $tmp =  $order;
+                        sort($tmp);
+                        $top = $tmp[count($tmp) -1];
+                    }else{
+                        $top = 0;
+                    }
+                ?>
+                <input type='hidden' name='g<?php echo $group->id?>counter' id='g<?php echo $group->id?>counter' value='<?php echo $top ?>' />
+                <input type="hidden" name="rc-custom-write-panel-verify-key" id="rc-custom-write-panel-verify-key" value="<?php echo wp_create_nonce('rc-custom-write-panel')?>" />
+		        <input type="hidden" name="rc-cwp-custom-write-panel-id" value="<?php echo $CUSTOM_WRITE_PANEL->id?>" />
+                </div>
+            <?php
 			}else{
-			?>
-				<div class="write_panel_wrapper" id="write_panel_wrap_<?php echo $group->id;?>">
-				<?php
-					RCCWP_WritePostPage::GroupDuplicate($group,1,1,false);
-					$gc = 1;
-				?>
-				<input type='hidden' name='g<?php echo $group->id?>counter' id='g<?php echo $group->id?>counter' value='<?php echo $gc?>' />
-		   		<input type='hidden' name="rc-custom-write-panel-verify-key" id="rc-custom-write-panel-verify-key" value="<?php echo wp_create_nonce('rc-custom-write-panel')?>" />
-				<input type='hidden' name="rc-cwp-custom-write-panel-id" value="<?php echo $CUSTOM_WRITE_PANEL->id;?>" />
-				</div>
-			<?php 
-		   
-		   }
+               
+            ?>
+                <div class="write_panel_wrapper" id="write_panel_wrap_<?php echo $group->id;?>">
+                <?php
+             		      RCCWP_WritePostPage::GroupDuplicate($group,1,1,false);
+                          $gc = 1;
+                ?>
+                <input type='hidden' name='g<?php echo $group->id?>counter' id='g<?php echo $group->id?>counter' value='<?php echo $gc?>' />
+           		<input type='hidden' name="rc-custom-write-panel-verify-key" id="rc-custom-write-panel-verify-key" value="<?php echo wp_create_nonce('rc-custom-write-panel')?>" />
+		        <input type='hidden' name="rc-cwp-custom-write-panel-id" value="<?php echo $CUSTOM_WRITE_PANEL->id;?>" />
+                </div>
+            <?php 
+           
+           }
 	}
 
-	/**
-	 * 
-	 * @param object $customGroup
-	 * @param integer $groupCounter
-	 * @param boolean $fromAjax
-	 *
-	 */ 
+    /**
+     * This method and   groupduplicated  will be merged in nexts commits
+     * 
+     * @param object $customGroup
+     * @param integer $groupCounter
+     * @param boolean $fromAjax
+     *
+     */ 
 	function GroupDuplicate($customGroup, $groupCounter,$order,$fromAjax=true){
 		global $mf_domain;
  
-		//getting the custom fields
+        //getting the custom fields
 		$customFields = RCCWP_CustomGroup::GetCustomFields($customGroup->id);
-		
-		//if don't have fields then finish
-		if (count($customFields) == 0) return;
+        
+        //if don't have fields then finish
+	    if (count($customFields) == 0) return;
 
 		require_once("RC_Format.php");
-		if( $customGroup->duplicate != 0 ){ 
-			$add_class_rep="mf_duplicate_group";}else{$add_class_rep="";
-		}
+if( $customGroup->duplicate != 0 ){ $add_class_rep="mf_duplicate_group";}else{$add_class_rep="";}
 		?>
-		<div class="magicfield_group <?php echo $add_class_rep;?>" id="freshpostdiv_group_<?php 
-			echo $customGroup->id.'_'.$groupCounter;?>">
-			<div>
-			<div class="inside">
-				<?php	
-					foreach ($customFields as $field) {
+		<div class="magicfield_group <?php echo $add_class_rep;?>" id="freshpostdiv_group_<?php echo
+		 $customGroup->id.'_'.$groupCounter;?>">	
+            <div>
+            <div class="inside">
+			    <?php	
+	        		foreach ($customFields as $field) {
 
-						$customFieldName = RC_Format::GetInputName(attribute_escape($field->name));
-						$customFieldTitle = attribute_escape($field->description);
-						$groupId  = $customGroup->id;
-						$inputName = $field->id."_".$groupCounter."_1_".$groupId."_".$customFieldName;
+		        		$customFieldName = RC_Format::GetInputName(attribute_escape($field->name));
+        				$customFieldTitle = attribute_escape($field->description);
+                        $groupId  = $customGroup->id;
+		        		$inputName = $field->id."_".$groupCounter."_1_".$groupId."_".$customFieldName;
 
-						
-						if(isset($_REQUEST['post'])){
-							$fc = RCCWP_CustomField::GetFieldDuplicates($_REQUEST['post'],$field->name,$groupCounter);
-							$fields_order =  RCCWP_CustomField::GetFieldsOrder($_REQUEST['post'],$field->name,$groupCounter);
-							foreach($fields_order as $element){
-								RCCWP_WritePostPage::CustomFieldInterface($field->id,$groupCounter,$element,$customGroup->id); 
-							}   
-						}else{
-							RCCWP_WritePostPage::CustomFieldInterface($field->id,$groupCounter,1,$customGroup->id);
-							$fc = 1;
-						}
+                        
+                        if(isset($_REQUEST['post'])){
+                            $fc = RCCWP_CustomField::GetFieldDuplicates($_REQUEST['post'],$field->name,$groupCounter);
+                            $fields_order =  RCCWP_CustomField::GetFieldsOrder($_REQUEST['post'],$field->name,$groupCounter);
+                            foreach($fields_order as $element){
+                                RCCWP_WritePostPage::CustomFieldInterface($field->id,$groupCounter,$element,$customGroup->id); 
+                            }   
+                        }else{
+                            RCCWP_WritePostPage::CustomFieldInterface($field->id,$groupCounter,1,$customGroup->id);
+                            $fc = 1;
+                        }
 
 
-						if(!empty($fields_order)){
-							$tmp =  $fields_order;
-							sort($tmp);
-							$top = $tmp[count($tmp) -1];
-						}else{
-							$top = 1;
-						}
+                    if(!empty($fields_order)){
+                        $tmp =  $fields_order;
+                        sort($tmp);
+                        $top = $tmp[count($tmp) -1];
+                    }else{
+                        $top = 1;
+                    }
 
-					?>
-					<span style="display:none" id="<?php echo "c".$inputName."Duplicate"?>">
+                ?>
+               <span style="display:none" id="<?php echo "c".$inputName."Duplicate"?>">
 						<input type="text" name="c<?php echo $inputName ?>Counter" id="c<?php echo $inputName ?>Counter" value='<?php echo $top ?>' /> 
-					</span>
-				<?php } ?>
-			<br />
-			<?php
-				if( $customGroup->duplicate != 0 ){
-			?>
+				</span>
+                <?php } ?>
+    		<br />
+				<?php
+		        	if( $customGroup->duplicate != 0 ){
+				?>
 			<div class="mf_toolbox">
 				<span class="hndle sortable_mf row_mf">
 					<img title="Order" src="<?php echo MF_URI;?>/images/move.png"/>
-				</span>
+			    </span>
 				<span class="mf_counter" id="counter_<?php echo $customGroup->id;?>_<?php echo $groupCounter;?>">
 					(<?php echo $order;?>)
 				</span>
-				<span class="add_mf">
-					<?php
-						if($groupCounter != 1):?>
-							<a class ="delete_duplicate_button" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"> 
-								<img class="duplicate_image"  src="<?php echo MF_URI; ?>images/delete.png" alt="<?php _e('Remove field duplicate', $mf_domain); ?>"/><?php _e('Remove Group', $mf_domain); ?>
-							</a>
-						<?php else:?> 
-							<a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);"> 
-								<img class="duplicate_image" src="<?php echo MF_URI; ?>images/duplicate.png" alt="<?php _e('Add group duplicate', $mf_domain); ?>" title="Duplicate Field"/>
-							</a>
-					   <?php endif;?> 
-				</span>
-				<br style="height:2px"/>
-			</div>
-			<?php
-				  }
-			?>
-			</div>
-			</div> 
-			<input type="hidden" name="order_<?php echo $customGroup->id?>_<?php echo $groupCounter;?>" id="order_<?php echo $customGroup->id?>_<?php echo $groupCounter;?>" value="<?php echo $order?>" />
+			<span class="add_mf">
+				<?php
+                    if($groupCounter != 1):?>
+                        <a class ="delete_duplicate_button" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"> 
+            		        <img class="duplicate_image"  src="<?php echo MF_URI; ?>images/delete.png" alt="<?php _e('Remove field duplicate', $mf_domain); ?>"/><?php _e('Remove Group', $mf_domain); ?>
+                	    </a>
+                    <?php else:?> 
+                        <a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);"> 
+            		    	<img class="duplicate_image" src="<?php echo MF_URI; ?>images/duplicate.png" alt="<?php _e('Add group duplicate', $mf_domain); ?>" title="Duplicate Field"/>
+	                	</a>
+                   <?php endif;?> 
+</span>
+			<br style="height:2px"/>
 		</div>
+		<?php
+	          }
+	    ?>
+                </div>
+            </div> 
+            <input type="hidden" name="order_<?php echo $customGroup->id?>_<?php echo $groupCounter;?>" id="order_<?php echo $customGroup->id?>_<?php echo $groupCounter;?>" value="<?php echo $order?>" />
+        </div>
 		<?php
 	}
 	
@@ -487,7 +481,8 @@ class RCCWP_WritePostPage
 		$customField = RCCWP_CustomField::Get($customFieldId);
 		$customFieldName = RC_Format::GetInputName(attribute_escape($customField->name));
 		$customFieldTitle = attribute_escape($customField->description);
-		$groupId = $customGroup_id;
+                $customFieldHelp = htmlentities2($customField->help_text);
+        $groupId =  $customGroup_id;
 		$inputName = $customFieldId."_".$groupCounter."_".$fieldCounter."_".$groupId."_".$customFieldName; // Create input tag name
  		if( $fieldCounter > 1 && $customField->duplicate == 0 ) return ;
  		if( $fieldCounter > 1) $titleCounter = " ($fieldCounter)";
@@ -504,54 +499,57 @@ class RCCWP_WritePostPage
 					
 				?>
 				<?php echo $customFieldTitle.$titleCounter?>
+                        <?php if (!empty($customFieldHelp)) {?>
+                        <small class="tip">(what's this?)<span class="field_help"><?php echo $customFieldHelp; ?></span></small>
+                        <?php } ?>
 			</label>
 			<span>
 				<p class="error_msg_txt" id="fieldcellerror_<?php echo $inputName?>" style="display:none"></p>
 				<?php		
-				switch ($customField->type)
-				{
-					case 'Textbox' :
-						RCCWP_WritePostPage::TextboxInterface($customField, $inputName, $groupCounter, $fieldCounter);
-						break;
-					case 'Multiline Textbox' :
-						RCCWP_WritePostPage::MultilineTextboxInterface($customField, $inputName, $groupCounter, $fieldCounter);
-						break;
-					case 'Checkbox' :
-						RCCWP_WritePostPage::CheckboxInterface($customField, $inputName, $groupCounter, $fieldCounter);
-						break;
-					case 'Checkbox List' :
-						RCCWP_WritePostPage::CheckboxListInterface($customField, $inputName, $groupCounter, $fieldCounter);
-						break;
-					case 'Radiobutton List' :
-						RCCWP_WritePostPage::RadiobuttonListInterface($customField, $inputName, $groupCounter, $fieldCounter);
-						break;
-					case 'Dropdown List' :
-						RCCWP_WritePostPage::DropdownListInterface($customField, $inputName, $groupCounter, $fieldCounter);
-						break;
-					case 'Listbox' :
-						RCCWP_WritePostPage::ListboxInterface($customField, $inputName, $groupCounter, $fieldCounter);
-						break;
-					case 'File' :
-						RCCWP_WritePostPage::FileInterface($customField, $inputName, $groupCounter, $fieldCounter);
-						break;
-					case 'Image' :
-						RCCWP_WritePostPage::PhotoInterface($customField, $inputName, $groupCounter, $fieldCounter);
-						break;
-					case 'Date' :
-						RCCWP_WritePostPage::DateInterface($customField, $inputName, $groupCounter, $fieldCounter);
-						break;
-					case 'Audio' :
-						RCCWP_WritePostPage::AudioInterface($customField, $inputName, $groupCounter, $fieldCounter);
-						break;
-					case 'Color Picker' :
-						RCCWP_WritePostPage::ColorPickerInterface($customField, $inputName, $groupCounter, $fieldCounter);
-						break;
-					case 'Slider' :
-						RCCWP_WritePostPage::SliderInterface($customField, $inputName, $groupCounter, $fieldCounter);
-						break;
-					default:
-						;
-				}
+					switch ($customField->type)
+					{
+						case 'Textbox' :
+							RCCWP_WritePostPage::TextboxInterface($customField, $inputName, $groupCounter, $fieldCounter);
+							break;
+						case 'Multiline Textbox' :
+							RCCWP_WritePostPage::MultilineTextboxInterface($customField, $inputName, $groupCounter, $fieldCounter);
+							break;
+						case 'Checkbox' :
+							RCCWP_WritePostPage::CheckboxInterface($customField, $inputName, $groupCounter, $fieldCounter);
+							break;
+						case 'Checkbox List' :
+							RCCWP_WritePostPage::CheckboxListInterface($customField, $inputName, $groupCounter, $fieldCounter);
+							break;
+						case 'Radiobutton List' :
+							RCCWP_WritePostPage::RadiobuttonListInterface($customField, $inputName, $groupCounter, $fieldCounter);
+							break;
+						case 'Dropdown List' :
+							RCCWP_WritePostPage::DropdownListInterface($customField, $inputName, $groupCounter, $fieldCounter);
+							break;
+						case 'Listbox' :
+							RCCWP_WritePostPage::ListboxInterface($customField, $inputName, $groupCounter, $fieldCounter);
+							break;
+						case 'File' :
+							RCCWP_WritePostPage::FileInterface($customField, $inputName, $groupCounter, $fieldCounter);
+							break;
+						case 'Image' :
+							RCCWP_WritePostPage::PhotoInterface($customField, $inputName, $groupCounter, $fieldCounter);
+							break;
+						case 'Date' :
+							RCCWP_WritePostPage::DateInterface($customField, $inputName, $groupCounter, $fieldCounter);
+							break;
+						case 'Audio' :
+							RCCWP_WritePostPage::AudioInterface($customField, $inputName, $groupCounter, $fieldCounter);
+							break;
+						case 'Color Picker' :
+							RCCWP_WritePostPage::ColorPickerInterface($customField, $inputName, $groupCounter, $fieldCounter);
+							break;
+						case 'Slider' :
+							RCCWP_WritePostPage::SliderInterface($customField, $inputName, $groupCounter, $fieldCounter);
+							break;
+						default:
+							;
+					}
 				if($fieldCounter == 1)
 				{
 					?>
@@ -562,12 +560,14 @@ class RCCWP_WritePostPage
 						<img class="duplicate_image"  src="<?php echo MF_URI; ?>images/duplicate.png" alt="<?php _e('Add field duplicate', $mf_domain); ?>"/>  <?php _e('Duplicate', $mf_domain); ?>
 					</a>
 					<?php } ?>
+					 
 					<?php
 				}
 				else
-				{
+				{	
 				?>
 					<br />
+					
 					<a class ="delete_duplicate_field" href="javascript:void(0)" id="delete_field_repeat-<?php echo $inputName?>"> 
 						<img class="duplicate_image"  src="<?php echo MF_URI; ?>images/delete.png" alt="<?php _e('Remove field duplicate', $mf_domain); ?> "/> <?php _e('Remove', $mf_domain); ?> 
 					</a>
@@ -619,7 +619,7 @@ class RCCWP_WritePostPage
 			$option = attribute_escape(trim($option));
 		?>
 		
-			<input tabindex="3" class="checkbox_list_mf" id="<?php echo $option?>" name="<?php echo $inputName?>[]" value="<?php echo $option?>" type="checkbox" <?php echo $checked?> />
+		    <input tabindex="3" class="checkbox_list_mf" id="<?php echo $option?>" name="<?php echo $inputName?>[]" value="<?php echo $option?>" type="checkbox" <?php echo $checked?> />
 			<label for="<?php echo $inputName;?>" class="selectit mf-checkbox-list">
 				<?php echo attribute_escape($option)?>
 			</label><br />
@@ -677,19 +677,19 @@ class RCCWP_WritePostPage
 			$customFieldId = $customField->id;
 			$values = (array) RCCWP_CustomField::GetCustomFieldValues(false, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 			
-		}else{
+        }else{
 			$values = $customField->default_value;
 		}
 		
 		$inputSize = (int)$customField->properties['size'];
-		$requiredClass = "mf_listbox";
+        $requiredClass = "mf_listbox";
 		if ($customField->required_field) $requiredClass = "mf_listbox field_required";
 		?>
 		<select  class="<?php echo $requiredClass;?> listbox_mf"  tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>[]" multiple size="<?php echo $inputSize?>" style="height: 6em;">
 		
 		<?php
-		foreach ($customField->options as $option) {
-			if(!empty($option)){
+		foreach ($customField->options as $option) :
+			if(!empty($option)):
 				$selected = in_array($option, (array)$values) ? 'selected="selected"' : '';
 				$option = attribute_escape(trim($option));
 				
@@ -698,8 +698,8 @@ class RCCWP_WritePostPage
 			<option value="<?php echo $option?>" <?php echo $selected?>><?php echo $option?></option>
 			
 		<?php
-			}
-		}
+			endif;
+		endforeach;
 		?>
 		
 		</select>
@@ -731,23 +731,23 @@ class RCCWP_WritePostPage
 		?>
 		<script type="text/javascript">
 			jQuery(document).ready(function(){	 
-				tinyMCE.execCommand('mceAddControl', true, "<?php echo $inputName?>");
+			    tinyMCE.execCommand('mceAddControl', true, "<?php echo $inputName?>");
 			});
 
 			function add_editor(id){
-				tinyMCE.execCommand('mceAddControl', false, id);
+			    tinyMCE.execCommand('mceAddControl', false, id);
 			}
 			
 			function del_editor(id){
-				tinyMCE.execCommand('mceRemoveControl', false, id);
+			    tinyMCE.execCommand('mceRemoveControl', false, id);
 			}
 			
 			</script>
 		<?php } ?>
 		<?php if ($hide_visual_editor == '' || $hide_visual_editor == 0){ ?>
 		<div class="tab_multi_mf">
-			<a onclick="del_editor('<?php echo $inputName?>');" class="edButtonHTML_mf">HTML</a>		
-			<a onclick="add_editor('<?php echo $inputName?>');" class="edButtonHTML_mf" >Visual</a>
+		    <a onclick="del_editor('<?php echo $inputName?>');" class="edButtonHTML_mf">HTML</a>		
+		    <a onclick="add_editor('<?php echo $inputName?>');" class="edButtonHTML_mf" >Visual</a>
 		</div>
 		<?php } ?>
 		
@@ -767,7 +767,7 @@ class RCCWP_WritePostPage
 			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
 		}else{
 			$value = "";
-		}
+        }
 
 		$inputSize = (int)$customField->properties['size'];
 		if ($customField->required_field) $requiredClass = "field_required";
@@ -786,10 +786,10 @@ class RCCWP_WritePostPage
 	
 
 
-	/**
-	 * File Field
-	 *
-	 */
+    /**
+     * File Field
+     *
+     */
 	function FileInterface($customField, $inputName, $groupCounter, $fieldCounter)
 	{
 		global $mf_domain;
@@ -820,35 +820,35 @@ class RCCWP_WritePostPage
 		?>
 		
 		<p class="error_msg_txt" id="upload_progress_<?php echo $inputName?>" style="visibility:hidden;height:0px"></p>
-		<script type="text/javascript"> 
-			//this script is for remove the  file  related  to the post (using ajax)
-			remove_file = function(){
-				if(confirm("Are you sure?")){
-					//get  the name to the file
-					id = jQuery(this).attr("id").split("-")[1];
-					file = jQuery('#'+id).val();
-					jQuery.get('<?php echo MF_URI;?>RCCWP_.php',{'action':'delete','file':file},
-								function(message){
-									jQuery('#actions-'+id).empty();
-									jQuery('#remove-'+id).empty();
-									jQuery('#'+id).val("");
-								});
+        <script type="text/javascript"> 
+            //this script is for remove the  file  related  to the post (using ajax)
+            remove_file = function(){
+                if(confirm("Are you sure?")){
+                    //get  the name to the file
+                    id = jQuery(this).attr("id").split("-")[1];
+                    file = jQuery('#'+id).val();
+                    jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':file},
+                                function(message){
+                                    jQuery('#actions-'+id).empty();
+                                    jQuery('#remove-'+id).empty();
+                                    jQuery('#'+id).val("");
+                                });
 
-				}
-			}
+                }
+            }
 
 
-			jQuery(document).ready(function(){
-				jQuery("#remove-<?php echo $inputName;?>").click(remove_file);
+            jQuery(document).ready(function(){
+                jQuery("#remove-<?php echo $inputName;?>").click(remove_file);
 
-			});
-		</script>
+            });
+        </script>
 		
 		<?php if( $valueRelative ){ 
-				echo "<span id='actions-{$inputName}'>(<a href='{$value}' target='_blank'>".__("View Current",$mf_domain)."</a>)</span>"; 
-				echo "&nbsp;<a href='javascript:void(0);' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a>";
-			} 
-		?>
+                echo "<span id='actions-{$inputName}'>(<a href='{$value}' target='_blank'>".__("View Current",$mf_domain)."</a>)</span>"; 
+                echo "&nbsp;<a href='javascript:void(0);' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a>";
+            } 
+        ?>
 			
 		<input tabindex="3" 
 			id="<?php echo $inputName?>" 
@@ -867,7 +867,7 @@ class RCCWP_WritePostPage
 
 	function PhotoInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		global $mf_domain;
-		
+		$customFieldId 	= ''; // <---- ¿?
 		$filepath 		= $inputName . '_filepath'; /// <---- ¿?
 		$noimage 		= ""; // <---- if no exists image? 
 
@@ -875,41 +875,33 @@ class RCCWP_WritePostPage
 		$imageThumbID = "";
 		$imageThumbID = "img_thumb_".$inputName; 
 
-		if (isset($_REQUEST['post'])) {
 
+		if (isset($_REQUEST['post'])) {
+			$customFieldId = $customField->id;
 			$value = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 
-			$path = PHPTHUMB."?src=".MF_FILES_URI;
+            $path = PHPTHUMB."?src=".MF_FILES_URI;
 			$valueRelative = $value;
 			$value = $path.$value;
-		
-
-
-			if(!(strpos($value, 'http') === FALSE ) && !empty($valueRelative)){
+			if(!(strpos($value, 'http') === FALSE))
 				$hidValue = str_replace('"', "'", $valueRelative);
 			$value = "<img src='".$value."' class='magicfields' />"; 
-			
-			}else{
-				$value = "<img src='".MF_URI."images/noimage.jpg' id='".$imageThumbID."'/>";
-			}	
-			
 		} else if( !empty($customField->value)){
-			
-			$path = PHPTHUMB."?src=".MF_FILES_PATH;
-			$valueRelative = $customField->value;
-			$value  = $path.$customField->value;
+            $path = PHPTHUMB."?src=".MF_FILES_PATH;
+            $valueRelative = $customField->value;
+            $value  = $path.$customField->value;
 
-			if(!(strpos($value, 'http') === FALSE)){
-				$hidValue = str_replace('"', "'", $valueRelative);
-				$value = "<img src='".$value."' class='magicfields' />";
-			}
-		}else{
+            if(!(strpos($value, 'http') === FALSE)){
+    		    $hidValue = str_replace('"', "'", $valueRelative);
+	    	    $value = "<img src='".$value."' class='magicfields' />";
+            }
+
+
+        }else{
 			$noimage = "<img src='".MF_URI."images/noimage.jpg' id='".$imageThumbID."'/>";
 		}
 		
-		
-		if(empty($valueRelative) || $valueRelative == '') {
-
+		if(!empty($valueRelative) && $valueRelative == '') {
 			$noimage = "<img src='".MF_URI."images/noimage.jpg' id='".$imageThumbID."'/>";
 		}
 
@@ -924,103 +916,129 @@ class RCCWP_WritePostPage
 	
 		?>
 
-		<p 	class="error_msg_txt" 
-			id="upload_progress_<?php echo $inputName?>"
-			style="visibility:hidden;height:0px"></p>
-			
-		<div id="image_photo" style="width:150px; float: left">
+		<p class="error_msg_txt" id="upload_progress_<?php echo $inputName?>" style="visibility:hidden;height:0px"></p>
+		
+
+        <!--- This Script is for remove the image -->
+	    <script type="text/javascript">
+            remove_photo = function(){
+                if(confirm("<?php _e('Are you sure?', $mf_domain); ?>")){
+                        //get the  name to the image
+                        id = jQuery(this).attr('id').split("-")[1];
+                        image = jQuery('#'+id).val();
+                        jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':image},
+                                    function(message){
+                                        if(message == "true"){
+                                            photo = "img_thumb_" + id;
+                                            jQuery("#"+photo).attr("src","<?php echo MF_URI."images/noimage.jpg"?>");
+                                            jQuery("#photo_edit_link_"+id).empty();
+                                            jQuery("#"+id).val("");
+
+                                        }
+                                    });
+                    }
+            }
+
+            jQuery(document).ready(function(){
+                jQuery(".remove").live('click',remove_photo);
+            });
+        </script>
+        <!-- Here finish -->
+
+
+		<div id="image_photo" style="width:150px;">
 		
 			<?php
-			
-			if(!empty($valueRelative) && $valueRelative != "") {
-				if(!(strpos($value, '<img src') === FALSE)) {
-					$valueLinkArr = explode("'", $value);
-					$valueLink = $valueLinkArr[1];
+				if(!empty($valueRelative) && $valueRelative != "") { 
+					if(!(strpos($value, '<img src') === FALSE)) {
+						$valueLinkArr = explode("'", $value);
+						$valueLink = $valueLinkArr[1];
+						
 					
-					if(!(strpos($value, '&sw') === FALSE)) {
-						// Calculating Image Width/Height
-						$arrSize = explode("=",$value);
-						$arrSize1 = explode("&",$arrSize[3]);
-						$arrSize2 = explode("&",$arrSize[4]);
 
-						$imageWidth = $arrSize1[0];
-						$imageHeight = $arrSize2[0];
-						// END
+						if(!(strpos($value, '&sw') === FALSE)) {
+							// Calculating Image Width/Height
+							$arrSize = explode("=",$value);
+							$arrSize1 = explode("&",$arrSize[3]);
+							$arrSize2 = explode("&",$arrSize[4]);
 
-						$valueArr = explode("&sw", $value);
-						$valueArr = explode("'", $valueArr[1]);
-						$value = str_replace("&sw".$valueArr[0]."'", "&sw".$valueArr[0]."&w=150&h=120' align='center' id='".$imageThumbID."'", $value);
-					} else if(!(strpos($value, '&w') === FALSE)) {
-						// Calculating Image Width/Height
-						$arrSize = explode("=",$value);
-						$arrSize1 = explode("&",$arrSize[3]);
-						$arrSize2 = explode("'",$arrSize[4]);
+							$imageWidth = $arrSize1[0];
+							$imageHeight = $arrSize2[0];
+							// END
 
-						$imageWidth = $arrSize1[0];
-						$imageHeight = $arrSize2[0];
-						// END
+							$valueArr = explode("&sw", $value);
+							$valueArr = explode("'", $valueArr[1]);
+							$value = str_replace("&sw".$valueArr[0]."'", "&sw".$valueArr[0]."&w=150&h=120' align='center' id='".$imageThumbID."'", $value);
+						} else if(!(strpos($value, '&w') === FALSE)) {
+							// Calculating Image Width/Height
+							$arrSize = explode("=",$value);
+							$arrSize1 = explode("&",$arrSize[3]);
+							$arrSize2 = explode("'",$arrSize[4]);
 
-						$valueArr = explode("&", $value);
-						$valueArr = explode("'", $valueArr[2]);
-						$value = str_replace($valueArr[0], "&w=150&h=120' align='left' id='".$imageThumbID."'", $value);
-					} else {
-						// Calculating Image Width/Height
-						if(!empty($params)){
-						$arrSize = explode("&",$params);
-						$arrSize1 = explode("=",$arrSize[1]);
-						$arrSize2 = explode("=",$arrSize[2]);
-						}else{
-							$arrSize = '';
-							$arrSize1 = array('','');
-							$arrSize2 = array('','');
+							$imageWidth = $arrSize1[0];
+							$imageHeight = $arrSize2[0];
+							// END
+
+							$valueArr = explode("&", $value);
+							$valueArr = explode("'", $valueArr[2]);
+							$value = str_replace($valueArr[0], "&w=150&h=120' align='left' id='".$imageThumbID."'", $value);
+						} else {
+							// Calculating Image Width/Height
+							if(!empty($params)){
+							$arrSize = explode("&",$params);
+							$arrSize1 = explode("=",$arrSize[1]);
+							$arrSize2 = explode("=",$arrSize[2]);
+							}else{
+								$arrSize = '';
+								$arrSize1 = array('','');
+								$arrSize2 = array('','');
+							}
+							
+							$imageWidth = $arrSize1[1];
+							$imageHeight = $arrSize2[1];
+							// END
+
+							$valueArr = explode("'", $value);
+							$value = str_replace($valueArr[1], $valueArr[1]."&w=150' id='".$imageThumbID."' align='", $value);
 						}
 						
-						$imageWidth = $arrSize1[1];
-						$imageHeight = $arrSize2[1];
-						// END
-
-						$valueArr = explode("'", $value);
-						$value = str_replace($valueArr[1], $valueArr[1]."&w=150' id='".$imageThumbID."' align='", $value);
+						echo '<a style="display: block;margin-left: auto;margin-right: auto " href="' . $valueLink . '" target="_blank">' . $value .'</a>';
+						}
+					}else{
+						$valueLink = '';
+					}
+					echo $noimage;
+					$arrSize = explode("phpThumb.php?src=",$valueLink);
+					
+					if(!empty($arrSize[1])){
+						$fileLink = $arrSize[1];
+					}else{
+						$fileLink = '';
 					}
 					
-					echo '<a style="display: block;margin-left: auto;margin-right: auto " href="' . $valueLink . '" target="_blank">' . $value .'</a>';
-				}
-			}else{
-				$valueLink = '';
-			}
-			
-			echo $noimage;
-			$arrSize = explode("phpThumb.php?src=",$valueLink);
-			
-			if(!empty($arrSize[1])){
-				$fileLink = $arrSize[1];
-			}else{
-				$fileLink = '';
-			}
-			
-			$andPos = strpos($fileLink,"?");
-			
-			
-			if ($andPos === FALSE)
-				$andPos = strpos($fileLink,"&");
+					$andPos = strpos($fileLink,"?");
+					
+					
+					if ($andPos === FALSE)	 $andPos = strpos($fileLink,"&");
+				
+					// Remove & parameters from file path
+					if ($andPos>0)	$fileLink = substr($fileLink, 0, $andPos);
+				
+					$ext = substr($fileLink, -3, 3);	
+	    ?>	
 		
-			// Remove & parameters from file path
-			if ($andPos>0)	$fileLink = substr($fileLink, 0, $andPos);
-		
-			$ext = substr($fileLink, -3, 3);	
-			?>	
-		
-			<div id="photo_edit_link_<?php echo $inputName ?>" class="photo_edit_link"> 
+		<div id="photo_edit_link_<?php echo $inputName ?>" class="photo_edit_link"> 
+			
 				<?php
 				if(isset($_REQUEST['post']) && $hidValue != '')
 				{ 	
-				   echo "&nbsp;<strong><a href='#remove' class='remove' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a></strong>";			   
+                   echo "&nbsp;<strong><a href='#remove' class='remove' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a></strong>";               
 				}
 				?>			
-			</div>
+		    </div>
 		</div>
-		
-		<div id="image_input" style="padding-left: 170px;">
+		<br />
+		<div id="image_input">
 			<?php
 				if(empty($requiredClass)){
 					$requiredClass ='';
@@ -1042,12 +1060,13 @@ class RCCWP_WritePostPage
 
 		</div>
 		
-		<div style="clear: both; height: 1px;"> </div>
-		
 		<input type="hidden" name="rc_cwp_meta_photos[]" value="<?php echo $inputName?>" 	/>
 		<input type="hidden" name="<?php echo $inputName?>_dorename" id="<?php echo $inputName?>_dorename" value="0" />
 		
-		<input type="hidden" name="<?php echo $inputName?>_deleted" id="<?php echo $inputName;?>_deleted" value="0" />
+
+		<!-- Used to store name of URL Field -->
+		<!--<input type="hidden" name="parent_text_<?php echo $countImageThumbID; ?>" id="parent_text_<?php echo $countImageThumbID; ?>" value="<?php echo $filepath; ?>"/>
+		<input type="hidden" name="hidImgValue<?php echo $countImageThumbID; ?>" id="hidImgValue<?php echo $countImageThumbID; ?>" value="<?php echo $inputName; ?>_last" />-->
 
 		<?php
 	}
@@ -1091,17 +1110,14 @@ class RCCWP_WritePostPage
 			$customFieldId = $customField->id;
 			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
 			
-			if(!empty($value)){
-				$value = date($customField->properties['format'],strtotime($value));
-			}else{	
-				$value =  date($customField->properties['format']);
-			}		
+			$value = date($customField->properties['format'],strtotime($value));
+			
 		} else { 
 			$value =  date($customField->properties['format']);
 		}
 		
 		$dateFormat = $customField->properties['format'];
-		$today = date($dateFormat);
+		
 		
 		$field_group = RCCWP_CustomGroup::Get($customField->group_id);
 		$inputSize = 25;
@@ -1132,11 +1148,7 @@ class RCCWP_WritePostPage
 				value="Today" 
 				class="todaybotton_mf"
 		/>
-		<input 	type="hidden"
-				value="<?php echo $today;?>"
-				id="tt_<?php echo $inputName;?>"
-				class="todaydatebutton_mf"
-		/>
+
 		<input 
 				type="hidden" 
 				name="rc_cwp_meta_date[]" 
@@ -1146,12 +1158,14 @@ class RCCWP_WritePostPage
 	}
 
 
-	/**
-	 * Audio  field
-	 */
+    /**
+     * Audio  field
+     *
+     *
+     */
 	function AudioInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		global $mf_domain;
-		$customFieldId = '';
+        $customFieldId = '';
 		$freshPageFolderName = (dirname(plugin_basename(__FILE__))); 
 		if ($customField->required_field) $requiredClass = "field_required";
 		
@@ -1174,7 +1188,7 @@ class RCCWP_WritePostPage
 				$value = stripslashes(trim("\<div  id='obj-{$inputName}' style=\'width:260px;padding-top:3px;\'\>\<object classid=\'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\' codebase='\http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0\' width=\'95%\' height=\'20\' wmode=\'transparent\' \>\<param name=\'movie\' value=\'".MF_URI."js/singlemp3player.swf?file=".urlencode($valueOriginal)."\' wmode=\'transparent\' /\>\<param name=\'quality\' value=\'high\' wmode=\'transparent\' /\>\<embed src=\'".MF_URI."js/singlemp3player.swf?file=".urlencode($valueOriginal)."' width=\'100\%\' height=\'20\' quality=\'high\' pluginspage=\'http://www.macromedia.com/go/getflashplayer\' type=\'application/x-shockwave-flash\' wmode=\'transparent\' \>\</embed\>\</object\>\</div\><br />"));			
 		}
 		
-		// If the field is at right, set a constant width to the text box
+        // If the field is at right, set a constant width to the text box
 		$field_group = RCCWP_CustomGroup::Get($customField->group_id);
 		$urlInputSize = false;
 		$is_canvas = 0;
@@ -1186,36 +1200,36 @@ class RCCWP_WritePostPage
 		?>
 		<p class="error_msg_txt" id="upload_progress_<?php echo $inputName?>" style="visibility:hidden;height:0px"></p>
 		<script type="text/javascript">
-			//this script is for remove the audio file using ajax
-			remove_audio = function(){
-				if(confirm("<?php _e('Are you sure?', $mf_domain); ?>")){
-					//get the name to the image
-					id = jQuery(this).attr('id').split("-")[1];
-					file = jQuery('#'+id).val(); 
-					jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':file},
-								function(message){
-									if(message =="true"){
-										jQuery('#obj-'+id).empty();
-										jQuery('#actions-'+id).empty();
-									}
+            //this script is for remove the audio file using ajax
+            remove_audio = function(){
+                if(confirm("<?php _e('Are you sure?', $mf_domain); ?>")){
+                    //get the name to the image
+                    id = jQuery(this).attr('id').split("-")[1];
+                    file = jQuery('#'+id).val(); 
+                    jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':file},
+                                function(message){
+                                    if(message =="true"){
+                                        jQuery('#obj-'+id).empty();
+                                        jQuery('#actions-'+id).empty();
+                                    }
 
-								});
-				}						   
+                                });
+                }                           
+            }
+
+            jQuery(document).ready(function(){
+                jQuery("#remove-<?php echo $inputName;?>").click(remove_audio);
+            });
+        </script>
+		<?php if( !empty($$valueOriginalRelative)){ 
+                                                echo $value; 
+                                                echo "<div id='actions-{$inputName}'><a href='javascript:void(0);' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a></div>";
+                                            } 
+			if(empty($valueOriginalRelative)){
+				$valueOriginalRelative = '';
 			}
-
-			jQuery(document).ready(function(){
-				jQuery("#remove-<?php echo $inputName;?>").click(remove_audio);
-			});
-		</script>
-		<?php 
-		if( !empty($$valueOriginalRelative)){ 
-			echo $value; 
-			echo "<div id='actions-{$inputName}'><a href='javascript:void(0);' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a></div>";
-		} 
-		if(empty($valueOriginalRelative)){
-			$valueOriginalRelative = '';
-		}
 		?>
+		
 		
 		<input tabindex="3" 
 			id="<?php echo $inputName?>" 
@@ -1225,9 +1239,9 @@ class RCCWP_WritePostPage
 			size="46"
 			value="<?php echo $$valueOriginalRelative?>"	
 			/>
-	
+    
 		<?php
-		// adding the SWF upload 
+        //adding the  SWF upload 
 		include_once( "RCCWP_SWFUpload.php" ) ;
 		RCCWP_SWFUpload::Body($inputName, 2, $is_canvas, $urlInputSize) ;
 		
@@ -1296,26 +1310,21 @@ class RCCWP_WritePostPage
 		<?php } ?>
 			<script>
 				jQuery('document').ready(function(){
-					jQuery('#slider_<?php echo $inputName?>').slider({
-						range: false, 
-						value: <?php echo $value?>, 
-						min: <?php echo $customField->properties['min']?>, 
-						max: <?php echo $customField->properties['max']?>, 
-						stepping: <?php echo $customField->properties['step']?>,
-						handles: [{
-							start: <?php echo $value?>, 
-							stepping: <?php echo $customField->properties['step']?>,
-							min: <?php echo $customField->properties['min']?>, 
-							max: <?php echo $customField->properties['max']?>, 
-							id: 'slider_<?php echo $inputName?>'
-							}],
-						'slide': function(e, ui) {
-								jQuery('#slide_value_<?php echo $inputName?>').empty();
-								jQuery('#slide_value_<?php echo $inputName?>').append(ui.value);
-								jQuery('#<?php echo $inputName?>').val(ui.value);
-							}
-						});
+					jQuery('#slider_<?php echo $inputName?>').slider({range: false, value: <?php echo $value?> , min: <?php echo $customField->properties['min']?>, max: <?php echo $customField->properties['max']?>, stepping: <?php echo $customField->properties['step']?>,
+					handles: [ {start: <?php echo $value?>, stepping: <?php echo $customField->properties['step']?>,min: <?php echo $customField->properties['min']?>, max: <?php echo $customField->properties['max']?>, id: 'slider_<?php echo $inputName?>'} ]
+					
+
+								,'slide': function(e, ui){ 
+	                    jQuery('#slide_value_<?php echo $inputName?>').empty();
+									jQuery('#slide_value_<?php echo $inputName?>').append(ui.value);
+									jQuery('#<?php echo $inputName?>').val(ui.value);
+	            }
+
+									});
+
 				});
+				
+			
 			</script>
 	
 		<style>
@@ -1332,4 +1341,7 @@ class RCCWP_WritePostPage
 			<input  type="hidden" id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>"  />		
 		<?php
 	}
+
 }
+
+?>
