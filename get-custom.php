@@ -472,3 +472,60 @@ function get_label($fieldName,$post_id=NULL) {
 	if(!$field) return FALSE;
 	return $field['description'];
 }
+
+function get_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
+	global $wpdb, $post, $FIELD_TYPES;
+	
+	if(!$post_id){ $post_id = $post->ID; }
+	
+	$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
+			FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
+						".MF_TABLE_GROUP_FIELDS." cf 
+			LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
+			WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND
+						pm_wp.meta_id=pm.id AND pm.field_name='$fieldName' AND pm.group_count = $groupIndex 
+			ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
+		$data_fields = $wpdb->get_results($sql);
+
+	$info = null;
+	foreach($data_fields as $data){
+		switch($data->type){
+			case $FIELD_TYPES["textbox"]:
+			case $FIELD_TYPES["radiobutton_list"]:
+			case $FIELD_TYPES["dropdown_list"]:
+			case $FIELD_TYPES["color_picker"]:
+			case $FIELD_TYPES["slider"]:
+				$info[$data->field_count] = $data->meta_value;
+				break;
+			case $FIELD_TYPES['multiline_textbox']:
+				$info[$data->field_count] = apply_filters('the_content', $data->meta_value);
+				break;
+			case $FIELD_TYPES["checkbox"]: 		
+					if ($data->meta_value == 'true')  $fieldValue = 1; else $fieldValue = 0;
+					$info[$data->field_count] = $fieldValue; 
+					break;
+			case $FIELD_TYPES["checkbox_list"]:
+			case $FIELD_TYPES["listbox"]:
+					$info[$data->field_count] = unserialize($data->meta_value);
+				break;
+			case $FIELD_TYPES["audio"]:
+			case $FIELD_TYPES["file"]:
+				if ($data->meta_value != ""){ $fieldValue = MF_FILES_URI.$data->meta_value;}else{$fieldValue= null;}
+				$info[$data->field_count] = $fieldValue;
+				break;
+			case $FIELD_TYPES['image']:
+				if($data->meta_value != ""){
+					$format = unserialize($data->properties);
+					if($format) $info[$data->field_count]['t'] = aux_image($data->meta_value,$format['params']);
+					$info[$data->field_count]['o'] = MF_FILES_URI.$data->meta_value;		
+				}
+				break;
+			case $FIELD_TYPES['date']:
+				$format = unserialize($data->properties);
+				$fieldValue = GetProcessedFieldValue($data->meta_value, $data->type, $format);
+				$info[$data->field_count] = $fieldValue;
+				break;
+		}
+	}
+	return $info;
+}
