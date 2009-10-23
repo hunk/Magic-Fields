@@ -34,9 +34,9 @@ class RCCWP_CustomField
 		$label = stripslashes(stripslashes($label));
 		$label = addslashes($label);
 
-		$sql = sprintf(
+			$sql = sprintf(
 			"INSERT INTO " . MF_TABLE_GROUP_FIELDS .
-			" (group_id, name, description, help_text display_order, required_field, type, CSS, duplicate) values (%d, %s, %s, %d, %d, %d, %s, %d)",
+			" (group_id, name, description, help_text, display_order, required_field, type, CSS, duplicate) values (%d, %s, %s, %d, %d, %d, %s, %d)",
 			$customGroupId,
 			RC_Format::TextToSql($name),
 			RC_Format::TextToSql($label),
