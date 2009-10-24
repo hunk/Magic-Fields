@@ -1,7 +1,7 @@
 jQuery(document).ready(function(){
     
     //Adding the datepicker event to the fields
-	jQuery('.datebotton_mf').click(function(){
+	jQuery('.datebotton_mf').live('click',function(){
 	    	    
         the_id = jQuery(this).attr('id');
         picker = the_id.replace(/pick_/,'');
@@ -26,7 +26,7 @@ jQuery(document).ready(function(){
 	});
 	
 	//TODAY Botton
-	jQuery('.todaybotton_mf').click(function(){
+	jQuery('.todaybotton_mf').live('click',function(){
 	    the_id = jQuery(this).attr('id');
 	    picker = the_id.replace(/today_/,'');
 	    today = 'tt_' + picker;    
