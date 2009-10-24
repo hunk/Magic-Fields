@@ -49,7 +49,8 @@ class RCCWP_Menu
 						$_POST['custom-field-type'],
 						$_POST['custom-field-options'],
 						null,null,
-						$_POST['custom-field-duplicate']);
+						$_POST['custom-field-duplicate'],
+						$_POST['custom-field-helptext']);
 	
 					$page_group = 'RCCWP_CustomWritePanelPage';
 					$page_type = 'View';
