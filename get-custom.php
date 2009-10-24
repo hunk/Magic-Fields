@@ -172,7 +172,7 @@ function getGroupOrder($field_name,$post_id=NULL){
 	global $post,$wpdb;
 
 	if(!$post_id){ $post_id = $post->ID; }
-	$elements  = $wpdb->get_results("SELECT group_count FROM ".MF_TABLE_POST_META." WHERE post_id = ".$post_id."  AND field_name = '{$field_name}' ORDER BY order_id ASC");
+	$elements  = $wpdb->get_results("SELECT DISTINCT(group_count) FROM ".MF_TABLE_POST_META." WHERE post_id = ".$post_id."  AND field_name = '{$field_name}' ORDER BY order_id ASC");
    
 	foreach($elements as $element){
 		$order[] =  $element->group_count;
