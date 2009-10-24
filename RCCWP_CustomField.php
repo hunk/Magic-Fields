@@ -23,7 +23,7 @@ class RCCWP_CustomField
 	 * @param array $properties an array containing extra properties of the field.
 	 * @return the new field id
 	 */
-	function Create($customGroupId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null,$duplicate)
+	function Create($customGroupId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null,$duplicate,$helptext = null)
 	{
 		global $wpdb;
 
@@ -33,10 +33,13 @@ class RCCWP_CustomField
 
 		$label = stripslashes(stripslashes($label));
 		$label = addslashes($label);
+		
+		$helptext = stripslashes(stripslashes($helptext));
+		$helptext = addslashes($helptext);
 
 		$sql = sprintf(
 			"INSERT INTO " . MF_TABLE_GROUP_FIELDS .
-			" (group_id, name, description, display_order, required_field, type, CSS, duplicate) values (%d, %s, %s, %d, %d, %d, %s, %d)",
+			" (group_id, name, description, display_order, required_field, type, CSS, duplicate,help_text) values (%d, %s, %s, %d, %d, %d, %s, %d, %s)",
 			$customGroupId,
 			RC_Format::TextToSql($name),
 			RC_Format::TextToSql($label),
@@ -44,7 +47,8 @@ class RCCWP_CustomField
 			$required_field,
 			$type,
 			"'".$_POST['custom-field-css']."'",
-			$duplicate
+			$duplicate,
+			RC_Format::TextToSql($helptext)
 			);
 		$wpdb->query($sql);
 		
@@ -132,7 +136,7 @@ class RCCWP_CustomField
 	function Get($customFieldId)
 	{
 		global $wpdb;
-		$sql = "SELECT cf.group_id, cf.id, cf.name, cf.CSS, tt.id AS type_id, tt.name AS type, cf.description, cf.display_order, cf.required_field, co.options, co.default_option AS default_value, tt.has_options, cp.properties, tt.has_properties, tt.allow_multiple_values, duplicate FROM " . MF_TABLE_GROUP_FIELDS .
+		$sql = "SELECT cf.group_id, cf.id, cf.name, cf.CSS, tt.id AS type_id, tt.name AS type, cf.description, cf.display_order, cf.required_field, co.options, co.default_option AS default_value, tt.has_options, cp.properties, tt.has_properties, tt.allow_multiple_values, duplicate,cf.help_text FROM " . MF_TABLE_GROUP_FIELDS .
 			" cf LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " co ON cf.id = co.custom_field_id" .
 			" LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " cp ON cf.id = cp.custom_field_id" .
 			" JOIN " . MF_TABLE_CUSTOM_FIELD_TYPES . " tt ON cf.type = tt.id" . 
@@ -409,7 +413,7 @@ class RCCWP_CustomField
 	 * @param array $properties an array containing extra properties of the field.
 	 */
 
-	function Update($customFieldId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null, $duplicate)
+	function Update($customFieldId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null, $duplicate,$helptext = null)
 	{
 		global $wpdb;
 		$name = str_replace(" ","_",$name);
@@ -437,6 +441,7 @@ class RCCWP_CustomField
 			" , type = %d" .
 			" , CSS = '%s'" .
 			" , duplicate = %d" .
+			" , help_text = %s" .
 			" WHERE id = %d",
 			RC_Format::TextToSql($name),
 			RC_Format::TextToSql($label),
@@ -445,6 +450,7 @@ class RCCWP_CustomField
 			$type,
 			$_POST['custom-field-css'],
 			$duplicate,
+			RC_Format::TextToSql($helptext),
 			$customFieldId
 			);
 		$wpdb->query($sql);

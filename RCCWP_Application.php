@@ -159,7 +159,7 @@ class RCCWP_Application
 				name varchar(255) NOT NULL,
 				single tinyint(1) NOT NULL default 0,
 				description varchar(255),
-				display_order tinyint,
+				display_order int(11),
 				capability_name varchar(255) NOT NULL,
 				type varchar(255) NOT NULL,
 				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
@@ -178,13 +178,14 @@ class RCCWP_Application
 				group_id int(11) NOT NULL,
 				name varchar(255) NOT NULL,
 				description varchar(255),
-				display_order tinyint,
+				display_order int(11),
 				display_name enum('true', 'false') NOT NULL,
 				display_description enum('true', 'false') NOT NULL,
 				type tinyint NOT NULL,
 				CSS varchar(100),
 				required_field tinyint,
 				duplicate tinyint(1) NOT NULL,
+				help_text text,
 				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 				
 			$qst_tables[] = "CREATE TABLE " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " (
@@ -299,7 +300,13 @@ class RCCWP_Application
 	}
 	
 	function UpgradeBlog(){
+		global $wpdb;
 		
+		if (RC_CWP_DB_VERSION == 2){
+			$wpdb->query('ALTER TABLE '.MF_TABLE_GROUP_FIELDS.' MODIFY display_order INTEGER');
+			$wpdb->query('ALTER TABLE '.MF_TABLE_GROUP_FIELDS.' ADD COLUMN help_text text after duplicate');
+			$wpdb->query('ALTER TABLE '.MF_TABLE_PANELS.' MODIFY display_order INTEGER');
+		}
 	}
 
 	function UpgradeBlogSite(){

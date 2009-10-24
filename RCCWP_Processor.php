@@ -143,7 +143,8 @@ class RCCWP_Processor
 					$fieldToCopy->options,
 					$fieldToCopy->default_value,
 					$fieldToCopy->properties,
-					$fieldToCopy->duplicate
+					$fieldToCopy->duplicate,
+					$fieldToCopy->helptext
 					);
 				
 			case 'continue-create-custom-field':
@@ -226,7 +227,8 @@ class RCCWP_Processor
 					$_POST['custom-field-options'],
 					$_POST['custom-field-default-value'],
 					$custom_field_properties,
-					$_POST['custom-field-duplicate']
+					$_POST['custom-field-duplicate'],
+					$_POST['custom-field-helptext']
 					);
 				break;
 				
@@ -302,7 +304,8 @@ class RCCWP_Processor
 					$_POST['custom-field-options'],
 					$_POST['custom-field-default-value'],
 					$custom_field_properties,
-					$_POST['custom-field-duplicate']
+					$_POST['custom-field-duplicate'],
+					$_POST['custom-field-helptext']
 					);
 					
 				break;

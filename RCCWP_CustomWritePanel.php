@@ -542,7 +542,7 @@ class RCCWP_CustomWritePanel
 			foreach ($group->fields as $field){
 				$fieldOptions = @implode("\n", $field->options);
 				$fieldDefault = @implode("\n", $field->default_value);
-				RCCWP_CustomField::Create($groupID, $field->name, $field->description, $field->display_order, $field->required_field, $types[$field->type], $fieldOptions, $fieldDefault, $field->properties, $field->duplicate);
+				RCCWP_CustomField::Create($groupID, $field->name, $field->description, $field->display_order, $field->required_field, $types[$field->type], $fieldOptions, $fieldDefault, $field->properties, $field->duplicate,$field->help_text);
 			}
 		}
 

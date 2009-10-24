@@ -61,7 +61,13 @@ class RCCWP_CreateCustomFieldPage
 				</p>
 			</td>
 		</tr>
-
+		
+		<tr valign="top">
+			<th scope="row"><?php _e('Help text',$mf_domain); ?>:</th>
+			<td>
+				<input name="custom-field-helptext" id="custom-field-helptext" size="40" type="text" /><br/><small>If set, this will be displayed in a tooltip next to the field label</small></td>
+		</tr>
+		
 		<tr valign="top">
 			<th scope="row"><?php _e("Can be duplicated", $mf_domain); ?>:</th>
 			<td><input name="custom-field-duplicate" id="custom-field-duplicate" type="checkbox" value="1" <?php echo $custom_field->duplicate==1 ? "checked":"" ?>/></td>
@@ -176,6 +182,7 @@ class RCCWP_CreateCustomFieldPage
 		<input type="hidden" name="custom-field-order" 		value="<?php echo $_POST['custom-field-order']?>" />
 		<input type="hidden" name="custom-field-required" 		value="<?php echo $_POST['custom-field-required']?>" />
 		<input type="hidden" name="custom-field-type" 		value="<?php echo $_POST['custom-field-type']?>" />
+		<input type="hidden" name="custom-field-helptext" 		value="<?php echo $_POST['custom-field-helptext']?>" />
 
 		<!-- Hidden value for Image/Photo' Css Class-->
 		<input type="hidden" name="custom-field-css" value="<?php echo $_POST['custom-field-css']?>" />
