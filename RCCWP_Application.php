@@ -3,19 +3,6 @@
 class RCCWP_Application
 {
 
-	/**
-	* Check whether this is wordpress mu and the logged in user is the top admin and it is the main blog
-	*/
-	function is_mu_top_admin(){
-		global $wpdb;
-
-		if ($wpdb->prefix != $wpdb->base_prefix.'1_') {
-			return false;
-		}
-
-		return true;
-	}
-
 	function ContinueInstallation(){
 		RCCWP_Application::SetCaps();
 	}
@@ -69,7 +56,6 @@ class RCCWP_Application
 			$options['condense-menu'] = 0;
 
 			RCCWP_Options::Update($options);
-			
 		}
 
 		//for  backward compatibility
@@ -78,7 +64,7 @@ class RCCWP_Application
 		}else{
 			$options['enable-broserupload'] = 1;
 		}
-
+		
 		RCCWP_Options::Update($options);
 
 		
@@ -124,9 +110,6 @@ class RCCWP_Application
 				dbDelta($blog_table);
 		}
 		update_option('RC_CWP_BLOG_DB_VERSION', RC_CWP_DB_VERSION);
-		//canvas_install($BLOG_DBChanged);
-		
-	 
 
 		// Upgrade Blog
 		if ($BLOG_DBChanged)	RCCWP_Application::UpgradeBlog();
@@ -146,7 +129,6 @@ class RCCWP_Application
 			else
 				$DBChanged = false;
 		}
-		
 		
 		// -- Create Tables if they don't exist or the database changed
 		if(!$wpdb->get_var("SHOW TABLES LIKE '".MF_TABLE_PANELS."'") == MF_TABLE_PANELS) 	$not_installed = true;

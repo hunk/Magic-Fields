@@ -78,9 +78,16 @@ if (is_admin()) {
 	
 	register_activation_hook(dirname(__FILE__) . '/Main.php', array('RCCWP_Application', 'Install'));
 
-	if(isset($current_blog)) {
-		RCCWP_Application::Install();
-		add_action('admin_menu', array('RCCWP_Application', 'ContinueInstallation'));
+	if($is_wordpress_mu) {
+		//checking if the method Install was executed before
+		//if exists the option called "mf_custom_write_panel" 
+		//is because Magic Fields was already installed
+		$option = get_option('mf_custom_write_panel');
+		
+		if(!$option){
+			RCCWP_Application::Install();
+			add_action('admin_menu', array('RCCWP_Application', 'ContinueInstallation'));
+		}
 	}
 
 	if (get_option(RC_CWP_OPTION_KEY) !== false) {
