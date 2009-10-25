@@ -26,8 +26,14 @@ Author URI: http://magicfields.org
 
 
 // Globals
-global $wpdb,$post,$current_user,$FIELD_TYPES,$current_user,$flag;
+global $wpdb,$post,$current_user,$FIELD_TYPES,$current_user,$flag,$is_wordpress_mu;
 
+
+if(isset($current_blog)){
+	$is_wordpress_mu=true;
+}else{
+	$is_wordpress_mu=false;
+}
 
 //for this save_post action doesn't execute  twice
 $flag = 0;
@@ -57,13 +63,6 @@ require_once 'RCCWP_Menu.php';
 require_once 'RCCWP_CreateCustomFieldPage.php';
 require_once 'tools/debug.php';
 
-
-global $is_wordpress_mu;
-if(isset($current_blog)) 
-	$is_wordpress_mu=true;
-else
-	$is_wordpress_mu=false;
-	
  /* function for languajes
   *
   */

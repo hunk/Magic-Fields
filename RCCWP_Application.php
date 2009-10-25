@@ -403,6 +403,10 @@ class RCCWP_Application
 		$dir_list = "";
 		$dir_list2 = "";
 	
+		wp_mkdir_p(MF_UPLOAD_FILES_DIR);
+		wp_mkdir_p(MF_IMAGES_CACHE_DIR);
+	
+		// Giving full rights to folders. thanks Akis Kesoglou 
 		if (!is_dir(MF_IMAGES_CACHE_DIR)){
 			$dir_list2.= "<li>".MF_IMAGES_CACHE_DIR . "</li>";
 		}elseif (!is_writable(MF_IMAGES_CACHE_DIR)){
@@ -424,9 +428,11 @@ class RCCWP_Application
 			echo "<div id='magic-fields-install-error-message-2' class='error'><p><strong>".__('Magic Fields is not ready yet.', $mf_domain)."</strong> ".__('The following folders must be writable (usually chmod 777 is neccesary):', $mf_domain)."</p><ul>";
 			echo $dir_list;
 			echo "</ul></div>";
-		} else {
-			/* the directory is writable
-			 * we can create the css and js files
+		} 
+		
+		if (empty($dir_list) && empty($dir_list2)){
+			/* the directory exists and is writable 
+			 * we can create the css and js files for the EIP feature
 			 */
 			$EnPCSS = RCCWP_Application::create_EditnPlace_css();
 			$EnPJS = RCCWP_Application::create_EditnPlace_js();
@@ -435,7 +441,6 @@ class RCCWP_Application
 				echo "</div>";
 			}
 		}
-
 	}
 	
 	/**
