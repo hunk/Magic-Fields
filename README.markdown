@@ -2,7 +2,7 @@
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
 * Contributors: [Freshout](http://freshout.us "Freshout"), [Jeff Minard](http://jrm.cc/ "Jeff Minard"),[Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"),Michael Bayard,[Doc4](doc4design.com/ "Doc4")
 * Tested up to: Wordpress 2.8.5
-* Stable tag: 1.2
+* Stable tag: 1.2.1
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -17,6 +17,10 @@ Follow the following steps to install this plugin.
 2.	Activate the plugin through the 'Plugins' menu in WordPress.
 
 ## Changelog ##
+
+###1.2.1###
+
+* Fix in the GetDataField function, this function is used by all front-end functions
 
 ###1.2###
 
