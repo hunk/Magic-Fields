@@ -525,9 +525,9 @@ class RCCWP_CustomField
 		$customFieldvalues = $wpdb->get_row(
 			"SELECT pm.meta_id,pm.meta_value, cf.id, cf.type,cf.CSS,fp.properties,cf.description 
 			FROM ".MF_TABLE_POST_META." pm_mf, ".$wpdb->postmeta." pm, ".MF_TABLE_GROUP_FIELDS." cf LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id 
-			WHERE cf.name = '$customFieldName' AND cf.name = pm_mf.field_name AND group_count = $groupIndex AND field_count = $fieldIndex AND pm_mf.post_id= $postId AND pm_mf.id = pm.meta_id AND cf.group_id in ( SELECT mg.id FROM wp_mf_module_groups mg, wp_postmeta pm WHERE mg.panel_id = pm.meta_value AND pm.meta_key = '_mf_write_panel_id' AND pm.post_id = $postId)
+			WHERE cf.name = '$customFieldName' AND cf.name = pm_mf.field_name AND group_count = $groupIndex AND field_count = $fieldIndex AND pm_mf.post_id= $postId AND pm_mf.id = pm.meta_id AND cf.group_id in ( SELECT mg.id FROM ".MF_TABLE_PANEL_GROUPS." mg, ".$wpdb->postmeta." pm WHERE mg.panel_id = pm.meta_value AND pm.meta_key = '_mf_write_panel_id' AND pm.post_id = $postId)
 			",ARRAY_A);
-										
+						
 		if (empty($customFieldvalues)) 
 			return false;
 		
