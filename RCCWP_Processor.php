@@ -215,6 +215,11 @@ class RCCWP_Processor
 						$custom_field_properties['min'] = $_POST['custom-field-slider-min'];
 						$custom_field_properties['step'] = $_POST['custom-field-slider-step'];
 					}
+					//eeble
+					else if (in_array($current_field->name, array('Related Type')))
+					{
+						$custom_field_properties['panel_id'] = $_POST['custom-field-related-type-panel-id'];
+					}
 				}
 				
 				RCCWP_CustomField::Create(
@@ -291,6 +296,11 @@ class RCCWP_Processor
 						$custom_field_properties['max'] = $_POST['custom-field-slider-max'];
 						$custom_field_properties['min'] = $_POST['custom-field-slider-min'];
 						$custom_field_properties['step'] = $_POST['custom-field-slider-step'];
+					}
+					//eeble
+					else if (in_array($current_field->name, array('Related Type')))
+					{
+						$custom_field_properties['panel_id'] = $_POST['custom-field-related-type-panel-id'];
 					}
 				}
 				

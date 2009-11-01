@@ -11,7 +11,7 @@ if (!defined('DIRECTORY_SEPARATOR'))
 }
 
 // General Constants
-define('RC_CWP_DB_VERSION', 2);
+define('RC_CWP_DB_VERSION', 3);
 define('RC_CWP_POST_WRITE_PANEL_ID_META_KEY', '_mf_write_panel_id');
 define('RC_CWP_OPTION_KEY', 'mf_custom_write_panel');
 
@@ -72,7 +72,8 @@ $FIELD_TYPES = array(
 					"date" => 10,
 					"audio" => 11,
 					'color_picker' => 12,
-					'slider' => 13
+					'slider' => 13,
+					'related_type' => 14
 					);
 
 // Field Types

@@ -264,6 +264,8 @@ class RCCWP_Application
 			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (13, 'Slider', NULL, 'false', 'true', 'false')";
 			$wpdb->query($sql6);
 			
+			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (14, 'Related Type', NULL, 'false', 'true', 'false')";
+			$wpdb->query($sql6);
 		}
 		
 		// Upgrade Blog site
@@ -284,10 +286,15 @@ class RCCWP_Application
 	function UpgradeBlog(){
 		global $wpdb;
 		
-		if (RC_CWP_DB_VERSION == 2){
+		if (RC_CWP_DB_VERSION <= 2){
 			$wpdb->query('ALTER TABLE '.MF_TABLE_GROUP_FIELDS.' MODIFY display_order INTEGER');
 			$wpdb->query('ALTER TABLE '.MF_TABLE_GROUP_FIELDS.' ADD COLUMN help_text text after duplicate');
 			$wpdb->query('ALTER TABLE '.MF_TABLE_PANELS.' MODIFY display_order INTEGER');
+		}
+		
+		if (RC_CWP_DB_VERSION <= 3){
+			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (14, 'Related Type', NULL, 'false', 'true', 'false')";
+			$wpdb->query($sql6);
 		}
 	}
 

@@ -245,6 +245,23 @@ class RCCWP_CreateCustomFieldPage
 		<?php endif; ?>
 		
 		<?php
+		//eeble
+		if (in_array($current_field->name, array('Related Type'))) :
+			$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
+		?>
+		<tr valign="top">
+			<th scope="row"><?php _e('Related Type Panel', $mf_domain); ?>:</th>
+			<td><select name="custom-field-related-type-panel-id" id="custom-field-related-type-panel-id">
+				<option value="">--Select Panel--</option>
+				<?php foreach ($customWritePanels as $panel): ?>
+					<option value="<?php echo $panel->id ?>"><?php echo $panel->name ?></option>
+				<?php endforeach; ?>
+			</select></td>
+		</tr>
+		<?php endif; ?>
+
+				
+		<?php
 		endif; // has_properties
 		?>
 		

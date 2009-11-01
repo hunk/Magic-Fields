@@ -129,6 +129,20 @@ class RCCWP_CustomFieldPage
 		</tr>
 		<?php endif; ?>
 
+		<?php 
+		//eeble
+		if (in_array($custom_field->type, array('Related Type'))) :
+			$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
+		?>
+		<tr valign="top">
+			<th scope="row"><?php _e('Related Type Panel', $mf_domain); ?>:</th>
+			<td><select name="custom-field-related-type-panel-id" id="custom-field-related-type-panel-id">
+				<?php foreach ($customWritePanels as $panel): ?>
+					<option value="<?php echo $panel->id ?>" <?php if ($custom_field->properties['panel_id']==$panel->id) echo 'selected' ?>><?php echo $panel->name ?></option>
+				<?php endforeach; ?>
+			</select></td>
+		</tr>
+		<?php endif; ?>
 
 		<?php
 		if ($custom_field->has_options == "true") :

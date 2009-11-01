@@ -553,6 +553,10 @@ class RCCWP_WritePostPage
 					case 'Slider' :
 						RCCWP_WritePostPage::SliderInterface($customField, $inputName, $groupCounter, $fieldCounter);
 						break;
+					//eeble
+					case 'Related Type' :
+						RCCWP_WritePostPage::RelatedTypeInterface($customField, $inputName, $groupCounter, $fieldCounter);
+						break;
 					default:
 						;
 				}
@@ -664,6 +668,48 @@ class RCCWP_WritePostPage
 		
 			<option value="<?php echo $option?>" <?php echo $selected?>><?php echo $option?></option>
 		
+		<?php
+		endforeach;
+		?>
+		
+		</select>	
+		
+		
+		<?php
+	}
+	
+	//eeble
+	function RelatedTypeInterface($customField, $inputName, $groupCounter, $fieldCounter)
+	{
+		global $mf_domain;
+		$customFieldId = '';
+		if (isset($_REQUEST['post']))
+		{
+			$customFieldId = $customField->id;
+			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+		}
+		else
+		{
+			$value = $customField->default_value[0];
+		}
+		
+		//get id of related type / panel
+		$panel_id = (int)$customField->properties['panel_id'];
+		
+		if ($customField->required_field) $requiredClass = "field_required";
+		?>
+
+		<select tabindex="3"  class="<?php echo $requiredClass;?> listbox_mf" name="<?php echo $inputName?>">
+			<option value=""><?php _e('--Select--', $mf_domain); ?></option>
+		
+		<?php
+		$options=get_posts("post_type=any&meta_key=_mf_write_panel_id&meta_value=$panel_id");
+		foreach ($options as $option) :
+			$selected = $option->ID == $value ? 'selected="selected"' : '';
+		?>
+
+			<option value="<?php echo $option->ID ?>" <?php echo $selected?>><?php echo $option->post_title ?></option>
+
 		<?php
 		endforeach;
 		?>
