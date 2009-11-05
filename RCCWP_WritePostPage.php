@@ -73,13 +73,25 @@ class RCCWP_WritePostPage
 							MF_URI.'js/upload.js'
 						);
 		
-		//loading handler for validate
+		//loading handler for metadata
 		wp_enqueue_script( 'mf_metadata',
 							MF_URI.'js/jquery.metadata.js'
 						);
+		///loading handler for validate
 		wp_enqueue_script( 'mf_validate',
 							MF_URI.'js/jquery.validate.pack.js'
 						);
+		//loading the code for validation
+		wp_enqueue_script( 'mf_validate_fields',
+							MF_URI.'js/custom_fields/validate.js'
+						);
+		$hide_visual_editor = RCCWP_Options::Get('hide-visual-editor');
+		if ($hide_visual_editor == '' || $hide_visual_editor ==  0){
+			//loading the code for textarea in validation
+			wp_enqueue_script( 'mf_editor_validate',
+								MF_URI.'js/custom_fields/editor_validate.js'
+							);
+		}
 		//loading Prototype framework
 		wp_enqueue_script('prototype');
 						
@@ -180,86 +192,6 @@ class RCCWP_WritePostPage
 					
 					return true;
 				}
-				
-				jQuery.metadata.setType("attr", "validate");
-				
-			/** function validate**/
-			jQuery().ready(function() {
-				// validate the comment form when it is submitted
-				jQuery("#post").validate();
-			});
-				
-			/**
-			 * Pay Attention on this.
-			 */
-			function checkForm(event){
-				var stopPublish = false;
-				jQuery('input.field_required','textarea.field_required').each(
-						function(inputField){
-							<?php  
-								$hide_visual_editor = RCCWP_Options::Get('hide-visual-editor');
-								if ($hide_visual_editor == '' || $hide_visual_editor ==  0):
-							?>
-								re = new RegExp(".*_multiline");
-								if(re.match(inputField.id)){
-									inputField.value = tinyMCE.get(inputField.id).getContent();
-								}
-
-							<?php endif;?>
-
-							if ($F(inputField) == "" &&
-								!(Object.isElement($(inputField.id+"_last")) && $F(inputField.id+"_last") != "")	){
-								stopPublish = true;
-
-								// Update row color
-								if (isset($("row_"+inputField.id).style))
-									$("row_"+inputField.id).style.backgroundColor = "#FFEBE8";
-
-								// Update iframe color if it exists
-								if (Object.isElement($("upload_internal_iframe_"+inputField.id))){
-								  	if ($("upload_internal_iframe_"+inputField.id).contentDocument) {
-										// For FF
-										$("upload_internal_iframe_"+inputField.id).contentDocument.body.style.backgroundColor = "#FFEBE8"; 
-								  	} else if ($("upload_internal_iframe_"+inputField.id).contentWindow) {
-										// For IE5.5 and IE6
-										$("upload_internal_iframe_"+inputField.id).contentWindow.document.body.style.backgroundColor = "#FFEBE8";
-									}
-								}
-									
-								$("fieldcellerror_"+inputField.id).style.display = "";
-								$("fieldcellerror_"+inputField.id).innerHTML = "ERROR: Field can not be empty";
-							}
-							else{
-								$("fieldcellerror_"+inputField.id).style.display = "none";
-								if (isset($("row_"+inputField.id).style))
-									$("row_"+inputField.id).style.backgroundColor = "";
-									
-								// Update iframe color if it exists
-								if (Object.isElement($("upload_internal_iframe_"+inputField.id))){
-								  	if ($("upload_internal_iframe_"+inputField.id).contentDocument) {
-										// For FF
-										$("upload_internal_iframe_"+inputField.id).contentDocument.body.style.backgroundColor = "#EAF3FA"; 
-								  	} else if ($("upload_internal_iframe_"+inputField.id).contentWindow) {
-										// For IE5.5 and IE6
-										$("upload_internal_iframe_"+inputField.id).contentWindow.document.body.style.backgroundColor = "#EAF3FA";
-									}
-								}
-									
-							}
-						}
-					);
-				if (stopPublish){
-					$("mf-publish-error-message").style.display = "";
-					Event.stop(event);
-					return false;
-				}
-				
-				return true;
-			}
-
-			Event.observe(window, 'load', function() {
-				Event.observe('post', 'submit', checkForm);
-			});
 		</script>
 
 		<?php
