@@ -20,5 +20,19 @@
 	padding-top:5px;
 }
 .Checkbox .block { display: block; }
-.mf-field label.error
-	{ display: none; }
+.mf-field label.error { display: none; }
+.error_magicfields {
+	background-color:#FFEBE8;
+	border-color:#CC0000; 
+	border-style:solid;
+	border-width:1px;	
+	-moz-border-radius-bottomleft:3px;
+	-moz-border-radius-bottomright:3px;
+	-moz-border-radius-topleft:3px;
+	-moz-border-radius-topright:3px;
+}
+label.error_magicfields {
+	height:13px;
+	padding-top:3px;
+	padding-left:7px;
+}

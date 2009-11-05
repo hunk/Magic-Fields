@@ -547,11 +547,11 @@ class RCCWP_WritePostPage
 			$checked = "";
 		}
 		?>
-		
+		<div class="mf_custom_field">
 		<input  type="hidden" name="<?php echo $inputName?>_1" value="false" />
-		<input tabindex="3" class="checkbox checkbox_mf" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> name="<?php echo $inputName?>" value="true" id="<?php echo $inputName?>" type="checkbox" <?php echo $checked?> />
+		<input tabindex="3" class="checkbox checkbox_mf" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> name="<?php echo $inputName?>" value="true" id="<?php echo $inputName?>" type="checkbox" <?php echo $checked?> /></div>
 		<?php if ($customField->required_field){ ?>
-		<label for="<?php echo $inputName?>" class="error block">This field is required.</label>
+		<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error block">This field is required.</label></div>
 		<?php }
 	}
 	
@@ -569,7 +569,7 @@ class RCCWP_WritePostPage
 		
 		?>
 		
-		
+		<div class="mf_custom_field">
 		<?php
 		foreach ($customField->options as $option) :
 			$checked = in_array($option, (array)$values) ? 'checked="checked"' : '';
@@ -583,9 +583,9 @@ class RCCWP_WritePostPage
 		
 		<?php
 		endforeach;
-		?>
+		?></div>
 		<?php if ($customField->required_field){ ?>
-			<label for="<?php echo $inputName?>[]" class="error">This field is required.</label>
+			<div class="mf_message_error"><label for="<?php echo $inputName?>[]" class="error_magicfields error">This field is required.</label></div>
 		<?php } ?>
 		<?php
 	}
@@ -606,7 +606,7 @@ class RCCWP_WritePostPage
 		
 		if ($customField->required_field) $requiredClass = "field_required";
 		?>
-		
+		<div class="mf_custom_field">
 		<select tabindex="3" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf" name="<?php echo $inputName?>">
 			<option value=""><?php _e('--Select--', $mf_domain); ?></option>
 		
@@ -615,16 +615,14 @@ class RCCWP_WritePostPage
 			$selected = $option == $value ? 'selected="selected"' : '';
 			$option = attribute_escape(trim($option));
 		?>
-		
 			<option value="<?php echo $option?>" <?php echo $selected?>><?php echo $option?></option>
-		
 		<?php
 		endforeach;
 		?>
 		
-		</select>	
+		</select>	</div>
 		<?php if ($customField->required_field){ ?>
-			<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
 		<?php }
 	}
 	
@@ -648,7 +646,7 @@ class RCCWP_WritePostPage
 		
 		if ($customField->required_field) $requiredClass = "field_required";
 		?>
-
+		<div class="mf_custom_field">
 		<select tabindex="3" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf" name="<?php echo $inputName?>">
 			<option value=""><?php _e('--Select--', $mf_domain); ?></option>
 		
@@ -657,16 +655,14 @@ class RCCWP_WritePostPage
 		foreach ($options as $option) :
 			$selected = $option->ID == $value ? 'selected="selected"' : '';
 		?>
-
 			<option value="<?php echo $option->ID ?>" <?php echo $selected?>><?php echo $option->post_title ?></option>
-
 		<?php
 		endforeach;
 		?>
 		
-		</select>	
+		</select></div>
 		<?php if ($customField->required_field){ ?>
-			<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
 		<?php } ?>
 		
 		<?php
@@ -687,6 +683,7 @@ class RCCWP_WritePostPage
 		$requiredClass = "mf_listbox";
 		if ($customField->required_field) $requiredClass = "mf_listbox field_required";
 		?>
+		<div class="mf_custom_field">
 		<select <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf"  tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>[]" multiple size="<?php echo $inputSize?>" style="height: 6em;">
 		
 		<?php
@@ -694,19 +691,15 @@ class RCCWP_WritePostPage
 			if(!empty($option)){
 				$selected = in_array($option, (array)$values) ? 'selected="selected"' : '';
 				$option = attribute_escape(trim($option));
-				
 		?>
-			
-			<option value="<?php echo $option?>" <?php echo $selected?>><?php echo $option?></option>
-			
+			<option value="<?php echo $option?>" <?php echo $selected?>><?php echo $option?></option>	
 		<?php
 			}
 		}
 		?>
-		
-		</select>
+		</select></div>
 			<?php if ($customField->required_field){ ?>
-				<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
 			<?php } ?>
 		
 		<?php
@@ -733,6 +726,7 @@ class RCCWP_WritePostPage
 		$pre_text='';
 		$hide_visual_editor = RCCWP_Options::Get('hide-visual-editor');
 		if ($hide_visual_editor == '' || $hide_visual_editor == 0){ $pre_text="pre_editor"; ?>
+		<div class="mf_custom_field">
 		<div class="tab_multi_mf">
 			<a onclick="del_editor('<?php echo $inputName?>');" class="edButtonHTML_mf">HTML</a>		
 			<a onclick="add_editor('<?php echo $inputName?>');" class="edButtonHTML_mf" >Visual</a>
@@ -740,10 +734,10 @@ class RCCWP_WritePostPage
 		<?php } ?>
 		<div class="mul_mf">
 		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> mf_editor <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $inputName?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"><?php echo $value?></textarea>
-				<?php if ($customField->required_field){ ?>
-					<label for="<?php echo $inputName?>" class="error">This field is required.</label>
-				<?php } ?>
-		</div>
+		</div></div>
+		<?php if ($customField->required_field){ ?>
+			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
+		<?php } ?>
 		
 	<?php
 	}
@@ -768,10 +762,11 @@ class RCCWP_WritePostPage
 			if ($inputSize>14) $inputSize = 14;
 		}
 		?>
-		
+		<div class="mf_custom_field">
 		<input <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> textboxinterface" tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>" />
+		</div>
 			<?php if ($customField->required_field){ ?>
-				<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
 			<?php } ?>
 		<?php
 	}
@@ -841,7 +836,7 @@ class RCCWP_WritePostPage
 				echo "&nbsp;<a href='javascript:void(0);' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a>";
 			} 
 		?>
-			
+		<div class="mf_custom_field">	
 		<input tabindex="3" 
 			id="<?php echo $inputName?>" 
 			name="<?php echo $inputName?>" 
@@ -854,9 +849,10 @@ class RCCWP_WritePostPage
 		
 		<?php
 		include_once( "RCCWP_SWFUpload.php" ) ;
-		RCCWP_SWFUpload::Body($inputName, 0, $is_canvas, $urlInputSize) ;
-		if ($customField->required_field){ ?>
-			<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+		RCCWP_SWFUpload::Body($inputName, 0, $is_canvas, $urlInputSize) ;?>
+		</div>
+		<?php if ($customField->required_field){ ?>
+			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
 		<?php }
 	}
 
@@ -1022,6 +1018,7 @@ class RCCWP_WritePostPage
 					$requiredClass ='';
 				}
 			?>		
+			<div class="mf_custom_field">
 			<input tabindex="3" 
 				id="<?php echo $inputName?>" 
 				name="<?php echo $inputName?>" 
@@ -1030,14 +1027,13 @@ class RCCWP_WritePostPage
 				size="46"
 				value="<?php echo $hidValue?>"
 				<?php if ($customField->required_field) echo 'validate="required:true"'; ?>
-					title="barbara mori"
 				/>
 			
 			<?php
 			include_once( "RCCWP_SWFUpload.php" ) ;
 			RCCWP_SWFUpload::Body($inputName, 1, $is_canvas, $urlInputSize) ;
 			?>
-
+			</div>
 		</div>
 		
 		<div style="clear: both; height: 1px;"> </div>
@@ -1047,7 +1043,7 @@ class RCCWP_WritePostPage
 		
 		<input type="hidden" <?php if ($customField->required_field) echo 'validate="required: true,max: 0"'; ?> title="This field is required." name="<?php echo $inputName?>_deleted" id="<?php echo $inputName;?>_deleted" value="0" />
 			<?php if ($customField->required_field){ ?>
-			<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
 			<?php
 			} ?>
 
@@ -1067,7 +1063,7 @@ class RCCWP_WritePostPage
 			$value = $customField->default_value[0];
 		}
 		?>
-		
+		<div class="mf_custom_field">
 		<?php
 		foreach ($customField->options as $option) :
 			$checked = $option == $value ? 'checked="checked"' : '';
@@ -1076,11 +1072,12 @@ class RCCWP_WritePostPage
 			<label for="<?php echo $inputName;?>" class="selectit">
 				<input tabindex="3" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> id="<?php echo $option?>" name="<?php echo $inputName?>" value="<?php echo $option?>" type="radio" <?php echo $checked?>/>
 				<?php echo $option?>
-			</label><br />
+			</label>
 		<?php
-		endforeach;
-		if ($customField->required_field){ ?>
-		<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+		endforeach; ?>
+		</div>
+		<?php if ($customField->required_field){ ?>
+		<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required</label></div>
 		<?php
 		}
 	}
@@ -1219,7 +1216,7 @@ class RCCWP_WritePostPage
 			$valueOriginalRelative = '';
 		}
 		?>
-		
+		<div class="mf_custom_field">
 		<input tabindex="3" 
 			id="<?php echo $inputName?>" 
 			name="<?php echo $inputName?>" 
@@ -1233,9 +1230,10 @@ class RCCWP_WritePostPage
 		<?php
 		// adding the SWF upload 
 		include_once( "RCCWP_SWFUpload.php" ) ;
-		RCCWP_SWFUpload::Body($inputName, 2, $is_canvas, $urlInputSize);
-		if ($customField->required_field){ ?>
-			<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+		RCCWP_SWFUpload::Body($inputName, 2, $is_canvas, $urlInputSize);?>
+		</div>
+		<?php if ($customField->required_field){ ?>
+			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.audio</label></div>
 		<?php }
 		
 	}
