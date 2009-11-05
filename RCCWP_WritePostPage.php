@@ -730,33 +730,16 @@ class RCCWP_WritePostPage
 		$inputWidth = (int)$customField->properties['width'];
 		if ($customField->required_field) $requiredClass = "field_required";
 		
+		$pre_text='';
 		$hide_visual_editor = RCCWP_Options::Get('hide-visual-editor');
-		if ($hide_visual_editor == '' || $hide_visual_editor == 0){
-		?>
-		<script type="text/javascript">
-			jQuery(document).ready(function(){	 
-				tinyMCE.execCommand('mceAddControl', true, "<?php echo $inputName?>");
-			});
-
-			function add_editor(id){
-				tinyMCE.execCommand('mceAddControl', false, id);
-			}
-			
-			function del_editor(id){
-				tinyMCE.execCommand('mceRemoveControl', false, id);
-			}
-			
-			</script>
-		<?php } ?>
-		<?php if ($hide_visual_editor == '' || $hide_visual_editor == 0){ ?>
+		if ($hide_visual_editor == '' || $hide_visual_editor == 0){ $pre_text="pre_editor"; ?>
 		<div class="tab_multi_mf">
 			<a onclick="del_editor('<?php echo $inputName?>');" class="edButtonHTML_mf">HTML</a>		
 			<a onclick="add_editor('<?php echo $inputName?>');" class="edButtonHTML_mf" >Visual</a>
 		</div>
 		<?php } ?>
-		
 		<div class="mul_mf">
-		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?>" tabindex="3"  id="<?php echo $inputName?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"><?php echo $value?></textarea>
+		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> mf_editor <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $inputName?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"><?php echo $value?></textarea>
 				<?php if ($customField->required_field){ ?>
 					<label for="<?php echo $inputName?>" class="error">This field is required.</label>
 				<?php } ?>
