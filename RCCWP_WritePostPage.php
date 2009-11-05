@@ -73,6 +73,13 @@ class RCCWP_WritePostPage
 							MF_URI.'js/upload.js'
 						);
 		
+		//loading handler for validate
+		wp_enqueue_script( 'mf_metadata',
+							MF_URI.'js/jquery.metadata.js'
+						);
+		wp_enqueue_script( 'mf_validate',
+							MF_URI.'js/jquery.validate.pack.js'
+						);
 		//loading Prototype framework
 		wp_enqueue_script('prototype');
 						
@@ -173,6 +180,14 @@ class RCCWP_WritePostPage
 					
 					return true;
 				}
+				
+				jQuery.metadata.setType("attr", "validate");
+				
+			/** function validate**/
+			jQuery().ready(function() {
+				// validate the comment form when it is submitted
+				jQuery("#post").validate();
+			});
 				
 			/**
 			 * Pay Attention on this.
@@ -496,7 +511,7 @@ class RCCWP_WritePostPage
  		$field_group = RCCWP_CustomGroup::Get($customField->group_id);
 
 		?>
-		<div class="mf-field" id="row_<?php echo $inputName?>">
+		<div class="mf-field <?php echo str_replace(" ","_",$customField->type); ?>" id="row_<?php echo $inputName?>">
 			<label for="<?php echo $inputName?>">
 				<?php
 					if(empty($titleCounter)){
@@ -601,10 +616,11 @@ class RCCWP_WritePostPage
 		}
 		?>
 		
-		<input  type="hidden" name="<?php echo $inputName?>" value="false" />
-		<input tabindex="3" class="checkbox checkbox_mf" name="<?php echo $inputName?>" value="true" id="<?php echo $inputName?>" type="checkbox" <?php echo $checked?> />
-		
-		<?php
+		<input  type="hidden" name="<?php echo $inputName?>_1" value="false" />
+		<input tabindex="3" class="checkbox checkbox_mf" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> name="<?php echo $inputName?>" value="true" id="<?php echo $inputName?>" type="checkbox" <?php echo $checked?> />
+		<?php if ($customField->required_field){ ?>
+		<label for="<?php echo $inputName?>" class="error block">This field is required.</label>
+		<?php }
 	}
 	
 	function CheckboxListInterface($customField, $inputName, $groupCounter, $fieldCounter)
@@ -618,6 +634,7 @@ class RCCWP_WritePostPage
 		}else{
 			$values = $customField->default_value;
 		}
+		
 		?>
 		
 		
@@ -626,17 +643,18 @@ class RCCWP_WritePostPage
 			$checked = in_array($option, (array)$values) ? 'checked="checked"' : '';
 			$option = attribute_escape(trim($option));
 		?>
-		
-			<input tabindex="3" class="checkbox_list_mf" id="<?php echo $option?>" name="<?php echo $inputName?>[]" value="<?php echo $option?>" type="checkbox" <?php echo $checked?> />
-			<label for="<?php echo $inputName;?>" class="selectit mf-checkbox-list">
+		<label for="<?php echo $inputName;?>" class="selectit mf-checkbox-list">
+			<input tabindex="3" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="checkbox_list_mf" id="<?php echo $option?>" name="<?php echo $inputName?>[]" value="<?php echo $option?>" type="checkbox" <?php echo $checked?> />
+			
 				<?php echo attribute_escape($option)?>
 			</label><br />
 		
 		<?php
 		endforeach;
 		?>
-			
-		
+		<?php if ($customField->required_field){ ?>
+			<label for="<?php echo $inputName?>[]" class="error">This field is required.</label>
+		<?php } ?>
 		<?php
 	}
 	
@@ -657,7 +675,7 @@ class RCCWP_WritePostPage
 		if ($customField->required_field) $requiredClass = "field_required";
 		?>
 		
-		<select tabindex="3"  class="<?php echo $requiredClass;?> listbox_mf" name="<?php echo $inputName?>">
+		<select tabindex="3" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf" name="<?php echo $inputName?>">
 			<option value=""><?php _e('--Select--', $mf_domain); ?></option>
 		
 		<?php
@@ -673,9 +691,9 @@ class RCCWP_WritePostPage
 		?>
 		
 		</select>	
-		
-		
-		<?php
+		<?php if ($customField->required_field){ ?>
+			<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+		<?php }
 	}
 	
 	//eeble
@@ -699,7 +717,7 @@ class RCCWP_WritePostPage
 		if ($customField->required_field) $requiredClass = "field_required";
 		?>
 
-		<select tabindex="3"  class="<?php echo $requiredClass;?> listbox_mf" name="<?php echo $inputName?>">
+		<select tabindex="3" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf" name="<?php echo $inputName?>">
 			<option value=""><?php _e('--Select--', $mf_domain); ?></option>
 		
 		<?php
@@ -715,7 +733,9 @@ class RCCWP_WritePostPage
 		?>
 		
 		</select>	
-		
+		<?php if ($customField->required_field){ ?>
+			<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+		<?php } ?>
 		
 		<?php
 	}
@@ -735,7 +755,7 @@ class RCCWP_WritePostPage
 		$requiredClass = "mf_listbox";
 		if ($customField->required_field) $requiredClass = "mf_listbox field_required";
 		?>
-		<select  class="<?php echo $requiredClass;?> listbox_mf"  tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>[]" multiple size="<?php echo $inputSize?>" style="height: 6em;">
+		<select <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf"  tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>[]" multiple size="<?php echo $inputSize?>" style="height: 6em;">
 		
 		<?php
 		foreach ($customField->options as $option) {
@@ -753,7 +773,9 @@ class RCCWP_WritePostPage
 		?>
 		
 		</select>
-		
+			<?php if ($customField->required_field){ ?>
+				<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+			<?php } ?>
 		
 		<?php
 	}
@@ -802,7 +824,10 @@ class RCCWP_WritePostPage
 		<?php } ?>
 		
 		<div class="mul_mf">
-		<textarea  class="<?php echo $requiredClass;?>" tabindex="3"  id="<?php echo $inputName?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"><?php echo $value?></textarea>
+		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?>" tabindex="3"  id="<?php echo $inputName?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"><?php echo $value?></textarea>
+				<?php if ($customField->required_field){ ?>
+					<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+				<?php } ?>
 		</div>
 		
 	<?php
@@ -829,8 +854,10 @@ class RCCWP_WritePostPage
 		}
 		?>
 		
-		<input class="<?php echo $requiredClass;?> textboxinterface" tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>" />
-		
+		<input <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> textboxinterface" tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>" />
+			<?php if ($customField->required_field){ ?>
+				<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+			<?php } ?>
 		<?php
 	}
 	
@@ -877,7 +904,7 @@ class RCCWP_WritePostPage
 					//get  the name to the file
 					id = jQuery(this).attr("id").split("-")[1];
 					file = jQuery('#'+id).val();
-					jQuery.get('<?php echo MF_URI;?>RCCWP_.php',{'action':'delete','file':file},
+					jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':file},
 								function(message){
 									jQuery('#actions-'+id).empty();
 									jQuery('#remove-'+id).empty();
@@ -907,11 +934,15 @@ class RCCWP_WritePostPage
 			class="<?php echo $requiredClass;?>" 
 			size="46"
 			value="<?php echo $valueRelative?>"
+			<?php if ($customField->required_field) echo 'validate="required:true"'; ?>
 			/>
 		
 		<?php
 		include_once( "RCCWP_SWFUpload.php" ) ;
 		RCCWP_SWFUpload::Body($inputName, 0, $is_canvas, $urlInputSize) ;
+		if ($customField->required_field){ ?>
+			<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+		<?php }
 	}
 
 
@@ -1083,6 +1114,8 @@ class RCCWP_WritePostPage
 				class="<?php echo $requiredClass;?>"
 				size="46"
 				value="<?php echo $hidValue?>"
+				<?php if ($customField->required_field) echo 'validate="required:true"'; ?>
+					title="barbara mori"
 				/>
 			
 			<?php
@@ -1097,7 +1130,11 @@ class RCCWP_WritePostPage
 		<input type="hidden" name="rc_cwp_meta_photos[]" value="<?php echo $inputName?>" 	/>
 		<input type="hidden" name="<?php echo $inputName?>_dorename" id="<?php echo $inputName?>_dorename" value="0" />
 		
-		<input type="hidden" name="<?php echo $inputName?>_deleted" id="<?php echo $inputName;?>_deleted" value="0" />
+		<input type="hidden" <?php if ($customField->required_field) echo 'validate="required: true,max: 0"'; ?> title="This field is required." name="<?php echo $inputName?>_deleted" id="<?php echo $inputName;?>_deleted" value="0" />
+			<?php if ($customField->required_field){ ?>
+			<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+			<?php
+			} ?>
 
 		<?php
 	}
@@ -1122,14 +1159,15 @@ class RCCWP_WritePostPage
 			$option = attribute_escape(trim($option));
 		?>
 			<label for="<?php echo $inputName;?>" class="selectit">
-				<input tabindex="3" id="<?php echo $option?>" name="<?php echo $inputName?>" value="<?php echo $option?>" type="radio" <?php echo $checked?>/>
+				<input tabindex="3" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> id="<?php echo $option?>" name="<?php echo $inputName?>" value="<?php echo $option?>" type="radio" <?php echo $checked?>/>
 				<?php echo $option?>
 			</label><br />
 		<?php
 		endforeach;
-		?>
-		
+		if ($customField->required_field){ ?>
+		<label for="<?php echo $inputName?>" class="error">This field is required.</label>
 		<?php
+		}
 	}
 
 	function DateInterface($customField, $inputName, $groupCounter, $fieldCounter) {
@@ -1244,11 +1282,11 @@ class RCCWP_WritePostPage
 					file = jQuery('#'+id).val(); 
 					jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':file},
 								function(message){
-									if(message =="true"){
+									//if(message =="true"){
 										jQuery('#obj-'+id).empty();
 										jQuery('#actions-'+id).empty();
-									}
-
+										jQuery('#'+id).val("");
+									//}
 								});
 				}						   
 			}
@@ -1273,13 +1311,17 @@ class RCCWP_WritePostPage
 			type="hidden" 
 			class="<?php echo $requiredClass;?>"
 			size="46"
-			value="<?php echo $$valueOriginalRelative?>"	
+			value="<?php echo $$valueOriginalRelative?>"
+			<?php if ($customField->required_field) echo 'validate="required:true"'; ?>	
 			/>
 	
 		<?php
 		// adding the SWF upload 
 		include_once( "RCCWP_SWFUpload.php" ) ;
-		RCCWP_SWFUpload::Body($inputName, 2, $is_canvas, $urlInputSize) ;
+		RCCWP_SWFUpload::Body($inputName, 2, $is_canvas, $urlInputSize);
+		if ($customField->required_field){ ?>
+			<label for="<?php echo $inputName?>" class="error">This field is required.</label>
+		<?php }
 		
 	}
 	

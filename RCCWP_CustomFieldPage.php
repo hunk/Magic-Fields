@@ -61,11 +61,15 @@ class RCCWP_CustomFieldPage
 		<?php if (in_array($custom_field->type_id, 
 							array(  $FIELD_TYPES['textbox'],
 									$FIELD_TYPES['multiline_textbox'],
+									$FIELD_TYPES['checkbox'],
+									$FIELD_TYPES['checkbox_list'],
+									$FIELD_TYPES['radiobutton_list'],
 									$FIELD_TYPES['dropdown_list'],
 									$FIELD_TYPES['listbox'],
 									$FIELD_TYPES['file'],
 									$FIELD_TYPES['image'],
-									$FIELD_TYPES['audio']
+									$FIELD_TYPES['audio'],
+									$FIELD_TYPES['related_type']
 							))){  ?>
 		<tr valign="top">
 			<th scope="row"><?php _e('Required',$mf_domain); ?>:</th>

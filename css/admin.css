@@ -14,3 +14,11 @@
 #adminmenu .mf-menu-edit-pages:hover div.wp-menu-image {
 	background-position: -151px -1px;
 }
+.mf-field label.error{
+	height:15px;
+	margin-top:-5px;
+	padding-top:5px;
+}
+.Checkbox .block { display: block; }
+.mf-field label.error
+	{ display: none; }
