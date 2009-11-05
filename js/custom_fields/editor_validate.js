@@ -1,5 +1,5 @@
 jQuery().ready(function() {
-	jQuery("#post").live('click',check_textarea);
+	jQuery("#publish").live('click',check_textarea);
 });
 
 check_textarea = function(){
