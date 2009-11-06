@@ -1,8 +1,19 @@
 jQuery(document).ready(function(){
     
     //sorteable
-    jQuery(".write_panel_wrapper").sortable({
+    jQuery(".write_panel_wrapper").sortable({ 
         handle: ".sortable_mf",
+		// function fix the problem of block of the editor visual textareas
+		start: function() { 
+			id =  jQuery(this).attr("id");
+			jQuery("#"+id+" :input[type='textarea'].mf_editor").each( function(inputField){
+				var editor_text = jQuery(this).attr('id');
+				if(tinyMCE.get(editor_text)){
+					tinyMCE.execCommand('mceRemoveControl', false, editor_text);
+					jQuery('#'+editor_text).addClass('temp_remove_editor');
+				}
+			});
+		},
         stop : function(){
             id =  jQuery(this).attr("id").split("_")[3];
             kids =  jQuery("#write_panel_wrap_"+id).children().filter(".magicfield_group");
@@ -12,6 +23,12 @@ jQuery(document).ready(function(){
                 jQuery("#order_"+groupCounter+"_"+ids).val(i+1);
                 jQuery("#counter_"+groupCounter+"_"+ids).text(i+1);
             }
+			//add the editor visual in textareas
+			jQuery("#"+jQuery(this).attr("id")+" :input[type='textarea'].temp_remove_editor").each( function(inputField){
+				var editor_text = jQuery(this).attr('id');
+				tinyMCE.execCommand('mceAddControl', false, editor_text);
+				jQuery('#'+editor_text).removeClass('temp_remove_editor');
+			});
         }
     });
 
