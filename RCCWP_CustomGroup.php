@@ -75,6 +75,19 @@ class RCCWP_CustomGroup
 	}
 	
 	/**
+	 *  Has custom fields the group?
+	 *	@param interger $fcustomGroupId the group id
+	 *  @return bool return true if the group has at least one filed false if is empty
+	 */
+	function HasCustomfields($customGroupId){
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT  count(*) FROM ".MF_TABLE_GROUP_FIELDS." WHERE group_id = %d",$customGroupId);
+		$results = $wpdb->get_var($sql);
+		return  $results > 0;
+	}
+	
+	/**
 	 * Get a list of the custom fields of a group
 	 *
 	 * @param integer $customGroupId the group id

@@ -131,14 +131,6 @@ class RCCWP_WritePostPage
 		
 		<script type="text/javascript">
 				function isset(  ) {
-					// http://kevin.vanzonneveld.net
-					// +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-					// +   improved by: FremyCompany
-					// *	 example 1: isset( undefined, true);
-					// *	 returns 1: false
-					// *	 example 2: isset( 'Kevin van Zonneveld' );
-					// *	 returns 2: true
-					
 					var a=arguments; var l=a.length; var i=0;
 					
 					while ( i!=l ) {
@@ -172,14 +164,6 @@ class RCCWP_WritePostPage
 
 		<script type="text/javascript">
 				function isset(  ) {
-					// http://kevin.vanzonneveld.net
-					// +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-					// +   improved by: FremyCompany
-					// *	 example 1: isset( undefined, true);
-					// *	 returns 1: false
-					// *	 example 2: isset( 'Kevin van Zonneveld' );
-					// *	 returns 2: true
-					
 					var a=arguments; var l=a.length; var i=0;
 					
 					while ( i!=l ) {
@@ -253,18 +237,24 @@ class RCCWP_WritePostPage
 		
 		//getting information of the CustomWrite Panel
 		$groups = RCCWP_CustomWritePanel::GetCustomGroups($CUSTOM_WRITE_PANEL->id);
-		
+
 		foreach($groups as $group){
+			
+			//Only is drawed the group if has at least one field
+			$hasfields = RCCWP_CustomGroup::HasCustomfields($group->id);
+			if(!$hasfields){
+				continue;
+			}
 			
 			if($group->name == "__default"){
 				$name = "Magic Fields Custom Fields";
 			}else{
 				$name = $group->name;
 			}	
-				
+			
 			add_meta_box(
-							'panel_'.$group->id,
-							$name,
+						'panel_'.$group->id,
+						$name,
 						array('RCCWP_WritePostPage','metaboxContent'),
 						$CUSTOM_WRITE_PANEL->type,
 						'normal',
