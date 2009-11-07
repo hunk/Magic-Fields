@@ -641,7 +641,14 @@ class RCCWP_WritePostPage
 			<option value=""><?php _e('--Select--', $mf_domain); ?></option>
 		
 		<?php
-		$options=get_posts("post_type=any&meta_key=_mf_write_panel_id&meta_value=$panel_id");
+		if($panel_id == -2){
+			$options=get_posts("post_type=any&numberposts=-1");
+		}elseif($panel_id == -1){
+			$options=get_posts("post_type=any&meta_key=_mf_write_panel_id&numberposts=-1");
+		}else{
+			$options=get_posts("post_type=any&meta_key=_mf_write_panel_id&meta_value=$panel_id");
+		}
+		
 		foreach ($options as $option) :
 			$selected = $option->ID == $value ? 'selected="selected"' : '';
 		?>
