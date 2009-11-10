@@ -685,7 +685,7 @@ class RCCWP_WritePostPage
 		if ($customField->required_field) $requiredClass = "mf_listbox field_required";
 		?>
 		<div class="mf_custom_field">
-		<select <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf"  tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>[]" multiple size="<?php echo $inputSize?>" style="height: 6em;">
+		<select <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf"  tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>[]" multiple size="<?php echo $inputSize?>" style="height: auto;">
 		
 		<?php
 		foreach ($customField->options as $option) {
