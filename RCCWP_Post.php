@@ -200,6 +200,7 @@ class RCCWP_Post
 	 */
 	function GetCustomWritePanel()
 	{
+	    global $wpdb;
 		
 		if (isset($_GET['post']))
 		{
@@ -211,6 +212,17 @@ class RCCWP_Post
 			{
 				$customWritePanelId = (int)$_REQUEST['custom-write-panel-id'];
 			}
+		}
+		else if (function_exists('icl_t') && isset($_GET['trid']) )
+		{
+		    $element_id = $wpdb->get_col("SELECT element_id FROM {$wpdb->prefix}icl_translations WHERE element_type='post' AND trid = ".intval($_GET['trid']));
+			$customWritePanelId = get_post_meta((int)$element_id, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, true);
+
+			if (empty($customWritePanelId))
+			{
+				$customWritePanelId = (int)$_REQUEST['custom-write-panel-id'];
+			}
+
 		}
 		else if (isset($_REQUEST['custom-write-panel-id']))
 		{
