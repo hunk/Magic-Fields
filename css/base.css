@@ -124,6 +124,7 @@
 .datepicker_mf{
     margin-left: 15%;
 }
+
 .mf-field small.tip {
     color: #ff0000;
 }
@@ -153,4 +154,9 @@
 
 .mf-field small:hover.tip span {
 	display: block;
+}
+
+.slider_numeber_show{
+	margin-top: -16px;
+	padding-left: 3px;
 }

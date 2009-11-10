@@ -1,6 +1,6 @@
 <?php
 
-global $wpdb;
+global $wpdb,$is_wordpress_mu,$blog_id;
 
 if (!defined('DIRECTORY_SEPARATOR'))
 {
@@ -11,7 +11,7 @@ if (!defined('DIRECTORY_SEPARATOR'))
 }
 
 // General Constants
-define('RC_CWP_DB_VERSION', 1.2);
+define('RC_CWP_DB_VERSION', 3);
 define('RC_CWP_POST_WRITE_PANEL_ID_META_KEY', '_mf_write_panel_id');
 define('RC_CWP_OPTION_KEY', 'mf_custom_write_panel');
 
@@ -72,7 +72,8 @@ $FIELD_TYPES = array(
 					"date" => 10,
 					"audio" => 11,
 					'color_picker' => 12,
-					'slider' => 13
+					'slider' => 13,
+					'related_type' => 14
 					);
 
 // Field Types
@@ -108,11 +109,23 @@ $STANDARD_FIELDS[17] = new PanelFields(17, 'Page Order', array('pageorderdiv'), 
 
 // files of magic fields is wp-content/files_mf/
 define('MF_FILES_NAME','files_mf');
-$path_content= str_replace(DIRECTORY_SEPARATOR."plugins".DIRECTORY_SEPARATOR.MF_PLUGIN_DIR,"",MF_PATH);
+
+if($is_wordpress_mu){
+	$current_site = get_current_site();	
+	$path_content = str_replace(DIRECTORY_SEPARATOR."mu-plugins".DIRECTORY_SEPARATOR.MF_PLUGIN_DIR,"",MF_PATH);
+	$path_content = $path_content.DIRECTORY_SEPARATOR."blogs.dir".DIRECTORY_SEPARATOR.$blog_id;
+}else{
+	$path_content= str_replace(DIRECTORY_SEPARATOR."plugins".DIRECTORY_SEPARATOR.MF_PLUGIN_DIR,"",MF_PATH);
+}
+
 define('MF_FILES_PATH', $path_content.DIRECTORY_SEPARATOR.MF_FILES_NAME.DIRECTORY_SEPARATOR);
 
+if($is_wordpress_mu){
+	define('MF_FILES_URI',WP_CONTENT_URL.DIRECTORY_SEPARATOR."blogs.dir".DIRECTORY_SEPARATOR.$blog_id.DIRECTORY_SEPARATOR.MF_FILES_NAME.DIRECTORY_SEPARATOR);
 
-define('MF_FILES_URI', WP_CONTENT_URL."/".MF_FILES_NAME."/");
+}else{
+	define('MF_FILES_URI', WP_CONTENT_URL."/".MF_FILES_NAME."/");
+}
 define('MF_UPLOAD_FILES_DIR', MF_FILES_PATH);
 define('MF_IMAGES_CACHE_DIR', MF_FILES_PATH.'phpthumbcache'.DIRECTORY_SEPARATOR);
 

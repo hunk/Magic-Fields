@@ -49,7 +49,8 @@ class RCCWP_Menu
 						$_POST['custom-field-type'],
 						$_POST['custom-field-options'],
 						null,null,
-						$_POST['custom-field-duplicate']);
+						$_POST['custom-field-duplicate'],
+						$_POST['custom-field-helptext']);
 	
 					$page_group = 'RCCWP_CustomWritePanelPage';
 					$page_type = 'View';
@@ -214,9 +215,7 @@ class RCCWP_Menu
 		add_options_page(__('Magic Fields Options',$mf_domain), __('Magic Fields',$mf_domain), 'manage_options', 'RCCWP_OptionsPage.php', array('RCCWP_OptionsPage', 'Main'));
 	}
 	
-	function AttachCustomWritePanelMenuItems()
-	{
-		global $wp_version;
+	function AttachCustomWritePanelMenuItems() {
 		global $submenu,$menu;
 		global $mf_domain,$wpdb;
 		require_once ('RCCWP_Options.php');
@@ -261,7 +260,6 @@ class RCCWP_Menu
 					$type_write_panel="edit-pages";	
 				}
 				
-				$new_menu[$base+$offset] = array( __($panel->name), $type_write_panel, $base+$offset.'.php', '', 'wp-menu-open menu-top mf-menu-'.$type_write_panel, 'mf-menu-'.($base+$offset), 'div' );
 				if ($assignToRole == 1){
 					$requiredPostsCap = $panel->capability_name;
 					$requiredPagesCap = $panel->capability_name;
@@ -270,57 +268,60 @@ class RCCWP_Menu
 				require_once ('RCCWP_Options.php');
 				$condence = RCCWP_Options::Get('condense-menu');
 
+				//IF we has unactivated the condenced menu
 				if(!$condence){
-				if ($panel->type == "post"){
-					if($panel->single == 1){  //if the post is single
-						if($add_post){ //if the post is single and don't have any related post
-							add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPostsCap, 'post-new.php?custom-write-panel-id=' . $panel->id);
-						}else{ //if have one related post we just can  edit the post 
-							add_submenu_page($base+$offset.'.php',__($panel->name),"Edit",$requiredPostsCap,'post.php?action=edit&post='.$has_posts);
-						}
-					}else{
-						add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPostsCap, 'post-new.php?custom-write-panel-id=' . $panel->id);
-						add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPostsCap, 'edit.php?filter-posts=1&custom-write-panel-id=' . $panel->id);
-					}
-				}else{
-					if($panel->single == 1){ //if the page is single
-						if($add_post){ //if the page is single and don't have any related post
-							add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPagesCap, 'page-new.php?custom-write-panel-id=' . $panel->id);
+					//adding the top parent menus
+					$new_menu[$base+$offset] = array( __($panel->name), $type_write_panel, $base+$offset.'.php', '', 'wp-menu-open menu-top mf-menu-'.$type_write_panel, 'mf-menu-'.($base+$offset), 'div' );
+					
+					//adding submenu options (add new and manage for each write panel)
+					if ($panel->type == "post"){
+						if($panel->single == 1){  //if the post is single
+							if($add_post){ //if the post is single and don't have any related post
+								add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPostsCap, 'post-new.php?custom-write-panel-id=' . $panel->id);
+							}else{ //if have one related post we just can  edit the post 
+								add_submenu_page($base+$offset.'.php',__($panel->name),"Edit",$requiredPostsCap,'post.php?action=edit&post='.$has_posts);
+							}
 						}else{
-							add_submenu_page($base+$offset.'.php',__($panel->name),"Edit",$requiredPagesCap,'page.php?action=edit&post='.$has_posts);
+							add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPostsCap, 'post-new.php?custom-write-panel-id=' . $panel->id);
+							add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPostsCap, 'edit.php?filter-posts=1&custom-write-panel-id=' . $panel->id);
 						}
 					}else{
-						add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPagesCap, 'page-new.php?custom-write-panel-id=' . $panel->id);
-						add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPagesCap, 'edit-pages.php?filter-posts=1&custom-write-panel-id=' . $panel->id);
-					}
-				}
-			
-		}else{
-			if ($panel->type == "post"){
-			 	if($panel->single == 1){ //if the post is single
-			 			if($add_post){ //if the post is single and don't have any related post
+						if($panel->single == 1){ //if the page is single
+							if($add_post){ //if the page is single and don't have any related post
+								add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPagesCap, 'page-new.php?custom-write-panel-id=' . $panel->id);
+							}else{
+								add_submenu_page($base+$offset.'.php',__($panel->name),"Edit",$requiredPagesCap,'page.php?action=edit&post='.$has_posts);
+							}
+						}else{
+							add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPagesCap, 'page-new.php?custom-write-panel-id=' . $panel->id);
+							add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPagesCap, 'edit-pages.php?filter-posts=1&custom-write-panel-id=' . $panel->id);
+						}
+					}			
+				}else{//if condenced is activated
+					if ($panel->type == "post"){
+			 			if($panel->single == 1){ //if the post is single
+			 				if($add_post){ //if the post is single and don't have any related post
+			 					add_submenu_page('post-new.php', __($panel->name), __($panel->name), $requiredPostsCap, 'post-new.php?custom-write-panel-id=' . $panel->id);
+			 				}
+			 			}else{
 			 				add_submenu_page('post-new.php', __($panel->name), __($panel->name), $requiredPostsCap, 'post-new.php?custom-write-panel-id=' . $panel->id);
 			 			}
-			 	}else{
-			 		add_submenu_page('post-new.php', __($panel->name), __($panel->name), $requiredPostsCap, 'post-new.php?custom-write-panel-id=' . $panel->id);
-			 	}
-			}else {
-			 	if($panel->single == 1){ //if the page is single
-			 		if($add_post){ //if the page is single and don't have any related post
-			 			add_submenu_page('page-new.php', __($panel->name), __($panel->name), $requiredPagesCap, 'page-new.php?custom-write-panel-id=' . $panel->id);
-			 		}
-				}else{
-			 		add_submenu_page('page-new.php', __($panel->name), __($panel->name), $requiredPagesCap, 'page-new.php?custom-write-panel-id=' . $panel->id);
-			 	}
-			}
+					}else {
+			 			if($panel->single == 1){ //if the page is single
+			 				if($add_post){ //if the page is single and don't have any related post
+			 					add_submenu_page('page-new.php', __($panel->name), __($panel->name), $requiredPagesCap, 'page-new.php?custom-write-panel-id=' . $panel->id);
+			 				}
+						}else{
+			 				add_submenu_page('page-new.php', __($panel->name), __($panel->name), $requiredPagesCap, 'page-new.php?custom-write-panel-id=' . $panel->id);
+			 			}
+					}
+				}
 		}
-	}
-			foreach ($menu as $k => $v) {
-				if($k > 5) $new_menu[$k+$offset]=$v;
-			}
+		foreach ($menu as $k => $v) {
+			if($k > 5) $new_menu[$k+$offset]=$v;
+		}
 			
-			$menu = $new_menu;
-		 
+		$menu = $new_menu;
 		RCCWP_Menu::SetCurrentCustomWritePanelMenuItem();
 		
 	}
@@ -399,7 +400,6 @@ class RCCWP_Menu
 	{
 		global $menu;
 		global $submenu;
-		global $wp_version;
 
 		require_once ('RCCWP_Options.php');
 		
@@ -421,17 +421,14 @@ class RCCWP_Menu
 		
 	}
 	
-	function SetCurrentCustomWritePanelMenuItem()
-	{
-		
+	function SetCurrentCustomWritePanelMenuItem() {
 		global $submenu_file;
 		global $menu;
 		
 		require_once ('RCCWP_Options.php');
 		$options = RCCWP_Options::Get();
 		
-		if (!empty($options['default-custom-write-panel']))
-		{
+		if (!empty($options['default-custom-write-panel'])){
 			require_once ('RCCWP_CustomWritePanel.php');
 			
 			$customWritePanel = RCCWP_CustomWritePanel::Get((int)$options['default-custom-write-panel']);

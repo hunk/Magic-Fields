@@ -43,8 +43,7 @@ if (isset($_POST['fileframe'])){
 	if (isset($_FILES['file']) && (!empty($_FILES['file']['tmp_name'])))  // file was send from browser
 	{
 		
-		if ($_FILES['file']['error'] == UPLOAD_ERR_OK)  // no error
-		{
+		if ($_FILES['file']['error'] == UPLOAD_ERR_OK)   { //no error
 			$special_chars = array (' ','`','"','\'','\\','/'," ","#","$","%","^","&","*","!","~","‘","\"","’","'","=","?","/","[","]","(",")","|","<",">",";","\\",",");
 			$filename = str_replace($special_chars,'',$_FILES['file']['name']);
 			$filename = time() . $filename;
@@ -54,7 +53,7 @@ if (isset($_POST['fileframe'])){
 			$result_msg = "<font color=\"green\"><b>".__("Successful upload!",$mf_domain)."</b></font>" ;
 			
 			//Checking the mimetype of the file
-			if(valid_mime(MF_FILES_PATH.$filename,$acceptedExts)){
+			if(valid_mime($_FILES['file']['type'],$acceptedExts)){
 				$operationSuccess = "true";
 			}else{
 				$operationSuccess = "false";
@@ -134,7 +133,6 @@ if (isset($_POST['fileframe'])){
 			par.getElementById("<?php echo $_POST['input_name'];?>_deleted").value = 0;
 			//Set image
 			<?php
-				//$newImagePath = MF_URI.'phpThumb.php
 				$newImagePath = PHPTHUMB.'?&w=150&h=120&src='.MF_FILES_URI.$filename;
 				
 				if (isset($_POST['imageThumbID'])){ 

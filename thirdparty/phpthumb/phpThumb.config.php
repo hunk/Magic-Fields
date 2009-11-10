@@ -15,6 +15,20 @@ if (!file_exists(dirname(__FILE__).'/phpthumb.functions.php') || !include_once(d
 	ob_end_flush();
 	die('failed to include_once(phpthumb.functions.php) - realpath="'.realpath(dirname(__FILE__).'/phpthumb.functions.php').'"');
 }
+
+//use wp-load. Normally right here, but if it's not...
+if( file_exists('../../../../../wp-load.php')){
+	require_once('../../../../../wp-load.php');
+	$loaded = true;
+} elseif( file_exists('./mf_config.php')){
+	include_once('./mf-config.php');
+	require_once(MF_WP_LOAD);
+	$loaded = true;
+}
+
+if($loaded  !== true){
+	die('Could not load wp-load.php, edit/add mf-config.php and define MF_WP_LOAD to point to a valid wp-load file');
+}
 ob_end_clean();
 
 // START USER CONFIGURATION SECTION:
@@ -34,7 +48,7 @@ $PHPTHUMB_CONFIG['document_root'] = realpath((getenv('DOCUMENT_ROOT') && ereg('^
 // If the directory is not writable no error will be generated but caching will be disabled.
 //$PHPTHUMB_CONFIG['cache_directory'] = dirname(__FILE__).'../../cache/';                            // set the cache directory relative to the phpThumb() installation
 //$PHPTHUMB_CONFIG['cache_directory'] = $PHPTHUMB_CONFIG['document_root'].'/phpthumb/cache/'; // set the cache directory to an absolute directory for all source images
-$PHPTHUMB_CONFIG['cache_directory'] = dirname(__FILE__).'/../../../../files_mf/phpthumbcache/';                                           // set the cache directory relative to the source image - must start with '.' (will not work to cache URL- or database-sourced images, please use an absolute directory name)
+$PHPTHUMB_CONFIG['cache_directory'] = MF_IMAGES_CACHE_DIR;                                           // set the cache directory relative to the source image - must start with '.' (will not work to cache URL- or database-sourced images, please use an absolute directory name)
 //$PHPTHUMB_CONFIG['cache_directory'] = null;                                                 // disable thumbnail caching (not recommended)
 //if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
 //	$PHPTHUMB_CONFIG['cache_directory'] = dirname(__FILE__).'/cache/'; // set the cache directory to an absolute directory for all source images

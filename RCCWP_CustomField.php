@@ -23,7 +23,7 @@ class RCCWP_CustomField
 	 * @param array $properties an array containing extra properties of the field.
 	 * @return the new field id
 	 */
-	function Create($customGroupId, $name, $label, $helptext, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null,$duplicate)
+	function Create($customGroupId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null,$duplicate,$helptext = null)
 	{
 		global $wpdb;
 
@@ -33,19 +33,22 @@ class RCCWP_CustomField
 
 		$label = stripslashes(stripslashes($label));
 		$label = addslashes($label);
+		
+		$helptext = stripslashes(stripslashes($helptext));
+		$helptext = addslashes($helptext);
 
-			$sql = sprintf(
+		$sql = sprintf(
 			"INSERT INTO " . MF_TABLE_GROUP_FIELDS .
-			" (group_id, name, description, help_text, display_order, required_field, type, CSS, duplicate) values (%d, %s, %s, %d, %d, %d, %s, %d)",
+			" (group_id, name, description, display_order, required_field, type, CSS, duplicate,help_text) values (%d, %s, %s, %d, %d, %d, %s, %d, %s)",
 			$customGroupId,
 			RC_Format::TextToSql($name),
 			RC_Format::TextToSql($label),
-			RC_Format::TextToSql($helptext),
 			$order,
 			$required_field,
 			$type,
 			"'".$_POST['custom-field-css']."'",
-			$duplicate
+			$duplicate,
+			RC_Format::TextToSql($helptext)
 			);
 		$wpdb->query($sql);
 		
@@ -133,7 +136,7 @@ class RCCWP_CustomField
 	function Get($customFieldId)
 	{
 		global $wpdb;
-		$sql = "SELECT cf.group_id, cf.id, cf.name, cf.CSS, tt.id AS type_id, tt.name AS type, cf.description, cf.help_text, cf.display_order, cf.required_field, co.options, co.default_option AS default_value, tt.has_options, cp.properties, tt.has_properties, tt.allow_multiple_values, duplicate FROM " . MF_TABLE_GROUP_FIELDS .
+		$sql = "SELECT cf.group_id, cf.id, cf.name, cf.CSS, tt.id AS type_id, tt.name AS type, cf.description, cf.display_order, cf.required_field, co.options, co.default_option AS default_value, tt.has_options, cp.properties, tt.has_properties, tt.allow_multiple_values, duplicate,cf.help_text FROM " . MF_TABLE_GROUP_FIELDS .
 			" cf LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " co ON cf.id = co.custom_field_id" .
 			" LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " cp ON cf.id = cp.custom_field_id" .
 			" JOIN " . MF_TABLE_CUSTOM_FIELD_TYPES . " tt ON cf.type = tt.id" . 
@@ -271,67 +274,57 @@ class RCCWP_CustomField
 
 		return $wpdb->get_var("SELECT count(DISTINCT field_count) FROM " . MF_TABLE_POST_META . 
 						" WHERE field_name = '$fieldName' AND post_id = $postId AND group_count = $groupIndex");
-    }
+	}
 
-    /**
-    * Get field duplicates
-    *
-    *
-    */ 
-    function GetFieldsOrder($postId,$fieldName,$groupId){
-        global $wpdb;
+	/**
+	* Get field duplicates
+	*/ 
+	function GetFieldsOrder($postId,$fieldName,$groupId){
+		global $wpdb;
 
-        $tmp =  $wpdb->get_col(
-                                "SELECT field_count FROM ".MF_TABLE_POST_META." WHERE field_name = '{$fieldName}' AND post_id = {$postId} AND group_count = {$groupId} GROUP BY field_count ORDER BY field_count ASC"
-                              );
+		$tmp =  $wpdb->get_col("SELECT field_count FROM ".MF_TABLE_POST_META." WHERE field_name = '{$fieldName}' AND post_id = {$postId} AND group_count = {$groupId} GROUP BY field_count ORDER BY field_count ASC");
 
+		// if the array is  empty is because this field is new and don't have
+		// a data related with this post 
+		// then we just create with the index 1
+		if(empty($tmp)){
+			$tmp[0] = 1;
+		}
 
-        //if the array is  empty is because this field is new and don't have
-        //a data related with this post 
-        //then we just create with the index 1
-        if(empty($tmp)){
-            $tmp[0] = 1;
-        }
+		return $tmp;
+	}
 
-        return $tmp;
-     }
+	/**
+	 * Get the order of group duplicates given the  field name. The function returns a
+	 * array  with the orden  
+	 *
+	 * @param integer  $postId post id
+	 * @param integer $fieldID  the name of any field in the group
+	 * @return order of one group
+	 */
+	function GetOrderDuplicates($postId,$fieldName){
+		global $wpdb;
 
-    /**
-     * Get the order of group duplicates given the  field name. The function returns a
-     * array  with the orden  
-     *
-     * @param integer  $postId post id
-     * @param integer $fieldID  the name of any field in the group
-     * @return order of one group
-     */
-     function GetOrderDuplicates($postId,$fieldName){
-         global $wpdb;
+		$tmp =  $wpdb->get_col("SELECT group_count  FROM ".MF_TABLE_POST_META." WHERE field_name = '{$fieldName}' AND   post_id = {$postId} GROUP BY group_count ORDER BY order_id asc");
 
-        
-         $tmp =  $wpdb->get_col(
-                                   "SELECT group_count  FROM ".MF_TABLE_POST_META." WHERE field_name = '{$fieldName}' AND   post_id = {$postId} GROUP BY group_count ORDER BY order_id asc"
-                                 );
+		// if the array is  empty is because this field is new and don't have
+		// a data related with this post 
+		// then we just create with the index 1
+		if(empty($tmp)){
+			$tmp[0] = 1;
+		}
 
+		 
+		// the order start to 1  and the arrays start to 0
+		// then i just sum one element in each array key for 
+		// the  order and the array keys  be the same
+		$order  = array();
+		foreach($tmp as $key => $value){
+			$order[$key+1]  = $value;
+		} 
+		return $order;
 
-
-         //if the array is  empty is because this field is new and don't have
-         //a data related with this post 
-         //then we just create with the index 1
-         if(empty($tmp)){
-             $tmp[0] = 1;
-         }
-
-         
-         //the order start to 1  and the arrays start to 0
-         //then i just sum one element in each array key for 
-         //the  order and the array keys  be the same
-         $order  = array();
-         foreach($tmp as $key => $value){
-            $order[$key+1]  = $value;
-         } 
-         return $order;
-
-     }
+	}
 
 	
 	/**
@@ -354,7 +347,6 @@ class RCCWP_CustomField
 										" cf.group_id in (SELECT mg.id FROM ". MF_TABLE_PANEL_GROUPS . " mg ".
 														"  WHERE mg.panel_id = $customWritePanelId)");
 														
-														
 		return $customFieldId;
 	}
 	
@@ -369,7 +361,7 @@ class RCCWP_CustomField
 		global $wpdb, $FIELD_TYPES;
 		
 		$customFieldvalues = $wpdb->get_row(
-			"SELECT cf.id, cf.type,cf.CSS,fp.properties 
+			"SELECT cf.id, cf.type,cf.CSS,fp.properties,cf.description 
 				FROM ". MF_TABLE_GROUP_FIELDS . " cf 
 					LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
 					WHERE cf.name = '$customFieldName' 
@@ -380,11 +372,14 @@ class RCCWP_CustomField
 									AND pm.meta_key = '".RC_CWP_POST_WRITE_PANEL_ID_META_KEY."' 
 									AND pm.post_id = $post_id)",ARRAY_A);
 													
-		if (empty($customFieldvalues)) return false;
+		if (empty($customFieldvalues)) 
+			return false;
+
 		if($customFieldvalues['type'] == $FIELD_TYPES["date"] OR $customFieldvalues['type'] == $FIELD_TYPES["image"] )
 			$customFieldvalues['properties'] = unserialize($customFieldvalues['properties']);
-		else $customFieldvalues['properties']=null;
-										
+		else 
+			$customFieldvalues['properties']=null;
+		
 		return $customFieldvalues;
 	}
 	
@@ -418,7 +413,7 @@ class RCCWP_CustomField
 	 * @param array $properties an array containing extra properties of the field.
 	 */
 
-	function Update($customFieldId, $name, $label, $helptext, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null, $duplicate)
+	function Update($customFieldId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null, $duplicate,$helptext = null)
 	{
 		global $wpdb;
 		$name = str_replace(" ","_",$name);
@@ -441,21 +436,21 @@ class RCCWP_CustomField
 			"UPDATE " . MF_TABLE_GROUP_FIELDS .
 			" SET name = %s" .
 			" , description = %s" .
-			" , help_text = %s" .
 			" , display_order = %d" .
 			" , required_field = %d" .
 			" , type = %d" .
 			" , CSS = '%s'" .
 			" , duplicate = %d" .
+			" , help_text = %s" .
 			" WHERE id = %d",
 			RC_Format::TextToSql($name),
 			RC_Format::TextToSql($label),
-			RC_Format::TextToSql($helptext),
 			$order,
 			$required_field,
 			$type,
 			$_POST['custom-field-css'],
 			$duplicate,
+			RC_Format::TextToSql($helptext),
 			$customFieldId
 			);
 		$wpdb->query($sql);
@@ -522,5 +517,25 @@ class RCCWP_CustomField
 			$wpdb->query($sql);	
 		}
 	}
+	
+	function GetDataField($customFieldName, $groupIndex=1, $fieldIndex=1,$postId){
+		global $wpdb, $FIELD_TYPES;
+		$customFieldName = str_replace(" ","_",$customFieldName);
+		
+		$customFieldvalues = $wpdb->get_row(
+			"SELECT pm.meta_id,pm.meta_value, cf.id, cf.type,cf.CSS,fp.properties,cf.description 
+			FROM ".MF_TABLE_POST_META." pm_mf, ".$wpdb->postmeta." pm, ".MF_TABLE_GROUP_FIELDS." cf LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id 
+			WHERE cf.name = '$customFieldName' AND cf.name = pm_mf.field_name AND group_count = $groupIndex AND field_count = $fieldIndex AND pm_mf.post_id= $postId AND pm_mf.id = pm.meta_id AND cf.group_id in ( SELECT mg.id FROM ".MF_TABLE_PANEL_GROUPS." mg, ".$wpdb->postmeta." pm WHERE mg.panel_id = pm.meta_value AND pm.meta_key = '_mf_write_panel_id' AND pm.post_id = $postId)
+			",ARRAY_A);
+						
+		if (empty($customFieldvalues)) 
+			return false;
+		
+		$customFieldvalues['properties'] = unserialize($customFieldvalues['properties']);
+		
+		if($customFieldvalues['type'] == $FIELD_TYPES["checkbox_list"] OR $customFieldvalues['type'] == $FIELD_TYPES["listbox"] )
+			$customFieldvalues['meta_value'] = unserialize($customFieldvalues['meta_value']);
+								
+		return $customFieldvalues;
+	}
 }
-?>

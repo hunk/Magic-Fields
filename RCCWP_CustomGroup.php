@@ -75,6 +75,19 @@ class RCCWP_CustomGroup
 	}
 	
 	/**
+	 *  Has custom fields the group?
+	 *	@param interger $fcustomGroupId the group id
+	 *  @return bool return true if the group has at least one filed false if is empty
+	 */
+	function HasCustomfields($customGroupId){
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT  count(*) FROM ".MF_TABLE_GROUP_FIELDS." WHERE group_id = %d",$customGroupId);
+		$results = $wpdb->get_var($sql);
+		return  $results > 0;
+	}
+	
+	/**
 	 * Get a list of the custom fields of a group
 	 *
 	 * @param integer $customGroupId the group id
@@ -84,7 +97,7 @@ class RCCWP_CustomGroup
 	function GetCustomFields($customGroupId)
 	{
 		global $wpdb;
-		$sql = "SELECT cf.id, cf.name, tt.name AS type, cf.description, cf.display_order, cf.required_field,cf.css, co.options, co.default_option AS default_value, tt.has_options, cp.properties, tt.has_properties, tt.allow_multiple_values, cf.duplicate FROM " . MF_TABLE_GROUP_FIELDS .
+		$sql = "SELECT cf.id, cf.name, tt.name AS type, cf.description, cf.display_order, cf.required_field,cf.css, co.options, co.default_option AS default_value, tt.has_options, cp.properties, tt.has_properties, tt.allow_multiple_values, cf.duplicate,cf.help_text FROM " . MF_TABLE_GROUP_FIELDS .
 			" cf LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " co ON cf.id = co.custom_field_id" .
 			" LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " cp ON cf.id = cp.custom_field_id" .
 			" JOIN " . MF_TABLE_CUSTOM_FIELD_TYPES . " tt ON cf.type = tt.id" . 

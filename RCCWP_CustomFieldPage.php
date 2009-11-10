@@ -1,4 +1,5 @@
 <?php
+
 class RCCWP_CustomFieldPage
 {
 	function Edit()
@@ -44,7 +45,7 @@ class RCCWP_CustomFieldPage
 		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Help text',$mf_domain); ?>:</th>
-                        <td><input name="custom-field-helptext" id="custom-field-helptext" size="40" type="text" value="<?php echo htmlspecialchars($custom_field->help_text)?>" /><br/><small>If set, this will be displayed in a tooltip next to the field label</small></td>
+			<td><input name="custom-field-helptext" id="custom-field-helptext" size="40" type="text" value="<?php echo htmlspecialchars($custom_field->help_text)?>" /><br/><small>If set, this will be displayed in a tooltip next to the field label</small></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Can be duplicated',$mf_domain); ?>:</th>
@@ -60,11 +61,15 @@ class RCCWP_CustomFieldPage
 		<?php if (in_array($custom_field->type_id, 
 							array(  $FIELD_TYPES['textbox'],
 									$FIELD_TYPES['multiline_textbox'],
+									$FIELD_TYPES['checkbox'],
+									$FIELD_TYPES['checkbox_list'],
+									$FIELD_TYPES['radiobutton_list'],
 									$FIELD_TYPES['dropdown_list'],
 									$FIELD_TYPES['listbox'],
 									$FIELD_TYPES['file'],
 									$FIELD_TYPES['image'],
-									$FIELD_TYPES['audio']
+									$FIELD_TYPES['audio'],
+									$FIELD_TYPES['related_type']
 							))){  ?>
 		<tr valign="top">
 			<th scope="row"><?php _e('Required',$mf_domain); ?>:</th>
@@ -128,6 +133,24 @@ class RCCWP_CustomFieldPage
 		</tr>
 		<?php endif; ?>
 
+		<?php 
+		//eeble
+		if (in_array($custom_field->type, array('Related Type'))) :
+			$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
+		?>
+		<tr valign="top">
+			<th scope="row"><?php _e('Related Type Panel', $mf_domain); ?>:</th>
+			<td><select name="custom-field-related-type-panel-id" id="custom-field-related-type-panel-id">
+				<option value="-4" <?php if ($custom_field->properties['panel_id']== -4) echo 'selected' ?> >All Post</option>
+				<option value="-3" <?php if ($custom_field->properties['panel_id']== -3) echo 'selected' ?> >All Page</option>
+				<option value="-2" <?php if ($custom_field->properties['panel_id']== -2) echo 'selected' ?> >All Post with Write Panel</option>
+				<option value="-1" <?php if ($custom_field->properties['panel_id']== -1) echo 'selected' ?> >All Page with Write Panel</option>
+				<?php foreach ($customWritePanels as $panel): ?>
+					<option value="<?php echo $panel->id ?>" <?php if ($custom_field->properties['panel_id']==$panel->id) echo 'selected' ?>><?php echo $panel->name ?></option>
+				<?php endforeach; ?>
+			</select></td>
+		</tr>
+		<?php endif; ?>
 
 		<?php
 		if ($custom_field->has_options == "true") :
@@ -218,12 +241,12 @@ class RCCWP_CustomFieldPage
 		<!-- START :: For Image/Photo' Css -->
 		<?php
 			$isDisplay = $custom_field->type == "Image" ? 'display:inline;' : 'display:none;';
-		?>
-		<?php 
+			
 			$size = explode("&",$custom_field->properties['params']);
-if(isset($size[3])){
-$c=$size[3];
-}
+			if(isset($size[3])){
+				$c=$size[3];
+			}
+			
 			if (substr($size[1],0 ,1) == "h"){
 				$h = substr($size[1], 2);
 			}
@@ -281,4 +304,3 @@ $c=$size[3];
   		<?php
 	}
 }
-?>

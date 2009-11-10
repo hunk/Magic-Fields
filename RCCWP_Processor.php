@@ -137,7 +137,8 @@ class RCCWP_Processor
 					$fieldToCopy->options,
 					$fieldToCopy->default_value,
 					$fieldToCopy->properties,
-					$fieldToCopy->duplicate
+					$fieldToCopy->duplicate,
+					$fieldToCopy->helptext
 					);
 				
 			case 'continue-create-custom-field':
@@ -208,6 +209,11 @@ class RCCWP_Processor
 						$custom_field_properties['min'] = $_POST['custom-field-slider-min'];
 						$custom_field_properties['step'] = $_POST['custom-field-slider-step'];
 					}
+					//eeble
+					else if (in_array($current_field->name, array('Related Type')))
+					{
+						$custom_field_properties['panel_id'] = $_POST['custom-field-related-type-panel-id'];
+					}
 				}
 				
 				RCCWP_CustomField::Create(
@@ -220,7 +226,8 @@ class RCCWP_Processor
 					$_POST['custom-field-options'],
 					$_POST['custom-field-default-value'],
 					$custom_field_properties,
-					$_POST['custom-field-duplicate']
+					$_POST['custom-field-duplicate'],
+					$_POST['custom-field-helptext']
 					);
 				break;
 				
@@ -284,6 +291,11 @@ class RCCWP_Processor
 						$custom_field_properties['min'] = $_POST['custom-field-slider-min'];
 						$custom_field_properties['step'] = $_POST['custom-field-slider-step'];
 					}
+					//eeble
+					else if (in_array($current_field->name, array('Related Type')))
+					{
+						$custom_field_properties['panel_id'] = $_POST['custom-field-related-type-panel-id'];
+					}
 				}
 				
 				RCCWP_CustomField::Update(
@@ -297,7 +309,8 @@ class RCCWP_Processor
 					$_POST['custom-field-options'],
 					$_POST['custom-field-default-value'],
 					$custom_field_properties,
-					$_POST['custom-field-duplicate']
+					$_POST['custom-field-duplicate'],
+					$_POST['custom-field-helptext']
 					);
 					
 				break;

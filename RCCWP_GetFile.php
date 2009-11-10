@@ -44,13 +44,8 @@ function DownloadFile(){
 			$readData = fread($fp_source, 1024*2);
 			fwrite($fp_dest,$readData);	
 		}
-		fclose($fp_source) ;
-		fclose($fp_dest) ;
-			
-		if(!valid_mime($directory.$filename,$acceptedExts)){
-			unlink($directory.$filename);
-			return false;
-		}		
+		fclose($fp_source);
+		fclose($fp_dest);
 		
 		return $filename;
 	}

@@ -4,7 +4,7 @@ Plugin Name: Magic-fields
 Plugin URI: http://magicfields.org
 Description: Create custom write panels and easily retrieve their values in your templates.
 Author: Hunk and Gnuget
-Version: 1.1
+Version: 1.2.1
 Author URI: http://magicfields.org
 */
 
@@ -26,8 +26,14 @@ Author URI: http://magicfields.org
 
 
 // Globals
-global $wpdb,$post,$current_user,$FIELD_TYPES,$current_user,$flag;
+global $wpdb,$post,$current_user,$FIELD_TYPES,$current_user,$flag,$is_wordpress_mu;
 
+
+if(isset($current_blog)){
+	$is_wordpress_mu=true;
+}else{
+	$is_wordpress_mu=false;
+}
 
 //for this save_post action doesn't execute  twice
 $flag = 0;
@@ -57,13 +63,6 @@ require_once 'RCCWP_Menu.php';
 require_once 'RCCWP_CreateCustomFieldPage.php';
 require_once 'tools/debug.php';
 
-
-global $is_wordpress_mu;
-if(isset($current_blog)) 
-	$is_wordpress_mu=true;
-else
-	$is_wordpress_mu=false;
-	
  /* function for languajes
   *
   */
@@ -79,9 +78,16 @@ if (is_admin()) {
 	
 	register_activation_hook(dirname(__FILE__) . '/Main.php', array('RCCWP_Application', 'Install'));
 
-	if(isset($current_blog)) {
-		RCCWP_Application::Install();
-		add_action('admin_menu', array('RCCWP_Application', 'ContinueInstallation'));
+	if($is_wordpress_mu) {
+		//checking if the method Install was executed before
+		//if exists the option called "mf_custom_write_panel" 
+		//is because Magic Fields was already installed
+		$option = get_option('mf_custom_write_panel');
+		
+		if(!$option){
+			RCCWP_Application::Install();
+			add_action('admin_menu', array('RCCWP_Application', 'ContinueInstallation'));
+		}
 	}
 
 	if (get_option(RC_CWP_OPTION_KEY) !== false) {
@@ -217,7 +223,7 @@ function mf_admin_style() {
 *  Check the mime type of the file for 
 *  avoid upload any dangerous file.
 */
-function valid_mime($file_path,$file_type){
+function valid_mime($mime,$file_type){
 	$imagesExts = array(
 						'image/gif',
 						'image/jpeg',
@@ -231,11 +237,6 @@ function valid_mime($file_path,$file_type){
 						'audio/x-wav'
 						);
 						
-						
-	$mime = mime_content_type($file_path);
-	preg_match('/[a-z]+\/[a-z]+/i',$mime,$match);
-	$mime = $match[0];
-	
 	if($file_type == "image"){
 		if(in_array($mime,$imagesExts)){
 			return true;

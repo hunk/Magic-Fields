@@ -61,7 +61,13 @@ class RCCWP_CreateCustomFieldPage
 				</p>
 			</td>
 		</tr>
-
+		
+		<tr valign="top">
+			<th scope="row"><?php _e('Help text',$mf_domain); ?>:</th>
+			<td>
+				<input name="custom-field-helptext" id="custom-field-helptext" size="40" type="text" /><br/><small>If set, this will be displayed in a tooltip next to the field label</small></td>
+		</tr>
+		
 		<tr valign="top">
 			<th scope="row"><?php _e("Can be duplicated", $mf_domain); ?>:</th>
 			<td><input name="custom-field-duplicate" id="custom-field-duplicate" type="checkbox" value="1" <?php echo $custom_field->duplicate==1 ? "checked":"" ?>/></td>
@@ -176,6 +182,7 @@ class RCCWP_CreateCustomFieldPage
 		<input type="hidden" name="custom-field-order" 		value="<?php echo $_POST['custom-field-order']?>" />
 		<input type="hidden" name="custom-field-required" 		value="<?php echo $_POST['custom-field-required']?>" />
 		<input type="hidden" name="custom-field-type" 		value="<?php echo $_POST['custom-field-type']?>" />
+		<input type="hidden" name="custom-field-helptext" 		value="<?php echo $_POST['custom-field-helptext']?>" />
 
 		<!-- Hidden value for Image/Photo' Css Class-->
 		<input type="hidden" name="custom-field-css" value="<?php echo $_POST['custom-field-css']?>" />
@@ -237,6 +244,26 @@ class RCCWP_CreateCustomFieldPage
 		</tr>
 		<?php endif; ?>
 		
+		<?php
+		//eeble
+		if (in_array($current_field->name, array('Related Type'))) :
+			$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
+		?>
+		<tr valign="top">
+			<th scope="row"><?php _e('Related Type Panel', $mf_domain); ?>:</th>
+			<td><select name="custom-field-related-type-panel-id" id="custom-field-related-type-panel-id">
+				<option value="-4">All Post</option>
+				<option value="-3">All Page</option>
+				<option value="-2">All Post with Write Panel</option>
+				<option value="-1">All Page with Write Panel</option>
+				<?php foreach ($customWritePanels as $panel): ?>
+					<option value="<?php echo $panel->id ?>"><?php echo $panel->name ?></option>
+				<?php endforeach; ?>
+			</select></td>
+		</tr>
+		<?php endif; ?>
+
+				
 		<?php
 		endif; // has_properties
 		?>
