@@ -57,6 +57,12 @@ class RCCWP_WritePostPage
 							MF_URI.'js/ui.datepicker.js',
 							array('jquery','jquery-ui-core')
 						);
+					
+		//loading  jquery ui datepicker
+		wp_enqueue_script(	'slider',
+							MF_URI.'js/ui.slider.js',
+							array('jquery','jquery-ui-core')
+						);
 				
 		//loading core of the datepicker
 		wp_enqueue_script(	'mf_datepicker',
@@ -1267,8 +1273,7 @@ class RCCWP_WritePostPage
 		}else{
 			$value = 0;
 		}
-		
-		
+
 		if($fieldValue){
 			$value=$fieldValue;
 		}else{
@@ -1279,27 +1284,11 @@ class RCCWP_WritePostPage
 			}
 		}
 		
-		if(!$customField->properties['min']){
-			$customField->properties['min']=0;
-		}
-		if(!$value){
-			$value=$customField->properties['min'];
-		}
-		if(!$customField->properties['max']){
-			$customField->properties['max']=100;
-		}
-		if(!$customField->properties['step']){
-			$customField->properties['step']=0;
-		}
-		global $wp_version;
-		if($wp_version <= 2.7){ ?>
-		<link rel="stylesheet" href="<?php echo MF_URI?>css/flora.slider.css" type="text/css" media="screen" title="Flora (Default)">
-		<script type="text/javascript" src="<?php echoMF_URI?>js/ui.slider.js"></script>
-		<?php }else{ ?>
-			<link rel="stylesheet" href="<?php echo MF_URI?>css/base/ui.all.css" type="text/css" media="screen" />
-			<script type="text/javascript" src="<?php echo MF_URI?>js/ui.core_WP28.js"></script>
-			<script type="text/javascript" src="<?php echo MF_URI?>js/ui.slider_WP28.js"></script>
-		<?php } ?>
+		if(!$customField->properties['min']) $customField->properties['min']=0;
+		if(!$value) $value=$customField->properties['min'];
+		if(!$customField->properties['max']) $customField->properties['max']=100;
+		if(!$customField->properties['step']) $customField->properties['step']=1;
+		?>
 			<script>
 				jQuery('document').ready(function(){
 					jQuery('#slider_<?php echo $inputName?>').slider({
@@ -1307,10 +1296,10 @@ class RCCWP_WritePostPage
 						value: <?php echo $value?>, 
 						min: <?php echo $customField->properties['min']?>, 
 						max: <?php echo $customField->properties['max']?>, 
-						stepping: <?php echo $customField->properties['step']?>,
+						step: <?php echo $customField->properties['step']?>,
 						handles: [{
 							start: <?php echo $value?>, 
-							stepping: <?php echo $customField->properties['step']?>,
+							step: <?php echo $customField->properties['step']?>,
 							min: <?php echo $customField->properties['min']?>, 
 							max: <?php echo $customField->properties['max']?>, 
 							id: 'slider_<?php echo $inputName?>'
@@ -1323,17 +1312,12 @@ class RCCWP_WritePostPage
 						});
 				});
 			</script>
-	
-		<style>
-		.slider_numeber_show{
-			margin-top: -16px;
-			padding-left: 3px;
-		}
-		</style>
 			<div id='slider_<?php echo $inputName?>' class='ui-slider-2' style="margin:40px;">
-				<div class='ui-slider-handle'><div class="slider_numeber_show" id="slide_value_<?php echo $inputName?>">
-				<?php echo $value?>
-				</div></div>	
+				<div class='ui-slider-handle'>
+					<div class="slider_numeber_show" id="slide_value_<?php echo $inputName?>">
+						<?php echo $value?>
+					</div>
+				</div>	
 			</div>
 			<input  type="hidden" id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>"  />		
 		<?php
