@@ -65,7 +65,7 @@ class RCCWP_CreateCustomFieldPage
 		<tr valign="top">
 			<th scope="row"><?php _e('Help text',$mf_domain); ?>:</th>
 			<td>
-				<input name="custom-field-helptext" id="custom-field-helptext" size="40" type="text" /><br/><small>If set, this will be displayed in a tooltip next to the field label</small></td>
+				<input name="custom-field-helptext" id="custom-field-helptext" size="40" type="text" /><br/><small><?php _e('If set, this will be displayed in a tooltip next to the field label', $mf_domain); ?></small></td>
 		</tr>
 		
 		<tr valign="top">
