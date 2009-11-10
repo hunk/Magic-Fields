@@ -69,7 +69,7 @@ class RCCWP_WritePostPage
 							array('jquery','jquery-ui-core')
 						);
 						
-		//loading  jquery ui datepicker
+		//loading  js for color picker
 		wp_enqueue_script(	'sevencolorpicker',
 							MF_URI.'js/sevencolorpicker.js'
 						);
