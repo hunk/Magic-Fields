@@ -58,17 +58,22 @@ class RCCWP_WritePostPage
 							array('jquery','jquery-ui-core')
 						);
 					
-		//loading  jquery ui datepicker
-		wp_enqueue_script(	'slider',
-							MF_URI.'js/ui.slider.js',
-							array('jquery','jquery-ui-core')
-						);
-				
 		//loading core of the datepicker
 		wp_enqueue_script(	'mf_datepicker',
 							MF_URI.'js/custom_fields/datepicker.js'
 						);
-		
+					
+		//loading  jquery ui slider
+		wp_enqueue_script(	'slider',
+							MF_URI.'js/ui.slider.js',
+							array('jquery','jquery-ui-core')
+						);
+						
+		//loading  jquery ui datepicker
+		wp_enqueue_script(	'sevencolorpicker',
+							MF_URI.'js/sevencolorpicker.js'
+						);
+											
 		//loading the code for delete images
 		wp_enqueue_script(	'mf_image',
 							MF_URI.'js/custom_fields/image.js'
@@ -1256,7 +1261,6 @@ class RCCWP_WritePostPage
 			}
 		}
 		?>
-		<script type='text/javascript' src='<?php echo MF_URI?>js/sevencolorpicker.js'></script>
 		<script type="text/javascript">
 			jQuery('document').ready(function(){
 				jQuery('#<?php echo $inputName?>').SevenColorPicker();
