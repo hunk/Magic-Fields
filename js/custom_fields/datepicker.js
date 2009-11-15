@@ -11,6 +11,7 @@ jQuery(document).ready(function(){
         
         
         jQuery('#'+picker).datepicker({
+            changeYear: true,
             dateFormat: format,
             showOn:'focus',
             onClose: function(){
