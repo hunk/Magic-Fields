@@ -44,7 +44,7 @@ if (isset($_POST['fileframe'])){
 	{
 		
 		if ($_FILES['file']['error'] == UPLOAD_ERR_OK)   { //no error
-			$special_chars = array (' ','`','"','\'','\\','/'," ","#","$","%","^","&","*","!","~","‘","\"","’","'","=","?","/","[","]","(",")","|","<",">",";","\\",",");
+			$special_chars = array (' ','`','"','\'','\\','/'," ","#","$","%","^","&","*","!","~","‘","\"","’","'","=","?","/","[","]","(",")","|","<",">",";","\\",",","+","-");
 			$filename = str_replace($special_chars,'',$_FILES['file']['name']);
 			$filename = time() . $filename;
 			@move_uploaded_file( $_FILES['file']['tmp_name'], MF_FILES_PATH . $filename );
