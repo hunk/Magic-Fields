@@ -73,7 +73,12 @@ class RCCWP_WritePostPage
 		wp_enqueue_script(	'sevencolorpicker',
 							MF_URI.'js/sevencolorpicker.js'
 						);
-											
+							
+		//loading the code for delete images
+		wp_enqueue_script(	'mf_colorpicker',
+							MF_URI.'js/custom_fields/colorpicker.js'
+						)
+						;				
 		//loading the code for delete images
 		wp_enqueue_script(	'mf_image',
 							MF_URI.'js/custom_fields/image.js'
@@ -1261,12 +1266,7 @@ class RCCWP_WritePostPage
 			}
 		}
 		?>
-		<script type="text/javascript">
-			jQuery('document').ready(function(){
-				jQuery('#<?php echo $inputName?>').SevenColorPicker();
-			});
-		</script>
-		<input  id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>"  />
+		<input  id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>" class="mf_color_picker" />
 		<?php
 	}
 	

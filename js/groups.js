@@ -104,6 +104,7 @@ getDuplicate = function(fId,fcounter,div,gcounter,groupId){
             jQuery("#"+div).after(msg);
 			// set the editor in textarea
 			add_editor_text();
+			add_color_picker();
         }
     });
 }
@@ -136,6 +137,7 @@ GetGroupDuplicate = function(div,customGroupID,order){
                 }
 				// set the editor in textarea
 				add_editor_text();
+				add_color_picker();
         }
     });
 }
@@ -161,5 +163,15 @@ add_editor_text = function(){
 		var editor_text = jQuery(this).attr('id');
 		tinyMCE.execCommand('mceAddControl', true, editor_text); 
 		jQuery('#'+editor_text).removeClass('pre_editor');
+	});
+}
+
+/**
+ * Add the color picker, only inputs with class mf_color_picker
+ */
+add_color_picker = function(){
+	jQuery(":input.mf_color_picker").each( function(inputField){
+		var editor_text = jQuery(this).attr('id');
+		jQuery('#'+editor_text).SevenColorPicker();
 	});
 }
