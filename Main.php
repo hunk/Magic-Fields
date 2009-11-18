@@ -101,7 +101,6 @@ if (is_admin()) {
 		
 		add_filter('posts_where', array('RCCWP_Menu', 'FilterPostsPagesList'));
 		add_action('admin_head', array('RCCWP_Menu', 'HighlightCustomPanel'));
-		add_action('admin_head', array('RCCWP_CreateCustomFieldPage', 'AddAjaxDynamicList'));
 		
 		add_action('admin_head', 'mf_admin_style');
 

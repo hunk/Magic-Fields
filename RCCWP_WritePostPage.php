@@ -23,7 +23,7 @@ class RCCWP_WritePostPage
 		//set default theme page
 		if($post->ID == 0){
 			$toReplace = "value='".$customThemePage."'";
-			$replacement = "value='".$customThemePage."'" . ' SELECTED"';
+			$replacement = "value='".$customThemePage."'" . ' SELECTED';
 			$content = str_replace($toReplace, $replacement, $content);
 		}
 		return $content;

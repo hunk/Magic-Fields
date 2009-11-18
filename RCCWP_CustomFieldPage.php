@@ -242,23 +242,22 @@ class RCCWP_CustomFieldPage
 		<?php
 			$isDisplay = $custom_field->type == "Image" ? 'display:inline;' : 'display:none;';
 			
-			$size = explode("&",$custom_field->properties['params']);
-			if(isset($size[3])){
-				$c=$size[3];
+			preg_match('/w\=[0-9]+/',$custom_field->properties['params'],$match_w);
+			if($match_w){
+				$w=str_replace("w=",'',$match_w[0]);
+				$custom_field->properties['params']= str_replace("&".$match_w[0],"",$custom_field->properties['params']);
 			}
 			
-			if (substr($size[1],0 ,1) == "h"){
-				$h = substr($size[1], 2);
+			preg_match('/h\=[0-9]+/',$custom_field->properties['params'],$match_h);
+			if($match_h){
+				$h=str_replace("h=",'',$match_h[0]);
+				$custom_field->properties['params']= str_replace("&".$match_h[0],"",$custom_field->properties['params']);
 			}
-			elseif (substr($size[1],0 ,1) == "w"){
-				$w = substr($size[1], 2);
-			}
-
-			if (substr($size[2],0 ,1) == "h"){
-				$h = substr($size[2], 2);
-			}
-			elseif (substr($size[2],0 ,1) == "w"){
-				$w = substr($size[2], 2);
+			
+			if($custom_field->properties['params']){
+				if (substr($custom_field->properties['params'],0 ,1) == "&"){
+					$c = substr($custom_field->properties['params'], 1);
+				}
 			}
 			
 			$cssVlaue = $custom_field->CSS;

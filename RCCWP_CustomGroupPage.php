@@ -17,7 +17,6 @@ class RCCWP_CustomGroupPage
 		{
 			$customGroupName = $customGroup->name;
 			$customGroupDuplicate = $customGroup->duplicate;
-			$customGroupAtRight = $customGroup->at_right;
 		}
 		
   		?>
@@ -37,17 +36,6 @@ class RCCWP_CustomGroupPage
 			<th scope="row" align="right"><?php _e('Duplication', $mf_domain); ?>:</th>
 			<td><input name="custom-group-duplicate" id="custom-group-duplicate" type="checkbox" value="1" <?php echo $customGroupDuplicate == 0 ? "":"checked" ?> />&nbsp;<?php _e('The group can be duplicated', $mf_domain); ?></td>
 		</tr>
-
-		<?php
-		if (!isset($customGroup)) :
-		?>
-		<tr>
-			<th scope="row" align="right"><?php _e('Custom Fields', $mf_domain); ?>:</th>
-			<td><?php _e('Add custom fields later by editing this custom group.', $mf_domain); ?></td>
-		</tr>
-		<?php
-		endif;
-		?>
 		</tbody>
 		</table>
 		<br />
@@ -79,28 +67,5 @@ class RCCWP_CustomGroupPage
 		</div>
 		<br />
 		<?php
-	}
-	
-	function GetCustomFields($customGroupId)
-	{
-		global $wpdb;
-		$sql = "SELECT cf.id, cf.name, tt.name AS type, cf.description, cf.display_order, co.options, co.default_option AS default_value, tt.has_options, cp.properties, tt.has_properties, tt.allow_multiple_values FROM " . MF_TABLE_GROUP_FIELDS .
-			" cf LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " co ON cf.id = co.custom_field_id" .
-			" LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " cp ON cf.id = cp.custom_field_id" .
-			" JOIN " . MF_TABLE_CUSTOM_FIELD_TYPES . " tt ON cf.type = tt.id" . 
-			" WHERE group_id = " . $customGroupId .
-			" ORDER BY cf.display_order";
-		$results =$wpdb->get_results($sql);
-		if (!isset($results))
-			$results = array();
-		
-		for ($i = 0; $i < $wpdb->num_rows; ++$i)
-		{
-			$results[$i]->options = unserialize($results[$i]->options);
-			$results[$i]->properties = unserialize($results[$i]->properties);
-			$results[$i]->default_value = unserialize($results[$i]->default_value);
-		}
-		
-		return $results;
 	}
 }
