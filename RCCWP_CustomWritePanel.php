@@ -565,28 +565,31 @@ class RCCWP_CustomWritePanel
 		
 		// Prepare categories list
 		$assignedCategories = array();
-		foreach($imported_data['panel']->assignedCategories as $cat_name){
-			$assignedCategories[] = wp_create_category($cat_name);
-		}
-		
-		//Create write panel
-		$writePanelID = RCCWP_CustomWritePanel::Create($writePanelName, $imported_data['panel']->description, $imported_data['panel']->standardFieldsIDs, $assignedCategories,$imported_data['panel']->display_order, $imported_data['panel']->type, false,$imported_data['panel']->single,$imported_data['panel']->theme);
-		
-		foreach($imported_data['fields'] as $groupName => $group){
-			// For backward compatability
-			if (!isset($group->fields)) {
-				$newGroup->fields = $group;
-				$group = $newGroup; 
+		if(is_array($imported_data['panel']->assignedCategories)){
+			foreach($imported_data['panel']->assignedCategories as $cat_name){
+				$assignedCategories[] = wp_create_category($cat_name);
 			}
+		}
+		//Create write panel
+		$writePanelID = RCCWP_CustomWritePanel::Create($writePanelName, $imported_data['panel']->description, $imported_data['panel']->standardFieldsIDs, $assignedCategories,$imported_data['panel']->display_order, $imported_data['panel']->type, false,$imported_data['panel']->single,$imported_data['panel']->theme, $imported_data['panel']->parent_page);
+		
+		if(is_array($imported_data['fields'])){
+			foreach($imported_data['fields'] as $groupName => $group){
+				// For backward compatability
+				if (!isset($group->fields)) {
+					$newGroup->fields = $group;
+					$group = $newGroup; 
+				}
 			
-			// Import group
-			$groupID = RCCWP_CustomGroup::Create($writePanelID, $groupName, $group->duplicate, $group->at_right);
+				// Import group
+				$groupID = RCCWP_CustomGroup::Create($writePanelID, $groupName, $group->duplicate, $group->at_right);
 			
-			// Import group fields
-			foreach ($group->fields as $field){
-				$fieldOptions = @implode("\n", $field->options);
-				$fieldDefault = @implode("\n", $field->default_value);
-				RCCWP_CustomField::Create($groupID, $field->name, $field->description, $field->display_order, $field->required_field, $types[$field->type], $fieldOptions, $fieldDefault, $field->properties, $field->duplicate,$field->help_text);
+				// Import group fields
+				foreach ($group->fields as $field){
+					$fieldOptions = @implode("\n", $field->options);
+					$fieldDefault = @implode("\n", $field->default_value);
+					RCCWP_CustomField::Create($groupID, $field->name, $field->description, $field->display_order, $field->required_field, $types[$field->type], $fieldOptions, $fieldDefault, $field->properties, $field->duplicate,$field->help_text);
+				}
 			}
 		}
 
@@ -612,6 +615,7 @@ class RCCWP_CustomWritePanel
 		$writePanel->standardFieldsIDs = RCCWP_CustomWritePanel::GetStandardFields($panelID);
 		$writePanel->assignedCategories = array();
 		$writePanel->theme = RCCWP_CustomWritePanel::GetThemePage($writePanel->name);
+		$writePanel->parent_page = RCCWP_CustomWritePanel::GetParentPage($writePanel->name);
 				
 		$assignedCategories = RCCWP_CustomWritePanel::GetAssignedCategories($panelID);
 		foreach($assignedCategories as $assignedCategory){
