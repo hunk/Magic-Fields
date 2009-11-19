@@ -14,6 +14,7 @@ class RCCWP_CustomWritePanelPage
 		$customWritePanelAllFieldIds = NULL;
 		$customThemePage = NULL;
 		$showPost = true;
+		$customParentPage = NULL;
 		if ($customWritePanel != null)
 		{
 			$customWritePanelName = $customWritePanel->name;
@@ -26,9 +27,9 @@ class RCCWP_CustomWritePanelPage
 			$customWritePanelAllFieldIds = RCCWP_CustomWritePanel::Get($customWritePanel->id);
 			
 			if ($customWritePanelType == 'page'){
-				$customThemePage = RCCWP_CustomWritePanel::GetThemePage($customWritePanel->name); }
-			
-			
+				$customThemePage = RCCWP_CustomWritePanel::GetThemePage($customWritePanel->name);
+				$customParentPage = RCCWP_CustomWritePanel::GetParentPage($customWritePanel->name);
+			}
 			$defaultTagChecked = '';
 			?>
 			<input type="hidden" name="custom-write-panel-id" value="<?php echo $customWritePanel->id?>" />
@@ -118,6 +119,14 @@ class RCCWP_CustomWritePanelPage
 					<?php  ?>
 				</select>
 		
+			</td>
+		</tr>
+		
+		<tr valign="top"  id="catText" class="mf_forpage">
+			<th scope="row"  align="right"><div id="catLabel" style="display:inline;"><?php _e('Page Parent', $mf_domain); ?>:</div></th>
+			<td>
+			<?php 
+			wp_dropdown_pages(array('selected' => $customParentPage, 'name' => 'parent_id', 'show_option_none' => __('Main Page (no parent)'), 'sort_column'=> 'menu_order, post_title','option_none_value' => -1)); ?>
 			</td>
 		</tr>
 		
@@ -234,17 +243,6 @@ class RCCWP_CustomWritePanelPage
 			?>
 			<td><input name="custom-write-panel-order" id="custom-write-panel-order" size="2" type="text" value="<?php echo $customWritePanelDisplayOrder?>" /></td>
 		</tr>
-
-		<?php
-		if (!isset($customWritePanel)) :
-		?>
-		<tr>
-			<th scope="row" align="right"><?php _e('Custom Fields', $mf_domain); ?>:</th>
-			<td><?php _e('Add custom fields later by editing this custom write panel.', $mf_domain); ?></td>
-		</tr>
-		<?php
-		endif;
-		?>
 		</tbody>
 		</table>
 		

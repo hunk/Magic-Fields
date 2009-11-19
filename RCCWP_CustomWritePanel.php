@@ -51,7 +51,7 @@ class RCCWP_CustomWritePanel
 	 * @param boolean $createDefaultGroup indicates whether to create a default group.
 	 * @return the id of the write panel
 	 */
-	function Create($name, $description = '', $standardFields = array(), $categories = array(), $display_order = 1, $type = FALSE, $createDefaultGroup=true,$single_post = 0, $default_theme_page)
+	function Create($name, $description = '', $standardFields = array(), $categories = array(), $display_order = 1, $type = FALSE, $createDefaultGroup=true,$single_post = 0, $default_theme_page = NULL, $default_parent_page = NULL)
 	{
 		include_once('RC_Format.php');
 		global $wpdb;
@@ -114,8 +114,14 @@ class RCCWP_CustomWritePanel
 								" (meta_key, meta_value) ".
 								" VALUES ('".$theme_key."', '".$default_theme_page."')";
 			$wpdb->query($sql);
-			
-			
+		}
+		
+		if($default_parent_page && $default_parent_page >= 0){
+			$parent_key="p_".$name;
+			$sql = "INSERT INTO ". $wpdb->postmeta .
+								" (meta_key, meta_value) ".
+								" VALUES ('".$parent_key."', '".$default_parent_page."')";
+			$wpdb->query($sql);
 		}
 		
 		RCCWP_CustomWritePanel::AssignToRole($customWritePanelId, 'administrator');
@@ -192,6 +198,25 @@ class RCCWP_CustomWritePanel
 	
 		$sql = "SELECT meta_value FROM " . $wpdb->postmeta . 
 						" WHERE meta_key = 't_".$customWritePanelName."' AND post_id = 0" ;
+		
+		$results = $wpdb->get_row($sql);
+		
+		return $results->meta_value;
+	}
+	
+	/**
+	 * Get the properties of a write panel
+	 *
+	 * @param unknown_type $customWritePanelId
+	 * @return an object containing the properties of the write panel which are
+	 * 			id, name, description, display_order, capability_name, type
+	 */
+	function GetParentPage($customWritePanelName)
+	{
+		global $wpdb;
+	
+		$sql = "SELECT meta_value FROM " . $wpdb->postmeta . 
+						" WHERE meta_key = 'p_".$customWritePanelName."' AND post_id = 0" ;
 		
 		$results = $wpdb->get_row($sql);
 		
@@ -322,7 +347,7 @@ class RCCWP_CustomWritePanel
 	 * @param integer $display_order the order of the panel in Magic Fields > Write Panels tab
 	 * @param string $type 'post' or 'page'
 	 */
-	function Update($customWritePanelId, $name, $description = '', $standardFields = array(), $categories = array(), $display_order = 1, $type = FALSE, $createDefaultGroup=true,$single_post = 0, $default_theme_page)
+	function Update($customWritePanelId, $name, $description = '', $standardFields = array(), $categories = array(), $display_order = 1, $type = FALSE, $createDefaultGroup=true,$single_post = 0, $default_theme_page = NULL, $default_parent_page = NULL)
 	{
 		include_once('RC_Format.php');
 		global $wpdb;
@@ -453,9 +478,28 @@ class RCCWP_CustomWritePanel
 								" (meta_key, meta_value) ".
 								" VALUES ('".$theme_key."', '".$default_theme_page."')";				
 			}
-			$wpdb->query($sql);
+			$wpdb->query($sql);		
+		}
+		
+		if($default_parent_page && $default_parent_page >= 0){
+			$parent_key="p_".$name;
 			
+			//check if exist parent in postmeta
+			$check_parent ="SELECT meta_id FROM ".$wpdb->postmeta." WHERE meta_key='".$parent_key."' ";
+			$query_parent = $wpdb->query($check_parent);
 			
+			if($query_parent){
+				$sql = "UPDATE ". $wpdb->postmeta .
+					" SET meta_value = '".$default_parent_page."' ".
+					" WHERE meta_key = '".$parent_key."' AND post_id = '0' ";
+			}else{
+				$sql = "INSERT INTO ". $wpdb->postmeta .
+								" (meta_key, meta_value) ".
+								" VALUES ('".$parent_key."', '".$default_parent_page."')";				
+			}
+			$wpdb->query($sql);		
+		}elseif($default_parent_page == -1){
+				delete_post_meta(0, "p_".$name, $value);
 		}
 	
 	}

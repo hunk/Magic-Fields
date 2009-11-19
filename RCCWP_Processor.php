@@ -40,7 +40,10 @@ class RCCWP_Processor
 				include_once('RCCWP_CustomWritePanel.php');
 					
 				$default_theme_page=NULL;
-				if($_POST['radPostPage'] == 'page'){ $default_theme_page = $_POST['page_template']; }
+				if($_POST['radPostPage'] == 'page'){ 
+					$default_theme_page = $_POST['page_template']; 
+					$default_parent_page = $_POST['parent_id'];
+				}
 				
 				$customWritePanelId = RCCWP_CustomWritePanel::Create(
 					$_POST['custom-write-panel-name'],
@@ -51,7 +54,8 @@ class RCCWP_Processor
 					FALSE,
 					true,
 					$_POST['single'],
-					$default_theme_page
+					$default_theme_page,
+					$default_parent_page
 				);
 
 				wp_redirect(RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('view-custom-write-panel', $customWritePanelId));
@@ -61,7 +65,10 @@ class RCCWP_Processor
 				include_once('RCCWP_CustomWritePanel.php');
 				
 				$default_theme_page=NULL;
-				if($_POST['radPostPage'] == 'page'){ $default_theme_page = $_POST['page_template']; }
+				if($_POST['radPostPage'] == 'page'){ 
+					$default_theme_page = $_POST['page_template'];
+					$default_parent_page = $_POST['parent_id'];
+				}
 
 				RCCWP_CustomWritePanel::Update(
 					$_POST['custom-write-panel-id'],
@@ -73,7 +80,8 @@ class RCCWP_Processor
 					FALSE,
 					true,
 					$_POST['single'],
-					$default_theme_page
+					$default_theme_page,
+					$default_parent_page
 				);
 				
 				RCCWP_CustomWritePanel::AssignToRole($_POST['custom-write-panel-id'], 'administrator');
