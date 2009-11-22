@@ -1,7 +1,12 @@
 <?php
-
-class RCCWP_Post 
-{
+/** 
+ *  When a posts is saved  this class is called for  check if exists  a write panel with custom fields
+ *  if exists  then this processes all the custom fields and save his values in the database
+ */
+class RCCWP_Post {
+	/**
+	 *  This function is called when  a post is saves
+	 */
 	function SaveCustomFields($postId){
 		global $flag;
 		
@@ -28,25 +33,20 @@ class RCCWP_Post
 		}
 	}
 		
-	/*
+	/**
 	 * Attach a custom write panel to the current post by saving the custom write panel id
 	 * as a meta value for the post
+	 * 
+	 *  @param integer $postId
 	 */
 	function SetCustomWritePanel($postId) {
 		$customWritePanelId = $_POST['rc-cwp-custom-write-panel-id'];
-		if (isset($customWritePanelId))
-		{
-			if (!empty($customWritePanelId))
-			{
-				
-				if (!update_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, $customWritePanelId))
-				{
-
+		if (isset($customWritePanelId)) {
+			if (!empty($customWritePanelId)) {	
+				if (!update_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, $customWritePanelId)) {
 					add_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, $customWritePanelId);
 				}
-			}
-			else
-			{
+			} else {
 				delete_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY);
 			}
 		}
@@ -57,8 +57,8 @@ class RCCWP_Post
 	 * $_POST['rc_cwp_meta_keys'] contains the names of the fields, while $_POST[{FIELD_NAME}]
 	 * contains the value of the field named {FIELD_NAME}
 	 *
-	 * @param unknown_type $postId
-	 * @return unknown
+	 * @param integer $postId
+	 * @return void
 	 */
 	function SetMetaValues($postId){
 		global $wpdb;
@@ -152,6 +152,8 @@ class RCCWP_Post
 	 * This function prepares some custom fields before saving it. It reads $_REQUEST and:
 	 * 1. Adds params to photos uploaded (Image field)
 	 * 2. Formats dates (Date Field) 
+	 * 
+	 *  @param integer postId
 	 */
 	function PrepareFieldsValues($postId) {
 		global $wpdb;
@@ -237,8 +239,12 @@ class RCCWP_Post
 		return $customWritePanel;
 	}
 
-	function DeletePostMetaData($postId)
-	{
+	/**
+ 	 *  This Method is Executed when a post is deleted
+ 	 *  @param integer $postId
+  	 *  @TODO  check if  is deleted the  values in wp_postmeta too 
+ 	 */
+	function DeletePostMetaData($postId) {
 		global $wpdb;
 		$wpdb->query("DELETE FROM " . MF_TABLE_POST_META . " WHERE post_id =" . $postId) ;
 	}	

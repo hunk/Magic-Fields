@@ -1,7 +1,15 @@
 <?php
-
-class RCCWP_CustomField
-{
+/**
+ *  In this Class  can be found it the methods for work with CustomFields.
+ * 
+ *  - Create a Custom Field
+ *  - Delete a Field
+ *  - Get a Custom Field
+ *  - Get Info from the types of custom fields
+ *  - Get the  postmeta ID  with the value of a custom field
+ *  - Get a custom field Value
+ */
+class RCCWP_CustomField {
 	/**
 	 * Create a new custom field
 	 *
@@ -23,8 +31,7 @@ class RCCWP_CustomField
 	 * @param array $properties an array containing extra properties of the field.
 	 * @return the new field id
 	 */
-	function Create($customGroupId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null,$duplicate,$helptext = null)
-	{
+	function Create($customGroupId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null,$duplicate,$helptext = null) {
 		global $wpdb;
 
 		$name = stripslashes(stripslashes($name));
@@ -150,7 +157,7 @@ class RCCWP_CustomField
 	}
 	
 	/**
-	 * Retrievies information about a specified type
+	 * Retrieves information about a specified type
 	 *
 	 * @param integer $customFieldTypeId the type id, if null, a list of all types will be returned
 	 * @return a list/object containing information about the specified type. The information 
@@ -177,7 +184,19 @@ class RCCWP_CustomField
 		return $results;
 	}
 	
-	function GetMetaID($postId, $customFieldName, $groupIndex=1, $fieldIndex=1){
+	
+	/**
+	 *  Get the Meta ID from a custom field with this id is possible get the value of the custom field
+	 *  from the Post Meta table of wordpress
+	 * 
+	 *  @param  integer $postId   Post id
+	 *	@param  string  $customFieldNamethe name of the custom field
+	 *  @param 	integer $groupIndex the index of the group (if the field is content into a group)
+	 *  @param 	integer $fieldIndex  the index of the field
+	 *  @return integer Return the id from the postmeta table of wordpress
+	 * 					 who  contain the value of the custom field
+	 */
+	function GetMetaID($postId, $customFieldName, $groupIndex=1, $fieldIndex=1) {
 		global $wpdb;
 		
 		// Given $postId, $customFieldName, $groupIndex and $fieldIndex get meta_id
@@ -196,15 +215,15 @@ class RCCWP_CustomField
 	 * @param string $customFieldName
 	 * @param integer $groupIndex
 	 * @param integer $fieldIndex
-	 * @return a
+	 * @return mixed
+	 * @TODO review if is still necessary save the "backward compatibility"
 	 */
-	function GetCustomFieldValues($single, $postId, $customFieldName, $groupIndex=1, $fieldIndex=1)
-	{
+	function GetCustomFieldValues($single, $postId, $customFieldName, $groupIndex=1, $fieldIndex=1) {
 		global $wpdb;
 		$customFieldName = str_replace(" ","_",$customFieldName);
 		$fieldMetaID = RCCWP_CustomField::GetMetaID($postId, $customFieldName, $groupIndex, $fieldIndex);
 		
-		// for backward compatability, if no accociated row was found, use old method
+		// for backward compatability, if no associated row was found, use old method
 		if (!$fieldMetaID){
 			return get_post_meta($postId, $customFieldName, $single);
 		}
@@ -217,37 +236,8 @@ class RCCWP_CustomField
 	}
 	
 	/**
-	 * Retrieves the value of a custom field for a specified post
-	 *
-	 * @param boolean $single
-	 * @param integer $postId
-	 * @param string $customFieldName
-	 * @param integer $groupIndex
-	 * @param integer $fieldIndex
-	 * @return int|string Value of the custom field
-	 * @author Edgar García - hunk <ing.edgar@gmail.com>
-	 */
-	function GetValues($single, $postId, $customFieldName, $groupIndex=1, $fieldIndex=1)
-	{
-		global $wpdb;
-		$customFieldName = str_replace(" ","_",$customFieldName);
-		
-		$meta = $wpdb->get_var("SELECT pm.meta_value 
-								FROM ".MF_TABLE_POST_META." mf_pm, ".$wpdb->postmeta." pm 
-								WHERE mf_pm.field_name = '$customFieldName' 
-									AND mf_pm.group_count = $groupIndex 
-									AND mf_pm.field_count = $fieldIndex 
-									AND mf_pm.post_id = $postId 
-									AND mf_pm.id = pm.meta_id" );
-		
-		if(!$meta) return;
-		if (!$single) return unserialize($meta);
-		return $meta;
-	}
-	
-	/**
 	 * Get number of group duplicates given field name. The function returns 1
- 	 * if there are no duplicates (just he original group), 2 if there is one
+ 	 * if there are no duplicates (just the original group), 2 if there is one
  	 * duplicate and so on.
 	 *
 	 * @param integer $postId post id
@@ -278,6 +268,11 @@ class RCCWP_CustomField
 
 	/**
 	* Get field duplicates
+	*  
+	*  @param $postId   the id of the post
+	*  @param $fieldName the name of the field
+	*  @param $groupId the groupId  
+	*  @return  array  return the order of the field sorted
 	*/ 
 	function GetFieldsOrder($postId,$fieldName,$groupId){
 		global $wpdb;
@@ -325,30 +320,6 @@ class RCCWP_CustomField
 		return $order;
 
 	}
-
-	
-	/**
-	 * Retrieves the id of a custom field given field name for the current post.
-	 *
-	 * @param string $customFieldName
-	 * @return custom field id
-	 */
-	function GetIDByName($customFieldName)
-	{
-		global $wpdb, $post;
-		
-		// Get Panel ID
-		$customWritePanelId = get_post_meta($post->ID, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, true);
-		
-		if (empty($customWritePanelId)) return false;
-		
-		$customFieldId = $wpdb->get_var("SELECT cf.id FROM ". MF_TABLE_GROUP_FIELDS . " cf" .
-										" WHERE cf.name = '$customFieldName' AND ".
-										" cf.group_id in (SELECT mg.id FROM ". MF_TABLE_PANEL_GROUPS . " mg ".
-														"  WHERE mg.panel_id = $customWritePanelId)");
-														
-		return $customFieldId;
-	}
 	
 	/**
 	 * Retrieves the id and type of a custom field given field name for the current post.
@@ -382,16 +353,7 @@ class RCCWP_CustomField
 		
 		return $customFieldvalues;
 	}
-	
-	
-	/**
-	 * @access private 
-	 */
-	function GetDefaultCustomFieldType()
-	{
-		return 'Textbox';
-	}
-	
+
 
 	/**
 	 * Updates the properties of a custom field.
@@ -413,8 +375,7 @@ class RCCWP_CustomField
 	 * @param array $properties an array containing extra properties of the field.
 	 */
 
-	function Update($customFieldId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null, $duplicate,$helptext = null)
-	{
+	function Update($customFieldId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null, $duplicate,$helptext = null) {
 		global $wpdb;
 		$name = str_replace(" ","_",$name);
 		$oldCustomField = RCCWP_CustomField::Get($customFieldId);
@@ -518,6 +479,14 @@ class RCCWP_CustomField
 		}
 	}
 	
+	
+	/**
+	 *  Get Data Field
+	 *  @param  string $customFieldName
+	 *  @param  integer $groupIndex
+	 *  @param 	integer $fieldIndex
+	 *  @param 	integer	$postId
+	 */
 	function GetDataField($customFieldName, $groupIndex=1, $fieldIndex=1,$postId){
 		global $wpdb, $FIELD_TYPES;
 		$customFieldName = str_replace(" ","_",$customFieldName);

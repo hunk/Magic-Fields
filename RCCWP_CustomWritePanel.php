@@ -1,5 +1,7 @@
 <?php
-
+/**
+ *  In this Class  can be found it the methods for work with Write Panels.
+ */
 class RCCWP_CustomWritePanel
 {
 
@@ -9,8 +11,7 @@ class RCCWP_CustomWritePanel
 	 * @return array of objects containing all write panels. Each object contains
 	 * 			id, name, description, display_order, capability_name, type, always_show
 	 */
-	function GetCustomWritePanels()
-	{
+	function GetCustomWritePanels() {
 		global $wpdb;
 	
 		$sql = "SELECT id, name, description, display_order, capability_name, type, single  FROM " . MF_TABLE_PANELS;
@@ -29,8 +30,7 @@ class RCCWP_CustomWritePanel
 	 * @param integer $customWritePanelId panel id
 	 * @param string $roleName role name (see roles in wordpress)
 	 */
-	function AssignToRole($customWritePanelId, $roleName)
-	{
+	function AssignToRole($customWritePanelId, $roleName) {
 		$customWritePanel = RCCWP_CustomWritePanel::Get($customWritePanelId);
 		$capabilityName = $customWritePanel->capability_name;
 		$role = get_role($roleName);
@@ -51,8 +51,7 @@ class RCCWP_CustomWritePanel
 	 * @param boolean $createDefaultGroup indicates whether to create a default group.
 	 * @return the id of the write panel
 	 */
-	function Create($name, $description = '', $standardFields = array(), $categories = array(), $display_order = 1, $type = FALSE, $createDefaultGroup=true,$single_post = 0, $default_theme_page = NULL, $default_parent_page = NULL)
-	{
+	function Create($name, $description = '', $standardFields = array(), $categories = array(), $display_order = 1, $type = FALSE, $createDefaultGroup=true,$single_post = 0, $default_theme_page = NULL, $default_parent_page = NULL) {
 		include_once('RC_Format.php');
 		global $wpdb;
 
@@ -134,10 +133,8 @@ class RCCWP_CustomWritePanel
 	 *
 	 * @param integer $customWritePanelId write panel id
 	 */
-	function Delete($customWritePanelId = null)
-	{
-		if (isset($customWritePanelId))
-		{
+	function Delete($customWritePanelId = null) {
+		if (isset($customWritePanelId)) {
 			global $wpdb;
 			
 			$customWritePanel = RCCWP_CustomWritePanel::Get($customWritePanelId);
@@ -161,8 +158,7 @@ class RCCWP_CustomWritePanel
 				" WHERE panel_id = %d",
 				$customWritePanelId
 				);
-			$wpdb->query($sql);
-			
+			$wpdb->query($sql);	
 		}
 	}
 	
@@ -173,8 +169,7 @@ class RCCWP_CustomWritePanel
 	 * @return an object containing the properties of the write panel which are
 	 * 			id, name, description, display_order, capability_name, type
 	 */
-	function Get($customWritePanelId)
-	{
+	function Get($customWritePanelId) {
 		global $wpdb;
 	
 		$sql = "SELECT id, name, description, display_order, capability_name, type,single FROM " . MF_TABLE_PANELS .
@@ -192,8 +187,7 @@ class RCCWP_CustomWritePanel
 	 * @return an object containing the properties of the write panel which are
 	 * 			id, name, description, display_order, capability_name, type
 	 */
-	function GetThemePage($customWritePanelName)
-	{
+	function GetThemePage($customWritePanelName) {
 		global $wpdb;
 	
 		$sql = "SELECT meta_value FROM " . $wpdb->postmeta . 
@@ -211,8 +205,7 @@ class RCCWP_CustomWritePanel
 	 * @return an object containing the properties of the write panel which are
 	 * 			id, name, description, display_order, capability_name, type
 	 */
-	function GetParentPage($customWritePanelName)
-	{
+	function GetParentPage($customWritePanelName) {
 		global $wpdb;
 	
 		$sql = "SELECT meta_value FROM " . $wpdb->postmeta . 
@@ -229,8 +222,7 @@ class RCCWP_CustomWritePanel
 	 * @param integer $customWritePanelId write panel id
 	 * @return array of ids
 	 */
-	function GetAssignedCategoryIds($customWritePanelId)
-	{
+	function GetAssignedCategoryIds($customWritePanelId) {
 		$results = RCCWP_CustomWritePanel::GetAssignedCategories($customWritePanelId);
 		$ids = array();
 		foreach ($results as $r)
@@ -247,8 +239,7 @@ class RCCWP_CustomWritePanel
 	 * @param integer $customWritePanelId write panel id
 	 * @return array of objects, each object contains cat_id and cat_name 
 	 */
-	function GetAssignedCategories($customWritePanelId)
-	{
+	function GetAssignedCategories($customWritePanelId) {
 		global $wpdb;
 		
 		if( $wpdb->terms != '' )
@@ -281,8 +272,7 @@ class RCCWP_CustomWritePanel
 	 * @param string $customWritePanelName panel name
 	 * @return string capability name
 	 */
-	function GetCapabilityName($customWritePanelName)
-	{
+	function GetCapabilityName($customWritePanelName) {
 		// copied from WP's sanitize_title_with_dashes($title) (formatting.php)
 		$capabilityName = strip_tags($customWritePanelName);
 		// Preserve escaped octets.
@@ -311,9 +301,6 @@ class RCCWP_CustomWritePanel
    
 		return $capabilityName;
 	}
-
-
-
 		
 
 	/**

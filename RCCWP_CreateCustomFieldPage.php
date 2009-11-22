@@ -125,9 +125,7 @@ class RCCWP_CreateCustomFieldPage
 				<?php
 				$field_types = RCCWP_CustomField::GetCustomFieldTypes();
 				foreach ($field_types as $field) :
-					$checked = 
-						$field->name == RCCWP_CustomField::GetDefaultCustomFieldType() ?
-						'checked="checked"' : '';
+					$checked =  $field->name == "Textbox" ? 'checked="checked"' : '';
 				?>
 					<label><input name="custom-field-type" value="<?php echo $field->id?>" type="radio" <?php echo $checked?> onclick='fun("<?php echo $field->name?>");' /> <!-- Calling Javascript Function -->
 					<?php echo $field->name?></label><br />

@@ -1,5 +1,14 @@
 <?php
-
+/**
+ *  In this Class  can be found it the methods for work with Groups.
+ * 
+ *  - Create a Group
+ *  - Delete a Group 
+ *  - Get a Group
+ *  - Know if the group is empty or has at least one custom field
+ *  - Update a Group
+ *  - Get the custom fields of a group
+ */
 class RCCWP_CustomGroup
 {
 	

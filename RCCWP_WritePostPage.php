@@ -66,6 +66,8 @@ class RCCWP_WritePostPage
 	}
 		
 	function CustomFieldsJavascript(){
+		wp_enqueue_script('jquery-ui-sortable');
+		
 		//loading  jquery ui datepicker
 		wp_enqueue_script(	'datepicker',
 							MF_URI.'js/ui.datepicker.js',
@@ -76,7 +78,7 @@ class RCCWP_WritePostPage
 		wp_enqueue_script(	'mf_datepicker',
 							MF_URI.'js/custom_fields/datepicker.js'
 						);
-					
+						
 		//loading  jquery ui slider
 		wp_enqueue_script(	'slider',
 							MF_URI.'js/ui.slider.js',

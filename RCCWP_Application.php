@@ -1,5 +1,12 @@
 <?php
-
+/**
+ *  In this class content all the functions for:
+ *  
+ *   - Install Magic Fields
+ *   - Upgrade Magic Fields
+ *   - Uninstall Magic Fields
+ *   - Check if Magic Fields was correctly installed 
+ */
 class RCCWP_Application
 {
 
@@ -19,6 +26,15 @@ class RCCWP_Application
 		}
 	}
 
+
+	/**
+	 *  Installing Magic fields
+	 * 
+	 *  This function create all the Magic Fields default values and
+	 *  his  tables in the database 
+	 * 
+	 *  @return void
+	 */
 	function Install(){
 		
 		include_once('RCCWP_Options.php');
@@ -65,9 +81,7 @@ class RCCWP_Application
 			$options['enable-broserupload'] = 1;
 		}
 		
-		RCCWP_Options::Update($options);
-
-		
+		RCCWP_Options::Update($options);	
 
 		//comment sniptshot  preference
 		$checking_options = RCCWP_Options::Get();
@@ -268,9 +282,6 @@ class RCCWP_Application
 			$wpdb->query($sql6);
 		}
 		
-		// Upgrade Blog site
-		if ($DBChanged) RCCWP_Application::UpgradeBlogSite();
-		
 		//Import Default modules 
 		if (RCCWP_Application::IsWordpressMu()){
 			if (get_site_option('MAGIC_FIELDS_fist_time') == ''){
@@ -283,6 +294,14 @@ class RCCWP_Application
 		}
 	}
 	
+	/**
+	 *  Upgrade Blog
+	 *  
+	 *  If the Plugin was upgrade from a older version
+	 *  this function is executed for check any possible change in the database
+	 *  
+	 *  @return void
+	 */
 	function UpgradeBlog(){
 		global $wpdb;
 		
@@ -298,10 +317,11 @@ class RCCWP_Application
 		}
 	}
 
-	function UpgradeBlogSite(){
-
-	}
-	
+	/**
+	 *  Uninstall the Magic Fields Plugin
+	 *  
+	 *  @return void
+	 */
 	function Uninstall(){
  		global $wpdb;
 
@@ -361,11 +381,12 @@ class RCCWP_Application
 		update_option('active_plugins', $current);
 	}
 	
-	function InCustomWritePanel()
-	{
-		return RCCWP_Application::InWritePostPanel() && isset($_REQUEST['custom-write-panel-id']);
-	}
 	
+	/**
+	 * This function returns true if the user be in the Write Post Page
+	 *   
+	 * @return Bool  
+	 */
 	function InWritePostPanel()
 	{
 		return (strstr($_SERVER['REQUEST_URI'], '/wp-admin/post-new.php') ||
@@ -374,16 +395,25 @@ class RCCWP_Application
 			strstr($_SERVER['REQUEST_URI'], '/wp-admin/page.php'));
 	}
 
+	/**
+	 *  Return True if  Magic Fields was installed in a Wordpress Mu
+	 * 
+	 *  @return bool
+	 */
 	function IsWordpressMu(){
 		global $is_wordpress_mu; 
 
 		if  ($is_wordpress_mu){ 
 			return true;
 		}
-
 		return false;
 	}
 
+	/**
+	 *  This function check if  Magic Fields has all the requirements for his use
+	 * 
+	 *  @return void
+	 */
 	function CheckInstallation(){
 		global $mf_domain;
 	
@@ -434,6 +464,9 @@ class RCCWP_Application
 	
 	/**
 	 * This function create the EditInPlace.js file
+	 *  
+	 *  @param bool $created   
+	 *  @return  bool true if the js file was successful created,  false in the otherwise
 	 */
 	function create_EditnPlace_js($create=FALSE) {
 		$MF_URI = MF_URI;
@@ -447,6 +480,11 @@ class RCCWP_Application
 		return $js_file_created;
 	}
 		
+	/**
+	 *  Create The Edit In Place  CSS file
+	 * 
+	 *  @return  bool  true if the css file was successful created
+	 */
 	function create_EditnPlace_css($create=FALSE) {
 		include_once('RCCWP_Options.php');
 		$eip_highlight_color = RCCWP_Options::Get('eip-highlight-color');
@@ -529,6 +567,11 @@ div.nicEdit-panelContain{
 		return $css_file_created;
 	}
 
+	/**
+	 * Save the edit inplace files in the MF_FILES folder
+	 *  
+	 * @return bool  
+	 */
 	function save_editnplace_file( $filename, $comment, $data, $overwrite=FALSE ) {
 		if (!file_exists( $filename ) || is_writeable( $filename ) ) {
 			if ($overwrite) {

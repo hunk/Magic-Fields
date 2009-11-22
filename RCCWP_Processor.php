@@ -1,13 +1,18 @@
 <?php
-
-class RCCWP_Processor
-{
-	function Main()
-	{
+/**
+ *  When is created, saved,  deleted a Post with write panels this  class has a method accord with 
+ *  the action executed
+ * 
+ */
+class RCCWP_Processor {
+	
+	/**
+	 *  This function is executed every time to something related with the Magic Fields happen
+	 *  this function update,delete,create a customfield,writepanel,group.
+	 */
+	function Main() {
 		require_once('RC_Format.php');
 		global $CUSTOM_WRITE_PANEL;
-		
-		wp_enqueue_script('jquery-ui-sortable');
 		
 		if (isset($_POST['edit-with-no-custom-write-panel']))
 		{
@@ -304,10 +309,7 @@ class RCCWP_Processor
 						$custom_field_properties['max'] = $_POST['custom-field-slider-max'];
 						$custom_field_properties['min'] = $_POST['custom-field-slider-min'];
 						$custom_field_properties['step'] = $_POST['custom-field-slider-step'];
-					}
-					//eeble
-					else if (in_array($current_field->name, array('Related Type')))
-					{
+					}else if (in_array($current_field->name, array('Related Type'))) {
 						$custom_field_properties['panel_id'] = $_POST['custom-field-related-type-panel-id'];
 					}
 				}
@@ -425,14 +427,17 @@ class RCCWP_Processor
 		}
 		
 	}
-	
-	function FlushAllOutputBuffer() 
-	{ 
-		
+	/**
+	 *   Flush All the  buffers
+	 */
+	function FlushAllOutputBuffer() { 
 		while (@ob_end_flush()); 
-		
 	} 
 	
+	/**
+	 *  Redirect Function
+	 *  @param string $location
+	 */
 	function Redirect($location)
 	{
 		global $post_ID;
@@ -450,6 +455,12 @@ class RCCWP_Processor
 		return $location;
 	}
 	
+	/**
+	 *  Check if the name of some custom field is already used
+	 *  @param string $fieldName
+	 *  @param int  the Write panel ID
+	 *  @return bool
+	 */
 	function CheckFieldName($fieldName, $panelID){
 		global $wpdb;
 		
