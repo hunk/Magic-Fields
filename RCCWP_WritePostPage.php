@@ -315,7 +315,6 @@ class RCCWP_WritePostPage
 				$firstFieldName = $customFields[0]->name;
 
 				$order = RCCWP_CustomField::GetOrderDuplicates($_REQUEST['post'],$firstFieldName);
-
 				?> 
 				<div class="write_panel_wrapper"  id="write_panel_wrap_<?php echo $group->id;?>"><?php
 				
@@ -333,8 +332,6 @@ class RCCWP_WritePostPage
 				}
 				?>
 				<input type='hidden' name='g<?php echo $group->id?>counter' id='g<?php echo $group->id?>counter' value='<?php echo $top ?>' />
-				<input type="hidden" name="rc-custom-write-panel-verify-key" id="rc-custom-write-panel-verify-key" value="<?php echo wp_create_nonce('rc-custom-write-panel')?>" />
-				<input type="hidden" name="rc-cwp-custom-write-panel-id" value="<?php echo $CUSTOM_WRITE_PANEL->id?>" />
 				</div>
 			<?php
 			}else{
@@ -345,8 +342,6 @@ class RCCWP_WritePostPage
 					$gc = 1;
 				?>
 				<input type='hidden' name='g<?php echo $group->id?>counter' id='g<?php echo $group->id?>counter' value='<?php echo $gc?>' />
-		   		<input type='hidden' name="rc-custom-write-panel-verify-key" id="rc-custom-write-panel-verify-key" value="<?php echo wp_create_nonce('rc-custom-write-panel')?>" />
-				<input type='hidden' name="rc-cwp-custom-write-panel-id" value="<?php echo $CUSTOM_WRITE_PANEL->id;?>" />
 				</div>
 			<?php 
 		   

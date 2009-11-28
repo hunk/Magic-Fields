@@ -166,6 +166,20 @@ if($customWritePanelOptions['condense-menu']){
 add_action('edit_page_form','cwp_add_pages_identifiers');
 add_action('edit_form_advanced','cwp_add_type_identifier');
 
+add_action('edit_form_advanced','put_write_panel_id');
+
+/**
+ * put the id of the write panel as a hidden field in the 'create post/page' and 'edit post/page'
+ */
+function put_write_panel_id(){
+	global $CUSTOM_WRITE_PANEL;
+	
+	if(!empty($CUSTOM_WRITE_PANEL->id)){
+		echo "<input type='hidden' name='rc-custom-write-panel-verify-key' id='rc-custom-write-panel-verify-key' value='".wp_create_nonce('rc-custom-write-panel')."'/>";
+		echo "<input type='hidden' name='rc-cwp-custom-write-panel-id' value='".$CUSTOM_WRITE_PANEL->id."'/>";
+	}
+}
+
 function cwp_add_type_identifier(){
 
 	global $wpdb;
