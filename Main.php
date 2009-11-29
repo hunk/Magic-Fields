@@ -4,7 +4,7 @@ Plugin Name: Magic-fields
 Plugin URI: http://magicfields.org
 Description: Create custom write panels and easily retrieve their values in your templates.
 Author: Hunk and Gnuget
-Version: 1.2.1
+Version: 1.3-beta
 Author URI: http://magicfields.org
 */
 
