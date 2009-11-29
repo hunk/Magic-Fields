@@ -158,6 +158,7 @@ class RCCWP_WritePostPage
 			var JS_MF_FILES_PATH = '<?php echo MF_FILES_URI ?>';
 			var swf_authentication = "<?php if ( function_exists('is_ssl') && is_ssl() ) echo $_COOKIE[SECURE_AUTH_COOKIE]; else echo $_COOKIE[AUTH_COOKIE]; ?>" ;
 			var swf_nonce = "<?php echo wp_create_nonce('media-form'); ?>" ;
+			var lan_editor = "<?php echo ( '' == get_locale() ) ? 'en' : strtolower( substr(get_locale(), 0, 2) ); ?>";
 		</script>
  		<script type="text/javascript" src="<?php echo MF_URI?>js/groups.js"></script>
 		
@@ -192,6 +193,7 @@ class RCCWP_WritePostPage
 			var phpthumb           = "<?php echo PHPTHUMB;?>";
 			var swf_authentication = "<?php if ( function_exists('is_ssl') && is_ssl() ) echo $_COOKIE[SECURE_AUTH_COOKIE]; else echo $_COOKIE[AUTH_COOKIE]; ?>" ;
 			var swf_nonce          = "<?php echo wp_create_nonce('media-form'); ?>" ;
+			var lan_editor = "<?php echo ( '' == get_locale() ) ? 'en' : strtolower( substr(get_locale(), 0, 2) ); ?>";
 		</script>
 
 		<script type="text/javascript">
