@@ -386,7 +386,7 @@ function get_group($name_group,$post_id=NULL){
 						".MF_TABLE_GROUP_FIELDS." cf 
 			LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
 			WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND 
-						g.name='$name_group' AND pm_wp.meta_id=pm.id 
+						g.name='$name_group' AND pm_wp.meta_id=pm.id AND pm_wp.meta_value <> '' 
 			ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
 		$data_groups = $wpdb->get_results($sql);
 
@@ -483,8 +483,10 @@ function get_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 						".MF_TABLE_GROUP_FIELDS." cf 
 			LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
 			WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND
-						pm_wp.meta_id=pm.id AND pm.field_name='$fieldName' AND pm.group_count = $groupIndex 
+						pm_wp.meta_id=pm.id AND pm.field_name='$fieldName' AND pm.group_count = $groupIndex
+						AND pm_wp.meta_value <> '' 
 			ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
+			
 		$data_fields = $wpdb->get_results($sql);
 
 	$info = null;

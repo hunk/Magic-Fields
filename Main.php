@@ -72,7 +72,7 @@ require_once 'tools/debug.php';
   */
 global $mf_domain;
 $mf_domain = 'magic_fields';	
-load_plugin_textdomain($mf_domain, '/'.PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)).'/languajes', basename(dirname(__FILE__)).'/languages');
+load_plugin_textdomain($mf_domain, '/'.PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)).'/lang', basename(dirname(__FILE__)).'/lang');
 
 		
 
