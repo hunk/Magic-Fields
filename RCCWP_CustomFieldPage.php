@@ -109,7 +109,7 @@ class RCCWP_CustomFieldPage
 					<option value="l, F d, Y" <?php if ($custom_field->properties['format'] == "l, F d, Y" ) echo " selected ";?>>Sunday, April 20, 2008</option>
 					<option value="F d, Y" <?php if ($custom_field->properties['format'] == "F d, Y" ) echo " selected ";?>>April 20, 2008</option>
 					<option value="m/d/y" <?php if ($custom_field->properties['format'] == "m/d/y" ) echo " selected ";?>>4/20/08</option>
-					<option value="Y-d-m" <?php if ($custom_field->properties['format'] == "Y-m-d" ) echo " selected ";?>>2008-04-20</option>
+					<option value="Y-m-d" <?php if ($custom_field->properties['format'] == "Y-m-d" ) echo " selected ";?>>2008-04-20</option>
 					<option value="d-M-y" <?php if ($custom_field->properties['format'] == "d-M-y" ) echo " selected ";?>>20-Apr-08</option>
 					<option value="m.d.Y" <?php if ($custom_field->properties['format'] == "m.d.Y" ) echo " selected ";?>>4.20.2008</option>
 					<option value="m.d.y" <?php if ($custom_field->properties['format'] == "m.d.y" ) echo " selected ";?>>4.20.08</option>
