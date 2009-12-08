@@ -1,8 +1,8 @@
 # Magic Fields
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
 * Contributors: [Freshout](http://freshout.us "Freshout"), [Jeff Minard](http://jrm.cc/ "Jeff Minard"),[Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"),Michael Bayard,[Doc4](doc4design.com/ "Doc4")
-* Tested up to: Wordpress 2.8.5
-* Stable tag: 1.3-beta
+* Tested up to: Wordpress 2.8.6
+* Stable tag: 1.3
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -17,6 +17,22 @@ Follow the following steps to install this plugin.
 2.	Activate the plugin through the 'Plugins' menu in WordPress.
 
 ## Changelog ##
+
+###1.3###
+
+* New field Type: Related Type (thanks to Wouter de Winter for this)
+* Fix in the Image Custom Field 
+* Now the empty groups don't be displayed in the  post page
+* Fix in the multiline box.
+* Removing a lot of obsolete and unused code
+* Adding a dropdown with years in the datepicker's calendar for choice a year more easily
+* Adding a option for choice the parent page in the write panels type page
+* Removing   jquery1.2 and the jquery-ui, now  Magic Fields use only the wordpress version of jquery
+* Adding multimedia  buttons in the  multiline editor, now is easy add images and files in this field
+* Fix a little bug in the date field
+* fix in get\_field\_duplicate and get\_group (not return more empty fields)
+* Adding support i18n 
+
 
 ###1.2.1###
 
