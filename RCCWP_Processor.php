@@ -37,7 +37,6 @@ class RCCWP_Processor
 				$customWritePanelId = RCCWP_CustomWritePanel::Create(
 					$_POST['custom-write-panel-name'],
 					$_POST['custom-write-panel-description'],
-					$_POST['custom-write-panel-helptext'],
 					$_POST['custom-write-panel-standard-fields'],
 					$_POST['custom-write-panel-categories'],
 					$_POST['custom-write-panel-order'],
@@ -55,12 +54,10 @@ class RCCWP_Processor
 				
 				$default_theme_page=NULL;
 				if($_POST['radPostPage'] == 'page'){ $default_theme_page = $_POST['page_template']; }
-
 				RCCWP_CustomWritePanel::Update(
 					$_POST['custom-write-panel-id'],
 					$_POST['custom-write-panel-name'],
 					$_POST['custom-write-panel-description'],
-					$_POST['custom-write-panel-helptext'],
 					$_POST['custom-write-panel-standard-fields'],
 					$_POST['custom-write-panel-categories'],
 					$_POST['custom-write-panel-order'],
@@ -302,7 +299,6 @@ class RCCWP_Processor
 					$_POST['custom-field-id'],
 					$_POST['custom-field-name'],
 					$_POST['custom-field-description'],
-					$_POST['custom-field-helptext'],
 					$_POST['custom-field-order'],
 					$_POST['custom-field-required'],
 					$_POST['custom-field-type'],
