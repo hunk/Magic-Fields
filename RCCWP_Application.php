@@ -456,7 +456,7 @@ class RCCWP_Application
 			$EnPCSS = RCCWP_Application::create_EditnPlace_css();
 			$EnPJS = RCCWP_Application::create_EditnPlace_js();
 			if (!$EnPCSS || !$EnPJS) {
-				echo "<div id='magic-fields-install-error-message-2' class='error'><p><strong>".__('There was an error creating the CSS file for edit in place, please check the permissions on the file_mf directory.', $mf_domain)."</strong> "."</p>";
+				echo "<div id='magic-fields-install-error-message-2' class='error'><p><strong>".__('There was an error creating the CSS file for edit in place, please check the permissions on the files_mf directory.', $mf_domain)."</strong> "."</p>";
 				echo "</div>";
 			}
 		}
