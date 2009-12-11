@@ -1,30 +1,43 @@
 <?php
-//print_r($_POST);
-class RCCWP_Processor
-{
-	function Main()
-	{
+/**
+ *  When is created, saved,  deleted a Post with write panels this  class has a method accord with 
+ *  the action executed
+ * 
+ */
+class RCCWP_Processor {
+	
+	/**
+	 *  This function is executed every time to something related with the Magic Fields happen
+	 *  this function update,delete,create a customfield,writepanel,group.
+	 */
+	function Main() {
 		require_once('RC_Format.php');
 		global $CUSTOM_WRITE_PANEL;
-		
-        wp_enqueue_script('jquery-ui-sortable');
 		
 		if (isset($_POST['edit-with-no-custom-write-panel']))
 		{
 			$type = RCCWP_Post::GetCustomWritePanel();
-			wp_redirect($type->type.'.php?action=edit&post=' . $_POST['post-id'] . '&no-custom-write-panel=' . $_POST['custom-write-panel-id']);
+			if( is_object($type) )
+				$ptype = $type->type;
+			else
+				$ptype = (strpos($_SERVER['REQUEST_URI'], 'page.php') !== FALSE ) ? 'page' : 'post';
+			wp_redirect($ptype.'.php?action=edit&post=' . $_POST['post-id'] . '&no-custom-write-panel');
 		}
-		else if (isset($_POST['edit-with-custom-write-panel']))
+		else if (isset($_POST['edit-with-custom-write-panel']) && isset($_POST['custom-write-panel-id']) && (int) $_POST['custom-write-panel-id'] > 0)
 		{
 			$type = RCCWP_Post::GetCustomWritePanel();
+			if( is_object($type) )
+				$ptype = $type->type;
+			else
+				$ptype = (strpos($_SERVER['REQUEST_URI'], 'page.php') !== FALSE ) ? 'page' : 'post';
 			wp_redirect($type->type.'.php?action=edit&post=' . $_POST['post-id'] . '&custom-write-panel-id=' . $_POST['custom-write-panel-id']);
 		}
 	
-        if(empty($_REQUEST['mf_action'])){
-            $currentAction = "";
-        }else{
-            $currentAction = $_REQUEST['mf_action'];
-        }
+		if(empty($_REQUEST['mf_action'])){
+			$currentAction = "";
+		}else{
+			$currentAction = $_REQUEST['mf_action'];
+		}
 		switch ($currentAction){
 			
 			// ------------ Write Panels
@@ -32,7 +45,10 @@ class RCCWP_Processor
 				include_once('RCCWP_CustomWritePanel.php');
 					
 				$default_theme_page=NULL;
-				if($_POST['radPostPage'] == 'page'){ $default_theme_page = $_POST['page_template']; }
+				if($_POST['radPostPage'] == 'page'){ 
+					$default_theme_page = $_POST['page_template']; 
+					$default_parent_page = $_POST['parent_id'];
+				}
 				
 				$customWritePanelId = RCCWP_CustomWritePanel::Create(
 					$_POST['custom-write-panel-name'],
@@ -43,7 +59,8 @@ class RCCWP_Processor
 					FALSE,
 					true,
 					$_POST['single'],
-					$default_theme_page
+					$default_theme_page,
+					$default_parent_page
 				);
 
 				wp_redirect(RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('view-custom-write-panel', $customWritePanelId));
@@ -53,7 +70,11 @@ class RCCWP_Processor
 				include_once('RCCWP_CustomWritePanel.php');
 				
 				$default_theme_page=NULL;
-				if($_POST['radPostPage'] == 'page'){ $default_theme_page = $_POST['page_template']; }
+				if($_POST['radPostPage'] == 'page'){ 
+					$default_theme_page = $_POST['page_template'];
+					$default_parent_page = $_POST['parent_id'];
+				}
+
 				RCCWP_CustomWritePanel::Update(
 					$_POST['custom-write-panel-id'],
 					$_POST['custom-write-panel-name'],
@@ -64,7 +85,8 @@ class RCCWP_Processor
 					FALSE,
 					true,
 					$_POST['single'],
-					$default_theme_page
+					$default_theme_page,
+					$default_parent_page
 				);
 				
 				RCCWP_CustomWritePanel::AssignToRole($_POST['custom-write-panel-id'], 'administrator');
@@ -287,10 +309,7 @@ class RCCWP_Processor
 						$custom_field_properties['max'] = $_POST['custom-field-slider-max'];
 						$custom_field_properties['min'] = $_POST['custom-field-slider-min'];
 						$custom_field_properties['step'] = $_POST['custom-field-slider-step'];
-					}
-					//eeble
-					else if (in_array($current_field->name, array('Related Type')))
-					{
+					}else if (in_array($current_field->name, array('Related Type'))) {
 						$custom_field_properties['panel_id'] = $_POST['custom-field-related-type-panel-id'];
 					}
 				}
@@ -324,7 +343,7 @@ class RCCWP_Processor
 	
 				break;
 
-            default:
+			default:
 								
 				if (RCCWP_Application::InWritePostPanel())
 				{
@@ -374,16 +393,11 @@ class RCCWP_Processor
 							wp_redirect('?page=' . urlencode(MF_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'RCCWP_Menu.php') . '&assign-custom-write-panel=' . (int)$_GET['post']);
 						}
 					}
-				}
-				else if (isset($_POST['update-custom-write-panel-options']))
-				{
-					if ($_POST['uninstall-custom-write-panel'] == 'uninstall')
-					{
+				} else if (isset($_POST['update-custom-write-panel-options'])) {
+					if ($_POST['uninstall-custom-write-panel'] == 'uninstall') {
 						RCCWP_Application::Uninstall();
 						wp_redirect('options-general.php');
-					}
-					else
-					{
+					} else {
 						include_once('RCCWP_Options.php');
 						
 						$options['hide-write-post'] = $_POST['hide-write-post'];
@@ -403,25 +417,27 @@ class RCCWP_Processor
 						$options['canvas_show_zone_name'] = $_POST['canvas_show_zone_name'];
 						$options['canvas_show'] = $_POST['canvas_show'];
 						$options['ink_show'] = $_POST['ink_show'];
-		
+						$options['hide-non-standart-content'] = $_POST['hide-non-standart-content'];
+						$options['condense-menu'] = $_POST['condense-menu'];
 						
 						RCCWP_Options::Update($options);
-                                                $EnP = RCCWP_Application::create_EditnPlace_css(TRUE);
+						$EnP = RCCWP_Application::create_EditnPlace_css(TRUE);
 					}
 				}
 		}
 		
 	}
-	
-	
-	
-	function FlushAllOutputBuffer() 
-	{ 
-		
+	/**
+	 *   Flush All the  buffers
+	 */
+	function FlushAllOutputBuffer() { 
 		while (@ob_end_flush()); 
-		
 	} 
 	
+	/**
+	 *  Redirect Function
+	 *  @param string $location
+	 */
 	function Redirect($location)
 	{
 		global $post_ID;
@@ -439,6 +455,12 @@ class RCCWP_Processor
 		return $location;
 	}
 	
+	/**
+	 *  Check if the name of some custom field is already used
+	 *  @param string $fieldName
+	 *  @param int  the Write panel ID
+	 *  @return bool
+	 */
 	function CheckFieldName($fieldName, $panelID){
 		global $wpdb;
 		
@@ -456,4 +478,3 @@ class RCCWP_Processor
 	}
 
 }
-?>

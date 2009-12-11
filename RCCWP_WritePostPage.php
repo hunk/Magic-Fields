@@ -9,23 +9,37 @@ class RCCWP_WritePostPage
 		global $CUSTOM_WRITE_PANEL;
 		global $post,$title;
 		
-		$assignedCategoryIds = RCCWP_CustomWritePanel::GetAssignedCategoryIds($CUSTOM_WRITE_PANEL->id);
-		$customThemePage = RCCWP_CustomWritePanel::GetThemePage($CUSTOM_WRITE_PANEL->name);
+		if($post->post_type == "post"){
+			$assignedCategoryIds = RCCWP_CustomWritePanel::GetAssignedCategoryIds($CUSTOM_WRITE_PANEL->id);
+			
+			if($post->ID == 0){
+				foreach ($assignedCategoryIds as $categoryId)
+				{
+					$toReplace = 'id="in-category-' . $categoryId . '"';
+					$replacement = $toReplace . ' checked="checked"';
+					$content = str_replace($toReplace, $replacement, $content);
+				}
+			}
+		}
 		
-		if($_GET['custom-write-panel-id']){
-			foreach ($assignedCategoryIds as $categoryId)
-			{
-				$toReplace = 'id="in-category-' . $categoryId . '"';
-				$replacement = $toReplace . ' checked="checked"';
+		if($post->post_type == "page"){
+			$customParentPage = RCCWP_CustomWritePanel::GetParentPage($CUSTOM_WRITE_PANEL->name);
+			
+			if($customParentPage && $post->ID == 0){
+				$toReplace = 'value="'.$customParentPage.'"';
+				$replacement = 'value="'.$customParentPage.'"' . ' SELECTED';
+				$content = str_replace($toReplace, $replacement, $content);
+			}
+			
+			$customThemePage = RCCWP_CustomWritePanel::GetThemePage($CUSTOM_WRITE_PANEL->name);
+			//set default theme page
+			if($post->ID == 0){
+				$toReplace = "value='".$customThemePage."'";
+				$replacement = "value='".$customThemePage."'" . ' SELECTED';
 				$content = str_replace($toReplace, $replacement, $content);
 			}
 		}
-		//set default theme page
-		if($post->ID == 0){
-			$toReplace = "value='".$customThemePage."'";
-			$replacement = "value='".$customThemePage."'" . ' SELECTED"';
-			$content = str_replace($toReplace, $replacement, $content);
-		}
+		
 		return $content;
 	}
 
@@ -52,6 +66,8 @@ class RCCWP_WritePostPage
 	}
 		
 	function CustomFieldsJavascript(){
+		wp_enqueue_script('jquery-ui-sortable');
+		
 		//loading  jquery ui datepicker
 		wp_enqueue_script(	'datepicker',
 							MF_URI.'js/ui.datepicker.js',
@@ -62,7 +78,7 @@ class RCCWP_WritePostPage
 		wp_enqueue_script(	'mf_datepicker',
 							MF_URI.'js/custom_fields/datepicker.js'
 						);
-					
+						
 		//loading  jquery ui slider
 		wp_enqueue_script(	'slider',
 							MF_URI.'js/ui.slider.js',
@@ -73,7 +89,12 @@ class RCCWP_WritePostPage
 		wp_enqueue_script(	'sevencolorpicker',
 							MF_URI.'js/sevencolorpicker.js'
 						);
-											
+							
+		//loading the code for delete images
+		wp_enqueue_script(	'mf_colorpicker',
+							MF_URI.'js/custom_fields/colorpicker.js'
+						)
+						;				
 		//loading the code for delete images
 		wp_enqueue_script(	'mf_image',
 							MF_URI.'js/custom_fields/image.js'
@@ -137,6 +158,7 @@ class RCCWP_WritePostPage
 			var JS_MF_FILES_PATH = '<?php echo MF_FILES_URI ?>';
 			var swf_authentication = "<?php if ( function_exists('is_ssl') && is_ssl() ) echo $_COOKIE[SECURE_AUTH_COOKIE]; else echo $_COOKIE[AUTH_COOKIE]; ?>" ;
 			var swf_nonce = "<?php echo wp_create_nonce('media-form'); ?>" ;
+			var lan_editor = "<?php echo ( '' == get_locale() ) ? 'en' : strtolower( substr(get_locale(), 0, 2) ); ?>";
 		</script>
  		<script type="text/javascript" src="<?php echo MF_URI?>js/groups.js"></script>
 		
@@ -171,6 +193,7 @@ class RCCWP_WritePostPage
 			var phpthumb           = "<?php echo PHPTHUMB;?>";
 			var swf_authentication = "<?php if ( function_exists('is_ssl') && is_ssl() ) echo $_COOKIE[SECURE_AUTH_COOKIE]; else echo $_COOKIE[AUTH_COOKIE]; ?>" ;
 			var swf_nonce          = "<?php echo wp_create_nonce('media-form'); ?>" ;
+			var lan_editor = "<?php echo ( '' == get_locale() ) ? 'en' : strtolower( substr(get_locale(), 0, 2) ); ?>";
 		</script>
 
 		<script type="text/javascript">
@@ -294,7 +317,6 @@ class RCCWP_WritePostPage
 				$firstFieldName = $customFields[0]->name;
 
 				$order = RCCWP_CustomField::GetOrderDuplicates($_REQUEST['post'],$firstFieldName);
-
 				?> 
 				<div class="write_panel_wrapper"  id="write_panel_wrap_<?php echo $group->id;?>"><?php
 				
@@ -312,8 +334,6 @@ class RCCWP_WritePostPage
 				}
 				?>
 				<input type='hidden' name='g<?php echo $group->id?>counter' id='g<?php echo $group->id?>counter' value='<?php echo $top ?>' />
-				<input type="hidden" name="rc-custom-write-panel-verify-key" id="rc-custom-write-panel-verify-key" value="<?php echo wp_create_nonce('rc-custom-write-panel')?>" />
-				<input type="hidden" name="rc-cwp-custom-write-panel-id" value="<?php echo $CUSTOM_WRITE_PANEL->id?>" />
 				</div>
 			<?php
 			}else{
@@ -324,8 +344,6 @@ class RCCWP_WritePostPage
 					$gc = 1;
 				?>
 				<input type='hidden' name='g<?php echo $group->id?>counter' id='g<?php echo $group->id?>counter' value='<?php echo $gc?>' />
-		   		<input type='hidden' name="rc-custom-write-panel-verify-key" id="rc-custom-write-panel-verify-key" value="<?php echo wp_create_nonce('rc-custom-write-panel')?>" />
-				<input type='hidden' name="rc-cwp-custom-write-panel-id" value="<?php echo $CUSTOM_WRITE_PANEL->id;?>" />
 				</div>
 			<?php 
 		   
@@ -1261,12 +1279,7 @@ class RCCWP_WritePostPage
 			}
 		}
 		?>
-		<script type="text/javascript">
-			jQuery('document').ready(function(){
-				jQuery('#<?php echo $inputName?>').SevenColorPicker();
-			});
-		</script>
-		<input  id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>"  />
+		<input  id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>" class="mf_color_picker" />
 		<?php
 	}
 	

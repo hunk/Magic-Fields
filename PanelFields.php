@@ -1,5 +1,7 @@
 <?php
-
+/**
+ *  Custom Field Object
+ */
 class PanelFields{
 	var $id;
 	var $displayName;

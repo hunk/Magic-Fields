@@ -109,7 +109,7 @@ class RCCWP_CustomFieldPage
 					<option value="l, F d, Y" <?php if ($custom_field->properties['format'] == "l, F d, Y" ) echo " selected ";?>>Sunday, April 20, 2008</option>
 					<option value="F d, Y" <?php if ($custom_field->properties['format'] == "F d, Y" ) echo " selected ";?>>April 20, 2008</option>
 					<option value="m/d/y" <?php if ($custom_field->properties['format'] == "m/d/y" ) echo " selected ";?>>4/20/08</option>
-					<option value="Y-d-m" <?php if ($custom_field->properties['format'] == "Y-m-d" ) echo " selected ";?>>2008-04-20</option>
+					<option value="Y-m-d" <?php if ($custom_field->properties['format'] == "Y-m-d" ) echo " selected ";?>>2008-04-20</option>
 					<option value="d-M-y" <?php if ($custom_field->properties['format'] == "d-M-y" ) echo " selected ";?>>20-Apr-08</option>
 					<option value="m.d.Y" <?php if ($custom_field->properties['format'] == "m.d.Y" ) echo " selected ";?>>4.20.2008</option>
 					<option value="m.d.y" <?php if ($custom_field->properties['format'] == "m.d.y" ) echo " selected ";?>>4.20.08</option>
@@ -242,23 +242,22 @@ class RCCWP_CustomFieldPage
 		<?php
 			$isDisplay = $custom_field->type == "Image" ? 'display:inline;' : 'display:none;';
 			
-			$size = explode("&",$custom_field->properties['params']);
-			if(isset($size[3])){
-				$c=$size[3];
+			preg_match('/w\=[0-9]+/',$custom_field->properties['params'],$match_w);
+			if($match_w){
+				$w=str_replace("w=",'',$match_w[0]);
+				$custom_field->properties['params']= str_replace("&".$match_w[0],"",$custom_field->properties['params']);
 			}
 			
-			if (substr($size[1],0 ,1) == "h"){
-				$h = substr($size[1], 2);
+			preg_match('/h\=[0-9]+/',$custom_field->properties['params'],$match_h);
+			if($match_h){
+				$h=str_replace("h=",'',$match_h[0]);
+				$custom_field->properties['params']= str_replace("&".$match_h[0],"",$custom_field->properties['params']);
 			}
-			elseif (substr($size[1],0 ,1) == "w"){
-				$w = substr($size[1], 2);
-			}
-
-			if (substr($size[2],0 ,1) == "h"){
-				$h = substr($size[2], 2);
-			}
-			elseif (substr($size[2],0 ,1) == "w"){
-				$w = substr($size[2], 2);
+			
+			if($custom_field->properties['params']){
+				if (substr($custom_field->properties['params'],0 ,1) == "&"){
+					$c = substr($custom_field->properties['params'], 1);
+				}
 			}
 			
 			$cssVlaue = $custom_field->CSS;

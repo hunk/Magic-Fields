@@ -462,21 +462,6 @@ class RCCWP_Menu
 		}
 
 	}
-
-	function AddThickbox()
-	{
-		if (!empty($GET['page']) && $_GET['page']=='Magic_FieldsManageModules') {
-			// Overcome bug (http://wordpress.org/support/topic/196884)
-			$thickBoxCSS = get_bloginfo('url').'/wp-includes/js/thickbox/thickbox.css';
-			?>
-			<link rel='stylesheet' href='<?php echo $thickBoxCSS?>' type='text/css' />
-			<?php
-			
-			wp_enqueue_script('prototype');
-			wp_enqueue_script('thickbox');
-		}
-		
-	}
 	
 	function ShowPanel($panel){
 		return true;

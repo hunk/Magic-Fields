@@ -4,7 +4,7 @@ Plugin Name: Magic-fields
 Plugin URI: http://magicfields.org
 Description: Create custom write panels and easily retrieve their values in your templates.
 Author: Hunk and Gnuget
-Version: 1.2.1
+Version: 1.3
 Author URI: http://magicfields.org
 */
 
@@ -35,48 +35,58 @@ if(isset($current_blog)){
 	$is_wordpress_mu=false;
 }
 
-//for this save_post action doesn't execute  twice
+//for the save_post action doesn't be execute  twice
 $flag = 0;
 
 
-// Classes
+// Getting the  Custom field object
 require_once 'PanelFields.php';
 
-// Include Magic Fields API related files
-
+// Getting the RCCWP_CustomGroup object for work with groups
 require_once 'RCCWP_CustomGroup.php';
 
-// Classes/Core files
-
+// Getting the constants
 require_once 'RCCWP_Constant.php';
 
-// Include Magic Fields API related files
-
+// Getting the RCCWP_CustomField object for work with  Custom Fields
 require_once 'RCCWP_CustomField.php';
+
+// Getting the RCCWP_CustomWritePanel for work with Writepanels
 require_once 'RCCWP_CustomWritePanel.php';
 
 // Include files containing Magic Fields public functions
 require_once 'get-custom.php';
 
 // Include other files used in this script
+
+//Include files for put  the  write panels in the menu
 require_once 'RCCWP_Menu.php';
+
 require_once 'RCCWP_CreateCustomFieldPage.php';
+
+//Debug tool
 require_once 'tools/debug.php';
 
- /* function for languajes
-  *
+ /**
+  * function for languages
   */
 global $mf_domain;
 $mf_domain = 'magic_fields';	
-load_plugin_textdomain($mf_domain, '/'.PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)).'/languajes', basename(dirname(__FILE__)).'/languages');
+load_plugin_textdomain($mf_domain, '/'.PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)).'/lang', basename(dirname(__FILE__)).'/lang');
 
 		
 
+/**
+ *  Here actions/hooks only required in the Admin area
+ */
 if (is_admin()) {
 	require_once ('RCCWP_Application.php');
 	require_once ('RCCWP_WritePostPage.php');
 	
 	register_activation_hook(dirname(__FILE__) . '/Main.php', array('RCCWP_Application', 'Install'));
+	
+	//Attaching the Magic Fields Menus
+	add_action('admin_menu', array('RCCWP_Menu', 'AttachMagicFieldsMenus'));
 
 	if($is_wordpress_mu) {
 		//checking if the method Install was executed before
@@ -101,9 +111,9 @@ if (is_admin()) {
 		
 		add_filter('posts_where', array('RCCWP_Menu', 'FilterPostsPagesList'));
 		add_action('admin_head', array('RCCWP_Menu', 'HighlightCustomPanel'));
-		add_action('admin_head', array('RCCWP_CreateCustomFieldPage', 'AddAjaxDynamicList'));
 		
 		add_action('admin_head', 'mf_admin_style');
+	
 
 
 		// -- Hook all functions related to saving posts in order to save custom fields values
@@ -123,13 +133,10 @@ if (is_admin()) {
 	}
 }
 
-add_action('admin_print_scripts', array('RCCWP_Menu', 'AddThickbox'));
-add_action('admin_menu', array('RCCWP_Menu', 'AttachMagicFieldsMenus'));
-
 require_once ('RCCWP_EditnPlace.php');
 require_once ('RCCWP_Options.php');
 
-// Adding javascript for the editnplace if it is turned on
+// Adding javascript for the editnplace only if it is turned on
 $customWritePanelOptions = RCCWP_Options::Get();
 if( $customWritePanelOptions['enable-editnplace'] ) {
 	add_action('wp_head', array('RCCWP_EditnPlace', 'EditnHeader'));
@@ -158,6 +165,20 @@ if($customWritePanelOptions['condense-menu']){
 
 add_action('edit_page_form','cwp_add_pages_identifiers');
 add_action('edit_form_advanced','cwp_add_type_identifier');
+
+add_action('edit_form_advanced','put_write_panel_id');
+add_action('edit_page_form','put_write_panel_id');
+/**
+ * put the id of the write panel as a hidden field in the 'create post/page' and 'edit post/page'
+ */
+function put_write_panel_id(){
+	global $CUSTOM_WRITE_PANEL;
+	
+	if(!empty($CUSTOM_WRITE_PANEL->id)){
+		echo "<input type='hidden' name='rc-custom-write-panel-verify-key' id='rc-custom-write-panel-verify-key' value='".wp_create_nonce('rc-custom-write-panel')."'/>";
+		echo "<input type='hidden' name='rc-cwp-custom-write-panel-id' value='".$CUSTOM_WRITE_PANEL->id."'/>";
+	}
+}
 
 function cwp_add_type_identifier(){
 
@@ -222,6 +243,9 @@ function mf_admin_style() {
 /**
 *  Check the mime type of the file for 
 *  avoid upload any dangerous file.
+*  
+*  @param string $mime is the type of file can be "image","audio" or "file"
+*  @param string $file_type  is the mimetype of the field
 */
 function valid_mime($mime,$file_type){
 	$imagesExts = array(
@@ -269,4 +293,3 @@ function mf_load_modules() {
                 }
         }
 }
-

@@ -2,8 +2,7 @@
 
 require_once "RCCWP_Constant.php";
 
-class RCCWP_EditnPlace 
-{
+class RCCWP_EditnPlace {
 	/**
 	 * This function load all the necessary scripts for the 
 	 * editnplace feature
@@ -49,6 +48,9 @@ EOD;
 	}
 }
 
+/** 
+ *   TODO review all the EIP_* functions, i think is not used anymore
+ */
 function EIP_title(){
 	global $post;
 	$post_id = $post->ID;
