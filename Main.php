@@ -167,7 +167,7 @@ add_action('edit_page_form','cwp_add_pages_identifiers');
 add_action('edit_form_advanced','cwp_add_type_identifier');
 
 add_action('edit_form_advanced','put_write_panel_id');
-
+add_action('edit_page_form','put_write_panel_id');
 /**
  * put the id of the write panel as a hidden field in the 'create post/page' and 'edit post/page'
  */
