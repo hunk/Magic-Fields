@@ -258,7 +258,8 @@ function valid_mime($mime,$file_type){
 	$audioExts = array(
 						'audio/mpeg',
 						'audio/mpg',
-						'audio/x-wav'
+						'audio/x-wav',
+						'audio/mp3'
 						);
 						
 	if($file_type == "image"){
