@@ -1,6 +1,6 @@
 <?php
 /*
-	Red Comercial Thumb class
+	Magic Fields Thumb class
 	
 	This class is based in the TimThumb script created by Tim McDaniels and Darren Hoyt with tweaks by Ben Gillbanks
 	http://code.google.com/p/timthumb/
