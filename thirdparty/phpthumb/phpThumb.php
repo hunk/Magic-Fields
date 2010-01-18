@@ -36,50 +36,55 @@ foreach($_GET as $key => $value){
 $params = array_merge($default,$params);
 $md5_params =  md5("w=".$params['w']."&h=".$params['h']."&q=".$params['q']."&zc=".$params['zc']);
 
-//Checking if already exists the image
 //getting the name of the image
 preg_match('/\/files_mf\/([0-9\_a-z]+\.(jpg|png|jpg)|gif)/i',$params['src'],$match);
 $image_name_clean = $match[1];
+$extension = $match[2];
+
+//The file must be "jpg" or "png" or "jpg" 
+if(!in_array($extension,array('jpg','png','jpg'))){
+	return false;
+}
 
 
 //name with a png extension
-$image_name_without_extension = preg_replace('/[a-z\.]{4}$/','',$image_name_clean);
-
-$image_name = $md5_params."_".$image_name_without_extension;
+$image_name = $md5_params."_".$image_name_clean;
 
 //this code can be refactored
-if(file_exists(MF_UPLOAD_FILES_DIR.$image_name.".png")){
+if(file_exists(MF_UPLOAD_FILES_DIR.$image_name)){
 	//Displaying the image
-	$size = getimagesize(MF_UPLOAD_FILES_DIR.$image_name.".png");
-	$handle = fopen(MF_UPLOAD_FILES_DIR.$image_name.".png", "rb");
+	$size = getimagesize(MF_UPLOAD_FILES_DIR.$image_name);
+	$handle = fopen(MF_UPLOAD_FILES_DIR.$image_name, "rb");
 	while (!feof($handle)) {
 		$contents .= fread($handle, 1024);
 	}
 	fclose($handle);
 	
 	header("Cache-Control: public"); 
-	header ("Content-type: image/png"); 
-	header("Content-Disposition: inline; filename=\"". MF_UPLOAD_FILES_DIR.$image_name.".png". "\""); 
-	header('Content-Length: ' . filesize(MF_UPLOAD_FILES_DIR.$image_name.".png")); 
+	header ("Content-type: image/".$extension); 
+	header("Content-Disposition: inline; filename=\"".MF_UPLOAD_FILES_DIR.$image_name."\""); 
+	header('Content-Length: ' . filesize(MF_UPLOAD_FILES_DIR.$image_name)); 
 	echo $contents;
 	
 }else{
 	//generating the image
-	$thumb = new mfthumb;
-	$thumb->generate(MF_UPLOAD_FILES_DIR.$image_name_clean,MF_UPLOAD_FILES_DIR,$image_name,$params);
-
-	//Displaying the image
-	$size = getimagesize(MF_UPLOAD_FILES_DIR.$image_name.".png");
-	$handle = fopen(MF_UPLOAD_FILES_DIR.$image_name.".png", "rb");
-	while (!feof($handle)) {
-		$contents .= fread($handle, 1024);
-	}
-	fclose($handle);
+	$thumb = new mfthumb();
+	$thumb_path = $thumb->image_resize(MF_UPLOAD_FILES_DIR.$image_name_clean,$params['w'],$params['h'],$params['zc'],MF_UPLOAD_FILES_DIR.$image_name);
 	
-	header("Cache-Control: public"); 
-	header ("Content-type: image/png"); 
-	header("Content-Disposition: inline; filename=\"". MF_UPLOAD_FILES_DIR.$image_name.".png". "\""); 
-	header('Content-Length: ' . filesize(MF_UPLOAD_FILES_DIR.$image_name.".png")); 
-	echo $contents;
+	//Displaying the image
+	if(file_exists($thumb_path)){
+		$size = getimagesize($thumb_path);
+		$handle = fopen($thumb_path, "rb");
+		while (!feof($handle)) {
+			$contents .= fread($handle, 1024);
+		}
+		fclose($handle);
+
+		header("Cache-Control: public"); 
+		header ("Content-type: image/".$extension); 
+		header("Content-Disposition: inline; filename=\"".$thumb_path."\""); 
+		header('Content-Length: ' . filesize($thumb_path)); 
+		echo $contents;
+	}
 }
 ?>
