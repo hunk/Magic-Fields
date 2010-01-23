@@ -393,7 +393,8 @@ class RCCWP_CustomField {
 			
 			$wpdb->query($sql);
 		}
-		
+		$css = NULL;
+		if(isset($_POST['custom-field-css'])) $css = $_POST['custom-field-css'];
 		$sql = sprintf(
 			"UPDATE " . MF_TABLE_GROUP_FIELDS .
 			" SET name = %s" .
@@ -410,7 +411,7 @@ class RCCWP_CustomField {
 			$order,
 			$required_field,
 			$type,
-			isset($_POST['custom-field-css']),
+			$css,
 			$duplicate,
 			RC_Format::TextToSql($helptext),
 			$customFieldId
