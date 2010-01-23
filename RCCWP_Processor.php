@@ -150,10 +150,18 @@ class RCCWP_Processor {
 
 			case 'submit-edit-custom-group':				
 				include_once('RCCWP_CustomGroup.php');
+				$default = array(
+				  'custom-write-panel-id' => '',
+				  'custom-group-name' => '',
+				  'custom-group-duplicate' => ''
+				);
+				$all = $_POST;
+				$all['custom-group-id'] = $_REQUEST['custom-group-id'];
+				$values = array_merge($default,$all);
 				RCCWP_CustomGroup::Update(
-					$_REQUEST['custom-group-id'],
-					$_POST['custom-group-name'],
-					$_POST['custom-group-duplicate'],
+					$values['custom-group-id'],
+					$values['custom-group-name'],
+					$values['custom-group-duplicate'],
 					NULL);
 				break;
 										
