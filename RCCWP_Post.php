@@ -209,10 +209,10 @@ class RCCWP_Post {
 
 			$customWritePanelId = get_post_meta((int)$_GET['post'], RC_CWP_POST_WRITE_PANEL_ID_META_KEY, true);
 		
-		
+	
 			if (empty($customWritePanelId))
 			{
-				$customWritePanelId = (int)$_REQUEST['custom-write-panel-id'];
+				$customWritePanelId = (int)isset($_REQUEST['custom-write-panel-id']);
 			}
 		}
 		else if (function_exists('icl_t') && isset($_GET['trid']) )
@@ -231,6 +231,7 @@ class RCCWP_Post {
 			$customWritePanelId = (int)$_REQUEST['custom-write-panel-id'];
 		}
 		
+		$customWritePanel = FALSE;
 		if (isset($customWritePanelId)) {
 			include_once('RCCWP_Application.php');
 			$customWritePanel = RCCWP_CustomWritePanel::Get($customWritePanelId);

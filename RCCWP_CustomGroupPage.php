@@ -7,7 +7,7 @@ class RCCWP_CustomGroupPage
 	function Content($customGroup = null)
 	{
 		global $mf_domain;
-		$customGroupName = "";
+		$customGroupName = $customGroupDuplicate = "";
 		if (isset($_GET['custom-write-panel-id']) )
 			$customWritePanelId = $_GET['custom-write-panel-id'];
 		if (isset($_POST['custom-write-panel-id']) )

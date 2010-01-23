@@ -40,17 +40,30 @@ class RCCWP_Menu
 				}
 				else if ($current_field->has_options == "false")
 				{
+				  $default = array(
+  				  'custom-group-id' => '',
+  				  'custom-field-name' => '',
+  				  'custom-field-description' => '',
+  				  'custom-field-order' => '',
+  				  'custom-field-required' => '',
+  				  'custom-field-type' => '',
+  				  'custom-field-options' => '',
+  				  'custom-field-duplicate' => '',
+  				  'custom-field-helptext' => ''
+  				);
+  				$save = array_merge($default,$_POST);
+  				
 					RCCWP_CustomField::Create(
-						$_POST['custom-group-id'],
-						$_POST['custom-field-name'],
-						$_POST['custom-field-description'],
-						$_POST['custom-field-order'],
-						$_POST['custom-field-required'],
-						$_POST['custom-field-type'],
-						$_POST['custom-field-options'],
+						$save['custom-group-id'],
+						$save['custom-field-name'],
+						$save['custom-field-description'],
+						$save['custom-field-order'],
+						$save['custom-field-required'],
+						$save['custom-field-type'],
+						$save['custom-field-options'],
 						null,null,
-						$_POST['custom-field-duplicate'],
-						$_POST['custom-field-helptext']);
+						$save['custom-field-duplicate'],
+						$save['custom-field-helptext']);
 	
 					$page_group = 'RCCWP_CustomWritePanelPage';
 					$page_type = 'View';
@@ -447,7 +460,7 @@ class RCCWP_Menu
 		if ($_REQUEST['custom-write-panel-id'])
 		{
 			$customWritePanel = RCCWP_CustomWritePanel::Get((int)$_REQUEST['custom-write-panel-id']);
-			if ($_REQUEST['filter-posts']){
+			if ( isset($_REQUEST['filter-posts']) ){
 				if ($customWritePanel->type == "post")
 					$submenu_file = 'edit.php?filter-posts=1&custom-write-panel-id=' . (int)$_REQUEST['custom-write-panel-id'];
 				else

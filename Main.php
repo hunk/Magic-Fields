@@ -138,7 +138,7 @@ require_once ('RCCWP_Options.php');
 
 // Adding javascript for the editnplace only if it is turned on
 $customWritePanelOptions = RCCWP_Options::Get();
-if( $customWritePanelOptions['enable-editnplace'] ) {
+if( isset($customWritePanelOptions['enable-editnplace']) ) {
 	add_action('wp_head', array('RCCWP_EditnPlace', 'EditnHeader'));
 	add_action('template_redirect',array('RCCWP_EditnPlace','EditnPlaceJavascript'));
 }
@@ -151,7 +151,7 @@ add_filter('posts_orderby', array('RCCWP_Query', 'FilterCustomPostsOrderby'));
 add_filter('posts_fields', array('RCCWP_Query', 'FilterCustomPostsFields'));
 add_filter('posts_join_paged', array('RCCWP_Query', 'FilterCustomPostsJoin'));
 
-if($customWritePanelOptions['condense-menu']){
+if( isset($customWritePanelOptions['condense-menu']) ){
 	//adding Column for posts
 	add_filter('manage_posts_columns',array('RCCWP_Query','ColumnWritePanel'));
 	add_action('manage_posts_custom_column',array('RCCWP_Query','ColumnWritePanelData'));

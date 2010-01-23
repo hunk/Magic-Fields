@@ -456,7 +456,7 @@ class RCCWP_Application
 			$EnPCSS = RCCWP_Application::create_EditnPlace_css();
 			$EnPJS = RCCWP_Application::create_EditnPlace_js();
 			if (!$EnPCSS || !$EnPJS) {
-				echo "<div id='magic-fields-install-error-message-2' class='error'><p><strong>".__('There was an error creating the CSS file for edit in place, please check the permissions on the file_mf directory.', $mf_domain)."</strong> "."</p>";
+				echo "<div id='magic-fields-install-error-message-2' class='error'><p><strong>".__('There was an error creating the CSS file for edit in place, please check the permissions on the files_mf directory.', $mf_domain)."</strong> "."</p>";
 				echo "</div>";
 			}
 		}
@@ -488,9 +488,10 @@ class RCCWP_Application
 	function create_EditnPlace_css($create=FALSE) {
 		include_once('RCCWP_Options.php');
 		$eip_highlight_color = RCCWP_Options::Get('eip-highlight-color');
+		if(!$eip_highlight_color) $eip_highlight_color = '#FFFFFF';
 		$MF_URI = MF_URI;
 		$arrow_image_path = MF_URI."images/arrow.gif";
-		$editnplace_css .= "
+		$editnplace_css = "
 #savingDiv{
 	font-size: medium;
 	font-weight: bold;

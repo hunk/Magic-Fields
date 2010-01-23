@@ -671,15 +671,15 @@ class RCCWP_WritePostPage
 		
 		<?php
 		if($panel_id == -4){
-			$options=get_posts("post_type=post&numberposts=-1");
+			$options=get_posts("post_type=post&numberposts=-1&order=ASC&orderby=title");
 		}elseif($panel_id == -3){
-			$options=get_posts("post_type=page&numberposts=-1");
+			$options=get_posts("post_type=page&numberposts=-1&order=ASC&orderby=title");
 		}elseif($panel_id == -2){
-				$options=get_posts("post_type=post&meta_key=_mf_write_panel_id&numberposts=-1");
+				$options=get_posts("post_type=post&meta_key=_mf_write_panel_id&numberposts=-1&order=ASC&orderby=title");
 		}elseif($panel_id == -1){
-					$options=get_posts("post_type=page&meta_key=_mf_write_panel_id&numberposts=-1");
+					$options=get_posts("post_type=page&meta_key=_mf_write_panel_id&numberposts=-1&order=ASC&orderby=title");
 		}else{
-			$options=get_posts("post_type=any&meta_key=_mf_write_panel_id&numberposts=-1&meta_value=$panel_id");
+			$options=get_posts("post_type=any&meta_key=_mf_write_panel_id&numberposts=-1&meta_value=$panel_id&order=ASC&orderby=title");
 		}
 		
 		foreach ($options as $option) :

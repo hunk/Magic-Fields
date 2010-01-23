@@ -68,14 +68,15 @@ class RCCWP_CustomField {
 				$options = stripslashes($options);
 				$options = explode("\n", $options);
 			}
-			array_walk($options, array(RC_Format, TrimArrayValues));
+
+			array_walk($options, array("RC_Format", "TrimArrayValues"));
 			$options = addslashes(serialize($options));
 			
 			if (!is_array($default_value)) {
 				$default_value = stripslashes($default_value);
 				$default_value = explode("\n", $default_value);
 			}
-			array_walk($default_value, array(RC_Format, TrimArrayValues));
+			array_walk($default_value, array("RC_Format", "TrimArrayValues"));
 			$default_value = addslashes(serialize($default_value));
 			
 			$sql = sprintf(
@@ -409,7 +410,7 @@ class RCCWP_CustomField {
 			$order,
 			$required_field,
 			$type,
-			$_POST['custom-field-css'],
+			isset($_POST['custom-field-css']),
 			$duplicate,
 			RC_Format::TextToSql($helptext),
 			$customFieldId
@@ -424,14 +425,14 @@ class RCCWP_CustomField {
 				$options = stripslashes($options);
 				$options = explode("\n", $options);
 			}
-			array_walk($options, array(RC_Format, TrimArrayValues));
+			array_walk($options, array("RC_Format", "TrimArrayValues"));
 			$options = addslashes(serialize($options));
 			
 			if (!is_array($default_value)) {
 				$default_value = stripslashes($default_value);
 				$default_value = explode("\n", $default_value);
 			}
-			array_walk($default_value, array(RC_Format, TrimArrayValues));
+			array_walk($default_value, array("RC_Format", "TrimArrayValues"));
 			$default_value = addslashes(serialize($default_value));
 			
 			$sql = sprintf(

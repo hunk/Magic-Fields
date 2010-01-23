@@ -239,28 +239,33 @@ class RCCWP_CustomFieldPage
 			</td>
 		</tr>
 		<!-- START :: For Image/Photo' Css -->
-		<?php
-			$isDisplay = $custom_field->type == "Image" ? 'display:inline;' : 'display:none;';
+		<?php 
+		  if ( $custom_field->type == "Image" ){
+		    $h = $w = $c = NULL;
+			  $isDisplay = $custom_field->type == "Image" ? 'display:inline;' : 'display:none;';
+			  
+			  if( isset($custom_field->properties['params']) ){
+			    preg_match('/w\=[0-9]+/',$custom_field->properties['params'],$match_w);
+			    if($match_w){
+				    $w=str_replace("w=",'',$match_w[0]);
+				    $custom_field->properties['params']= str_replace("&".$match_w[0],"",$custom_field->properties['params']);
+			    }
 			
-			preg_match('/w\=[0-9]+/',$custom_field->properties['params'],$match_w);
-			if($match_w){
-				$w=str_replace("w=",'',$match_w[0]);
-				$custom_field->properties['params']= str_replace("&".$match_w[0],"",$custom_field->properties['params']);
-			}
+			    preg_match('/h\=[0-9]+/',$custom_field->properties['params'],$match_h);
+			    if($match_h){
+				    $h=str_replace("h=",'',$match_h[0]);
+				    $custom_field->properties['params']= str_replace("&".$match_h[0],"",$custom_field->properties['params']);
+			    }
 			
-			preg_match('/h\=[0-9]+/',$custom_field->properties['params'],$match_h);
-			if($match_h){
-				$h=str_replace("h=",'',$match_h[0]);
-				$custom_field->properties['params']= str_replace("&".$match_h[0],"",$custom_field->properties['params']);
-			}
+			    if($custom_field->properties['params']){
+				    if (substr($custom_field->properties['params'],0 ,1) == "&"){
+					    $c = substr($custom_field->properties['params'], 1);
+				    }
+			    }
+		  }
 			
-			if($custom_field->properties['params']){
-				if (substr($custom_field->properties['params'],0 ,1) == "&"){
-					$c = substr($custom_field->properties['params'], 1);
-				}
-			}
-			
-			$cssVlaue = $custom_field->CSS;
+			  $cssVlaue = $custom_field->CSS;
+		  
 		?>
 		<tr valign="top">
 			<th scope="row"><span id="lblHeight" style="<?php echo $isDisplay;?>"><?php _e('Max Height',$mf_domain); ?>:</span></th>
@@ -285,7 +290,7 @@ class RCCWP_CustomFieldPage
 				</div>
 			</td>
 		</tr>
-
+    <?php } ?>
 		<!-- END :: For Image/Photo' Css -->		
 		</tbody>
 		</table>

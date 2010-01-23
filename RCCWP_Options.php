@@ -30,7 +30,8 @@ class RCCWP_Options {
 			$options = unserialize(get_option(RC_CWP_OPTION_KEY));
 
 		if (!empty($key)){
-			return $options[$key];
+		  if( isset($options[$key]) ) return $options[$key];
+			return false;
 		}else{
 			return $options;
 		}

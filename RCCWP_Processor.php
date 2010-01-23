@@ -69,24 +69,39 @@ class RCCWP_Processor {
 			case 'submit-edit-custom-write-panel':
 				include_once('RCCWP_CustomWritePanel.php');
 				
-				$default_theme_page=NULL;
+				$default_theme_page = $default_parent_page = NULL;
 				if($_POST['radPostPage'] == 'page'){ 
 					$default_theme_page = $_POST['page_template'];
 					$default_parent_page = $_POST['parent_id'];
 				}
+				
+				$default = array(
+  				  'custom-write-panel-id' => '',
+  				  'custom-write-panel-name' => '',
+  				  'custom-write-panel-standard-fields' => '',
+  				  'custom-write-panel-categories' => '',
+  				  'custom-write-panel-order' => '',
+  				  'single' => '',
+  				  'theme_page' => '',
+  				  'parent_page' => ''
+  				);
+
+  				$_POST['theme_page'] = $default_theme_page;
+  				$_POST['parent_page'] = $default_parent_page;
+  				$save = array_merge($default,$_POST);
 
 				RCCWP_CustomWritePanel::Update(
-					$_POST['custom-write-panel-id'],
-					$_POST['custom-write-panel-name'],
-					$_POST['custom-write-panel-description'],
-					$_POST['custom-write-panel-standard-fields'],
-					$_POST['custom-write-panel-categories'],
-					$_POST['custom-write-panel-order'],
+					$save['custom-write-panel-id'],
+					$save['custom-write-panel-name'],
+					NULL,
+					$save['custom-write-panel-standard-fields'],
+					$save['custom-write-panel-categories'],
+					$save['custom-write-panel-order'],
 					FALSE,
 					true,
-					$_POST['single'],
-					$default_theme_page,
-					$default_parent_page
+					$save['single'],
+					$save['theme_page'],
+					$save['parent_page']
 				);
 				
 				RCCWP_CustomWritePanel::AssignToRole($_POST['custom-write-panel-id'], 'administrator');
@@ -116,8 +131,15 @@ class RCCWP_Processor {
 			// ------------ Groups
 			case 'finish-create-custom-group':
 				include_once('RCCWP_CustomGroup.php');
+				$default = array(
+				  'custom-write-panel-id' => '',
+				  'custom-group-name' => '',
+				  'custom-group-duplicate' => ''
+				);
+				$values = array_merge($default,$_POST);
+				
 				$customGroupId = RCCWP_CustomGroup::Create(
-						$_POST['custom-write-panel-id'], $_POST['custom-group-name'], $_POST['custom-group-duplicate'], $_POST['custom-group-at_right']);
+						$values['custom-write-panel-id'], $values['custom-group-name'], $values['custom-group-duplicate'], NULL);
 				break;
 				
 			case 'delete-custom-group':
@@ -132,7 +154,7 @@ class RCCWP_Processor {
 					$_REQUEST['custom-group-id'],
 					$_POST['custom-group-name'],
 					$_POST['custom-group-duplicate'],
-					$_POST['custom-group-at_right']);
+					NULL);
 				break;
 										
 			// ------------ Fields
@@ -235,18 +257,35 @@ class RCCWP_Processor {
 					}
 				}
 				
+				$default = array(
+				  'custom-group-id' => '',
+				  'custom-field-name' => '',
+				  'custom-field-description' => '',
+				  'custom-field-order' => '',
+				  'custom-field-required' => '',
+				  'custom-field-type' => '',
+				  'custom-field-options' => '',
+				  'custom-field-default-value' => '',
+				  'prop' => '',
+				  'custom-field-duplicate' => '',
+				  'custom-field-helptext' => ''
+				);
+				
+				$_POST['prop'] = $custom_field_properties;
+				$save = array_merge($default,$_POST);
+				
 				RCCWP_CustomField::Create(
-					$_POST['custom-group-id'],
-					$_POST['custom-field-name'],
-					$_POST['custom-field-description'],
-					$_POST['custom-field-order'],
-					$_POST['custom-field-required'],
-					$_POST['custom-field-type'],
-					$_POST['custom-field-options'],
-					$_POST['custom-field-default-value'],
-					$custom_field_properties,
-					$_POST['custom-field-duplicate'],
-					$_POST['custom-field-helptext']
+					$save['custom-group-id'],
+					$save['custom-field-name'],
+					$save['custom-field-description'],
+					$save['custom-field-order'],
+					$save['custom-field-required'],
+					$save['custom-field-type'],
+					$save['custom-field-options'],
+					$save['custom-field-default-value'],
+					$save['prop'],
+					$save['custom-field-duplicate'],
+					$save['custom-field-helptext']
 					);
 				break;
 				
@@ -314,18 +353,35 @@ class RCCWP_Processor {
 					}
 				}
 				
+				$default = array(
+  			  'custom-group-id' => '',
+  				'custom-field-name' => '',
+  				'custom-field-description' => '',
+  				'custom-field-order' => '',
+  				'custom-field-required' => '',
+  				'custom-field-type' => '',
+  				'custom-field-options' => '',
+  				'custom-field-default-value' => '',
+  				'prop' => '',
+  				'custom-field-duplicate' => '',
+  				'custom-field-helptext' => ''
+  			);
+
+  			$_POST['prop'] = $custom_field_properties;
+  			$save = array_merge($default,$_POST);
+				
 				RCCWP_CustomField::Update(
-					$_POST['custom-field-id'],
-					$_POST['custom-field-name'],
-					$_POST['custom-field-description'],
-					$_POST['custom-field-order'],
-					$_POST['custom-field-required'],
-					$_POST['custom-field-type'],
-					$_POST['custom-field-options'],
-					$_POST['custom-field-default-value'],
-					$custom_field_properties,
-					$_POST['custom-field-duplicate'],
-					$_POST['custom-field-helptext']
+					$save['custom-field-id'],
+					$save['custom-field-name'],
+					$save['custom-field-description'],
+					$save['custom-field-order'],
+					$save['custom-field-required'],
+					$save['custom-field-type'],
+					$save['custom-field-options'],
+					$save['custom-field-default-value'],
+					$save['prop'],
+					$save['custom-field-duplicate'],
+					$save['custom-field-helptext']
 					);
 					
 				break;
@@ -334,12 +390,8 @@ class RCCWP_Processor {
 				
 				include_once('RCCWP_CustomField.php');
 				
-				if(isset($_REQUEST['custom-group-id']) && !empty($_REQUEST['custom-group-id']) )
-					$customGroupId = (int)$_REQUEST['custom-group-id'];
-	
-				$customGroup = RCCWP_CustomGroup::Get($customGroupId);
-	
-				RCCWP_CustomField::Delete($_REQUEST['custom-field-id']);
+				if(isset($_REQUEST['custom-field-id']) && !empty($_REQUEST['custom-field-id']) )
+					RCCWP_CustomField::Delete($_REQUEST['custom-field-id']);
 	
 				break;
 
@@ -352,8 +404,7 @@ class RCCWP_Processor {
 					
 					$CUSTOM_WRITE_PANEL = RCCWP_Post::GetCustomWritePanel();
 					
-					
-					if (isset($CUSTOM_WRITE_PANEL) && $CUSTOM_WRITE_PANEL > 0){
+					if (isset($CUSTOM_WRITE_PANEL) && !empty($CUSTOM_WRITE_PANEL) ){
 								
 						ob_start(array('RCCWP_WritePostPage', 'ApplyCustomWritePanelAssignedCategories'));
 						
@@ -400,27 +451,10 @@ class RCCWP_Processor {
 					} else {
 						include_once('RCCWP_Options.php');
 						
-						$options['hide-write-post'] = $_POST['hide-write-post'];
-						$options['hide-write-page'] = $_POST['hide-write-page'];
-						$options['hide-visual-editor'] = $_POST['hide-visual-editor'];
-						$options['prompt-editing-post'] = $_POST['prompt-editing-post'];
-						$options['assign-to-role'] = $_POST['assign-to-role'];
-						$options['use-snipshot'] = $_POST['use-snipshot'];
-						$options['enable-editnplace'] = $_POST['enable-editnplace'];
-						$options['eip-highlight-color'] = $_POST['eip-highlight-color'];
-						$options['enable-swfupload'] = $_POST['enable-swfupload'] ;
-						$options['enable-browserupload'] = $_POST['enable-browserupload'];
-						$options['default-custom-write-panel'] = $_POST['default-custom-write-panel'];
-						$options['enable-HTMLPurifier'] = $_POST['enable-HTMLPurifier'];
-						$options['tidy-level'] = $_POST['tidy-level'];
-						$options['canvas_show_instructions'] = $_POST['canvas_show_instructions'];
-						$options['canvas_show_zone_name'] = $_POST['canvas_show_zone_name'];
-						$options['canvas_show'] = $_POST['canvas_show'];
-						$options['ink_show'] = $_POST['ink_show'];
-						$options['hide-non-standart-content'] = $_POST['hide-non-standart-content'];
-						$options['condense-menu'] = $_POST['condense-menu'];
-						
-						RCCWP_Options::Update($options);
+						$save_options = $_POST;
+						unset($save_options['uninstall-custom-write-panel']);
+						unset($save_options['update-custom-write-panel-options']);
+						RCCWP_Options::Update($save_options);
 						$EnP = RCCWP_Application::create_EditnPlace_css(TRUE);
 					}
 				}

@@ -55,6 +55,7 @@ if(file_exists(MF_UPLOAD_FILES_DIR.$image_name)){
 	//Displaying the image
 	$size = getimagesize(MF_UPLOAD_FILES_DIR.$image_name);
 	$handle = fopen(MF_UPLOAD_FILES_DIR.$image_name, "rb");
+	$contents = NULL;
 	while (!feof($handle)) {
 		$contents .= fread($handle, 1024);
 	}
@@ -75,6 +76,7 @@ if(file_exists(MF_UPLOAD_FILES_DIR.$image_name)){
 	if(file_exists($thumb_path)){
 		$size = getimagesize($thumb_path);
 		$handle = fopen($thumb_path, "rb");
+		$contents = NULL;
 		while (!feof($handle)) {
 			$contents .= fread($handle, 1024);
 		}

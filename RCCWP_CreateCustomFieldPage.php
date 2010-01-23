@@ -70,7 +70,7 @@ class RCCWP_CreateCustomFieldPage
 		
 		<tr valign="top">
 			<th scope="row"><?php _e("Can be duplicated", $mf_domain); ?>:</th>
-			<td><input name="custom-field-duplicate" id="custom-field-duplicate" type="checkbox" value="1" <?php echo $custom_field->duplicate==1 ? "checked":"" ?>/></td>
+			<td><input name="custom-field-duplicate" id="custom-field-duplicate" type="checkbox" value="1" /></td>
 		</tr>
 
 		<tr valign="top">
@@ -165,6 +165,18 @@ class RCCWP_CreateCustomFieldPage
 		global $mf_domain;
 		$current_field = RCCWP_CustomField::GetCustomFieldTypes($_POST['custom-field-type']);
 		$customGroupID = $_REQUEST['custom-group-id'];
+		$default = array(
+		  'custom-group-id' => '',
+		  'custom-field-name' => '',
+		  'custom-field-description' => '',
+		  'custom-field-duplicate' => '',
+		  'custom-field-order' => '',
+		  'custom-field-required' => '',
+		  'custom-field-type' => '',
+		  'custom-field-helptext' => '',
+		);
+		$values = array_merge($default,$_POST);
+		
 		?>
 		
 		<div class="wrap">
@@ -173,14 +185,14 @@ class RCCWP_CreateCustomFieldPage
 		
 		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('finish-create-custom-field')?>" method="post" id="continue-create-new-field-form">
 		
-		<input type="hidden" name="custom-group-id" 	value="<?php echo $_POST['custom-group-id']?>" />
-		<input type="hidden" name="custom-field-name" 		value="<?php echo htmlspecialchars($_POST['custom-field-name'])?>" />
-		<input type="hidden" name="custom-field-description" 	value="<?php echo htmlspecialchars($_POST['custom-field-description'])?>" />
-		<input type="hidden" name="custom-field-duplicate" value="<?php echo htmlspecialchars($_POST['custom-field-duplicate'])?>" />
-		<input type="hidden" name="custom-field-order" 		value="<?php echo $_POST['custom-field-order']?>" />
-		<input type="hidden" name="custom-field-required" 		value="<?php echo $_POST['custom-field-required']?>" />
-		<input type="hidden" name="custom-field-type" 		value="<?php echo $_POST['custom-field-type']?>" />
-		<input type="hidden" name="custom-field-helptext" 		value="<?php echo $_POST['custom-field-helptext']?>" />
+		<input type="hidden" name="custom-group-id" 	value="<?php echo $values['custom-group-id']?>" />
+		<input type="hidden" name="custom-field-name" 		value="<?php echo htmlspecialchars($values['custom-field-name'])?>" />
+		<input type="hidden" name="custom-field-description" 	value="<?php echo htmlspecialchars($values['custom-field-description'])?>" />
+		<input type="hidden" name="custom-field-duplicate" value="<?php echo htmlspecialchars($values['custom-field-duplicate'])?>" />
+		<input type="hidden" name="custom-field-order" 		value="<?php echo $values['custom-field-order']?>" />
+		<input type="hidden" name="custom-field-required" 		value="<?php echo $values['custom-field-required']?>" />
+		<input type="hidden" name="custom-field-type" 		value="<?php echo $values['custom-field-type']?>" />
+		<input type="hidden" name="custom-field-helptext" 		value="<?php echo $values['custom-field-helptext']?>" />
 
 		<!-- Hidden value for Image/Photo' Css Class-->
 		<input type="hidden" name="custom-field-css" value="<?php echo $_POST['custom-field-css']?>" />

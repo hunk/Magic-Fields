@@ -83,13 +83,13 @@ $STANDARD_FIELDS = array();
 // Standard fields
 $STANDARD_FIELDS[12] = new PanelFields(12, 'Post/Page', array('postdivrich'), true, false, true, true, 1000);
 $STANDARD_FIELDS[2] = new PanelFields(2, 'Categories', array('categorydiv'), false, false, true, false, 1000);
-$STANDARD_FIELDS[14] = new PanelFields(14, 'Tags', array('tagsdiv'), true, false, true, false, 1000);
+$STANDARD_FIELDS[14] = new PanelFields(14, 'Post Tags', array('tagsdiv-post_tag'), true, false, true, false, 1000);
 
 // Common advanced fields
 
 $STANDARD_FIELDS[11] = new PanelFields(11, 'Custom Fields', array('postcustom', 'pagepostcustom', 'pagecustomdiv'), true, true, true, true, 1000);
-$STANDARD_FIELDS[3] = new PanelFields(3, 'Comments & Pings', array('commentstatusdiv', 'pagecommentstatusdiv'), true, true, true, true, 1000);
-$STANDARD_FIELDS[4] = new PanelFields(4, 'Password', array('passworddiv', 'pagepassworddiv'), true, true, true, true, 1000);
+$STANDARD_FIELDS[3] = new PanelFields(3, 'Discussion', array('commentstatusdiv', 'pagecommentstatusdiv'), true, true, true, true, 1000);
+
 $STANDARD_FIELDS[18] = new PanelFields(4, 'Post/Page Author', array('authordiv', 'pageauthordiv'), true, true, true, true, 1000);
 
 // Post-specific advanced fields
@@ -98,9 +98,10 @@ $STANDARD_FIELDS[10] = new PanelFields(10, 'Trackbacks', array('trackbacksdiv'),
 $STANDARD_FIELDS[5] = new PanelFields(5, 'Post Slug', array('slugdiv'), true, true, true, false, 1000);
 
 // Page-specific advanced fields
-$STANDARD_FIELDS[15] = new PanelFields(15, 'Page Parent', array('pageparentdiv'), true, true, false, true, 1000);
-$STANDARD_FIELDS[16] = new PanelFields(16, 'Page Template', array('pagetemplatediv'), true, true, false, true, 1000);
-$STANDARD_FIELDS[17] = new PanelFields(17, 'Page Order', array('pageorderdiv'), true, true, false, true, 1000);										
+$STANDARD_FIELDS[15] = new PanelFields(15, 'Page Attributes', array('pageparentdiv'), true, true, false, true, 1000);
+$STANDARD_FIELDS[16] = new PanelFields(16, 'Page Slug', array('pageslugdiv'), true, true, false, true, 1000);
+$STANDARD_FIELDS[17] = new PanelFields(16, 'Page Revisions', array('revisionsdiv'), true, true, false, true, 1000);
+									
 
 
 

@@ -109,12 +109,12 @@ class RCCWP_CustomWritePanelPage
 				<select name="page_template" id="page_template">
 					<option value='default'><?php _e('Default Template'); ?></option>
 					<?php $themes_defaults = get_page_templates();
+					$theme_select=NULL;
 					foreach($themes_defaults as $v => $k) {
 						if ($customWritePanelType == 'page'){
-							$theme_select=NULL;
 							if($customThemePage == $k){ $theme_select='SELECTED';}
 						}?>
-					<option value='<?php echo $k?>' <?php echo $theme_select?> ><?php echo $v?></option>
+					<option value='<?php echo $k?>' <?php echo $theme_select; ?> ><?php echo $v?></option>
 					<?php } ?>
 					<?php  ?>
 				</select>
@@ -337,9 +337,9 @@ class RCCWP_CustomWritePanelPage
 				<?php echo $customWritePanel->name?>
 				<span style="font-size:small">
 					&nbsp; &nbsp;
-					<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $panel->id); ?>" ><?php _e('Edit', $mf_domain); ?></a>|
-					<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-write-panel', $panel->id); ?>" onclick="return confirmBeforeDelete();"><?php _e('Delete', $mf_domain); ?></a>|
-					<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('export-custom-write-panel', $panel->id); ?>" ><?php _e('Export', $mf_domain); ?></a>
+					<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $customWritePanel->id); ?>" ><?php _e('Edit', $mf_domain); ?></a>|
+					<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-write-panel', $customWritePanel->id); ?>" onclick="return confirmBeforeDelete();"><?php _e('Delete', $mf_domain); ?></a>|
+					<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('export-custom-write-panel', $customWritePanel->id); ?>" ><?php _e('Export', $mf_domain); ?></a>
 				</span>
 			</h2>
 			<p id="post-search" style="margin-top:6px">
