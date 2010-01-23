@@ -398,6 +398,7 @@ function get_group($name_group,$post_id=NULL){
 			case $FIELD_TYPES["dropdown_list"]:
 			case $FIELD_TYPES["color_picker"]:
 			case $FIELD_TYPES["slider"]:
+			case $FIELD_TYPES["related_type"]:
 				$info[$data->order_id][$data->field_name][$data->field_count] = $data->meta_value;
 				break;
 			case $FIELD_TYPES['multiline_textbox']:
@@ -497,6 +498,7 @@ function get_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 			case $FIELD_TYPES["dropdown_list"]:
 			case $FIELD_TYPES["color_picker"]:
 			case $FIELD_TYPES["slider"]:
+			case $FIELD_TYPES["related_type"]:
 				$info[$data->field_count] = $data->meta_value;
 				break;
 			case $FIELD_TYPES['multiline_textbox']:
