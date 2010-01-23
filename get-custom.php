@@ -316,42 +316,19 @@ function create_image($options)
 		}
 	}
 	// remove the ? on the params if it happened to be there
-	if (substr($fieldObject['params'], 0, 1) == "?"){
-		$fieldObject['params'] = substr($fieldObject['params'], 1);
-	}
+	if( isset($fieldObject['params']) && !empty($fieldObject['params']) ){
+	  if (substr($fieldObject['params'], 0, 1) == "?"){
+		  $fieldObject['params'] = substr($fieldObject['params'], 1);
+	  }
+  }
 
 	// check if exist params, if not exist params, return original image
 	if (empty($fieldObject['params']) && (FALSE === strstr($fieldValue, "&"))){
 		$fieldValue = MF_FILES_URI.$fieldValue;
-	}else{ 
-		//check if exist thumb image, if exist return thumb image
-		$md5_params = md5($fieldObject['params']);
-		if (file_exists(MF_FILES_PATH.'th_'.$md5_params."_".$fieldValue)) {
-			$fieldValue = MF_FILES_URI.'th_'.$md5_params."_".$fieldValue;
-		}else{
-			//generate thumb
-			include_once(dirname(__FILE__)."/thirdparty/phpthumb/phpthumb.class.php");
-			$phpThumb = new phpThumb();
-			$phpThumb->setSourceFilename(MF_FILES_PATH.$fieldValue);
-			$create_md5_filename = 'th_'.$md5_params."_".$fieldValue;
-			$output_filename = MF_FILES_PATH.$create_md5_filename;
-			$final_filename = MF_FILES_URI.$create_md5_filename;
-
-			$params_image = explode("&",$fieldObject['params']);
-			foreach($params_image as $param){
-				if($param){
-					$p_image=explode("=",$param);
-					$phpThumb->setParameter($p_image[0], $p_image[1]);
-				}
-			}
-			if ($phpThumb->GenerateThumbnail()) {
-				if ($phpThumb->RenderToFile($output_filename)) {
-					$fieldValue = $final_filename;
-				}
-			}
-		}
+	}else{
+	  //generate or check de thumb
+	  $fieldValue = aux_image($fieldValue,$fieldObject['params']);
 	}
-	
 	if($tag_img){
 		// make sure the attributes are an array
 		if( !is_array($attr) ) $attr = (array) $attr;
@@ -363,6 +340,7 @@ function create_image($options)
 		
 		// ok, put it together now
 		if(count($attr)){
+		  $add_attr = NULL;
 			foreach($attr as $k => $v){
 				$add_attr .= $k."='".$v."' ";
 			}
@@ -374,6 +352,51 @@ function create_image($options)
 		$finalString = $fieldValue;
 	}
 	return $finalString;
+}
+
+function aux_image($fieldValue,$params_image){
+	$md5_params = md5($params_image);
+	if (file_exists(MF_CACHE_DIR.'th_'.$md5_params."_".$fieldValue)) {
+		$fieldValue = MF_CACHE_URI.'th_'.$md5_params."_".$fieldValue;
+	}else{
+	//generate thumb
+	$create_md5_filename = 'th_'.$md5_params."_".$fieldValue;
+	$output_filename = MF_CACHE_DIR.$create_md5_filename;
+	$final_filename = MF_CACHE_URI.$create_md5_filename;
+
+  $default = array(
+    'zc'=> 1,
+  	'w'	=> 100,
+  	'h'	=> 100,
+  	'q'	=>  85,
+  	'src' => MF_FILES_PATH.$fieldValue
+  );
+
+	$params_image = explode("&",$params_image);
+	foreach($params_image as $param){
+		if($param){
+			$p_image=explode("=",$param);
+			$default[$p_image[0]] = $p_image[1];
+		}
+	}
+	
+	$MFthumb = MF_PATH.'/MF_thumb.php';
+  require_once($MFthumb);
+	$thumb = new mfthumb();
+	$thumb_path = $thumb->image_resize(
+	  $default['src'],
+	  $default['w'],
+	  $default['h'],
+	  $default['zc'],
+	  $output_filename,
+	  $default['q']
+	);
+	
+	if ( is_wp_error($thumb_path) )
+     return $thumb_path->get_error_message();
+  $fieldValue = $final_filename;
+  }
+  return $fieldValue;
 }
 
 function get_group($name_group,$post_id=NULL){
@@ -432,35 +455,6 @@ function get_group($name_group,$post_id=NULL){
 		}
 	}
 	return $info;
-}
-
-function aux_image($fieldValue,$params_image){
-	$md5_params = md5($params_image);
-	if (file_exists(MF_FILES_PATH.'th_'.$md5_params."_".$fieldValue)) {
-		$fieldValue = MF_FILES_URI.'th_'.$md5_params."_".$fieldValue;
-	}else{
-		//generate thumb
-		include_once(dirname(__FILE__)."/thirdparty/phpthumb/phpthumb.class.php");
-		$phpThumb = new phpThumb();
-		$phpThumb->setSourceFilename(MF_FILES_PATH.$fieldValue);
-		$create_md5_filename = 'th_'.$md5_params."_".$fieldValue;
-		$output_filename = MF_FILES_PATH.$create_md5_filename;
-		$final_filename = MF_FILES_URI.$create_md5_filename;
-
-		$params_image = explode("&",$params_image);
-		foreach($params_image as $param){
-			if($param){
-				$p_image=explode("=",$param);
-				$phpThumb->setParameter($p_image[0], $p_image[1]);
-			}
-		}
-		if ($phpThumb->GenerateThumbnail()) {
-			if ($phpThumb->RenderToFile($output_filename)) {
-				$fieldValue = $final_filename;
-			}
-		}
-	}
-	return $fieldValue;
 }
 
 function get_label($fieldName,$post_id=NULL) {

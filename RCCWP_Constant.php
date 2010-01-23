@@ -110,6 +110,7 @@ $STANDARD_FIELDS[17] = new PanelFields(16, 'Page Revisions', array('revisionsdiv
 
 // files of magic fields is wp-content/files_mf/
 define('MF_FILES_NAME','files_mf');
+define('MF_CACHE_NAME','cache');
 
 if($is_wordpress_mu){
 	$current_site = get_current_site();	
@@ -122,13 +123,15 @@ if($is_wordpress_mu){
 define('MF_FILES_PATH', $path_content.DIRECTORY_SEPARATOR.MF_FILES_NAME.DIRECTORY_SEPARATOR);
 
 if($is_wordpress_mu){
-	define('MF_FILES_URI',WP_CONTENT_URL.DIRECTORY_SEPARATOR."blogs.dir".DIRECTORY_SEPARATOR.$blog_id.DIRECTORY_SEPARATOR.MF_FILES_NAME.DIRECTORY_SEPARATOR);
-
+	define('MF_FILES_URI',WP_CONTENT_URL."/"."blogs.dir"."/".$blog_id."/".MF_FILES_NAME."/");
+  define('MF_CACHE_URI',WP_CONTENT_URL."/"."blogs.dir"."/".$blog_id."/".MF_FILES_NAME."/".MF_CACHE_NAME."/");
 }else{
 	define('MF_FILES_URI', WP_CONTENT_URL."/".MF_FILES_NAME."/");
+	define('MF_CACHE_URI', WP_CONTENT_URL."/".MF_FILES_NAME."/".MF_CACHE_NAME."/");
 }
 define('MF_UPLOAD_FILES_DIR', MF_FILES_PATH);
 define('MF_IMAGES_CACHE_DIR', MF_FILES_PATH.'phpthumbcache'.DIRECTORY_SEPARATOR);
+define('MF_CACHE_DIR', MF_FILES_PATH . MF_CACHE_NAME . DIRECTORY_SEPARATOR);
 
 // Capabilities names
 define('MF_CAPABILITY_PANELS', "Create Magic Fields Panels");

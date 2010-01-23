@@ -45,7 +45,7 @@ class RCCWP_Application
 	
 			// Giving full rights to folders. thanks Akis Kesoglou 
 			wp_mkdir_p(MF_UPLOAD_FILES_DIR);
-			wp_mkdir_p(MF_IMAGES_CACHE_DIR);
+			wp_mkdir_p(MF_CACHE_DIR);
 			
 			//Initialize options
 			$options['hide-write-post'] = 0;
@@ -423,13 +423,13 @@ class RCCWP_Application
 		$dir_list2 = "";
 	
 		wp_mkdir_p(MF_UPLOAD_FILES_DIR);
-		wp_mkdir_p(MF_IMAGES_CACHE_DIR);
+		wp_mkdir_p(MF_CACHE_DIR);
 	
 		// Giving full rights to folders. thanks Akis Kesoglou 
-		if (!is_dir(MF_IMAGES_CACHE_DIR)){
-			$dir_list2.= "<li>".MF_IMAGES_CACHE_DIR . "</li>";
-		}elseif (!is_writable(MF_IMAGES_CACHE_DIR)){
-			$dir_list.= "<li>".MF_IMAGES_CACHE_DIR . "</li>";
+		if (!is_dir(MF_CACHE_DIR)){
+			$dir_list2.= "<li>".MF_CACHE_DIR . "</li>";
+		}elseif (!is_writable(MF_CACHE_DIR)){
+			$dir_list.= "<li>".MF_CACHE_DIR . "</li>";
 		}
 
 		if (!is_dir(MF_UPLOAD_FILES_DIR)){
