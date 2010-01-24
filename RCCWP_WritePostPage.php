@@ -886,168 +886,47 @@ class RCCWP_WritePostPage
 		<?php }
 	}
 
-
 	function PhotoInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		global $mf_domain;
 		
-		$filepath 		= $inputName . '_filepath'; /// <---- ¿?
-		$noimage 		= ""; // <---- if no exists image? 
-
-		if ($customField->required_field) $requiredClass = "field_required";
-		$imageThumbID = "";
-		$imageThumbID = "img_thumb_".$inputName; 
-
-		if (isset($_REQUEST['post'])) {
-
-			$value = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
-
-			$path = PHPTHUMB."?src=".MF_FILES_URI;
-			$valueRelative = $value;
-			$value = $path.$value;
-		
-
-
-			if(!(strpos($value, 'http') === FALSE ) && !empty($valueRelative)){
-				$hidValue = str_replace('"', "'", $valueRelative);
-			$value = "<img src='".$value."' class='magicfields' />"; 
-			
-			}else{
-				$value = "<img src='".MF_URI."images/noimage.jpg' id='".$imageThumbID."'/>";
-			}	
-			
-		} else if( !empty($customField->value)){
-			
-			$path = PHPTHUMB."?src=".MF_FILES_PATH;
-			$valueRelative = $customField->value;
-			$value  = $path.$customField->value;
-
-			if(!(strpos($value, 'http') === FALSE)){
-				$hidValue = str_replace('"', "'", $valueRelative);
-				$value = "<img src='".$value."' class='magicfields' />";
-			}
+		if(!empty($_GET['post'])){
+			$hidValue = RCCWP_CustomField::GetCustomFieldValues(true,$_GET['post'], $customField->name, $groupCounter, $fieldCounter);
 		}else{
-			$noimage = "<img src='".MF_URI."images/noimage.jpg' id='".$imageThumbID."'/>";
+			$hidValue = '';
 		}
 		
+		$filepath	= $inputName . '_filepath';
+		//The Image is required?
+		if ($customField->required_field) $requiredClass = "field_required";
 		
-		if(empty($valueRelative) || $valueRelative == '') {
+		$imageThumbID = "img_thumb_".$inputName; 
+		$value = "<img src='".MF_URI."images/noimage.jpg' id='{$imageThumbID}'/>";
 
-			$noimage = "<img src='".MF_URI."images/noimage.jpg' id='".$imageThumbID."'/>";
+		if( !empty($hidValue)){
+			$path = PHPTHUMB."?src=".MF_FILES_URI;
+			$valueRelative = $hidValue;
+			$value  = $path.$hidValue."&w=150&h=120&zc=1";
+			$value  = "<img src='{$value}'/>";
 		}
-
-		// If the field is at right, set a constant width to the text box
-		$field_group = RCCWP_CustomGroup::Get($customField->group_id);
-		$urlInputSize = false;
-		$is_canvas = 0;
-		if ($field_group->at_right){
-			$urlInputSize = 5;
-			$is_canvas = 1;
-		}
-	
-		?>
-
-		<p 	class="error_msg_txt" 
-			id="upload_progress_<?php echo $inputName?>"
-			style="visibility:hidden;height:0px"></p>
-			
+?>
+		<p 	class="error_msg_txt" id="upload_progress_<?php echo $inputName?>" style="visibility:hidden;height:0px">
+		</p>	
 		<div id="image_photo" style="width:150px; float: left">
-		
+			<?php echo $value;?>
+		<div id="photo_edit_link_<?php echo $inputName ?>" class="photo_edit_link"> 
 			<?php
-			
-			if(!empty($valueRelative) && $valueRelative != "") {
-				if(!(strpos($value, '<img src') === FALSE)) {
-					$valueLinkArr = explode("'", $value);
-					$valueLink = $valueLinkArr[1];
-					
-					if(!(strpos($value, '&sw') === FALSE)) {
-						// Calculating Image Width/Height
-						$arrSize = explode("=",$value);
-						$arrSize1 = explode("&",$arrSize[3]);
-						$arrSize2 = explode("&",$arrSize[4]);
-
-						$imageWidth = $arrSize1[0];
-						$imageHeight = $arrSize2[0];
-						// END
-
-						$valueArr = explode("&sw", $value);
-						$valueArr = explode("'", $valueArr[1]);
-						$value = str_replace("&sw".$valueArr[0]."'", "&sw".$valueArr[0]."&w=150&h=120' align='center' id='".$imageThumbID."'", $value);
-					} else if(!(strpos($value, '&w') === FALSE)) {
-						// Calculating Image Width/Height
-						$arrSize = explode("=",$value);
-						$arrSize1 = explode("&",$arrSize[3]);
-						$arrSize2 = explode("'",$arrSize[4]);
-
-						$imageWidth = $arrSize1[0];
-						$imageHeight = $arrSize2[0];
-						// END
-
-						$valueArr = explode("&", $value);
-						$valueArr = explode("'", $valueArr[2]);
-						$value = str_replace($valueArr[0], "&w=150&h=120' align='left' id='".$imageThumbID."'", $value);
-					} else {
-						// Calculating Image Width/Height
-						if(!empty($params)){
-						$arrSize = explode("&",$params);
-						$arrSize1 = explode("=",$arrSize[1]);
-						$arrSize2 = explode("=",$arrSize[2]);
-						}else{
-							$arrSize = '';
-							$arrSize1 = array('','');
-							$arrSize2 = array('','');
-						}
-						
-						$imageWidth = $arrSize1[1];
-						$imageHeight = $arrSize2[1];
-						// END
-
-						$valueArr = explode("'", $value);
-						$value = str_replace($valueArr[1], $valueArr[1]."&w=150' id='".$imageThumbID."' align='", $value);
-					}
-					
-					echo '<a style="display: block;margin-left: auto;margin-right: auto " href="' . $valueLink . '" target="_blank">' . $value .'</a>';
+				if(isset($_REQUEST['post'])){	
+					echo "&nbsp;<strong><a href='#remove' class='remove' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a></strong>";
 				}
-			}else{
-				$valueLink = '';
-			}
-			
-			echo $noimage;
-			$arrSize = explode("phpThumb.php?src=",$valueLink);
-			
-			if(!empty($arrSize[1])){
-				$fileLink = $arrSize[1];
-			}else{
-				$fileLink = '';
-			}
-			
-			$andPos = strpos($fileLink,"?");
-			
-			
-			if ($andPos === FALSE)
-				$andPos = strpos($fileLink,"&");
-		
-			// Remove & parameters from file path
-			if ($andPos>0)	$fileLink = substr($fileLink, 0, $andPos);
-		
-			$ext = substr($fileLink, -3, 3);	
-			?>	
-		
-			<div id="photo_edit_link_<?php echo $inputName ?>" class="photo_edit_link"> 
-				<?php
-				if(isset($_REQUEST['post']) && $hidValue != '')
-				{ 	
-				   echo "&nbsp;<strong><a href='#remove' class='remove' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a></strong>";			   
-				}
-				?>			
-			</div>
+			?>
 		</div>
-		
+		</div>
 		<div id="image_input" style="padding-left: 170px;">
-			<?php
-				if(empty($requiredClass)){
-					$requiredClass ='';
-				}
-			?>		
+	<?php
+	if(empty($requiredClass)){
+		$requiredClass ='';
+	}
+	?>		
 			<div class="mf_custom_field">
 			<input tabindex="3" 
 				id="<?php echo $inputName?>" 
@@ -1061,7 +940,7 @@ class RCCWP_WritePostPage
 			
 			<?php
 			include_once( "RCCWP_SWFUpload.php" ) ;
-			RCCWP_SWFUpload::Body($inputName, 1, $is_canvas, $urlInputSize) ;
+			RCCWP_SWFUpload::Body($inputName, 1, 0,false);
 			?>
 			</div>
 		</div>
