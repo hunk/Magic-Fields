@@ -8,6 +8,7 @@ class RCCWP_EditnPlace {
 	 * editnplace feature
 	 */
 	function EditnPlaceJavascript(){
+		wp_enqueue_script('jquery');	
 		wp_enqueue_script(	'EditnPlace',
 							MF_URI.'js/editnplace.js',
 							array('prototype')
@@ -49,28 +50,28 @@ EOD;
 }
 
 /** 
- *   TODO review all the EIP_* functions, i think is not used anymore
+ *   TODO review all the EIP_* functions, i think to some of them are not used anymore
  */
 function EIP_title(){
 	global $post;
 	$post_id = $post->ID;
-	echo " EIP_title "." EIP_postid$post_id ";
+	echo " EIP_title "." EIP_postid_{$post_id} ";
 }
 
 function EIP_content(){
 	global $post;
 	$post_id = $post->ID;
-	echo " EIP_content "." EIP_postid$post_id ";
+	echo "EIP_content "." EIP_postid_{$post_id} ";
 }
 
 function EIP_textbox($meta_id){
 	global $post;
 	$post_id = $post->ID;
-	return " EIP_textbox "." EIP_postid$post_id "." EIP_mid_".$meta_id;
+	return "EIP_textbox"." EIP_postid_{$post_id}"." EIP_mid_".$meta_id;
 }
 
 function EIP_mulittextbox($meta_id){
 	global $post;
 	$post_id = $post->ID;
-	return " EIP_mulittextbox "." EIP_postid$post_id "." EIP_mid_".$meta_id;
+	return "EIP_mulittextbox"." EIP_postid_{$post_id}"." EIP_mid_".$meta_id;
 }

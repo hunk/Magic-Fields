@@ -1,7 +1,39 @@
+/**
+ * Edit In place
+ *
+ */
+jQuery(document).ready(function(){
+    jQuery('.EIP_textbox').click(add_editor);
+});
+
+add_editor = function(){
+    // Create save/cancel buttons
+    saveCancel =    '<div id="save_cancel_field" class="EIPSaveCancel" style="display:block;">'+
+                        '<div id="savingDiv" style="display:none">saving ...</div>'+
+                        '<div id="saveButton">'+
+                            '<input type="button" value="Save" onclick="saveField()" /> Or <input type="button" value="Cancel" onclick="cancelSaveField()" />'+
+                        '</div>'+
+                    '</div>';
+    node_clases = jQuery(this).attr('class').split(" ");
+    
+    //Getting the type of field (inputtext or multiline)
+    type = node_clases[0];
+    type = type.split("_")[1];
+    
+    //Getting the post id
+    post_id = node_clases[1];
+    post_id =  post_id.split("_")[2];
+    
+    alert(type)
+    alert(post_id);
+    
+	jQuery(document.body).prepend(saveCancel);
+}
+
 var currentItemInEdit;
 
 
-Event.observe(window, 'load', CreateEditnPlaceObjects);
+//Event.observe(window, 'load', CreateEditnPlaceObjects);
 
 
 var EIPObject = Class.create({
