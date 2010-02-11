@@ -1,4 +1,6 @@
 <?php
+
+//TODO: The Original Image MUST be  bigger to the thumb
 //use wp-load. Normally right here, but if it's not...
 if( file_exists('../../../../../wp-load.php')){
 	require_once('../../../../../wp-load.php');
@@ -21,7 +23,7 @@ $default = array(
 					'zc'=> 1,
 					'w'	=> 0,
 					'h'	=> 0,
-					'q'	=>  85,
+					'q'	=>  95,
 					'src' => ''
 				);
 				
@@ -46,10 +48,8 @@ if(!in_array($extension,array('jpg','png','jpg'))){
 	return false;
 }
 
-
 //name with a png extension
 $image_name = $md5_params."_".$image_name_clean;
-
 //this code can be refactored
 if(file_exists(MF_CACHE_DIR.$image_name)){
 	//Displaying the image
@@ -71,7 +71,6 @@ if(file_exists(MF_CACHE_DIR.$image_name)){
 	//generating the image
 	$thumb = new mfthumb();
 	$thumb_path = $thumb->image_resize(MF_UPLOAD_FILES_DIR.$image_name_clean,$params['w'],$params['h'],$params['zc'],MF_CACHE_DIR.$image_name);
-	
 	//Displaying the image
 	if(file_exists($thumb_path)){
 		$size = getimagesize($thumb_path);

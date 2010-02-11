@@ -5,7 +5,11 @@ jQuery(document).ready(function(){
 remove_photo = function(){
      if(confirm("Are you sure?")){
          //get the  name to the image
-         id = jQuery(this).attr('id').split("-")[1];
+         pattern =  /remove\-(.+)/i;
+         id = jQuery(this).attr('id');
+         id = pattern.exec(id);
+         id = id[1];
+
          image = jQuery('#'+id).val();
          jQuery("#"+id+"_deleted").val(1);
          jQuery("#img_thumb_"+id).attr("src",mf_path+"images/noimage.jpg");
