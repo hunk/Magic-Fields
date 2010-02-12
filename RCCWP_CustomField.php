@@ -33,7 +33,6 @@ class RCCWP_CustomField {
 	 */
 	function Create($customGroupId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null,$duplicate,$helptext = null) {
 		global $wpdb;
-
 		$name = stripslashes(stripslashes($name));
 		$name = addslashes($name);
 		$name = str_replace(" ","_",$name);

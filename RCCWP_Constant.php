@@ -130,7 +130,6 @@ if($is_wordpress_mu){
 	define('MF_CACHE_URI', WP_CONTENT_URL."/".MF_FILES_NAME."/".MF_CACHE_NAME."/");
 }
 define('MF_UPLOAD_FILES_DIR', MF_FILES_PATH);
-define('MF_IMAGES_CACHE_DIR', MF_FILES_PATH.'phpthumbcache'.DIRECTORY_SEPARATOR);
 define('MF_CACHE_DIR', MF_FILES_PATH . MF_CACHE_NAME . DIRECTORY_SEPARATOR);
 
 // Capabilities names

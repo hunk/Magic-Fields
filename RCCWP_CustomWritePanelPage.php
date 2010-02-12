@@ -1,5 +1,4 @@
 <?php
-
 include_once('RCCWP_CustomWritePanel.php');
 
 class RCCWP_CustomWritePanelPage
@@ -480,3 +479,4 @@ class RCCWP_CustomWritePanelPage
 	}
 	
 }
+?>

@@ -277,3 +277,20 @@ function valid_mime($mime,$file_type){
 	}
 	return false;
 }
+
+/* Loading modules */
+
+add_action( 'plugins_loaded', 'mf_load_modules', 1 );
+
+function mf_load_modules() {
+        $dir = WP_PLUGIN_DIR."/".MF_PLUGIN_DIR."/modules";
+
+        if ( ! ( is_dir( $dir ) && $dh = opendir( $dir ) ) )
+                return false;
+
+        while ( ( $module = readdir( $dh ) ) !== false ) {
+                if ( substr( $module, -4 ) == '.php' ) {
+                        include_once $dir . '/' . $module;
+                }
+        }
+}
