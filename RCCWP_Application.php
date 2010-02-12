@@ -557,7 +557,15 @@ div.nicEdit-panelContain{
 .nicEdit-button {
 	background-color: white !important;
 	border: 0px !important;
-}";
+}
+
+.FEIP_textbox {
+        background-color: #CCC;
+        height: 32px;
+        width: 100%;       
+}
+"
+;
 		$editnplace_css_file = MF_UPLOAD_FILES_DIR.'editnplace.css';
 		$css = explode( "\n", $editnplace_css );
 		if (!file_exists( $editnplace_css_file ) ) {

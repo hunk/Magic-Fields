@@ -49,20 +49,6 @@ EOD;
 	}
 }
 
-/** 
- *   TODO review all the EIP_* functions, i think to some of them are not used anymore
- */
-function EIP_title(){
-	global $post;
-	$post_id = $post->ID;
-	echo " EIP_title "." EIP_postid_{$post_id} ";
-}
-
-function EIP_content(){
-	global $post;
-	$post_id = $post->ID;
-	echo "EIP_content "." EIP_postid_{$post_id} ";
-}
 
 function EIP_textbox($meta_id){
 	global $post;

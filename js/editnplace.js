@@ -2,32 +2,99 @@
  * Edit In place
  *
  */
+mf_content = "";
+mf_post_id = "";
+mf_type = "";
+mf_meta_id = "";
+
 jQuery(document).ready(function(){
     jQuery('.EIP_textbox').click(add_editor);
+    jQuery('.mfceip').live('click',cancel_editor);
+    jQuery('.mfseip').live('click',save_editor);
 });
 
+save_editor = function(){
+    //Putting the new content in the mf_Content var
+    mf_content = jQuery('#FEIP_textbox_'+mf_post_id).val();
+
+    //saving the post
+    values =  "post_id=" + escape(encodeURI(mf_post_id)) +
+	"&meta_id=" + escape(encodeURI(mf_meta_id)) +
+	"&field_value=" + escape(encodeURI(mf_content )) + 
+	"&field_type=" + escape(encodeURI(mf_type));
+
+	jQuery.ajax({
+	    type: "POST",
+        url: JS_MF_URI + 'RCCWP_EditnPlaceResponse.php',
+        data: values,
+        success: function(msg){
+            //removing the input
+            jQuery('#FEIP_textbox_'+mf_post_id).remove();
+
+            //putting the original content in the div
+            jQuery('#mfeip_'+mf_post_id).html(mf_content);
+
+            //restoring the onclick event to the field
+            jQuery('#mfeip_'+mf_post_id).bind('click',add_editor);
+
+            //removing the "savecancel" bar
+            jQuery('#save_cancel_field').remove();
+            //Done            
+        }	    
+	});
+}
+
+cancel_editor = function(){
+    //Remove the  text input
+    jQuery('#FEIP_textbox_'+mf_post_id).remove();
+
+    //putting the original content in the div
+    jQuery('#mfeip_'+mf_post_id).html(mf_content);
+    
+    //restoring the onclick event to the field
+    jQuery('#mfeip_'+mf_post_id).bind('click',add_editor);
+    
+    //removing the "savecancel" bar
+    jQuery('#save_cancel_field').remove();
+    
+    //Done
+    
+}
+
 add_editor = function(){
+    //Getting the classes of the div
+    node_clases = jQuery(this).attr('class').split(" ");
+    
+    //Getting the type of field (inputtext or multiline)
+    mf_type = node_clases[0];
+    mf_type = mf_type.split("_")[1];
+
+    //Getting the post id
+    mf_post_id = node_clases[1];
+    mf_post_id =  mf_post_id.split("_")[2];
+    
+    //Getting the meta id
+    mf_meta_id = node_clases[2];
+    mf_meta_id = mf_meta_id.split("_")[2];
+    
+    jQuery(this).unbind('click');
     // Create save/cancel buttons
     saveCancel =    '<div id="save_cancel_field" class="EIPSaveCancel" style="display:block;">'+
                         '<div id="savingDiv" style="display:none">saving ...</div>'+
                         '<div id="saveButton">'+
-                            '<input type="button" value="Save" onclick="saveField()" /> Or <input type="button" value="Cancel" onclick="cancelSaveField()" />'+
+                            '<input type="button" value="Save" id="mfseip_'+mf_post_id+'" class="mfseip" /> Or'+ 
+                            '<input type="button" value="Cancel" id="mfceip_'+mf_post_id+'" class="mfceip" />'+
                         '</div>'+
                     '</div>';
-    node_clases = jQuery(this).attr('class').split(" ");
+   	jQuery(document.body).prepend(saveCancel);
     
-    //Getting the type of field (inputtext or multiline)
-    type = node_clases[0];
-    type = type.split("_")[1];
+    //Getting the original value of the content
+    mf_content = jQuery(this).html();
     
-    //Getting the post id
-    post_id = node_clases[1];
-    post_id =  post_id.split("_")[2];
-    
-    alert(type)
-    alert(post_id);
-    
-	jQuery(document.body).prepend(saveCancel);
+    //Creating the input field for put the new content
+    jQuery(this).empty();
+    jQuery(this).html('');
+    jQuery(this).html('<input  type="text" value="'+mf_content+'" class="FEIP_textbox" id="FEIP_textbox_'+mf_post_id+'"/>');
 }
 
 var currentItemInEdit;
