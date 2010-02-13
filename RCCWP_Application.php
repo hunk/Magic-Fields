@@ -532,6 +532,7 @@ class RCCWP_Application
 	width:154px;
 	height:38px;
 	z-index: 1000;
+	margin-top: -23px;
 }
 
 div.nicEdit-panel{

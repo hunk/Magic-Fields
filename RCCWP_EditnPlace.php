@@ -48,16 +48,3 @@ EOD;
 		}
 	}
 }
-
-
-function EIP_textbox($meta_id){
-	global $post;
-	$post_id = $post->ID;
-	return "EIP_textbox"." EIP_postid_{$post_id}"." EIP_mid_".$meta_id;
-}
-
-function EIP_mulittextbox($meta_id){
-	global $post;
-	$post_id = $post->ID;
-	return "EIP_mulittextbox"." EIP_postid_{$post_id}"." EIP_mid_".$meta_id;
-}
