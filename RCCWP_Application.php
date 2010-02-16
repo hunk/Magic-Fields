@@ -48,46 +48,19 @@ class RCCWP_Application
 			wp_mkdir_p(MF_CACHE_DIR);
 			
 			//Initialize options
+			$options['condense-menu'] = 0;
+			$options['hide-non-standart-content'] = 1;
 			$options['hide-write-post'] = 0;
 			$options['hide-write-page'] = 0;
 			$options['hide-visual-editor'] = 0;
 			$options['prompt-editing-post'] = 0;
 			$options['assign-to-role'] = 0;
-			$options['use-snipshot'] = 0;
+			$options['default-custom-write-panel'] = "";
 			$options['enable-editnplace'] = 1;
 			$options['eip-highlight-color'] = "#FFFFCC";
-			$options['enable-swfupload'] = 1 ;
-			$options['default-custom-write-panel'] = "";
-			if (version_compare(PHP_VERSION, '5.0.0') === 1)
-				$options['enable-HTMLPurifier'] = 0;
-			else
-				$options['enable-HTMLPurifier'] = 0;
-			$options['tidy-level'] = "medium";
-			$options['canvas_show_instructions'] = 1;
-			$options['canvas_show_zone_name'] = 0;
-			$options['canvas_show'] = 1;
-			$options['ink_show'] = 0;
-			$options['enable-broserupload'] = 0;
-			$options['hide-non-standart-content'] = 1;
-			$options['condense-menu'] = 0;
 
 			RCCWP_Options::Update($options);
 		}
-
-		//for  backward compatibility
-		if($options['enable-swfupload'] == 1){
-			$options['enable-browserupload'] =  0;
-		}else{
-			$options['enable-broserupload'] = 1;
-		}
-		
-		RCCWP_Options::Update($options);	
-
-		//comment sniptshot  preference
-		$checking_options = RCCWP_Options::Get();
-		$checking_options['use-snipshot'] = 0; 
-		RCCWP_Options::Update($checking_options);
-
 		// Check blog database
 		if (get_option("RC_CWP_BLOG_DB_VERSION") == '') update_option("RC_CWP_BLOG_DB_VERSION", 0);
 		
