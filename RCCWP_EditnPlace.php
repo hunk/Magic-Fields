@@ -8,10 +8,9 @@ class RCCWP_EditnPlace {
 	 * editnplace feature
 	 */
 	function EditnPlaceJavascript(){
-		wp_enqueue_script('jquery');	
 		wp_enqueue_script(	'EditnPlace',
 							MF_URI.'js/editnplace.js',
-							array('prototype')
+							array('jquery')
 						);
 		wp_enqueue_script(	'nicEdit',
 							MF_URI.'js/nicEdit.js'
