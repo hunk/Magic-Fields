@@ -411,7 +411,7 @@ class RCCWP_WritePostPage
 		$customField = RCCWP_CustomField::Get($customFieldId);
 		$customFieldName = RC_Format::GetInputName(attribute_escape($customField->name));
 		$customFieldTitle = attribute_escape($customField->description);
-		$customFieldHelp = htmlentities2($customField->help_text);
+		$customFieldHelp = htmlentities($customField->help_text,ENT_COMPAT,'UTF-8');
 		$groupId = $customGroup_id;
 		$inputName = $customFieldId."_".$groupCounter."_".$fieldCounter."_".$groupId."_".$customFieldName; // Create input tag name
  		if( $fieldCounter > 1 && $customField->duplicate == 0 ) return ;
@@ -484,8 +484,7 @@ class RCCWP_WritePostPage
 					default:
 						;
 				}
-				if($fieldCounter == 1)
-				{
+				if($fieldCounter == 1) {
 					?>
 					<?php if($customField->duplicate != 0 ){ ?>
 					<br />
