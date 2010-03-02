@@ -119,14 +119,11 @@ class RCCWP_WritePostPage
 						);
 		$hide_visual_editor = RCCWP_Options::Get('hide-visual-editor');
 		if ($hide_visual_editor == '' || $hide_visual_editor ==  0){
-			//loading the code for textarea in validation
-			wp_enqueue_script( 'mf_editor_validate',
-								MF_URI.'js/custom_fields/editor_validate.js'
-							);
-		}
-		//loading Prototype framework
-		wp_enqueue_script('prototype');
-						
+		//loading the code for textarea in validation
+		wp_enqueue_script( 'mf_editor_validate',
+							MF_URI.'js/custom_fields/editor_validate.js'
+						);
+		}				
 	}	
 	
 	function ApplyCustomWritePanelHeader() {
@@ -163,29 +160,6 @@ class RCCWP_WritePostPage
  		<script type="text/javascript" src="<?php echo MF_URI?>js/groups.js"></script>
 		
 		<script type="text/javascript">
-				function isset(  ) {
-					var a=arguments; var l=a.length; var i=0;
-					
-					while ( i!=l ) {
-						if (typeof(a[i])=='undefined') { 
-						return false; 
-						} else { 
-						i++; 
-						}
-					}
-					
-					return true;
-				}
-			
-			// -------------
-			// Edit Photo functions
-			function prepareUpdatePhoto(inputName){	
-				jQuery('#'+inputName+'_dorename').val(1);
-				return true;
-			}
-		</script>
-		
-		<script type="text/javascript">
 			var JS_MF_FILES_PATH   = '<?php echo MF_FILES_URI ?>';
 			var wp_root            = "<?php echo get_bloginfo('wpurl');?>";
 			var mf_path            = "<?php echo MF_URI; ?>";
@@ -194,22 +168,6 @@ class RCCWP_WritePostPage
 			var swf_authentication = "<?php if ( function_exists('is_ssl') && is_ssl() ) echo $_COOKIE[SECURE_AUTH_COOKIE]; else echo $_COOKIE[AUTH_COOKIE]; ?>" ;
 			var swf_nonce          = "<?php echo wp_create_nonce('media-form'); ?>" ;
 			var lan_editor = "<?php echo ( '' == get_locale() ) ? 'en' : strtolower( substr(get_locale(), 0, 2) ); ?>";
-		</script>
-
-		<script type="text/javascript">
-				function isset(  ) {
-					var a=arguments; var l=a.length; var i=0;
-					
-					while ( i!=l ) {
-						if (typeof(a[i])=='undefined') { 
-						return false; 
-						} else { 
-						i++; 
-						}
-					}
-					
-					return true;
-				}
 		</script>
 
 		<?php
@@ -453,7 +411,7 @@ class RCCWP_WritePostPage
 		$customField = RCCWP_CustomField::Get($customFieldId);
 		$customFieldName = RC_Format::GetInputName(attribute_escape($customField->name));
 		$customFieldTitle = attribute_escape($customField->description);
-		$customFieldHelp = htmlentities2($customField->help_text);
+		$customFieldHelp = htmlentities($customField->help_text,ENT_COMPAT,'UTF-8');
 		$groupId = $customGroup_id;
 		$inputName = $customFieldId."_".$groupCounter."_".$fieldCounter."_".$groupId."_".$customFieldName; // Create input tag name
  		if( $fieldCounter > 1 && $customField->duplicate == 0 ) return ;
@@ -526,8 +484,7 @@ class RCCWP_WritePostPage
 					default:
 						;
 				}
-				if($fieldCounter == 1)
-				{
+				if($fieldCounter == 1) {
 					?>
 					<?php if($customField->duplicate != 0 ){ ?>
 					<br />
