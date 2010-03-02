@@ -35,7 +35,7 @@ class RCCWP_WritePostPage
 			//set default theme page
 			if($post->ID == 0){
 				$toReplace = "value='".$customThemePage."'";
-				$replacement = "value='".$customThemePage."'" . ' SELECTED';
+				$replacement = "value='".$customThemePage."'" . ' selected="selected"';
 				$content = str_replace($toReplace, $replacement, $content);
 			}
 		}
@@ -785,6 +785,7 @@ class RCCWP_WritePostPage
 
 		$inputSize = (int)$customField->properties['size'];
 		if ($customField->required_field) $requiredClass = "field_required";
+		else $requiredClass="";
 		
 		// If the field is at right, set a constant width to the text box
 		$field_group = RCCWP_CustomGroup::Get($customField->group_id);

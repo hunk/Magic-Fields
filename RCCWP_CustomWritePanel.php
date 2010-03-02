@@ -212,8 +212,8 @@ class RCCWP_CustomWritePanel
 						" WHERE meta_key = 'p_".$customWritePanelName."' AND post_id = 0" ;
 		
 		$results = $wpdb->get_row($sql);
-		
-		return $results->meta_value;
+	  if($results) return $results->meta_value;
+	  return FALSE;
 	}
 	
 	/**
@@ -486,7 +486,7 @@ class RCCWP_CustomWritePanel
 			}
 			$wpdb->query($sql);		
 		}elseif($default_parent_page == -1){
-				delete_post_meta(0, "p_".$name, $value);
+				delete_post_meta(0, "p_".$name);
 		}
 	
 	}

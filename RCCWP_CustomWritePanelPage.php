@@ -110,6 +110,7 @@ class RCCWP_CustomWritePanelPage
 					<?php $themes_defaults = get_page_templates();
 					$theme_select=NULL;
 					foreach($themes_defaults as $v => $k) {
+					$theme_select=NULL;
 						if ($customWritePanelType == 'page'){
 							if($customThemePage == $k){ $theme_select='SELECTED';}
 						}?>
