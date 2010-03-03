@@ -31,7 +31,7 @@ class RCCWP_CustomField {
 	 * @param array $properties an array containing extra properties of the field.
 	 * @return the new field id
 	 */
-	function Create($customGroupId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null,$duplicate,$helptext = null) {
+	function Create($customGroupId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null,$duplicate,$helptext = null,$css = null) {
 		global $wpdb;
 		$name = stripslashes(stripslashes($name));
 		$name = addslashes($name);
@@ -42,7 +42,8 @@ class RCCWP_CustomField {
 		
 		$helptext = stripslashes(stripslashes($helptext));
 		$helptext = addslashes($helptext);
-
+    
+		if(isset($_POST['custom-field-css'])) $css = $_POST['custom-field-css'];
 		$sql = sprintf(
 			"INSERT INTO " . MF_TABLE_GROUP_FIELDS .
 			" (group_id, name, description, display_order, required_field, type, CSS, duplicate,help_text) values (%d, %s, %s, %d, %d, %d, %s, %d, %s)",
@@ -52,7 +53,7 @@ class RCCWP_CustomField {
 			$order,
 			$required_field,
 			$type,
-			"'".$_POST['custom-field-css']."'",
+			"'".$css."'",
 			$duplicate,
 			RC_Format::TextToSql($helptext)
 			);

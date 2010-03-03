@@ -194,8 +194,8 @@ class RCCWP_CustomWritePanel
 						" WHERE meta_key = 't_".$customWritePanelName."' AND post_id = 0" ;
 		
 		$results = $wpdb->get_row($sql);
-		
-		return $results->meta_value;
+		if($results) return $results->meta_value;
+		return false;
 	}
 	
 	/**
@@ -575,7 +575,7 @@ class RCCWP_CustomWritePanel
 				foreach ($group->fields as $field){
 					$fieldOptions = @implode("\n", $field->options);
 					$fieldDefault = @implode("\n", $field->default_value);
-					RCCWP_CustomField::Create($groupID, $field->name, $field->description, $field->display_order, $field->required_field, $types[$field->type], $fieldOptions, $fieldDefault, $field->properties, $field->duplicate,$field->help_text);
+					RCCWP_CustomField::Create($groupID, $field->name, $field->description, $field->display_order, $field->required_field, $types[$field->type], $fieldOptions, $fieldDefault, $field->properties, $field->duplicate,$field->help_text,$field->css);
 				}
 			}
 		}
