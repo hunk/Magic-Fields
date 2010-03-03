@@ -120,7 +120,7 @@ class RCCWP_Processor {
 				header('Content-type: binary');
 				header('Content-Disposition: attachment; filename="'.$writePanel->name.'.pnl"');
 				readfile($exportedFilename);
-				//unlink($exportedFilename);
+				unlink($exportedFilename);
 				exit();	
 				break;
 				
