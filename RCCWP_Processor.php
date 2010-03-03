@@ -459,10 +459,25 @@ class RCCWP_Processor {
 					} else {
 						include_once('RCCWP_Options.php');
 						
-						$save_options = $_POST;
+						$default = array(
+        		  'condense-menu' => 0,
+        			'hide-non-standart-content' => 0,
+        			'hide-write-post' => 0,
+        			'hide-write-page' => 0,
+        			'hide-visual-editor' => 0,
+        			'assign-to-role' => 0,
+        			'default-custom-write-panel' => 0,
+        			'enable-editnplace' => 0,
+        			'eip-highlight-color' => "#FFFFCC"
+        		);
+        		
+        		$save_options = $_POST;
 						unset($save_options['uninstall-custom-write-panel']);
 						unset($save_options['update-custom-write-panel-options']);
-						RCCWP_Options::Update($save_options);
+        		
+        		$save = array_merge($default,$save_options);
+						
+						RCCWP_Options::Update($save);
 						$EnP = RCCWP_Application::create_EditnPlace_css(TRUE);
 					}
 				}
