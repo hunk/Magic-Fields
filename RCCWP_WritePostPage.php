@@ -27,7 +27,7 @@ class RCCWP_WritePostPage
 			
 			if($customParentPage && $post->ID == 0){
 				$toReplace = 'value="'.$customParentPage.'"';
-				$replacement = 'value="'.$customParentPage.'"' . ' SELECTED';
+				$replacement = 'value="'.$customParentPage.'"' . ' selected="selected"';
 				$content = str_replace($toReplace, $replacement, $content);
 			}
 			
@@ -35,7 +35,7 @@ class RCCWP_WritePostPage
 			//set default theme page
 			if($post->ID == 0){
 				$toReplace = "value='".$customThemePage."'";
-				$replacement = "value='".$customThemePage."'" . ' SELECTED';
+				$replacement = "value='".$customThemePage."'" . ' selected="selected"';
 				$content = str_replace($toReplace, $replacement, $content);
 			}
 		}
