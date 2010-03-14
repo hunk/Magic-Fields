@@ -22,7 +22,7 @@ jQuery(document).ready(function(){
                 uncompatible =  "This option is uncompatible with '"+ 
                                 "Condense Menu' option"+
                                 " do you want disable this option and active"+
-                                " 'Hide non-standart content in Post Panel' option?";
+                                " 'Hide non-standard content in Post Panel' option?";
         
                 if(confirm(uncompatible)){
                     jQuery("#condense-menu").removeAttr("checked");
