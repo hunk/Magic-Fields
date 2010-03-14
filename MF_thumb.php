@@ -31,7 +31,7 @@ class mfthumb{
 		
 		$dims = image_resize_dimensions($orig_w, $orig_h, $max_w, $max_h, $crop);
 		if ( !$dims ){
-			return $dims;
+			$dims = array(0,0,0,0,$orig_w,$orig_h,$orig_w,$orig_h);
 		}
 		list($dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) = $dims;
 

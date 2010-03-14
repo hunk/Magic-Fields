@@ -364,13 +364,17 @@ function aux_image($fieldValue,$params_image){
 	$output_filename = MF_CACHE_DIR.$create_md5_filename;
 	$final_filename = MF_CACHE_URI.$create_md5_filename;
 
-  $default = array(
-    'zc'=> 1,
-  	'w'	=> 100,
-  	'h'	=> 100,
-  	'q'	=>  85,
-  	'src' => MF_FILES_PATH.$fieldValue
-  );
+  	$default = array(
+    	'zc'=> 1,
+  		'w'	=> 100,
+  		'h'	=> 100,
+  		'q'	=>  85,
+  		'src' => MF_FILES_PATH.$fieldValue
+  	);
+
+	$size = @getimagesize(MF_UPLOAD_FILES_DIR.$fieldValue);
+	$default['w'] = $size[0];
+	$default['h'] = $size[1];
 
 	$params_image = explode("&",$params_image);
 	foreach($params_image as $param){
@@ -379,6 +383,7 @@ function aux_image($fieldValue,$params_image){
 			$default[$p_image[0]] = $p_image[1];
 		}
 	}
+	
 	
 	$MFthumb = MF_PATH.'/MF_thumb.php';
   require_once($MFthumb);
