@@ -55,6 +55,7 @@ require_once 'RCCWP_CustomField.php';
 require_once 'RCCWP_CustomWritePanel.php';
 
 // Include files containing Magic Fields public functions
+require_once("markdown.php");
 require_once 'get-custom.php';
 
 // Include other files used in this script

@@ -62,10 +62,19 @@ class RCCWP_WritePostPage
 			href="<?php echo MF_URI;?>css/datepicker/ui.datepicker.css"
 			type="text/css" media="screen" charset="utf-8"
 	/>
+	<link rel="stylesheet" type="text/css" href="<?php echo MF_URI; ?>js/markitup/skins/markitup/style.css" />
+	<link rel="stylesheet" type="text/css" href="<?php echo MF_URI; ?>js/markitup/sets/markdown/style.css" />
 	<?php
 	}
 		
 	function CustomFieldsJavascript(){
+	
+	?>
+	<script type="text/javascript">
+		var mf_path = "<?php echo MF_URI ?>" ;
+	</script>
+	<?php
+	
 		wp_enqueue_script('jquery-ui-sortable');
 		
 		//loading  jquery ui datepicker
@@ -123,7 +132,24 @@ class RCCWP_WritePostPage
 		wp_enqueue_script( 'mf_editor_validate',
 							MF_URI.'js/custom_fields/editor_validate.js'
 						);
-		}				
+		}
+		
+		//markitup
+		wp_enqueue_script('markitup',
+  	  MF_URI.'js/markitup/jquery.markitup.pack.js',
+  		array('jquery')
+  	);
+  	
+  	wp_enqueue_script('markitup_set_markdown',
+  	  MF_URI.'js/markitup/sets/markdown/set.js',
+  	  array('markitup')
+    );
+    
+  	wp_enqueue_script('markitup_setup',
+  	  MF_URI.'js/markitup/jquery.markitup.setup.js',
+  		array('markitup')
+  	);
+  		
 	}	
 	
 	function ApplyCustomWritePanelHeader() {
@@ -479,6 +505,9 @@ class RCCWP_WritePostPage
 					case 'Related Type' :
 						RCCWP_WritePostPage::RelatedTypeInterface($customField, $inputName, $groupCounter, $fieldCounter);
 						break;
+				  case 'Markdown Textbox' :
+  					RCCWP_WritePostPage::MarkdownTextboxInterface($customField, $inputName, $groupCounter, $fieldCounter);
+  					break;
 					default:
 						;
 				}
@@ -577,6 +606,7 @@ class RCCWP_WritePostPage
 			$value = $customField->default_value[0];
 		}
 		
+		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 		?>
 		<div class="mf_custom_field">
@@ -617,6 +647,7 @@ class RCCWP_WritePostPage
 		//get id of related type / panel
 		$panel_id = (int)$customField->properties['panel_id'];
 		
+		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 		?>
 		<div class="mf_custom_field">
@@ -705,6 +736,7 @@ class RCCWP_WritePostPage
 		
 		$inputHeight = (int)$customField->properties['height'];
 		$inputWidth = (int)$customField->properties['width'];
+		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 		
 		$pre_text='';
@@ -737,6 +769,7 @@ class RCCWP_WritePostPage
 			$value = "";
 		}
 
+    $requiredClass= '';
 		$inputSize = (int)$customField->properties['size'];
 		if ($customField->required_field) $requiredClass = "field_required";
 		
@@ -766,6 +799,7 @@ class RCCWP_WritePostPage
 		global $mf_domain;
 		$customFieldId = '';
 		$freshPageFolderName = (dirname(plugin_basename(__FILE__)));
+		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 
 		if (isset($_REQUEST['post']))
@@ -851,6 +885,7 @@ class RCCWP_WritePostPage
 		
 		$filepath	= $inputName . '_filepath';
 		//The Image is required?
+		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 		
 		$imageThumbID = "img_thumb_".$inputName; 
@@ -1016,6 +1051,7 @@ class RCCWP_WritePostPage
 		global $mf_domain;
 		$customFieldId = '';
 		$freshPageFolderName = (dirname(plugin_basename(__FILE__))); 
+		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 		
 		if (isset($_REQUEST['post']))
@@ -1172,4 +1208,35 @@ class RCCWP_WritePostPage
 			<input  type="hidden" id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>"  />		
 		<?php
 	}
+	
+	function MarkdownTextboxInterface($customField, $inputName, $groupCounter, $fieldCounter) {
+    $customFieldId = '';
+
+    if (isset($_REQUEST['post'])) {
+  	  $customFieldId = $customField->id;
+  		$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+  	}else{
+  		$value = "";
+  	}
+    
+    $requiredClass="";
+  	if ($customField->required_field) $requiredClass = "field_required";
+      ?>
+  		<div class="mf_custom_field">
+  		<?php 
+  		print sprintf("<textarea %s class=\"%s markdowntextboxinterface\" id=\"%s\" name=\"%s\">%s</textarea>\n",
+  			($customField->required_field)?'validate="required:true"':'',
+  			$requiredClass,
+  			$inputName,
+  			$inputName,
+  			$value
+  		);
+  	?>
+  	</div>
+  	<?php if ($customField->required_field){ ?>
+  	  <div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
+  	<?php } ?>
+  	<?php
+  }
+  	
 }

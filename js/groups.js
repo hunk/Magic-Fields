@@ -176,6 +176,7 @@ add_editor_text = function(){
 		tinyMCE.execCommand('mceAddControl', true, editor_text); 
 		jQuery('#'+editor_text).removeClass('pre_editor');
 	});
+	jQuery(".markdowntextboxinterface:not(.markItUpEditor)").markItUp(mySettings);
 }
 
 /**

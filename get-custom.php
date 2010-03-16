@@ -63,6 +63,12 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 	if($fieldType == $FIELD_TYPES['multiline_textbox']){
 		$results = apply_filters('the_content', $results);
 	}
+	
+	// filter for markup
+	if($fieldType == $FIELD_TYPES['markdown_textbox']){
+		$results = apply_filters('markdown', $results);
+	}
+	
 	if($fieldType == $FIELD_TYPES['image']){
 		$results = split('&',$results);
 		$results = $results[0];
@@ -457,6 +463,9 @@ function get_group($name_group,$post_id=NULL){
 				$fieldValue = GetProcessedFieldValue($data->meta_value, $data->type, $format);
 				$info[$data->order_id][$data->field_name][$data->field_count] = $fieldValue;
 				break;
+		  case $FIELD_TYPES['markdown_textbox']:
+		    $info[$data->order_id][$data->field_name][$data->field_count] = apply_filters('markdown', $data->meta_value);
+      break;
 		}
 	}
 	return $info;
@@ -528,6 +537,9 @@ function get_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 				$fieldValue = GetProcessedFieldValue($data->meta_value, $data->type, $format);
 				$info[$data->field_count] = $fieldValue;
 				break;
+			case $FIELD_TYPES['markdown_textbox']:
+			  $info[$data->field_count] = apply_filters('markdown', $data->meta_value);
+      break;
 		}
 	}
 	return $info;
