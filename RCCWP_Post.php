@@ -24,7 +24,7 @@ class RCCWP_Post {
 			if (!current_user_can('edit_post', $postId)){
 				return $postId;
 			}
-			
+				
 			RCCWP_Post::SetCustomWritePanel($postId);
 			RCCWP_Post::PrepareFieldsValues($postId);
 			RCCWP_Post::SetMetaValues($postId);
@@ -82,6 +82,7 @@ class RCCWP_Post {
 			
 			//Creating the new values
 			foreach($customfields as $name => $groups){
+				$groups_index = 1;
 				foreach($groups as $group_id => $fields){
 					$index = 1;
 					foreach($fields as $value){
@@ -93,11 +94,12 @@ class RCCWP_Post {
 						// Add field extended properties
 						$wpdb->query("INSERT INTO ". MF_TABLE_POST_META .
 										" (id, field_name, group_count, field_count, post_id,order_id) ".
-										" VALUES ({$fieldMetaID}, '{$name}',{$group_id},{$index},{$postId},{$group_id})"
+										" VALUES ({$fieldMetaID}, '{$name}',{$groups_index},{$index},{$postId},{$groups_index})"
 									);
 									
 						$index++;
 					}
+					$groups_index++;
 				}		
 			}
 		}
