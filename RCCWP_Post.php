@@ -12,7 +12,7 @@ class RCCWP_Post {
 		
 		if($flag == 0){
 			
-			//for this save_post action doesn't execute twice
+			//with this  the save_post action don't will be execute twice
 			$flag = 1;
 			
 			
@@ -64,88 +64,43 @@ class RCCWP_Post {
 		global $wpdb;
 	
 		$customWritePanelId = $_POST['rc-cwp-custom-write-panel-id'];
-		$customFieldKeys = $_POST['rc_cwp_meta_keys'];
+		$customfields = $_POST['magicfields'];
+
+		if ( $the_post = wp_is_post_revision($postId))
+			$postId = $the_post;
+
 		
-		if (!empty($customWritePanelId) && !empty($customFieldKeys) ) {
+		if (!empty($customWritePanelId)) {
 				
 			// --- Delete old values
-			foreach ($customFieldKeys as $key)
-			{
-				if (!empty($key))
-				{
-					list($customFieldId, $groupCounter, $fieldCounter, $groupId, $rawCustomFieldName) = split("_", $key, 5);
-					$customFieldName = $wpdb->escape(stripslashes(trim(RC_Format::GetFieldName($rawCustomFieldName))));
-					delete_post_meta($postId, $customFieldName);	
-				}
+			foreach($customfields as $name => $field){
+				delete_post_meta($postId,$name);
 			}
-
-			if ( $the_post = wp_is_post_revision($postId) )
-				$postId = $the_post;
 
 			$wpdb->query("DELETE FROM ". MF_TABLE_POST_META .
 				" WHERE post_id=$postId");
-
 			
-			$arr = ARRAY();
-			foreach($customFieldKeys as $key=>$value) {
-				list($customFieldId, $groupCounter, $fieldCounter, $groupId,$rawCustomFieldName) = split("_", $value, 5);
-				$arr[$key]->id = $customFieldId ;
-				$arr[$key]->gc = $groupCounter ;
-				$arr[$key]->fc = $fieldCounter ;
-				$arr[$key]->gi = $groupId;
-				$arr[$key]->fn = $rawCustomFieldName ;
-				$arr[$key]->ov = $value ;
+			//Creating the new values
+			foreach($customfields as $name => $groups){
+				foreach($groups as $group_id => $fields){
+					$index = 1;
+					foreach($fields as $value){
+						// Add field value meta data
+						add_post_meta($postId, $name, $value);
+							
+						$fieldMetaID = $wpdb->insert_id;
+						
+						// Add field extended properties
+						$wpdb->query("INSERT INTO ". MF_TABLE_POST_META .
+										" (id, field_name, group_count, field_count, post_id,order_id) ".
+										" VALUES ({$fieldMetaID}, '{$name}',{$group_id},{$index},{$postId},{$group_id})"
+									);
+									
+						$index++;
+					}
+				}		
 			}
-
-			// --- Add new meta data
-			foreach ($arr as $key)
-			{
-				if (!empty($key))
-				{
-					//order
-					if($key->gi == 1){
-						$order = 1;
-					}else if (!empty($_POST['order_'.$key->gi.'_'.$key->gc])){
-						$order = $_POST['order_'.$key->gi.'_'.$key->gc];
-					}else{
-						$order = 1;
-					}
-					
-					$customFieldValue = $_POST[$key->ov];
-
-					$customFieldName = $wpdb->escape(stripslashes(trim(RC_Format::GetFieldName($key->fn))));
-					
-					// Prepare field value
-					if (is_array($customFieldValue))
-					{
-						$finalValue = array();
-						foreach ($customFieldValue as $value)
-						{
-							$value = stripslashes(trim($value));
-							array_push($finalValue, $value);
-						}
-					}
-					else
-					{
-						$finalValue = stripslashes(trim($customFieldValue));
-					}
-			
-					// Add field value meta data
-					add_post_meta($postId, $customFieldName, $finalValue);
-					
-					// make sure meta is added to the post, not a revision
-					if ( $the_post = wp_is_post_revision($postId) )
-						$postId = $the_post;
-					
-					$fieldMetaID = $wpdb->insert_id;
-
-					// Add field extended properties
-					$wpdb->query("INSERT INTO ". MF_TABLE_POST_META .
-								" (id, field_name, group_count, field_count, post_id,order_id) ".
-								" VALUES ($fieldMetaID, '$customFieldName', ".$key->gc.", ".$key->fc.", $postId,$order)");
-				}
-			}
-	 	}	
+		}
 	}
 	
 	/**

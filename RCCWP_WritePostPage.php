@@ -301,7 +301,7 @@ class RCCWP_WritePostPage
 					RCCWP_WritePostPage::GroupDuplicate($group,1,1,false);
 					$gc = 1;
 				?>
-				<input type='hidden' name='g<?php echo $group->id?>counter' id='g<?php echo $group->id?>counter' value='<?php echo $gc?>' />
+				<input type='hidden' name='g<?php echo $group->id;?>counter' id='g<?php echo $group->id?>counter' value='<?php echo $gc?>' />
 				</div>
 			<?php 
 		   
@@ -336,11 +336,10 @@ class RCCWP_WritePostPage
 				<?php	
 					foreach ($customFields as $field) {
 
-						$customFieldName = RC_Format::GetInputName(attribute_escape($field->name));
+						$customFieldName = $field->name;
 						$customFieldTitle = attribute_escape($field->description);
 						$groupId  = $customGroup->id;
 						$inputName = $field->id."_".$groupCounter."_1_".$groupId."_".$customFieldName;
-
 						
 						if(isset($_REQUEST['post'])){
 							$fc = RCCWP_CustomField::GetFieldDuplicates($_REQUEST['post'],$field->name,$groupCounter);
@@ -409,24 +408,25 @@ class RCCWP_WritePostPage
 		global $mf_domain;
 		require_once("RC_Format.php");
 		$customField = RCCWP_CustomField::Get($customFieldId);
-		$customFieldName = RC_Format::GetInputName(attribute_escape($customField->name));
+		$customFieldName = $customField->name;
 		$customFieldTitle = attribute_escape($customField->description);
 		$customFieldHelp = htmlentities($customField->help_text,ENT_COMPAT,'UTF-8');
 		$groupId = $customGroup_id;
-		$inputName = $customFieldId."_".$groupCounter."_".$fieldCounter."_".$groupId."_".$customFieldName; // Create input tag name
+		$inputCustomName = $customFieldId."_".$groupCounter."_".$fieldCounter."_".$groupId."_".$customFieldName; // Create input tag name
+		
+		$inputName = "magicfields[{$customFieldName}][{$groupCounter}][{$fieldCounter}]";
  		if( $fieldCounter > 1 && $customField->duplicate == 0 ) return ;
- 		if( $fieldCounter > 1) $titleCounter = " ($fieldCounter)";
- 		
+ 		if( $fieldCounter > 1) $titleCounter = " (<span class='counter_{$customFieldName}_{$groupCounter}'>$fieldCounter</span>)";
+
  		$field_group = RCCWP_CustomGroup::Get($customField->group_id);
 
 		?>
-		<div class="mf-field <?php echo str_replace(" ","_",$customField->type); ?>" id="row_<?php echo $inputName?>">
-			<label for="<?php echo $inputName?>">
+		<div class="mf-field <?php echo str_replace(" ","_",$customField->type); ?>" id="row_<?php echo $inputCustomName?>">
+			<label for="<?php echo $inputCustomName?>">
 				<?php
 					if(empty($titleCounter)){
 						$titleCounter = "";
 					}
-					
 				?>
 				<?php echo $customFieldTitle.$titleCounter?>
 				<?php if (!empty($customFieldHelp)) {?>
@@ -434,10 +434,9 @@ class RCCWP_WritePostPage
 				<?php } ?>
 			</label>
 			<span>
-				<p class="error_msg_txt" id="fieldcellerror_<?php echo $inputName?>" style="display:none"></p>
+				<p class="error_msg_txt" id="fieldcellerror_<?php echo $inputCustomName?>" style="display:none"></p>
 				<?php		
-				switch ($customField->type)
-				{
+				switch ($customField->type) {
 					case 'Textbox' :
 						RCCWP_WritePostPage::TextboxInterface($customField, $inputName, $groupCounter, $fieldCounter);
 						break;
@@ -477,7 +476,6 @@ class RCCWP_WritePostPage
 					case 'Slider' :
 						RCCWP_WritePostPage::SliderInterface($customField, $inputName, $groupCounter, $fieldCounter);
 						break;
-					//eeble
 					case 'Related Type' :
 						RCCWP_WritePostPage::RelatedTypeInterface($customField, $inputName, $groupCounter, $fieldCounter);
 						break;
@@ -489,7 +487,7 @@ class RCCWP_WritePostPage
 					<?php if($customField->duplicate != 0 ){ ?>
 					<br />
 					
-					 <a class ="typeHandler" href="javascript:void(0);" id="type_handler-<?php echo $inputName ?>" > 
+					 <a class ="typeHandler" href="javascript:void(0);" id="type_handler-<?php echo $inputCustomName ?>" > 
 						<img class="duplicate_image"  src="<?php echo MF_URI; ?>images/duplicate.png" alt="<?php _e('Add field duplicate', $mf_domain); ?>"/>  <?php _e('Duplicate', $mf_domain); ?>
 					</a>
 					<?php } ?>
@@ -499,13 +497,12 @@ class RCCWP_WritePostPage
 				{
 				?>
 					<br />
-					<a class ="delete_duplicate_field" href="javascript:void(0)" id="delete_field_repeat-<?php echo $inputName?>"> 
+					<a class ="delete_duplicate_field" href="javascript:void(0)" id="delete_field_repeat-<?php echo $inputCustomName?>"> 
 						<img class="duplicate_image"  src="<?php echo MF_URI; ?>images/delete.png" alt="<?php _e('Remove field duplicate', $mf_domain); ?> "/> <?php _e('Remove', $mf_domain); ?> 
 					</a>
 				<?php
 				}
 				?>
-				<input type="hidden" name="rc_cwp_meta_keys[]" value="<?php echo $inputName?>" />
 		</span>
 		</div>
 	<?php

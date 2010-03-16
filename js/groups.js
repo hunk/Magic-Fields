@@ -34,8 +34,8 @@ jQuery(document).ready(function(){
 
     //duplicate  group
     jQuery(".duplicate_button").click(function(){
-        id = jQuery(this).attr("id");        
-        id = id.split("_");
+        id = jQuery(this).attr("id"); 
+        id = id.split("_"); 
         group = id[2];
         customGroupID =  id[3];
         order = id[4];
@@ -50,6 +50,9 @@ jQuery(document).ready(function(){
         div = id.split("-")[1]; 
         div = "row_"+div;
         deleteGroupDuplicate(div);
+        
+        counter_field = id.split("_")[6] +"_"+ div.split("_")[2];   
+        fixcounter("counter_"+counter_field);
     });
 
 
@@ -77,17 +80,14 @@ jQuery(document).ready(function(){
 
         groupId = inputName.split("_")[3];
 
-        oldval = jQuery("#c"+inputName+"Counter").val();    
+        oldval = jQuery("#c"+inputName+"Counter").val();
         newval = parseInt(oldval) + 1; 
-        jQuery("#c"+inputName+"Counter").val(newval); 
-
+        jQuery("#c"+inputName+"Counter").val(newval);
 
         counter = jQuery("#c"+inputName+"Counter").val();
         div  = "c"+inputName+"Duplicate";
-
-        getDuplicate(customFieldId,counter,div,groupCounter,groupId);
-
-
+        counter_field = inputName.split("_")[4] +"_"+ inputName.split("_")[1];
+        getDuplicate(customFieldId,counter,div,groupCounter,groupId,counter_field);
     });
 });
 
@@ -95,17 +95,29 @@ jQuery(document).ready(function(){
 /**
  * field duplicate 
  */
-getDuplicate = function(fId,fcounter,div,gcounter,groupId){
+getDuplicate = function(fId,fcounter,div,gcounter,groupId,counter_field){
     jQuery.ajax({
         type : "POST",
         url  : mf_path+'RCCWP_GetDuplicate.php',
         data : "customFieldId="+fId+"&fieldCounter="+fcounter+"&groupCounter="+gcounter+"&groupId="+groupId,
         success: function(msg){
-            jQuery("#"+div).after(msg);
+            jQuery("#"+div).before(msg);
 			// set the editor in textarea
 			add_editor_text();
 			add_color_picker();
+			
+			//fixing the order in the indexes of the custom fields
+		    fixcounter("counter_"+counter_field);
         }
+    });
+}
+
+
+fixcounter = function(fields){
+    init = 1;
+    jQuery.each(jQuery('.'+fields),function(key,value){
+        counter = init+key + 1;
+        jQuery(this).text(counter);
     });
 }
 
@@ -126,7 +138,7 @@ GetGroupDuplicate = function(div,customGroupID,order){
         url     : mf_path+'RCCWP_GetDuplicate.php',
         data    : "flag=group&groupId="+customGroupID+"&groupCounter="+customGroupCounter+"&order="+order,
         success : function(msg){
-            jQuery("#write_panel_wrap_"+customGroupID).append(msg);  
+            jQuery("#write_panel_wrap_"+customGroupID).append(msg);
             kids =  jQuery("#write_panel_wrap_"+customGroupID).children().filter(".magicfield_group");
                 for(i=0;i < kids.length; i++){
                     groupCounter =  kids[i].id.split("_")[2];
