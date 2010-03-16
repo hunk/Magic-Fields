@@ -63,7 +63,7 @@ class RCCWP_WritePostPage
 			type="text/css" media="screen" charset="utf-8"
 	/>
 	<link rel="stylesheet" type="text/css" href="<?php echo MF_URI; ?>js/markitup/skins/markitup/style.css" />
-	<link rel="stylesheet" type="text/css" href="<?php echo MF_URI; ?>js/markitup/sets/markdown/style.css" />
+	<link rel="stylesheet" type="text/css" href="<?php echo MF_URI; ?>js/markitup/sets/html/style.css" />
 	<?php
 	}
 		
@@ -141,7 +141,7 @@ class RCCWP_WritePostPage
   	);
   	
   	wp_enqueue_script('markitup_set_markdown',
-  	  MF_URI.'js/markitup/sets/markdown/set.js',
+  	  MF_URI.'js/markitup/sets/html/set.js',
   	  array('markitup')
     );
     

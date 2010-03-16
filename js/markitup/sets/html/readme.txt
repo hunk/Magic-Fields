@@ -1,8 +1,8 @@
 Markup language: 
-Markdown
+Html
 
 Description:
-A basic Markdown markup set with Headings, Bold, Italic, Picture, Link, List, Quotes, Code, Preview button.
+A basic Html markup set with Headings, Paragraph, Bold, Italic, Stroke through, Picture, Link, List, Clean button, Preview button.
 
 Install:
 - Download the zip file
