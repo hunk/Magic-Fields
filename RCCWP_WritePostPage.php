@@ -44,43 +44,6 @@ class RCCWP_WritePostPage
 		}
 		
 	}
-	function ApplyCustomWritePanelAssignedCategories($content){ 
-		global $CUSTOM_WRITE_PANEL;
-		global $post,$title;
-		
-		if($post->post_type == "post"){
-			$assignedCategoryIds = RCCWP_CustomWritePanel::GetAssignedCategoryIds($CUSTOM_WRITE_PANEL->id);
-			
-			if($post->ID == 0){
-				foreach ($assignedCategoryIds as $categoryId)
-				{
-					$toReplace = 'id="in-category-' . $categoryId . '"';
-					$replacement = $toReplace . ' checked="checked"';
-					$content = str_replace($toReplace, $replacement, $content);
-				}
-			}
-		}
-		
-		if($post->post_type == "page"){
-			$customParentPage = RCCWP_CustomWritePanel::GetParentPage($CUSTOM_WRITE_PANEL->name);
-			
-			if($customParentPage && $post->ID == 0){
-				$toReplace = 'value="'.$customParentPage.'"';
-				$replacement = 'value="'.$customParentPage.'"' . ' selected="selected"';
-				$content = str_replace($toReplace, $replacement, $content);
-			}
-			
-			$customThemePage = RCCWP_CustomWritePanel::GetThemePage($CUSTOM_WRITE_PANEL->name);
-			//set default theme page
-			if($post->ID == 0){
-				$toReplace = "value='".$customThemePage."'";
-				$replacement = "value='".$customThemePage."'" . ' selected="selected"';
-				$content = str_replace($toReplace, $replacement, $content);
-			}
-		}
-		
-		return $content;
-	}
 
 	function FormError(){
 		global $mf_domain;
