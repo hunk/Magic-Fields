@@ -6,9 +6,15 @@
 class RCCWP_WritePostPage 
 {
 	function ApplyWritePanelAssignedCategoriesOrTemplate(){
-		global $CUSTOM_WRITE_PANEL,$post;
+		global $CUSTOM_WRITE_PANEL,$post,$wp_version;
 		
-		if($post->post_status == "auto-draft"){
+		if(substr($wp_version, 0, 3) < 3.0){
+		  $check = "draft";
+	  }else{
+	    $check = "auto-draft";
+	  }
+		
+		if($post->post_status == $check){
 	
 			if($post->post_type == "post"){
 				$assignedCategoryIds = RCCWP_CustomWritePanel::GetAssignedCategoryIds($CUSTOM_WRITE_PANEL->id);
