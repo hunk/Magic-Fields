@@ -428,7 +428,14 @@ class RCCWP_Processor {
 											'CustomFieldsJavascript'
 										)
 									);
-									
+						
+						//check this function in WP 2.9
+						/*add_action('admin_print_scripts',
+							array(	'RCCWP_WritePostPage',
+								'ApplyWritePanelAssignedCategoriesOrTemplate'
+							)
+						);*/
+						
 						add_action('admin_head',
 						 			array(	'RCCWP_WritePostPage',
 						 					'ApplyCustomWritePanelHeader'

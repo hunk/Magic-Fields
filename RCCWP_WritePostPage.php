@@ -5,6 +5,39 @@
  */
 class RCCWP_WritePostPage 
 {
+	function ApplyWritePanelAssignedCategoriesOrTemplate(){
+		global $CUSTOM_WRITE_PANEL,$post;
+		
+		if($post->post_status == "auto-draft"){
+	
+			if($post->post_type == "post"){
+				$assignedCategoryIds = RCCWP_CustomWritePanel::GetAssignedCategoryIds($CUSTOM_WRITE_PANEL->id);
+				?>
+				<script type="text/javascript">
+					var mf_categories = new Array(<?php echo '"'.implode('","',$assignedCategoryIds).'"' ?>); 
+				</script>
+				<?php
+				wp_enqueue_script(	'magic_set_categories',
+					MF_URI.'js/custom_fields/categories.js',
+					array('jquery')
+				);
+			}else{
+				$customParentPage = RCCWP_CustomWritePanel::GetParentPage($CUSTOM_WRITE_PANEL->name);
+				$customThemePage = RCCWP_CustomWritePanel::GetThemePage($CUSTOM_WRITE_PANEL->name);
+				?>
+				<script type="text/javascript">
+					var mf_parent = <?php printf("'%s'",$customParentPage); ?>;
+					var mf_theme = <?php printf("'%s'",$customThemePage); ?>; 
+				</script>
+				<?php
+				wp_enqueue_script(	'magic_set_categories',
+					MF_URI.'js/custom_fields/template.js',
+					array('jquery')
+				);
+			}
+		}
+		
+	}
 	function ApplyCustomWritePanelAssignedCategories($content){ 
 		global $CUSTOM_WRITE_PANEL;
 		global $post,$title;
