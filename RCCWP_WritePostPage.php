@@ -1146,6 +1146,8 @@ class RCCWP_WritePostPage
 	}
 	
 	function ColorPickerInterface($customField, $inputName, $groupCounter, $fieldCounter,$fieldValue = NULL){
+		
+		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		if($fieldValue){
 			$value=$fieldValue;
 		}else{
@@ -1156,11 +1158,14 @@ class RCCWP_WritePostPage
 			}
 		}
 		?>
-		<input  id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>" class="mf_color_picker" />
+		<input  id="<?php echo $idField; ?>" name="<?php echo $inputName?>" value="<?php echo $value?>" class="mf_color_picker" />
 		<?php
 	}
 	
 	function SliderInterface($customField, $inputName, $groupCounter, $fieldCounter,$fieldValue = NULL){
+		
+		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
+		
 		$customFieldId = $customField->id;
 		if(!empty($_REQUEST['post'])){
 		$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
@@ -1185,7 +1190,7 @@ class RCCWP_WritePostPage
 		?>
 			<script>
 				jQuery('document').ready(function(){
-					jQuery('#slider_<?php echo $inputName?>').slider({
+					jQuery('#slider_<?php echo $idField; ?>').slider({
 						range: false, 
 						value: <?php echo $value?>, 
 						min: <?php echo $customField->properties['min']?>, 
@@ -1196,24 +1201,24 @@ class RCCWP_WritePostPage
 							step: <?php echo $customField->properties['step']?>,
 							min: <?php echo $customField->properties['min']?>, 
 							max: <?php echo $customField->properties['max']?>, 
-							id: 'slider_<?php echo $inputName?>'
+							id: 'slider_<?php echo $idField; ?>'
 							}],
 						'slide': function(e, ui) {
-								jQuery('#slide_value_<?php echo $inputName?>').empty();
-								jQuery('#slide_value_<?php echo $inputName?>').append(ui.value);
-								jQuery('#<?php echo $inputName?>').val(ui.value);
+								jQuery('#slide_value_<?php echo $idField; ?>').empty();
+								jQuery('#slide_value_<?php echo $idField; ?>').append(ui.value);
+								jQuery('#<?php echo $idField; ?>').val(ui.value);
 							}
 						});
 				});
 			</script>
-			<div id='slider_<?php echo $inputName?>' class='ui-slider-2' style="margin:40px;">
+			<div id='slider_<?php echo $idField; ?>' class='ui-slider-2' style="margin:40px;">
 				<div class='ui-slider-handle'>
-					<div class="slider_numeber_show" id="slide_value_<?php echo $inputName?>">
+					<div class="slider_numeber_show" id="slide_value_<?php echo $idField; ?>">
 						<?php echo $value?>
 					</div>
 				</div>	
 			</div>
-			<input  type="hidden" id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>"  />		
+			<input  type="hidden" id="<?php echo $idField; ?>" name="<?php echo $inputName?>" value="<?php echo $value?>"  />		
 		<?php
 	}
 	
