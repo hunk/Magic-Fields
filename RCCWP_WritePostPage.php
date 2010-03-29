@@ -986,18 +986,19 @@ class RCCWP_WritePostPage
 		global $wpdb;
 		$customFieldId = '';
 		
-		if (isset($_REQUEST['post']))
-		{
+		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
+		
+		if (isset($_REQUEST['post'])) {
 			$customFieldId = $customField->id;
 			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
 			
 			if(!empty($value)){
 				$value = date($customField->properties['format'],strtotime($value));
 			}else{	
-				$value =  date($customField->properties['format']);
+				$value =  "";//date($customField->properties['format']);
 			}		
 		} else { 
-			$value =  date($customField->properties['format']);
+			$value =  "";//date($customField->properties['format']);
 		}
 		
 		$dateFormat = $customField->properties['format'];
@@ -1008,39 +1009,44 @@ class RCCWP_WritePostPage
 		if ($field_group->at_right){
 			$inputSize = 15;
 		}
-?>	
-		<div id="format_date_field_<?php echo $inputName;?>" style="display:none"><?php echo $dateFormat;?></div>
+		?>
+		<div id="format_date_field_<?php echo $idField; ?>" style="display:none"><?php echo $dateFormat;?></div>
 			
-		<input 	id="display_date_field_<?php echo $inputName?>"
+		<input 	id="display_date_field_<?php echo $idField; ?>"
 		 		value="<?php echo $value?>" 
 				type="text" 
 				size="<?php echo $inputSize?>" 
 				class="datepicker_mf"   
 		READONLY/>
 		
-		<input 	id="date_field_<?php echo $inputName?>" 
+		<input 	id="date_field_<?php echo $idField; ?>" 
 				name="<?php echo $inputName?>" 
 				value="<?php echo $value?>" type="hidden" 
 		/>
 		<input 	type="button" 
 				value="Pick..." 
-				id="pick_<?php echo $inputName;?>" 
+				id="pick_<?php echo $idField; ?>" 
 				class="datebotton_mf"
 		/>
 		<input 	type="button" 
-				id="today_<?php echo $inputName;?>"
+				id="today_<?php echo $idField; ?>"
 				value="Today" 
 				class="todaybotton_mf"
 		/>
+		<input 	type="button" 
+				id="blank_<?php echo $idField; ?>"
+				value="Blank" 
+				class="blankBotton_mf"
+		/>
 		<input 	type="hidden"
 				value="<?php echo $today;?>"
-				id="tt_<?php echo $inputName;?>"
+				id="tt_<?php echo $idField; ?>"
 				class="todaydatebutton_mf"
 		/>
 		<input 
-				type="hidden" 
+				type="hidden"
 				name="rc_cwp_meta_date[]" 
-				value="<?php echo $inputName?>" 	
+				value="<?php echo $idField; ?>" 	
 		/>
 		<?php
 	}
@@ -1240,5 +1246,17 @@ class RCCWP_WritePostPage
   	<?php } ?>
   	<?php
   }
+	
+	
+	
+	//Change the nameinput magicfields[type][id gruop index][id field index] => magicfields_{type}_{id group index}_{if field index}
+	function changeNameInput($inputName){
+		
+		$patterns  = array('/\[/','/\]/');
+		$replacements = array('_','');
+		return preg_replace($patterns,$replacements,$inputName);
+		
+	}
   	
+	
 }

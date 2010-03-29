@@ -7,6 +7,7 @@ jQuery(document).ready(function(){
         picker = the_id.replace(/pick_/,'');
         format = jQuery('#format_date_field_'+picker).text();
         format = switch_formats(format);
+				
         picker = 'display_date_field_' + picker;
         
         
@@ -34,11 +35,18 @@ jQuery(document).ready(function(){
 	    today = jQuery('#'+today);
 	    date = today.val();
 	    
-        jQuery('#display_date_field_'+picker).val(date);
-	    input = picker.replace(/display_/,'');
-	    input = jQuery('#'+input);
-	    input.val(date)
+      jQuery('#display_date_field_'+picker).val(date);
+			jQuery('#date_field_'+picker).val(date);
 	});
+	
+	//BLANK Botton
+	jQuery('.blankBotton_mf').live('click',function(){
+	    the_id = jQuery(this).attr('id');
+	    picker = the_id.replace(/blank_/,'');	    
+      jQuery('#display_date_field_'+picker).val("");
+			jQuery('#date_field_'+picker).val("");
+	});
+	
 });
 
 //From php date format to jqueyr datepicker format
