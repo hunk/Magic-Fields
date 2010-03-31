@@ -722,12 +722,12 @@ class RCCWP_WritePostPage
 		<?php
 	}
 	
-	function MultilineTextboxInterface($customField, $inputName, $groupCounter, $fieldCounter)
-	{
+	function MultilineTextboxInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		$customFieldId = '';
 		
-		if (isset($_REQUEST['post']))
-		{
+		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
+		
+		if( isset($_REQUEST['post']) ){
 			$customFieldId = $customField->id;
 			$value = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 			$value = apply_filters('the_editor_content', $value);
@@ -746,15 +746,15 @@ class RCCWP_WritePostPage
 		if ($hide_visual_editor == '' || $hide_visual_editor == 0){ $pre_text="pre_editor"; ?>
 		<div class="mf_custom_field">
 		<div class="tab_multi_mf">
-			<a onclick="del_editor('<?php echo $inputName?>');" class="edButtonHTML_mf">HTML</a>		
-			<a onclick="add_editor('<?php echo $inputName?>');" class="edButtonHTML_mf" >Visual</a>
+			<a onclick="del_editor('<?php echo $idField; ?>');" class="edButtonHTML_mf">HTML</a>		
+			<a onclick="add_editor('<?php echo $idField; ?>');" class="edButtonHTML_mf" >Visual</a>
 		</div>
 		<?php } ?>
 		<div class="mul_mf">
-		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> mf_editor <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $inputName?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"><?php echo $value?></textarea>
+		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> mf_editor <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $idField; ?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"><?php echo $value?></textarea>
 		</div></div>
 		<?php if ($customField->required_field){ ?>
-			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
+			<div class="mf_message_error"><label for="<?php echo $idField; ?>" class="error_magicfields error">This field is required.</label></div>
 		<?php } ?>
 		
 	<?php
