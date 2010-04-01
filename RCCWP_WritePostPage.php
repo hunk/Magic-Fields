@@ -536,9 +536,10 @@ class RCCWP_WritePostPage
 	<?php
 	}
 	
-	function CheckboxInterface($customField, $inputName, $groupCounter, $fieldCounter)
-	{
+	function CheckboxInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		$customFieldId = '';
+		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
+		
 		if (isset($_REQUEST['post']))
 		{
 			$customFieldId = $customField->id;
@@ -550,18 +551,19 @@ class RCCWP_WritePostPage
 		?>
 		<div class="mf_custom_field">
 		<input  type="hidden" name="<?php echo $inputName?>_1" value="false" />
-		<input tabindex="3" class="checkbox checkbox_mf" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> name="<?php echo $inputName?>" value="true" id="<?php echo $inputName?>" type="checkbox" <?php echo $checked?> /></div>
+		<input tabindex="3" class="checkbox checkbox_mf" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> name="<?php echo $inputName?>" value="true" id="<?php echo $idField;?>" type="checkbox" <?php echo $checked?> /></div>
 		<?php if ($customField->required_field){ ?>
 		<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error block">This field is required.</label></div>
 		<?php }
 	}
 	
-	function CheckboxListInterface($customField, $inputName, $groupCounter, $fieldCounter)
-	{
+	function CheckboxListInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		$customFieldId = '';
+		
+		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
+		
 		$values = array();
-		if (isset($_REQUEST['post']))
-		{
+		if (isset($_REQUEST['post'])) {
 			$customFieldId = $customField->id;
 			$values = (array) RCCWP_CustomField::GetCustomFieldValues(false, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 		}else{
@@ -683,7 +685,7 @@ class RCCWP_WritePostPage
 	}
 	
 	function ListboxInterface($customField, $inputName, $groupCounter, $fieldCounter) {
-
+		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		$customFieldId = '';
 		if (isset($_REQUEST['post'])){
 			$customFieldId = $customField->id;
@@ -698,7 +700,7 @@ class RCCWP_WritePostPage
 		if ($customField->required_field) $requiredClass = "mf_listbox field_required";
 		?>
 		<div class="mf_custom_field">
-		<select <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf"  tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>[]" multiple size="<?php echo $inputSize?>" style="height: auto;">
+		<select <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf"  tabindex="3" id="<?php echo $idField;?>" name="<?php echo $inputName?>[]" multiple size="<?php echo $inputSize?>" style="height: auto;">
 		
 		<?php
 		foreach ($customField->options as $option) {
@@ -757,9 +759,10 @@ class RCCWP_WritePostPage
 	<?php
 	}
 	
-	function TextboxInterface($customField, $inputName, $groupCounter, $fieldCounter)
-	{
+	function TextboxInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		$customFieldId = '';
+		
+		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
 		if (isset($_REQUEST['post'])) {
 			$customFieldId = $customField->id;
@@ -779,7 +782,7 @@ class RCCWP_WritePostPage
 		}
 		?>
 		<div class="mf_custom_field">
-		<input <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> textboxinterface" tabindex="3" id="<?php echo $inputName?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>" />
+		<input <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> textboxinterface" tabindex="3" id="<?php echo $idField ?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>" />
 		</div>
 			<?php if ($customField->required_field){ ?>
 				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
@@ -793,16 +796,17 @@ class RCCWP_WritePostPage
 	 * File Field
 	 *
 	 */
-	function FileInterface($customField, $inputName, $groupCounter, $fieldCounter)
-	{
+	function FileInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		global $mf_domain;
+		
+		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
+		
 		$customFieldId = '';
 		$freshPageFolderName = (dirname(plugin_basename(__FILE__)));
 		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 
-		if (isset($_REQUEST['post']))
-		{
+		if (isset($_REQUEST['post'])) {
 			$customFieldId = $customField->id;
 			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
 			$path = MF_FILES_URI;
@@ -823,7 +827,7 @@ class RCCWP_WritePostPage
 
 		?>
 		
-		<p class="error_msg_txt" id="upload_progress_<?php echo $inputName?>" style="visibility:hidden;height:0px"></p>
+		<p class="error_msg_txt" id="upload_progress_<?php echo $idField;?>" style="visibility:hidden;height:0px"></p>
 		<script type="text/javascript"> 
 			//this script is for remove the  file  related  to the post (using ajax)
 			remove_file = function(){
@@ -843,19 +847,19 @@ class RCCWP_WritePostPage
 
 
 			jQuery(document).ready(function(){
-				jQuery("#remove-<?php echo $inputName;?>").click(remove_file);
+				jQuery("#remove-<?php echo $idField;?>").click(remove_file);
 
 			});
 		</script>
 		
 		<?php if( $valueRelative ){ 
-				echo "<span id='actions-{$inputName}'>(<a href='{$value}' target='_blank'>".__("View Current",$mf_domain)."</a>)</span>"; 
-				echo "&nbsp;<a href='javascript:void(0);' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a>";
+				echo "<span id='actions-{$idField}'>(<a href='{$value}' target='_blank'>".__("View Current",$mf_domain)."</a>)</span>"; 
+				echo "&nbsp;<a href='javascript:void(0);' id='remove-{$idField}'>".__("Delete",$mf_domain)."</a>";
 			} 
 		?>
 		<div class="mf_custom_field">	
 		<input tabindex="3" 
-			id="<?php echo $inputName?>" 
+			id="<?php echo $idField?>" 
 			name="<?php echo $inputName?>" 
 			type="hidden"
 			class="<?php echo $requiredClass;?>" 
@@ -1054,13 +1058,14 @@ class RCCWP_WritePostPage
 	 */
 	function AudioInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		global $mf_domain;
+		
+		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		$customFieldId = '';
 		$freshPageFolderName = (dirname(plugin_basename(__FILE__))); 
 		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 		
-		if (isset($_REQUEST['post']))
-		{
+		if (isset($_REQUEST['post'])) {
 			$customFieldId = $customField->id;
 			$valueOriginal = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 			$path = MF_FILES_URI;
@@ -1075,7 +1080,7 @@ class RCCWP_WritePostPage
 			$$valueOriginalRelative = $valueOriginal;
 			$valueOriginal = $path.$valueOriginal;
 			if (!empty($valueOriginal))
-				$value = stripslashes(trim("\<div  id='obj-{$inputName}' style=\'width:260px;padding-top:3px;\'\>\<object classid=\'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\' codebase='\http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0\' width=\'95%\' height=\'20\' wmode=\'transparent\' \>\<param name=\'movie\' value=\'".MF_URI."js/singlemp3player.swf?file=".urlencode($valueOriginal)."\' wmode=\'transparent\' /\>\<param name=\'quality\' value=\'high\' wmode=\'transparent\' /\>\<embed src=\'".MF_URI."js/singlemp3player.swf?file=".urlencode($valueOriginal)."' width=\'100\%\' height=\'20\' quality=\'high\' pluginspage=\'http://www.macromedia.com/go/getflashplayer\' type=\'application/x-shockwave-flash\' wmode=\'transparent\' \>\</embed\>\</object\>\</div\><br />"));			
+				$value = stripslashes(trim("\<div  id='obj-{$idField}' style=\'width:260px;padding-top:3px;\'\>\<object classid=\'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\' codebase='\http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0\' width=\'95%\' height=\'20\' wmode=\'transparent\' \>\<param name=\'movie\' value=\'".MF_URI."js/singlemp3player.swf?file=".urlencode($valueOriginal)."\' wmode=\'transparent\' /\>\<param name=\'quality\' value=\'high\' wmode=\'transparent\' /\>\<embed src=\'".MF_URI."js/singlemp3player.swf?file=".urlencode($valueOriginal)."' width=\'100\%\' height=\'20\' quality=\'high\' pluginspage=\'http://www.macromedia.com/go/getflashplayer\' type=\'application/x-shockwave-flash\' wmode=\'transparent\' \>\</embed\>\</object\>\</div\><br />"));			
 		}
 		
 		// If the field is at right, set a constant width to the text box
@@ -1088,7 +1093,7 @@ class RCCWP_WritePostPage
 		}
 
 		?>
-		<p class="error_msg_txt" id="upload_progress_<?php echo $inputName?>" style="visibility:hidden;height:0px"></p>
+		<p class="error_msg_txt" id="upload_progress_<?php echo $idField;?>" style="visibility:hidden;height:0px"></p>
 		<script type="text/javascript">
 			//this script is for remove the audio file using ajax
 			remove_audio = function(){
@@ -1108,13 +1113,13 @@ class RCCWP_WritePostPage
 			}
 
 			jQuery(document).ready(function(){
-				jQuery("#remove-<?php echo $inputName;?>").click(remove_audio);
+				jQuery("#remove-<?php echo $idField;?>").click(remove_audio);
 			});
 		</script>
 		<?php 
 		if( !empty($$valueOriginalRelative)){ 
 			echo $value; 
-			echo "<div id='actions-{$inputName}'><a href='javascript:void(0);' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a></div>";
+			echo "<div id='actions-{$idField}'><a href='javascript:void(0);' id='remove-{$idField}'>".__("Delete",$mf_domain)."</a></div>";
 		} 
 		if(empty($valueOriginalRelative)){
 			$valueOriginalRelative = '';
@@ -1122,7 +1127,7 @@ class RCCWP_WritePostPage
 		?>
 		<div class="mf_custom_field">
 		<input tabindex="3" 
-			id="<?php echo $inputName?>" 
+			id="<?php echo $idField?>" 
 			name="<?php echo $inputName?>" 
 			type="hidden" 
 			class="<?php echo $requiredClass;?>"
