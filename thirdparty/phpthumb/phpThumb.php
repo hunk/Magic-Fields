@@ -1,5 +1,4 @@
 <?php
-
 //TODO: The Original Image MUST be  bigger to the thumb
 //use wp-load. Normally right here, but if it's not...
 if( file_exists('../../../../../wp-load.php')){
@@ -27,9 +26,8 @@ $default = array(
 					'src' => ''
 				);
 				
-
 //getting the name of the image
-preg_match('/\/files_mf\/([0-9\_a-z]+\.(jpg|png|jpg)|gif)/i',$_GET['src'],$match);
+preg_match('/\/files_mf\/([0-9\_a-z\-]+\.(jpg|png|jpg)|gif)/i',$_GET['src'],$match);
 $image_name_clean = $match[1];
 $extension = $match[2];
 

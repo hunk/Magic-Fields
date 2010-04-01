@@ -24,7 +24,7 @@ class RCCWP_Post {
 			if (!current_user_can('edit_post', $postId)){
 				return $postId;
 			}
-				
+			
 			RCCWP_Post::SetCustomWritePanel($postId);
 			RCCWP_Post::PrepareFieldsValues($postId);
 			RCCWP_Post::SetMetaValues($postId);
@@ -81,17 +81,36 @@ class RCCWP_Post {
 				" WHERE post_id=$postId");
 			
 			//Creating the new values
+			//Iterating the custom fields
 			foreach($customfields as $name => $groups){
 				$groups_index = 1;
+				//Iterating the groups
 				foreach($groups as $group_id => $fields){
 					$index = 1;
+					//Iterating the  duplicates
 					foreach($fields as $value){
-						// Add field value meta data
+						
+						//If Value is a array is because the custom field is a image or a file
+						//In that case we must do one step more before to save the value
+						if(is_array($value)){	
+							if(!empty($value['deleted'])){
+								//deleting  the file
+								unlink(MF_FILES_PATH.$value['file_name']);
+								$value = '';
+							}
+							//Setting the name of the file name as the custom field value
+							if(!empty($value['file_name'])){
+								$value = $value['file_name'];
+							}
+						}
+						
+						
+						// Adding field value meta data
 						add_post_meta($postId, $name, $value);
 							
 						$fieldMetaID = $wpdb->insert_id;
 						
-						// Add field extended properties
+						// Adding  the referencie in the magic fields post meta table
 						$wpdb->query("INSERT INTO ". MF_TABLE_POST_META .
 										" (id, field_name, group_count, field_count, post_id,order_id) ".
 										" VALUES ({$fieldMetaID}, '{$name}',{$groups_index},{$index},{$postId},{$groups_index})"
@@ -115,32 +134,6 @@ class RCCWP_Post {
 	function PrepareFieldsValues($postId) {
 		global $wpdb;
 			
-		// Add params to photos
-		if( isset( $_REQUEST['rc_cwp_meta_photos'])) {
-			
-			foreach( $_REQUEST['rc_cwp_meta_photos'] as $meta_name ) {		
-				$slashPos = strrpos($_POST[$meta_name], "/");
-				if (!($slashPos === FALSE))
-					$_POST[$meta_name] = substr($_POST[$meta_name], $slashPos+1);
-				
-				//Rename photo if it is edited using editnplace to avoid phpthumb cache
-				if ($_POST[$meta_name.'_dorename'] == 1){
-					$oldFilename = $_POST[$meta_name]; 
-					$newFilename = time().substr($oldFilename, 10);
-					rename(MF_UPLOAD_FILES_DIR.$oldFilename, MF_UPLOAD_FILES_DIR.$newFilename);
-					$_POST[$meta_name] = $newFilename;
-				}
-				
-				//if is deleted
-				if($_POST[$meta_name.'_deleted'] == 1){	
-					$file = $_POST[$meta_name];
-					//deleting  the file
-					unlink(MF_FILES_PATH.$file);
-					$_POST[$meta_name] = '';
-				}
-			}
-		}
-
 		// Format Dates
 		if( isset( $_REQUEST['rc_cwp_meta_date'])){
 			foreach( $_REQUEST['rc_cwp_meta_date'] as $meta_name ) {

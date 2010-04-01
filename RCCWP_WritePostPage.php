@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This class content all  type of fields for the panels
  */
@@ -13,7 +12,6 @@ class RCCWP_WritePostPage
 	  }else{
 	    $check = "auto-draft";
 	  }
-		
 		if($post->post_status == $check){
 	
 			if($post->post_type == "post"){
@@ -41,8 +39,7 @@ class RCCWP_WritePostPage
 					array('jquery')
 				);
 			}
-		}
-		
+		}	
 	}
 
 	function FormError(){
@@ -879,6 +876,8 @@ class RCCWP_WritePostPage
 	function PhotoInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		global $mf_domain;
 		
+		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
+		
 		if(!empty($_GET['post'])){
 			$hidValue = RCCWP_CustomField::GetCustomFieldValues(true,$_GET['post'], $customField->name, $groupCounter, $fieldCounter);
 		}else{
@@ -890,24 +889,24 @@ class RCCWP_WritePostPage
 		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 		
-		$imageThumbID = "img_thumb_".$inputName; 
+		$imageThumbID = "img_thumb_".$idField; 
 		$value = "<img src='".MF_URI."images/noimage.jpg' id='{$imageThumbID}'/>";
 
 		if( !empty($hidValue)){
 			$path = PHPTHUMB."?src=".MF_FILES_URI;
 			$valueRelative = $hidValue;
 			$value  = $path.$hidValue."&w=150&h=120&zc=1";
-			$value  = "<img src='{$value}'/>";
+			$value  = "<img src='{$value}' id='{$imageThumbID}'/>";
 		}
 ?>
-		<p 	class="error_msg_txt" id="upload_progress_<?php echo $inputName?>" style="visibility:hidden;height:0px">
+		<p 	class="error_msg_txt" id="upload_progress_<?php echo $idField;?>" style="visibility:hidden;height:0px">
 		</p>	
 		<div id="image_photo" style="width:150px; float: left">
 			<?php echo $value;?>
-		<div id="photo_edit_link_<?php echo $inputName ?>" class="photo_edit_link"> 
+		<div id="photo_edit_link_<?php echo $idField ?>" class="photo_edit_link"> 
 			<?php
 				if(isset($_REQUEST['post'])){	
-					echo "&nbsp;<strong><a href='#remove' class='remove' id='remove-{$inputName}'>".__("Delete",$mf_domain)."</a></strong>";
+					echo "&nbsp;<strong><a href='#remove' class='remove' id='remove-{$idField}'>".__("Delete",$mf_domain)."</a></strong>";
 				}
 			?>
 		</div>
@@ -920,8 +919,8 @@ class RCCWP_WritePostPage
 	?>		
 			<div class="mf_custom_field">
 			<input tabindex="3" 
-				id="<?php echo $inputName?>" 
-				name="<?php echo $inputName?>" 
+				id="<?php echo $idField?>" 
+				name="<?php echo $inputName;?>[file_name]" 
 				type="hidden" 
 				class="<?php echo $requiredClass;?>"
 				size="46"
@@ -938,10 +937,8 @@ class RCCWP_WritePostPage
 		
 		<div style="clear: both; height: 1px;"> </div>
 		
-		<input type="hidden" name="rc_cwp_meta_photos[]" value="<?php echo $inputName?>" 	/>
-		<input type="hidden" name="<?php echo $inputName?>_dorename" id="<?php echo $inputName?>_dorename" value="0" />
 		
-		<input type="hidden" <?php if ($customField->required_field) echo 'validate="required: true,max: 0"'; ?> title="This field is required." name="<?php echo $inputName?>_deleted" id="<?php echo $inputName;?>_deleted" value="0" />
+		<input type="hidden" <?php if ($customField->required_field) echo 'validate="required: true,max: 0"'; ?> title="This field is required." name="<?php echo $inputName;?>[deleted]" id="<?php echo $idField;?>_deleted" value="0" />
 			<?php if ($customField->required_field){ ?>
 				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
 			<?php

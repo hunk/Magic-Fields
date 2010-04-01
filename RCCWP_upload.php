@@ -17,6 +17,8 @@ if( $loaded !== true ){
 	die('Could not load wp-load.php, edit/add mf-config.php and define MF_WP_LOAD to point to a valid wp-load file.');
 }
 
+
+
 global $mf_domain,  $wpdb;
 if (!(is_user_logged_in() && current_user_can('edit_posts')))
 	die(__("Athentication failed!",$mf_domain));
@@ -26,6 +28,16 @@ if (!(is_user_logged_in() && current_user_can('edit_posts')))
 <head>
 
 <?php
+//Change the nameinput magicfields[type][id gruop index][id field index] => magicfields_{type}_{id group index}_{if field index}
+function changeNameInput($inputName){
+	
+	$patterns  = array('/\[/','/\]/');
+	$replacements = array('_','');
+	return preg_replace($patterns,$replacements,$inputName);
+	
+}
+
+
 
 if (isset($_POST['fileframe'])){
 	$operationSuccess = "false";
@@ -121,16 +133,21 @@ if (isset($_POST['fileframe'])){
 
 	<script type="text/javascript" charset="utf-8">		
 		
+		<?php
+			$idField = changeNameInput($_POST['input_name']);
+		?>
+		
+		
 		// The code that runs after the file is uploaded
 		var par = window.parent.document;
-		var iframe = par.getElementById('upload_internal_iframe_<?php echo $_POST["input_name"]?>');
-		par.getElementById('upload_progress_<?php echo $_POST["input_name"]?>').innerHTML = '<?php echo $result_msg?>';
+		var iframe = par.getElementById('upload_internal_iframe_<?php echo $idField;?>');
+		par.getElementById('upload_progress_<?php echo $idField;?>').innerHTML = '<?php echo $result_msg?>';
 		iframe.style.display="";
 
 		if ( "<?php echo $operationSuccess;?>" == "true"){
-			par.getElementById("<?php echo $_POST['input_name']?>").value = "<?php echo $filename?>";
+			par.getElementById("<?php echo $idField; ?>").value = "<?php echo $filename?>";
 			
-			par.getElementById("<?php echo $_POST['input_name'];?>_deleted").value = 0;
+			par.getElementById("<?php echo $idField;?>_deleted").value = 0;
 			//Set image
 			<?php
 				$newImagePath = PHPTHUMB.'?&w=150&h=120&src='.MF_FILES_URI.$filename;
@@ -141,9 +158,9 @@ if (isset($_POST['fileframe'])){
 				{ 
 					par.getElementById('<?php echo $_POST['imageThumbID']; ?>').src = "<?php echo $newImagePath;?>";
 					
-					var b = "&nbsp;<strong><a href='#remove' class='remove' id='remove-<?php echo $_POST['input_name'];?>'>Delete</a></strong>";
+					var b = "&nbsp;<strong><a href='#remove' class='remove' id='remove-<?php echo $idField;?>'>Delete</a></strong>";
 
-					par.getElementById("photo_edit_link_<?php echo $_POST['input_name'] ?>").innerHTML = b ;
+					par.getElementById("photo_edit_link_<?php echo $idField; ?>").innerHTML = b ;
 				}
 			<?php } ?>
 		}
@@ -156,14 +173,19 @@ if (isset($_POST['fileframe'])){
 function upload(){
 	// hide old iframe
 	var par = window.parent.document;
+	
+	<?php
+		$idField = changeNameInput($_GET['input_name']);
+	?>
+	
 
-	var iframe = par.getElementById('upload_internal_iframe_<?php echo $_GET["input_name"]?>');
+	var iframe = par.getElementById('upload_internal_iframe_<?php echo  $idField?>');
 	iframe.style.display="none";
 
 	// update progress
-	par.getElementById('upload_progress_<?php echo $_GET["input_name"]?>').style.visibility = "visible";
-	par.getElementById('upload_progress_<?php echo $_GET["input_name"]?>').style.height = "auto";
-	par.getElementById('upload_progress_<?php echo $_GET["input_name"]?>').innerHTML = "Transferring ";
+	par.getElementById('upload_progress_<?php echo $idField;?>').style.visibility = "visible";
+	par.getElementById('upload_progress_<?php echo $idField;?>').style.height = "auto";
+	par.getElementById('upload_progress_<?php echo $idField;?>').innerHTML = "Transferring ";
 
 	setTimeout("transferring(0)",1000);
 	
@@ -182,8 +204,8 @@ function transferring(dots){
 	var par = window.parent.document;
 
 	// update progress
-	if (par.getElementById('upload_progress_<?php echo $_GET["input_name"]?>').innerHTML.substring(0,5) != "Trans") return;
-	par.getElementById('upload_progress_<?php echo $_GET["input_name"]?>').innerHTML = newString;
+	if (par.getElementById('upload_progress_<?php echo $idField;?>').innerHTML.substring(0,5) != "Trans") return;
+	par.getElementById('upload_progress_<?php echo $idField;?>').innerHTML = newString;
 	if (dots == 4) dots = 0; else dots = dots + 1;
 	setTimeout("transferring("+dots+")",1000) ;
 	

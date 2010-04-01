@@ -5,6 +5,8 @@ class RCCWP_SWFUpload
 	function Body($inputName, $fileType, $isCanvas = 0, $urlInputSize = false) {
 		global $mf_domain;
 		include_once('RCCWP_Options.php');
+		
+		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 
 		if (!$urlInputSize) $urlInputSize = 20;
 
@@ -21,21 +23,21 @@ class RCCWP_SWFUpload
 			$inputSizeParam = "&inputSize=$iframeInputSize";
 		}
 
-		$iframePath = MF_URI."RCCWP_upload.php?input_name=".urlencode($inputName)."&type=$fileType&imageThumbID=img_thumb_$inputName&canvas=$isCanvas".$inputSizeParam ;
+		$iframePath = MF_URI."RCCWP_upload.php?input_name=".urlencode($inputName)."&type=$fileType&imageThumbID=img_thumb_$idField&canvas=$isCanvas".$inputSizeParam ;
 		?>
-			<div id='upload_iframe_<?php echo $inputName?>'>
-				<iframe id='upload_internal_iframe_<?php echo $inputName?>' src='<?php echo $iframePath;?>' frameborder='' scrolling='no' style="border-width: 0px; height: <?php echo $iframeHeight ?>px; width: <?php echo $iframeWidth ?>px;vertical-align:top;"></iframe>
+			<div id='upload_iframe_<?php echo $idField;?>'>
+				<iframe id='upload_internal_iframe_<?php echo $idField ?>' src='<?php echo $iframePath;?>' frameborder='' scrolling='no' style="border-width: 0px; height: <?php echo $iframeHeight ?>px; width: <?php echo $iframeWidth ?>px;vertical-align:top;"></iframe>
 			</div>
 			<table border="0">
 				<tr >
 					<td style="border-bottom-width: 0px;padding: 0; padding-bottom:32px;"><label for="upload_url"><?php _e('Or URL', $mf_domain); ?>:</label></td>
 					<td style="border-bottom-width: 0px">
-						<input id="upload_url_<?php echo $inputName ?>"
+						<input id="upload_url_<?php echo $idField;  ?>"
 							name="upload_url_<?php echo $inputName ?>"
 							type="text"
 							size="<?php echo $urlInputSize ?>"
 							/>
-						<input type="button" onclick="uploadurl('<?php echo $inputName ?>','<?php echo $fileType ?>')" value="Upload" class="button" style="width:70px"/>
+						<input type="button" onclick="uploadurl('<?php echo $idField  ?>','<?php echo $fileType ?>')" value="Upload" class="button" style="width:70px"/>
 					</td>
 				</tr>
 			</table>
