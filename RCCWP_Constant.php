@@ -1,6 +1,6 @@
 <?php
 
-global $wpdb,$is_wordpress_mu,$blog_id;
+global $wpdb,$is_wordpress_mu,$blog_id,$wp_version;
 
 if (!defined('DIRECTORY_SEPARATOR'))
 {
@@ -114,8 +114,14 @@ define('MF_FILES_NAME','files_mf');
 define('MF_CACHE_NAME','cache');
 
 if($is_wordpress_mu){
-	$current_site = get_current_site();	
-	$path_content = str_replace(DIRECTORY_SEPARATOR."mu-plugins".DIRECTORY_SEPARATOR.MF_PLUGIN_DIR,"",MF_PATH);
+	$current_site = get_current_site();
+	
+	//check if WP3.0 is multisit
+	if(substr($wp_version, 0, 3) < 3.0){
+	  $path_content = str_replace(DIRECTORY_SEPARATOR."mu-plugins".DIRECTORY_SEPARATOR.MF_PLUGIN_DIR,"",MF_PATH);
+  }else{
+    $path_content = str_replace(DIRECTORY_SEPARATOR."plugins".DIRECTORY_SEPARATOR.MF_PLUGIN_DIR,"",MF_PATH);
+  }
 	$path_content = $path_content.DIRECTORY_SEPARATOR."blogs.dir".DIRECTORY_SEPARATOR.$blog_id;
 }else{
 	$path_content= str_replace(DIRECTORY_SEPARATOR."plugins".DIRECTORY_SEPARATOR.MF_PLUGIN_DIR,"",MF_PATH);
