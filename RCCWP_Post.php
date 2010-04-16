@@ -64,7 +64,13 @@ class RCCWP_Post {
 		global $wpdb;
 	
 		$customWritePanelId = $_POST['rc-cwp-custom-write-panel-id'];
+		
+		if(empty($_POST['magicfields'])){
+			return true;
+		}
+		
 		$customfields = $_POST['magicfields'];
+
 
 		if ( $the_post = wp_is_post_revision($postId))
 			$postId = $the_post;
