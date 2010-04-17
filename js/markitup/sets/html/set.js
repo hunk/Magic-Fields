@@ -13,7 +13,7 @@ mySettings = {
   previewParserPath:	mf_path +'markdownPreview.php',
 	previewInWindow: 'width=800, height=600, resizable=yes, scrollbars=yes',
 	onShiftEnter:	{keepDefault:false, replaceWith:'<br />\n'},
-	onEnter:	{keepDefault:true, replaceWith:'<br />\n'},
+	/*onEnter:	{keepDefault:true, replaceWith:'<br />\n'},*/
 	onCtrlEnter:	{keepDefault:false, openWith:'\n<p>', closeWith:'</p>\n'},
 	onTab:			{keepDefault:false, openWith:'	 '},
 	markupSet: [
