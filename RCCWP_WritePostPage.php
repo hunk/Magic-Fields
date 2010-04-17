@@ -67,8 +67,8 @@ class RCCWP_WritePostPage
 	}
 		
 	function CustomFieldsJavascript(){
-	
-	?>
+	  global $CUSTOM_WRITE_PANEL;
+  ?>
 	<script type="text/javascript">
 		var mf_path = "<?php echo MF_URI ?>" ;
 	</script>
@@ -148,6 +148,20 @@ class RCCWP_WritePostPage
   	  MF_URI.'js/markitup/jquery.markitup.setup.js',
   		array('markitup')
   	);
+  	
+  	//load script for custom magicfields
+  	if (file_exists(MF_UPLOAD_FILES_DIR.DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."magic_fields.js")) {
+  	  wp_enqueue_script('custom_magic_fields',
+    	  MF_FILES_URI.'js/magic_fields.js'
+    	);
+	  }
+	  //load script for custom write panel
+	  if (file_exists(MF_UPLOAD_FILES_DIR.DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR.$CUSTOM_WRITE_PANEL->capability_name.".js")) {
+  	   wp_enqueue_script('custom_wp'.$CUSTOM_WRITE_PANEL->capability_name,
+      	  MF_FILES_URI.'js/'.$CUSTOM_WRITE_PANEL->capability_name.'.js'
+      	);
+	  }
+	  
   		
 	}	
 	
