@@ -107,9 +107,10 @@ class RCCWP_Post {
 							//Setting the name of the file name as the custom field value
 							if(!empty($value['file_name'])){
 								$value = $value['file_name'];
+							}else{
+								$value = '';
 							}
 						}
-						
 						
 						// Adding field value meta data
 						add_post_meta($postId, $name, $value);
