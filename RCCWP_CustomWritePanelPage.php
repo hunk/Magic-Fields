@@ -36,7 +36,7 @@ class RCCWP_CustomWritePanelPage
 			<?php
 		}
 		
-  		?>
+			?>
 
 
 		<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6">
@@ -362,33 +362,33 @@ class RCCWP_CustomWritePanelPage
 		
 		<br class="clear"/>
 
-  		<table cellpadding="3" cellspacing="3" width="100%" class="widefat">
-  		<thead>
-	  		<tr>
-	  			<th width="60%" scope="col"><?php _e('Name', $mf_domain)?></th>
-	  			<th width="20%" scope="col"><?php _e('Type', $mf_domain)?></th>
+			<table cellpadding="3" cellspacing="3" width="100%" class="widefat">
+			<thead>
+				<tr>
+					<th width="60%" scope="col"><?php _e('Name', $mf_domain)?></th>
+					<th width="20%" scope="col"><?php _e('Type', $mf_domain)?></th>
 				<th width="20%" scope="col"><?php _e('Actions', $mf_domain)?></th>
 			</tr>
-  		</thead>
-  		<tbody>
-	  		<?php
-	  		foreach ($custom_groups as $group) :
+			</thead>
+			<tbody>
+				<?php
+				foreach ($custom_groups as $group) :
 				if ($customDefaultGroupId != $group->id){			
-	  		?>
-		  			<tr>
-		  				<td><strong><a style="color:#D54E21" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-group')."&custom-group-id={$group->id}"?>"><?php echo $group->name?></a></strong>&nbsp;&nbsp;(<a style="font-size:very-small" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field')."&custom-group-id={$group->id}"?>"><?php _e('create field',$mf_domain); ?></a>) </td>
-		  				<td><?php _e('Group', $mf_domain)?></td>
-		  				<td><a onclick="return confirmBeforeDelete();" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-group')."&custom-group-id={$group->id}"?>">X <?php _e('Delete',$mf_domain); ?></a></td>
-		  				
-		  			</tr>
-	  		<?php
-	  				RCCWP_CustomWritePanelPage::DisplayGroupFields($group->id, true);
+				?>
+						<tr>
+							<td><strong><a style="color:#D54E21" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-group')."&custom-group-id={$group->id}"?>"><?php echo $group->name?></a></strong>&nbsp;&nbsp;(<a style="font-size:very-small" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field')."&custom-group-id={$group->id}"?>"><?php _e('create field',$mf_domain); ?></a>) </td>
+							<td><?php _e('Group', $mf_domain)?></td>
+							<td><a onclick="return confirmBeforeDelete();" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-group')."&custom-group-id={$group->id}"?>">X <?php _e('Delete',$mf_domain); ?></a></td>
+							
+						</tr>
+				<?php
+						RCCWP_CustomWritePanelPage::DisplayGroupFields($group->id, true);
 				}
-	  		endforeach;
-	  		RCCWP_CustomWritePanelPage::DisplayGroupFields($customDefaultGroupId);
-	  		?>
-  		</tbody>
-  		</table>
+				endforeach;
+				RCCWP_CustomWritePanelPage::DisplayGroupFields($customDefaultGroupId);
+				?>
+			</tbody>
+			</table>
 		</div>
 		<br />
 		<?php
@@ -401,9 +401,9 @@ class RCCWP_CustomWritePanelPage
 		?>
 			<tr>
 				<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-field')."&custom-field-id=$field->id"?> " ><?php if ($intended){ ?><img align="top" src="<?php echo MF_URI; ?>images/arrow_right.gif" alt=""/> <?php } ?><?php echo $field->description?></a></td>
-		  		<td><?php echo $field->type?></td>
-		  		<td><a onclick="return confirmBeforeDelete();" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-field')."&custom-field-id=$field->id"?>" >X <?php _e('Delete',$mf_domain); ?></a></td>
-		  		
+					<td><?php echo $field->type?></td>
+					<td><a onclick="return confirmBeforeDelete();" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-field')."&custom-field-id=$field->id"?>" >X <?php _e('Delete',$mf_domain); ?></a></td>
+					
 			</tr>
 			
 		<?php
@@ -421,9 +421,12 @@ class RCCWP_CustomWritePanelPage
 		else {
 			die(__('Error uploading file!', $mf_domain));
 		}
+		if(isset($_REQUEST['overwrite-existing'])) {
+			$overwrite = true;
+		}
 
 		$writePanelName = basename($_FILES['import-write-panel-file']['name'], ".pnl");
-		$panelID = RCCWP_CustomWritePanel::Import($filePath, $writePanelName);
+		$panelID = RCCWP_CustomWritePanel::Import($filePath, $writePanelName, $overwrite);
 		unlink($filePath);
 		
 		
@@ -444,7 +447,8 @@ class RCCWP_CustomWritePanelPage
 		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('import-write-panel')?>" method="post"  id="posts-filter" name="ImportWritePanelForm" enctype="multipart/form-data">
 			<h2><?php _e('Custom Write Panel',$mf_domain); ?></h2>
 			<p id="post-search">					
-				<input id="import-write-panel-file" name="import-write-panel-file" type="file" /> 
+				<input id="import-write-panel-file" name="import-write-panel-file" type="file" />
+				<input id="overwrite-existing" name="overwrite-existing" type="checkbox"/> Overwrite existing panel
 				<a href="#none" class="button-secondary" style="display:inline" onclick="document.ImportWritePanelForm.submit();"><?php _e('Import a Write Panel',$mf_domain); ?></a>
 				<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-write-panel'); ?>" class="button-secondary" style="display:inline">+ <?php _e('Create a Write Panel',$mf_domain); ?></a>
 			</p>	

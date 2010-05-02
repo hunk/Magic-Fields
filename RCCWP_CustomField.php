@@ -96,7 +96,7 @@ class RCCWP_CustomField {
 				$customFieldId,
 				RC_Format::TextToSql(serialize($properties))
 				);
-			
+		
 			$wpdb->query($sql);
 			
 		}

@@ -4,7 +4,7 @@ Plugin Name: Magic-fields
 Plugin URI: http://magicfields.org
 Description: Create custom write panels and easily retrieve their values in your templates.
 Author: Hunk and Gnuget
-Version: 1.3
+Version: 1.3.2
 Author URI: http://magicfields.org
 */
 
@@ -113,8 +113,6 @@ if (is_admin()) {
 		add_action('admin_head', array('RCCWP_Menu', 'HighlightCustomPanel'));
 		
 		add_action('admin_head', 'mf_admin_style');
-	
-
 
 		// -- Hook all functions related to saving posts in order to save custom fields values
 		require_once ('RCCWP_Post.php');	
@@ -167,6 +165,7 @@ add_action('edit_page_form','cwp_add_pages_identifiers');
 add_action('edit_form_advanced','cwp_add_type_identifier');
 
 add_action('edit_form_advanced','put_write_panel_id');
+add_action('edit_page_form','put_write_panel_id');
 
 /**
  * put the id of the write panel as a hidden field in the 'create post/page' and 'edit post/page'
@@ -276,3 +275,4 @@ function valid_mime($mime,$file_type){
 	}
 	return false;
 }
+

@@ -36,7 +36,6 @@ class RCCWP_Application
 	 *  @return void
 	 */
 	function Install(){
-		
 		include_once('RCCWP_Options.php');
 		global $wpdb;
 
@@ -109,6 +108,7 @@ class RCCWP_Application
 				order_id integer NOT NULL,
 				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci" ;
 	
+			echo 'CREATE TABLES';
 
 			// try to get around
 			// these includes like http://trac.mu.wordpress.org/ticket/384 

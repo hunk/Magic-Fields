@@ -139,7 +139,7 @@ class RCCWP_CustomWritePanel
 			
 			$customWritePanel = RCCWP_CustomWritePanel::Get($customWritePanelId);
 					  	
-  			$sql = sprintf(
+				$sql = sprintf(
 				"DELETE FROM " . MF_TABLE_PANELS .
 				" WHERE id = %d",
 				$customWritePanel->id
@@ -178,6 +178,18 @@ class RCCWP_CustomWritePanel
 		$results = $wpdb->get_row($sql);
 		
 		return $results;
+	}
+	
+	/**
+	 * Gets a write panel id based on write panel name.
+	 *
+	 * @param string $name
+	 * @return the write panel id
+	 */
+	function GetIdByName($name) {
+		global $wpdb;
+		
+		return $wpdb->get_var("SELECT id FROM ".MF_TABLE_PANELS." WHERE name='".$name."'");
 	}
 	
 	/**
@@ -518,9 +530,10 @@ class RCCWP_CustomWritePanel
 	 * @param string $panelFilePath the full path of the panel file
 	 * @param string $writePanelName the write panel name, if this value if false, the function will
 	 * 							use the pnl filename as the write panel name. The default value is false
+	 * @param boolean $overwrite whether to overwrite existing panels with the same name
 	 * @return the panel id, or false in case of error.
 	 */
-	function Import($panelFilePath, $writePanelName = false)
+	function Import($panelFilePath, $writePanelName = false, $overwrite = false)
 	{
 		global $wpdb;
 		
@@ -534,13 +547,16 @@ class RCCWP_CustomWritePanel
 
 		if ($writePanelName == '') return false;
 
-		// Append a number if the panel already exists,	
-		$i = 1;
-		$temp_name = $writePanelName;
-		while ($wpdb->get_var("SELECT id FROM ".MF_TABLE_PANELS." WHERE name='".$temp_name."'")){
-			$temp_name = $writePanelName. "_" . $i++;
+		$writePanelID = RCCWP_CustomWritePanel::GetIdByName($writePanelName);
+		if ($writePanelID && !$overwrite) {
+			// Append a number if the panel already exists,	
+			$i = 2;
+			$temp_name = $writePanelName . "_1";
+			while (RCCWP_CustomWritePanel::GetIdByName($temp_name)){
+				$temp_name = $writePanelName. "_" . $i++;
+			}
+			$writePanelName = $temp_name;
 		}
-		$writePanelName = $temp_name;
 
 		// Unserialize file
 		$imported_data = unserialize(file_get_contents($panelFilePath));
@@ -558,8 +574,14 @@ class RCCWP_CustomWritePanel
 			}
 		}
 		//Create write panel
-		$writePanelID = RCCWP_CustomWritePanel::Create($writePanelName, $imported_data['panel']->description, $imported_data['panel']->standardFieldsIDs, $assignedCategories,$imported_data['panel']->display_order, $imported_data['panel']->type, false,$imported_data['panel']->single,$imported_data['panel']->theme, $imported_data['panel']->parent_page);
-		
+		if($writePanelID && $overwrite) {
+			RCCWP_CustomWritePanel::Update($existingPanelId, $writePanelName, $imported_data['panel']->description, $imported_data['panel']->standardFieldsIDs, $assignedCategories,$imported_data['panel']->display_order, $imported_data['panel']->type, false,$imported_data['panel']->single,$imported_data['panel']->theme, $imported_data['panel']->parent_page);
+			foreach (RCCWP_CustomWritePanel::GetCustomGroups($writePanelID) as $group) {
+				RCCWP_CustomGroup::Delete($group->id);
+			}
+		} else {
+			$writePanelID = RCCWP_CustomWritePanel::Create($writePanelName, $imported_data['panel']->description, $imported_data['panel']->standardFieldsIDs, $assignedCategories,$imported_data['panel']->display_order, $imported_data['panel']->type, false,$imported_data['panel']->single,$imported_data['panel']->theme, $imported_data['panel']->parent_page);
+		}
 		if(is_array($imported_data['fields'])){
 			foreach($imported_data['fields'] as $groupName => $group){
 				// For backward compatability
@@ -575,6 +597,10 @@ class RCCWP_CustomWritePanel
 				foreach ($group->fields as $field){
 					$fieldOptions = @implode("\n", $field->options);
 					$fieldDefault = @implode("\n", $field->default_value);
+					if ($field->type == "Related Type") {
+						$field->properties["panel_id"] = RCCWP_CustomWritePanel::GetIdByName($field->properties["panel_name"]);
+						unset($field->properties["panel_name"]);
+					}
 					RCCWP_CustomField::Create($groupID, $field->name, $field->description, $field->display_order, $field->required_field, $types[$field->type], $fieldOptions, $fieldDefault, $field->properties, $field->duplicate,$field->help_text);
 				}
 			}
@@ -611,7 +637,14 @@ class RCCWP_CustomWritePanel
 		
 		$moduleGroups = RCCWP_CustomWritePanel::GetCustomGroups($panelID);
 		foreach( $moduleGroups as $moduleGroup){
-			$groupFields[$moduleGroup->name]->fields = RCCWP_CustomGroup::GetCustomFields($moduleGroup->id);
+			$fields = RCCWP_CustomGroup::GetCustomFields($moduleGroup->id);
+			foreach ($fields as $field) {
+				if ($field->type == "Related Type") {
+					$field->properties["panel_name"] = RCCWP_CustomWritePanel::Get($field->properties["panel_id"])->name;
+					unset($field->properties["panel_id"]);
+				}
+			}
+			$groupFields[$moduleGroup->name]->fields = $fields;
  			$groupFields[$moduleGroup->name]->duplicate = $moduleGroup->duplicate;
 			$groupFields[$moduleGroup->name]->at_right = $moduleGroup->at_right;
 		}
@@ -645,7 +678,7 @@ class RCCWP_CustomWritePanel
 		}
 		
 		//Getting the write panel name using the id
-		$properties  = RCCWP_CustomWritePanel::Get($panel_id);
+		$properties = RCCWP_CustomWritePanel::Get($panel_id);
 		
 		return $properties->name;
 	}
