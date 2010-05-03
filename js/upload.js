@@ -28,8 +28,17 @@ uploadurl = function(input_name,file_type){
               return false;
           }
           
+          old_file = jQuery('#'+input_name).val();
+          if(old_file != '' ){
+            delete_field = jQuery('#magicfields_remove_files').val();
+            if(delete_field != ''){
+                jQuery('#magicfields_remove_files').val(delete_field+"|||"+old_file);
+            }else{
+                jQuery('#magicfields_remove_files').val(old_file);
+            }
+          }
+          
           jQuery('#'+input_name).val(h[1]);
-          jQuery('#'+input_name+'_delete').val(0);
           
           if(jQuery('#img_thumb_'+input_name)){
              jQuery('#img_thumb_'+input_name).attr('src',phpthumb+"?&w=150&h=120&src="+JS_MF_FILES_PATH+h[1]);

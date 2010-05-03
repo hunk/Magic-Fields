@@ -110,6 +110,18 @@ if (isset($_POST['fileframe'])){
 		iframe.style.display="";
 
 		if ( "<?php echo $operationSuccess;?>" == "true"){
+			
+			old_file = par.getElementById("<?php echo $idField; ?>").value;
+      if(old_file != '' ){
+        delete_field = par.getElementById("magicfields_remove_files").value;
+				if(delete_field != ''){
+          par.getElementById("magicfields_remove_files").value = delete_field+"|||"+old_file;
+        }else{
+					par.getElementById("magicfields_remove_files").value = old_file;
+        }
+      }
+					
+			
 			par.getElementById("<?php echo $idField; ?>").value = "<?php echo $filename?>";
 			//Set image
 			<?php
