@@ -68,22 +68,6 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 		$results = split('&',$results);
 		$results = $results[0];
 	}
-	
-	// Prepare fields for EIP 
-	include_once('RCCWP_Options.php');
-	$enableEditnplace = RCCWP_Options::Get('enable-editnplace');
-	if ($readyForEIP && $enableEditnplace == 1 && current_user_can('edit_posts', $post->ID)){
-		switch($fieldType){
-			case $FIELD_TYPES["textbox"]:
-				if(!$results) $results="&nbsp";
-				$results = "<div id='mfeip_".$fieldMetaID."' class='EIP_textbox' >".$results."</div>";
-				break;
-			case $FIELD_TYPES["multiline_textbox"]:
-				if(!$results) $results="&nbsp";
-				$results = "<div id='mfmueip_".$fieldMetaID."' class='EIP_mulittextbox' >".$results."</div>";
-				break;
-		}
-	}
 	return $results;
 
 }

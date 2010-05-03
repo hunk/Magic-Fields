@@ -133,16 +133,6 @@ if (is_admin()) {
 	}
 }
 
-require_once ('RCCWP_EditnPlace.php');
-require_once ('RCCWP_Options.php');
-
-// Adding javascript for the editnplace only if it is turned on
-$customWritePanelOptions = RCCWP_Options::Get();
-if( isset($customWritePanelOptions['enable-editnplace']) ) {
-	add_action('wp_head', array('RCCWP_EditnPlace', 'EditnHeader'));
-	add_action('template_redirect',array('RCCWP_EditnPlace','EditnPlaceJavascript'));
-}
-
 require_once ('RCCWP_Query.php');
 add_action('pre_get_posts', array('RCCWP_Query', 'FilterPrepare'));
 add_filter('posts_where', array('RCCWP_Query', 'FilterCustomPostsWhere'));

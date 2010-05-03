@@ -471,9 +471,7 @@ class RCCWP_Processor {
         			'hide-visual-editor' => 0,
         			'prompt-editing-post' => 0,
         			'assign-to-role' => 0,
-        			'default-custom-write-panel' => 0,
-        			'enable-editnplace' => 0,
-        			'eip-highlight-color' => "#FFFFCC"
+        			'default-custom-write-panel' => 0
         		);
         		
         		$save_options = $_POST;
@@ -483,7 +481,7 @@ class RCCWP_Processor {
         		$save = array_merge($default,$save_options);
 						
 						RCCWP_Options::Update($save);
-						$EnP = RCCWP_Application::create_EditnPlace_css(TRUE);
+						
 					}
 				}
 		}
