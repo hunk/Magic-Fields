@@ -75,41 +75,6 @@ if (isset($_POST['fileframe'])){
 				unlink($file_delete);
 				
 			}
-
-			if($operationSuccess == "true"){
-			//adding the image to  WP media
-			$query = "INSERT INTO  ".$wpdb->prefix. 'posts  (
-				post_author,
-				post_date,
-				post_date_gmt,
- 				post_content,
-				post_title,
-				post_status,
-				post_name,
- 				post_modified,
-				post_modified_gmt,
-				guid,
-				post_type,
-				post_mime_type
-				) 
-				VALUES (
-					1, 
-					now(),
-					now(), 
-					"'.$_FILES['file']['name'].'",
-					"'.$_FILES['file']['name'].'",
-					"inherit",
- 					"'.$_FILES['file']['name'].'",
-					now(),
-					now(),
-					"'.MF_FILES_URI.$filename.'",
- 					"attachment",
-					"'.$_FILES['file']['type'].'"
-				)';
-			 
-				$wpdb->query($query);
-
-			}
 		}elseif ($_FILES['file']['error'] == UPLOAD_ERR_INI_SIZE){
 			$result_msg = __('The uploaded file exceeds the maximum upload limit',$mf_domain);
 		}else{ 
@@ -146,8 +111,6 @@ if (isset($_POST['fileframe'])){
 
 		if ( "<?php echo $operationSuccess;?>" == "true"){
 			par.getElementById("<?php echo $idField; ?>").value = "<?php echo $filename?>";
-			
-			par.getElementById("<?php echo $idField;?>_deleted").value = 0;
 			//Set image
 			<?php
 				$newImagePath = PHPTHUMB.'?&w=150&h=120&src='.MF_FILES_URI.$filename;

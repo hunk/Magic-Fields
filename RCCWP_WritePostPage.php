@@ -938,7 +938,7 @@ class RCCWP_WritePostPage
 			<div class="mf_custom_field">
 			<input tabindex="3" 
 				id="<?php echo $idField?>" 
-				name="<?php echo $inputName;?>[file_name]" 
+				name="<?php echo $inputName;?>" 
 				type="hidden" 
 				class="<?php echo $requiredClass;?>"
 				size="46"
@@ -954,9 +954,6 @@ class RCCWP_WritePostPage
 		</div>
 		
 		<div style="clear: both; height: 1px;"> </div>
-		
-		
-		<input type="hidden" <?php if ($customField->required_field) echo 'validate="required: true,max: 0"'; ?> title="This field is required." name="<?php echo $inputName;?>[deleted]" id="<?php echo $idField;?>_deleted" value="0" />
 			<?php if ($customField->required_field){ ?>
 				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
 			<?php
@@ -965,8 +962,7 @@ class RCCWP_WritePostPage
 		<?php
 	}
 	
-	function RadiobuttonListInterface($customField, $inputName, $groupCounter, $fieldCounter)
-	{
+	function RadiobuttonListInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		$customFieldId = '';
 		
 		if (isset($_REQUEST['post']))

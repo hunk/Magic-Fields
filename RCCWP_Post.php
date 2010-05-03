@@ -65,6 +65,15 @@ class RCCWP_Post {
 	
 		$customWritePanelId = $_POST['rc-cwp-custom-write-panel-id'];
 		
+		//delete file
+		if(!empty($_POST['magicfields_remove_files'])){
+			$files = preg_split('/\|\|\|/', $_POST['magicfields_remove_files']);
+			foreach($files as $file){
+				@unlink(MF_FILES_PATH.$file);
+			}
+		}
+		
+		
 		if(empty($_POST['magicfields'])){
 			return true;
 		}
@@ -91,27 +100,10 @@ class RCCWP_Post {
 			foreach($customfields as $name => $groups){
 				$groups_index = 1;
 				//Iterating the groups
-				foreach($groups as $group_id => $fields){
+				foreach($groups as $group_id => $fields){ 
 					$index = 1;
 					//Iterating the  duplicates
 					foreach($fields as $value){
-						
-						//If Value is a array is because the custom field is a image or a file
-						//In that case we must do one step more before to save the value
-						if(is_array($value)){	
-							if(!empty($value['deleted'])){
-								//deleting  the file
-								unlink(MF_FILES_PATH.$value['file_name']);
-								$value = '';
-							}
-							//Setting the name of the file name as the custom field value
-							if(!empty($value['file_name'])){
-								$value = $value['file_name'];
-							}else{
-								$value = '';
-							}
-						}
-						
 						// Adding field value meta data
 						add_post_meta($postId, $name, $value);
 							
@@ -126,7 +118,7 @@ class RCCWP_Post {
 						$index++;
 					}
 					$groups_index++;
-				}		
+				} 		
 			}
 		}
 	}
