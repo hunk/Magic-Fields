@@ -62,8 +62,7 @@ class RCCWP_CustomField {
 		$customFieldId = $wpdb->insert_id;
 		
 		$field_type = RCCWP_CustomField::GetCustomFieldTypes($type);
-		if ($field_type->has_options == "true")
-		{
+		if ($field_type->has_options == "true"){
 			if (!is_array($options)) {
 				$options = stripslashes($options);
 				$options = explode("\n", $options);
@@ -89,17 +88,14 @@ class RCCWP_CustomField {
 			$wpdb->query($sql);	
 		}
 		
-		if ($field_type->has_properties == "true")
-		{
+		if ($field_type->has_properties == "true"){
 			$sql = sprintf(
 				"INSERT INTO " . MF_TABLE_CUSTOM_FIELD_PROPERTIES .
 				" (custom_field_id, properties) values (%d, %s)",
 				$customFieldId,
 				RC_Format::TextToSql(serialize($properties))
 				);
-			
 			$wpdb->query($sql);
-			
 		}
 		
 		return $customFieldId;
