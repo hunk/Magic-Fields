@@ -220,6 +220,7 @@ class RCCWP_Processor {
 					{
 						$custom_field_properties['height'] = $_POST['custom-field-height'];
 						$custom_field_properties['width'] = $_POST['custom-field-width'];
+						if( isset($_POST['hide-visual-editor']) ) $custom_field_properties['hide-visual-editor'] = 1;
 					}
 					else if (in_array($current_field->name, array('Date')))
 					{
@@ -322,6 +323,7 @@ class RCCWP_Processor {
 					{
 						$custom_field_properties['height'] = $_POST['custom-field-height'];
 						$custom_field_properties['width'] = $_POST['custom-field-width'];
+						if( isset($_POST['hide-visual-editor']) ) $custom_field_properties['hide-visual-editor'] = 1;
 					}
 					else if( in_array( $current_field->name, array('Image') ) )
 					{ 

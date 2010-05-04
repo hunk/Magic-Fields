@@ -1,9 +1,9 @@
 <?php
 
-class RCCWP_CustomFieldPage
-{
-	function Edit()
-	{
+class RCCWP_CustomFieldPage{
+	
+	function Edit(){
+		
 		global $FIELD_TYPES;
 		global $mf_domain;
 		$custom_field = RCCWP_CustomField::Get((int)$_GET['custom-field-id']);
@@ -97,6 +97,10 @@ class RCCWP_CustomFieldPage
 		<tr valign="top">
 			<th scope="row"><?php _e('Width',$mf_domain); ?>:</th>
 			<td><input type="text" name="custom-field-width" id="custom-field-width" size="2" value="<?php echo $custom_field->properties['width']?>" /></td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><?php _e('Hide Visual Editor for this field', $mf_domain); ?>:</th>
+			<td><input name="hide-visual-editor" id="hide-visual-editor" value="1" type="checkbox" <?php echo $custom_field->properties['hide-visual-editor']==0 ? "":"checked" ?> ></td>
 		</tr>	
 		<?php endif; ?>
 

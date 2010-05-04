@@ -231,6 +231,10 @@ class RCCWP_CreateCustomFieldPage
 		<tr valign="top">
 			<th scope="row"><?php _e('Width', $mf_domain); ?>:</th>
 			<td><input type="text" name="custom-field-width" id="custom-field-width" size="2" value="<?php echo $width?>" /></td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><?php _e('Hide Visual Editor for this field', $mf_domain); ?>:</th>
+			<td><input name="hide-visual-editor" id="hide-visual-editor" value="1" type="checkbox"></td>
 		</tr>	
 		<?php endif; ?>
 		
