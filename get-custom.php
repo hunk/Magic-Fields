@@ -72,6 +72,29 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 
 }
 
+
+function get_clean($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_id=NULL) {
+	require_once("RCCWP_CustomField.php");
+	global $post, $FIELD_TYPES;
+	
+	if(!$post_id){ $post_id = $post->ID; }
+	$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
+	if(!$field) return FALSE;
+	
+	$fieldType = $field['type'];
+	$fieldID = $field['id'];
+	$fieldObject = $field['properties'];
+	$fieldValues = (array)$field['meta_value'];
+	$fieldMetaID = $field['meta_id'];
+	
+	if($fieldType != $FIELD_TYPES['multiline_textbox']) return FALSE;
+	
+	$results = GetProcessedFieldValue($fieldValues, $fieldType, $fieldObject);
+	
+	return $results;
+
+}
+
 function GetProcessedFieldValue($fieldValues, $fieldType, $fieldProperties=array()){
 	global $FIELD_TYPES;
 	

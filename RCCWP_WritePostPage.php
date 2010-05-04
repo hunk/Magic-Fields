@@ -743,8 +743,9 @@ class RCCWP_WritePostPage
 		if( isset($_REQUEST['post']) ){
 			$customFieldId = $customField->id;
 			$value = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
-			$value = apply_filters('the_editor_content', $value);
-
+			if(!(int)$customField->properties['hide-visual-editor']){
+				$value = apply_filters('the_editor_content', $value);
+			}
 		}else{
 			$value = "";
 		}
