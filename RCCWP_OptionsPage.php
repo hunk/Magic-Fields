@@ -113,6 +113,19 @@ class RCCWP_OptionsPage {
 	</tr>
 
 	</table>
+	
+	<h3><?php _e('Extra', $mf_domain); ?></h3>
+	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6"> 
+		<tr valign="top">
+			<th scope="row"><?php _e('Clear cache', $mf_domain); ?></th>
+			<td>
+				<label for="clear-cache-image-mf"> 
+				<input name="clear-cache-image-mf" id="clear-cache-image-mf" value="1" type="checkbox">
+			&nbsp; <?php _e('delete all image thumbs', $mf_domain); ?></label> 
+			</td>
+		</tr>
+	</table>
+	
 
 	<h3><?php _e('Uninstall Magic Fields', $mf_domain); ?></h3>
 	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6"> 

@@ -461,6 +461,22 @@ class RCCWP_Processor {
 						RCCWP_Application::Uninstall();
 						wp_redirect('options-general.php');
 					} else {
+						
+						if( isset($_POST['clear-cache-image-mf']) ){
+							$dir = MF_CACHE_DIR;
+
+							if (is_dir($dir)) {
+						    if ($dh = opendir($dir)) {
+					        while (($file = readdir($dh)) !== false) {
+										if(!is_dir($file)){
+											@unlink(MF_CACHE_DIR.$file);
+										}
+					        }
+									closedir($dh);
+								}
+							}
+						}
+						
 						include_once('RCCWP_Options.php');
 						
 						$default = array(
