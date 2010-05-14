@@ -1,6 +1,6 @@
 <?php
 	
-require( dirname(__FILE__) . "/../../../wp-config.php");
+require( dirname(__FILE__) . "/../../../wp-load.php");
 
 //check if the user  is logged in
 global $mf_domain;

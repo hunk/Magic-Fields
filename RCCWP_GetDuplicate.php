@@ -1,6 +1,5 @@
 <?php
-
-require( dirname(__FILE__) . '/../../../wp-config.php' );
+require( dirname(__FILE__) . '/../../../wp-load.php' );
 global $mf_domain;
 if (!(is_user_logged_in() && current_user_can('edit_posts')))
 	die(__('Athentication failed!',$mf_domain));
