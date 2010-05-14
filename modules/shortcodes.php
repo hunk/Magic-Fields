@@ -48,20 +48,6 @@ function mf_shortcodes($atts) {
 	    if($fieldresults)
 		$shortcode_data = $checked;
 	}
-	// Prepare fields for EIP
-	$enableEditnplace = RCCWP_Options::Get('enable-editnplace');
-	if ($eip && $enableEditnplace == 1 && current_user_can('edit_posts', $post->ID)){
-		switch($fielddata['type']){
-			case $FIELD_TYPES["textbox"]:
-				if(!$results) $results="&nbsp";
-				$shortcode_data = "<div class='".EIP_textbox($fieldMetaID)."' >".$fieldresults."</div>";
-				break;
-			case $FIELD_TYPES["multiline_textbox"]:
-				if(!$results) $results="&nbsp";
-				$shortcode_data = "<div class='".EIP_mulittextbox($fieldMetaID)."' >".$shortcode_data."</div>";
-				break;
-		}
-	}
     if ($shortcode_data || $fieldduplicatedata) {
     if ($label) {
 	$shortcode_data = $label.$shortcode_data;

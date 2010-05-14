@@ -133,16 +133,6 @@ if (is_admin()) {
 	}
 }
 
-require_once ('RCCWP_EditnPlace.php');
-require_once ('RCCWP_Options.php');
-
-// Adding javascript for the editnplace only if it is turned on
-$customWritePanelOptions = RCCWP_Options::Get();
-if( isset($customWritePanelOptions['enable-editnplace']) ) {
-	add_action('wp_head', array('RCCWP_EditnPlace', 'EditnHeader'));
-	add_action('template_redirect',array('RCCWP_EditnPlace','EditnPlaceJavascript'));
-}
-
 require_once ('RCCWP_Query.php');
 add_action('pre_get_posts', array('RCCWP_Query', 'FilterPrepare'));
 add_filter('posts_where', array('RCCWP_Query', 'FilterCustomPostsWhere'));
@@ -177,6 +167,7 @@ function put_write_panel_id(){
 	if(!empty($CUSTOM_WRITE_PANEL->id)){
 		echo "<input type='hidden' name='rc-custom-write-panel-verify-key' id='rc-custom-write-panel-verify-key' value='".wp_create_nonce('rc-custom-write-panel')."'/>";
 		echo "<input type='hidden' name='rc-cwp-custom-write-panel-id' value='".$CUSTOM_WRITE_PANEL->id."'/>";
+		echo "<input type='hidden' value='' name='magicfields_remove_files' id='magicfields_remove_files' >";
 	}
 }
 
@@ -186,16 +177,14 @@ function cwp_add_type_identifier(){
 	global $post;
 	
 	
-	if( isset($_GET['custom-write-panel-id']) && !empty($_GET['custom-write-panel-id']))
-	{
+	if( isset($_GET['custom-write-panel-id']) && !empty($_GET['custom-write-panel-id'])){
 		$getPostID = $wpdb->get_results("SELECT id, type FROM ". MF_TABLE_PANELS ." WHERE id='".$_GET['custom-write-panel-id']."'");
 		echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"". $getPostID[0]->type ."\" />";
 
-	}
-	else{
+	}else{
 		if($post->post_type == 'page') { 
 			echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"page\" />";
- 		} else {
+ 		}else{
 			echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"post\" />";
  		}
 

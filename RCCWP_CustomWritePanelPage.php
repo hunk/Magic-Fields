@@ -362,13 +362,13 @@ class RCCWP_CustomWritePanelPage
 		
 		<br class="clear"/>
 
-  		<table cellpadding="3" cellspacing="3" width="100%" class="widefat">
+  	<table cellpadding="3" cellspacing="3" width="100%" class="widefat">
   		<thead>
 	  		<tr>
 	  			<th width="60%" scope="col"><?php _e('Name', $mf_domain)?></th>
 	  			<th width="20%" scope="col"><?php _e('Type', $mf_domain)?></th>
-				<th width="20%" scope="col"><?php _e('Actions', $mf_domain)?></th>
-			</tr>
+					<th width="20%" scope="col"><?php _e('Actions', $mf_domain)?></th>
+				</tr>
   		</thead>
   		<tbody>
 	  		<?php
@@ -417,13 +417,16 @@ class RCCWP_CustomWritePanelPage
 		
 		if(isset($_FILES['import-write-panel-file']) && !empty($_FILES['import-write-panel-file']['tmp_name']) ) {
 			$filePath = $_FILES['import-write-panel-file']['tmp_name'];
-		}
-		else {
+		}else{
 			die(__('Error uploading file!', $mf_domain));
+		}
+		
+		if(isset($_REQUEST['overwrite-existing'])) {
+			$overwrite = true;
 		}
 
 		$writePanelName = basename($_FILES['import-write-panel-file']['name'], ".pnl");
-		$panelID = RCCWP_CustomWritePanel::Import($filePath, $writePanelName);
+		$panelID = RCCWP_CustomWritePanel::Import($filePath, $writePanelName, $overwrite);
 		unlink($filePath);
 		
 		
@@ -444,7 +447,8 @@ class RCCWP_CustomWritePanelPage
 		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('import-write-panel')?>" method="post"  id="posts-filter" name="ImportWritePanelForm" enctype="multipart/form-data">
 			<h2><?php _e('Custom Write Panel',$mf_domain); ?></h2>
 			<p id="post-search">					
-				<input id="import-write-panel-file" name="import-write-panel-file" type="file" /> 
+				<input id="import-write-panel-file" name="import-write-panel-file" type="file" />
+				<input id="overwrite-existing" name="overwrite-existing" type="checkbox"/> Overwrite existing panel
 				<a href="#none" class="button-secondary" style="display:inline" onclick="document.ImportWritePanelForm.submit();"><?php _e('Import a Write Panel',$mf_domain); ?></a>
 				<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-write-panel'); ?>" class="button-secondary" style="display:inline">+ <?php _e('Create a Write Panel',$mf_domain); ?></a>
 			</p>	

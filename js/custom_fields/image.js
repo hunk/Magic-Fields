@@ -11,7 +11,15 @@ remove_photo = function(){
          id = id[1];
 
          image = jQuery('#'+id).val();
-         jQuery("#"+id+"_deleted").val(1);
+         //add file for delete
+         delete_field = jQuery('#magicfields_remove_files').val();
+         if(delete_field != ''){
+            jQuery('#magicfields_remove_files').val(delete_field+"|||"+image);
+         }else{
+            jQuery('#magicfields_remove_files').val(image);
+         }
+         
+         jQuery('#'+id).val('');
          jQuery("#img_thumb_"+id).attr("src",mf_path+"images/noimage.jpg");
          jQuery("#photo_edit_link_"+id).empty();
     }

@@ -743,28 +743,39 @@ class RCCWP_WritePostPage
 		if( isset($_REQUEST['post']) ){
 			$customFieldId = $customField->id;
 			$value = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
-			$value = apply_filters('the_editor_content', $value);
-
+			if(!(int)$customField->properties['hide-visual-editor']){
+				$value = apply_filters('the_editor_content', $value);
+			}
 		}else{
 			$value = "";
 		}
 		
 		$inputHeight = (int)$customField->properties['height'];
 		$inputWidth = (int)$customField->properties['width'];
+		$hideEditor = (int)$customField->properties['hide-visual-editor'];
+		
 		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 		
 		$pre_text='';
+		
 		$hide_visual_editor = RCCWP_Options::Get('hide-visual-editor');
-		if ($hide_visual_editor == '' || $hide_visual_editor == 0){ $pre_text="pre_editor"; ?>
+		if ($hide_visual_editor == '' || $hide_visual_editor == 0 ){
+			if(!$hideEditor){
+			$pre_text="pre_editor"; ?>
 		<div class="mf_custom_field">
 		<div class="tab_multi_mf">
 			<a onclick="del_editor('<?php echo $idField; ?>');" class="edButtonHTML_mf">HTML</a>		
 			<a onclick="add_editor('<?php echo $idField; ?>');" class="edButtonHTML_mf" >Visual</a>
 		</div>
-		<?php } ?>
+		<?php } } 
+		$classEditor = 'mf_editor';
+		if($hideEditor){
+			$classEditor = '';
+			$pre_text='';
+		} ?>
 		<div class="mul_mf">
-		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> mf_editor <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $idField; ?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"><?php echo $value?></textarea>
+		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> <?php echo $classEditor; ?> <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $idField; ?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"><?php echo $value?></textarea>
 		</div></div>
 		<?php if ($customField->required_field){ ?>
 			<div class="mf_message_error"><label for="<?php echo $idField; ?>" class="error_magicfields error">This field is required.</label></div>
@@ -938,7 +949,7 @@ class RCCWP_WritePostPage
 			<div class="mf_custom_field">
 			<input tabindex="3" 
 				id="<?php echo $idField?>" 
-				name="<?php echo $inputName;?>[file_name]" 
+				name="<?php echo $inputName;?>" 
 				type="hidden" 
 				class="<?php echo $requiredClass;?>"
 				size="46"
@@ -954,9 +965,6 @@ class RCCWP_WritePostPage
 		</div>
 		
 		<div style="clear: both; height: 1px;"> </div>
-		
-		
-		<input type="hidden" <?php if ($customField->required_field) echo 'validate="required: true,max: 0"'; ?> title="This field is required." name="<?php echo $inputName;?>[deleted]" id="<?php echo $idField;?>_deleted" value="0" />
 			<?php if ($customField->required_field){ ?>
 				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
 			<?php
@@ -965,8 +973,7 @@ class RCCWP_WritePostPage
 		<?php
 	}
 	
-	function RadiobuttonListInterface($customField, $inputName, $groupCounter, $fieldCounter)
-	{
+	function RadiobuttonListInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		$customFieldId = '';
 		
 		if (isset($_REQUEST['post']))

@@ -68,22 +68,29 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 		$results = split('&',$results);
 		$results = $results[0];
 	}
+	return $results;
+
+}
+
+
+function get_clean($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_id=NULL) {
+	require_once("RCCWP_CustomField.php");
+	global $post, $FIELD_TYPES;
 	
-	// Prepare fields for EIP 
-	include_once('RCCWP_Options.php');
-	$enableEditnplace = RCCWP_Options::Get('enable-editnplace');
-	if ($readyForEIP && $enableEditnplace == 1 && current_user_can('edit_posts', $post->ID)){
-		switch($fieldType){
-			case $FIELD_TYPES["textbox"]:
-				if(!$results) $results="&nbsp";
-				$results = "<div id='mfeip_".$fieldMetaID."' class='EIP_textbox' >".$results."</div>";
-				break;
-			case $FIELD_TYPES["multiline_textbox"]:
-				if(!$results) $results="&nbsp";
-				$results = "<div id='mfmueip_".$fieldMetaID."' class='EIP_mulittextbox' >".$results."</div>";
-				break;
-		}
-	}
+	if(!$post_id){ $post_id = $post->ID; }
+	$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
+	if(!$field) return FALSE;
+	
+	$fieldType = $field['type'];
+	$fieldID = $field['id'];
+	$fieldObject = $field['properties'];
+	$fieldValues = (array)$field['meta_value'];
+	$fieldMetaID = $field['meta_id'];
+	
+	if($fieldType != $FIELD_TYPES['multiline_textbox']) return FALSE;
+	
+	$results = GetProcessedFieldValue($fieldValues, $fieldType, $fieldObject);
+	
 	return $results;
 
 }

@@ -220,6 +220,7 @@ class RCCWP_Processor {
 					{
 						$custom_field_properties['height'] = $_POST['custom-field-height'];
 						$custom_field_properties['width'] = $_POST['custom-field-width'];
+						if( isset($_POST['hide-visual-editor']) ) $custom_field_properties['hide-visual-editor'] = 1;
 					}
 					else if (in_array($current_field->name, array('Date')))
 					{
@@ -322,6 +323,7 @@ class RCCWP_Processor {
 					{
 						$custom_field_properties['height'] = $_POST['custom-field-height'];
 						$custom_field_properties['width'] = $_POST['custom-field-width'];
+						if( isset($_POST['hide-visual-editor']) ) $custom_field_properties['hide-visual-editor'] = 1;
 					}
 					else if( in_array( $current_field->name, array('Image') ) )
 					{ 
@@ -461,6 +463,22 @@ class RCCWP_Processor {
 						RCCWP_Application::Uninstall();
 						wp_redirect('options-general.php');
 					} else {
+						
+						if( isset($_POST['clear-cache-image-mf']) ){
+							$dir = MF_CACHE_DIR;
+
+							if (is_dir($dir)) {
+						    if ($dh = opendir($dir)) {
+					        while (($file = readdir($dh)) !== false) {
+										if(!is_dir($file)){
+											@unlink(MF_CACHE_DIR.$file);
+										}
+					        }
+									closedir($dh);
+								}
+							}
+						}
+						
 						include_once('RCCWP_Options.php');
 						
 						$default = array(
@@ -471,9 +489,7 @@ class RCCWP_Processor {
         			'hide-visual-editor' => 0,
         			'prompt-editing-post' => 0,
         			'assign-to-role' => 0,
-        			'default-custom-write-panel' => 0,
-        			'enable-editnplace' => 0,
-        			'eip-highlight-color' => "#FFFFCC"
+        			'default-custom-write-panel' => 0
         		);
         		
         		$save_options = $_POST;
@@ -483,7 +499,7 @@ class RCCWP_Processor {
         		$save = array_merge($default,$save_options);
 						
 						RCCWP_Options::Update($save);
-						$EnP = RCCWP_Application::create_EditnPlace_css(TRUE);
+						
 					}
 				}
 		}

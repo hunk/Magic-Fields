@@ -113,36 +113,20 @@ class RCCWP_OptionsPage {
 	</tr>
 
 	</table>
-
 	
-	<h3><?php _e('Other Options', $mf_domain); ?></h3>
-	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6">
-	<tr valign="top">
-		<th scope="row"><?php _e('Edit-n-place', $mf_domain); ?></th>
-		<td>
-			<label for="enable-editnplace"> 
-			<input name="enable-editnplace" id="enable-editnplace" value="1" <?php echo RCCWP_OptionsPage::GetCheckboxState( $customWritePanelOptions['enable-editnplace'] )?> type="checkbox"> 
-			&nbsp; <?php _e('Edit posts instantly from the post page.', $mf_domain); ?></label> 
-		</td>
+	<h3><?php _e('Extra', $mf_domain); ?></h3>
+	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6"> 
+		<tr valign="top">
+			<th scope="row"><?php _e('Clear cache', $mf_domain); ?></th>
+			<td>
+				<label for="clear-cache-image-mf"> 
+				<input name="clear-cache-image-mf" id="clear-cache-image-mf" value="1" type="checkbox">
+			&nbsp; <?php _e('delete all image thumbs', $mf_domain); ?></label> 
+			</td>
 		</tr>
-	<script type='text/javascript' src='<?php echo MF_URI?>js/sevencolorpicker.js'></script>
-	<script type="text/javascript">
-		jQuery('document').ready(function(){
-			jQuery('#eip-highlight-color').SevenColorPicker();
-		});
-	</script>
-	<tr>
-		<th scope="row"><?php _e('EIP highlight color', $mf_domain); ?> </th>
-		<td>
-			<label for="eip-highlight-color">
-			<input name="eip-highlight-color" id="eip-highlight-color" value="<?php echo $customWritePanelOptions['eip-highlight-color']; ?>"  >
-			&nbsp; <?php _e('Use color to highlight areas EIP', $mf_domain); ?></label>
-		</td>
-	</tr>
-	
 	</table>
+	
 
-	<br />	
 	<h3><?php _e('Uninstall Magic Fields', $mf_domain); ?></h3>
 	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6"> 
 		<tr valign="top">

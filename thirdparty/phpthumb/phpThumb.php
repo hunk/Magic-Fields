@@ -51,8 +51,8 @@ $params = array_merge($default,$params);
 $md5_params =  md5("w=".$params['w']."&h=".$params['h']."&q=".$params['q']."&zc=".$params['zc']);
 
 
-//The file must be "jpg" or "png" or "jpg" 
-if(!in_array($extension,array('jpg','png','jpg'))){
+//The file must be "jpg" or "png" or "gif" 
+if(!in_array($extension,array('jpg','png','gif'))){
 	return false;
 }
 
