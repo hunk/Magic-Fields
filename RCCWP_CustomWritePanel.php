@@ -636,7 +636,15 @@ class RCCWP_CustomWritePanel
 		
 		$moduleGroups = RCCWP_CustomWritePanel::GetCustomGroups($panelID);
 		foreach( $moduleGroups as $moduleGroup){
-			$groupFields[$moduleGroup->name]->fields = RCCWP_CustomGroup::GetCustomFields($moduleGroup->id);
+			$fields = RCCWP_CustomGroup::GetCustomFields($moduleGroup->id);
+			foreach ($fields as $field) {
+				if ($field->type == "Related Type") {
+				  $tmp = RCCWP_CustomWritePanel::Get($field->properties["panel_id"]);
+          $field->properties["panel_name"] = $tmp->name;
+					unset($field->properties["panel_id"]);
+				}
+			}
+			$groupFields[$moduleGroup->name]->fields = $fields;
  			$groupFields[$moduleGroup->name]->duplicate = $moduleGroup->duplicate;
 			$groupFields[$moduleGroup->name]->at_right = $moduleGroup->at_right;
 		}
