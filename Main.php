@@ -283,3 +283,25 @@ function mf_load_modules() {
                 }
         }
 }
+
+add_filter('manage_posts_columns','change_botton_new_in_manage');
+
+function change_botton_new_in_manage($where){
+  global $wpdb, $parent_file;
+  if( $parent_file != 'edit.php' ) return $where;
+  
+  if(isset($_GET['custom-write-panel-id'])){
+    ?>
+    <script>
+    jQuery().ready(function() {
+      add = <?php printf("'?custom-write-panel-id=%s'",$_GET['custom-write-panel-id']); ?>;
+      tmp_url = jQuery(".wrap").children('h2').children('a').attr('href');
+      if(tmp_url == "post-new.php"){
+        jQuery(".wrap").children('h2').children('a').attr('href',tmp_url+add);
+      }
+    });
+    </script>
+    <?php
+  }
+  return $where;
+}
