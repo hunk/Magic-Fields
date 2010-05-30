@@ -49,6 +49,8 @@ if (isset($_POST['fileframe'])){
 		}elseif ($_POST['type'] == '2'){
 			$acceptedExts = "audio"; 
 		}
+	}else{
+		$acceptedExts = "file";
 	}
 	
 	// A file is uploaded
