@@ -1,8 +1,8 @@
 # Magic Fields
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
 * Contributors: [Freshout](http://freshout.us "Freshout"), [Jeff Minard](http://jrm.cc/ "Jeff Minard"),[Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"),Michael Bayard,[Doc4](doc4design.com/ "Doc4")
-* Tested up to: Wordpress 2.8.6
-* Stable tag: 1.3
+* Tested up to: Wordpress 2.9
+* Stable tag: 1.4
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -17,6 +17,27 @@ Follow the following steps to install this plugin.
 2.	Activate the plugin through the 'Plugins' menu in WordPress.
 
 ## Changelog ##
+
+###1.4###
+* Magic Fields works fine with  the next release of Wordpress (v3.0)
+* Was removed phpthumb, and was added a specific functions for make the same things to phpthumb would  do, this means to magic fields is now 7000 lines more lightweight
+* Was added a new type of field (markdown text field)
+* Prototype framework is not used anymore, now magic fields only use  jquery
+* Implemented new shortcodes for use the content of the magic fields inside of a post
+* Magic Fields now is avalaible in spanish and was added the .po and .mo files for translate MF in more languages.
+* Was integrated the changes made by the "store lives plugin" for magic fields works well with  "living stories"
+* was added a new option for delete the cache of the images  (for avoid overweight in the cache folder)
+* Was added a new function called get_clean this function doesn't apply any filter of "the content" onto  the multiline field.
+* Was removed Edit in place feature,  this feature cause more troubles than benefits
+* Adding a new boton "html" in the multiline custom field.
+* new engine for remove  the physical files when a file is removed in a write panel
+* magic fields don't send anymore trash to the wordpress multimedia content http://bit.ly/av88h5
+* Now the order in the  groups works well, http://bit.ly/9tqH59
+* new way to assign categories onto the write panels (for wordpress 3.0 compatibility)  http://bit.ly/blTAZB
+* now magic fields works well when the wp-config.php file is located outside (up one level) from the wordpress root directory http://bit.ly/9NAxdI
+* Little fixes in the  in the export write panel function
+* Now the button "add new" inside of the manage page into a write panel point into the correct place (before the reference of the write panel was lost)
+
 
 ###1.3###
 
