@@ -114,6 +114,7 @@ function GetProcessedFieldValue($fieldValues, $fieldType, $fieldProperties=array
 				break;
 	
 			case $FIELD_TYPES["date"]: 
+			  if(!$fieldValue) return false;
 				$fieldValue = date($fieldProperties['format'],strtotime($fieldValue)); 
 				break;
 		}
