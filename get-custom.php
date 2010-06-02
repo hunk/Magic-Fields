@@ -375,15 +375,15 @@ function aux_image($fieldValue,$params_image){
 
   	$default = array(
     	'zc'=> 1,
-  		'w'	=> 100,
-  		'h'	=> 100,
+  		'w'	=> 0,
+  		'h'	=> 0,
   		'q'	=>  85,
   		'src' => MF_FILES_PATH.$fieldValue
   	);
 
 	$size = @getimagesize(MF_UPLOAD_FILES_DIR.$fieldValue);
-	$default['w'] = $size[0];
-	$default['h'] = $size[1];
+	$defaults['w'] = $size[0];
+	$defaults['h'] = $size[1];
 
 	$params_image = explode("&",$params_image);
 	foreach($params_image as $param){
@@ -393,6 +393,11 @@ function aux_image($fieldValue,$params_image){
 		}
 	}
 	
+	if( ($default['w'] > 0) && ($default['h'] == 0) ){
+	  $default['h'] = round( ($default['w']*$defaults['h']) / $defaults['w'] );
+	}elseif( ($default['w'] == 0) && ($default['h'] > 0) ){
+	  $default['w'] = round( ($default['h']*$defaults['w']) / $defaults['h'] );
+	}
 	
 	$MFthumb = MF_PATH.'/MF_thumb.php';
   require_once($MFthumb);
