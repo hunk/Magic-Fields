@@ -408,6 +408,7 @@ class RCCWP_WritePostPage
 			<br />
 			<?php
 				if( $customGroup->duplicate != 0 ){
+				  $sgn = Inflect::singularize($customGroup->name);
 			?>
 			<div class="mf_toolbox">
 				<span class="hndle sortable_mf row_mf">
@@ -419,7 +420,6 @@ class RCCWP_WritePostPage
 				<span class="add_mf">
 					<?php
 						if($groupCounter != 1):
-						  $sgn = Inflect::singularize($customGroup->name);
 						?>
 							<a class ="delete_duplicate_button" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"> 
 								<img class="duplicate_image"  src="<?php echo MF_URI; ?>images/delete.png" alt="<?php _e('Remove '.$sgn, $mf_domain); ?>"/><?php _e('Remove '.$sgn, $mf_domain); ?>
