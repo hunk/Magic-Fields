@@ -418,13 +418,16 @@ class RCCWP_WritePostPage
 				</span>
 				<span class="add_mf">
 					<?php
-						if($groupCounter != 1):?>
+						if($groupCounter != 1):
+						  $sgn = Inflect::singularize($customGroup->name);
+						?>
 							<a class ="delete_duplicate_button" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"> 
-								<img class="duplicate_image"  src="<?php echo MF_URI; ?>images/delete.png" alt="<?php _e('Remove field duplicate', $mf_domain); ?>"/><?php _e('Remove Group', $mf_domain); ?>
+								<img class="duplicate_image"  src="<?php echo MF_URI; ?>images/delete.png" alt="<?php _e('Remove '.$sgn, $mf_domain); ?>"/><?php _e('Remove '.$sgn, $mf_domain); ?>
 							</a>
 						<?php else:?> 
 							<a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);"> 
-								<img class="duplicate_image" src="<?php echo MF_URI; ?>images/duplicate.png" alt="<?php _e('Add group duplicate', $mf_domain); ?>" title="Duplicate Field"/>
+								<img class="duplicate_image" src="<?php echo MF_URI; ?>images/duplicate.png" alt="<?php _e('Add Another '.$sgn, $mf_domain); ?>" title=""/>
+                Add Another <?=$sgn?>
 							</a>
 					   <?php endif;?> 
 				</span>
@@ -472,7 +475,7 @@ class RCCWP_WritePostPage
 					<small class="tip">(what's this?)<span class="field_help"><?php echo $customFieldHelp; ?></span></small>
 				<?php } ?>
 			</label>
-			<span>
+			<div>
 				<p class="error_msg_txt" id="fieldcellerror_<?php echo $inputCustomName?>" style="display:none"></p>
 				<?php		
 				switch ($customField->type) {
@@ -524,13 +527,16 @@ class RCCWP_WritePostPage
 					default:
 						;
 				}
+				
+				$cfd = Inflect::singularize($customField->description);
+					
 				if($fieldCounter == 1) {
 					?>
 					<?php if($customField->duplicate != 0 ){ ?>
 					<br />
 					
 					 <a class ="typeHandler" href="javascript:void(0);" id="type_handler-<?php echo $inputCustomName ?>" > 
-						<img class="duplicate_image"  src="<?php echo MF_URI; ?>images/duplicate.png" alt="<?php _e('Add field duplicate', $mf_domain); ?>"/>  <?php _e('Duplicate', $mf_domain); ?>
+						<img class="duplicate_image"  src="<?php echo MF_URI; ?>images/duplicate.png" alt="<?php _e('Add Another', $mf_domain); ?>"/>  <?php _e('Add Another '.$cfd, $mf_domain); ?>
 					</a>
 					<?php } ?>
 					<?php
@@ -540,12 +546,12 @@ class RCCWP_WritePostPage
 				?>
 					<br />
 					<a class ="delete_duplicate_field" href="javascript:void(0)" id="delete_field_repeat-<?php echo $inputCustomName?>"> 
-						<img class="duplicate_image"  src="<?php echo MF_URI; ?>images/delete.png" alt="<?php _e('Remove field duplicate', $mf_domain); ?> "/> <?php _e('Remove', $mf_domain); ?> 
+						<img class="duplicate_image"  src="<?php echo MF_URI; ?>images/delete.png" alt="<?php _e('Remove', $mf_domain); ?> "/> <?php _e('Remove '.$cfd, $mf_domain); ?> 
 					</a>
 				<?php
 				}
 				?>
-		</span>
+		</div>
 		</div>
 	<?php
 	}
@@ -1005,7 +1011,7 @@ class RCCWP_WritePostPage
 ?>
 		<p 	class="error_msg_txt" id="upload_progress_<?php echo $idField;?>" style="visibility:hidden;height:0px">
 		</p>	
-		<div id="image_photo" style="width:150px; float: left">
+		<div class="image_photo" style="width:150px; float: left">
 			<?php echo $value;?>
 		<div id="photo_edit_link_<?php echo $idField ?>" class="photo_edit_link"> 
 			<?php
@@ -1015,7 +1021,7 @@ class RCCWP_WritePostPage
 			?>
 		</div>
 		</div>
-		<div id="image_input" style="padding-left: 170px;">
+		<div class="image_input" style="padding-left: 170px;">
 	<?php
 	if(empty($requiredClass)){
 		$requiredClass ='';

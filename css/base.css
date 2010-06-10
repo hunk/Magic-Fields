@@ -160,3 +160,253 @@
 	margin-top: -16px;
 	padding-left: 3px;
 }
+
+/* Traversal patches for a cleaner UI */
+
+.write_panel_wrapper .checkbox_list_mf {
+  margin-left: 4px;
+  margin-top: 4px;
+}
+
+.write_panel_wrapper .mf_custom_field input {
+  margin-bottom: 4px;
+}
+
+#poststuff .magicfield_group .inside {
+  margin: 0;
+}
+
+
+.write_panel_wrapper {
+  border: 1px solid #eaeaea;
+  -webkit-border-top-left-radius: 6px 6px;
+  -webkit-border-top-right-radius: 6px 6px;
+  background: url(../images/mf_field.png) repeat-x #f8f8f8;
+}
+
+.write_panel_wrapper .mf_custom_field br {
+  line-height: 0;
+  height: 0;
+  font-size: 0;
+  display: none;
+}
+
+.write_panel_wrapper .mf-field {
+  padding: 10px 7px 0px 7px;
+  margin-top: 12px;
+  border-top: 1px solid #eaeaea;
+  background: url(../images/mf_field.png) repeat-x;
+}
+
+.write_panel_wrapper .inside .mf-field:first-child {
+  border-top: none;
+  padding-top: 0px;
+  background: none;
+}
+
+.write_panel_wrapper .mf-field input.textboxinterface {
+  background: #fff;
+  width: 99%;
+}
+
+.write_panel_wrapper .mf-field label {
+  margin-bottom: 8px;
+  margin-left: 3px;
+  margin-top: 0;
+  font-size: 12px;
+  
+}
+
+
+
+.write_panel_wrapper .mf_duplicate_group {
+  border: 1px solid #bbb; /*#a7c1d9;*/
+  border: 1px solid #a7c1d9;
+  margin-bottom: 0;
+}
+
+.write_panel_wrapper label.mf-checkbox-list {
+  margin-top: 9px;
+  margin-bottom: 2px;
+  margin-left: 2px;
+  font-weight: normal;
+  font-size: 11px;
+  margin-right: 6px;
+}
+
+.write_panel_wrapper input.checkbox_list_mf {
+  height: 14px;
+  width: 14px;
+  margin-right: 0;
+}
+
+.write_panel_wrapper input.checkbox_mf {
+  height: 14px;
+  width: 14px;
+  margin-right: 0;
+  margin-left: 2px;
+  
+}
+
+.write_panel_wrapper a.typeHandler,
+.write_panel_wrapper a.delete_duplicate_field {
+  text-decoration: none;
+  padding-left: 2px;
+  line-height: 16px;
+  font-weight: bold;
+}
+
+.write_panel_wrapper a.typeHandler img,
+.write_panel_wrapper a.delete_duplicate_field img,
+.write_panel_wrapper a.delete_duplicate_button img,
+.write_panel_wrapper a.duplicate_button img {
+  margin-top: -3px;
+  padding: 0;
+  margin-right: 4px;
+}
+
+.write_panel_wrapper small.tip,
+.write_panel_wrapper small.tip:hover {
+  font-size: 10px;
+}
+
+.write_panel_wrapper select {
+  width: 90%;
+}
+
+
+.write_panel_wrapper .mf_toolbox {
+  height: 22px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 6px;
+  background: url(../images/mf_toolbox.png) repeat-x #F3F3F3;
+  border-top: 1px solid #EAEAEA;
+  border-bottom: 1px solid #EAEAEA;
+}
+
+.write_panel_wrapper a.delete_duplicate_button,
+.write_panel_wrapper a.duplicate_button {
+  text-decoration: none;
+  line-height: 16px;
+}
+
+.write_panel_wrapper .image_photo {
+  border: 1px solid #EAEAEA;
+  background: #FFF;
+  width: 158px !important;
+  margin-top: 2px;
+}
+
+.write_panel_wrapper .image_photo img {
+  margin: 4px;
+}
+
+.write_panel_wrapper .image_input td {
+  padding-bottom: 0 !important;
+}
+
+.write_panel_wrapper .image_input td label {
+  font-weight: normal;
+  padding-top: 6px;
+  padding-right: 4px;
+}
+
+.write_panel_wrapper .photo_edit_link {
+  line-height: 18px;
+  border-top: 1px solid #EAEAEA;
+  width: 158px;
+}
+
+.write_panel_wrapper .photo_edit_link a {
+  text-decoration: none;
+}
+
+.write_panel_wrapper .mf_counter {
+  line-height: 15px;
+  padding-right: 2px;
+}
+
+.write_panel_wrapper .listbox_mf {
+  margin-left: 0;
+  width: 96%;
+}
+
+.write_panel_wrapper .tab_multi_mf {
+  overflow: hidden;
+  padding-bottom: 3px;
+}
+
+.write_panel_wrapper .mf_message_error {
+  color: #cc0000;
+  width: 94%;
+}
+
+.write_panel_wrapper .mf_message_error label {
+  margin-left: 0;
+  overflow: hidden;
+  zoom: 100%;
+  padding: 6px;
+  font-size: 10px;
+  height: auto;
+  background-color: #FFFFCC;
+}
+
+.write_panel_wrapper .Multiline_Textbox table.mceLayout {
+  border: 1px solid #dfdfdf;
+  -moz-border-top-right-radius: 3px;
+  -moz-border-top-left-radius: 3px;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-top-left-radius: 3px;
+}
+
+.write_panel_wrapper .tab_multi_mf a {
+  float: left;
+  line-height: 18px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-right: 3px;
+}
+
+.write_panel_wrapper .tab_multi_mf a.current {
+    background-color: #e3e3e3;
+    color: #666666 !important;
+    border-color: #ccc;
+    font-weight: bold;
+}
+
+.write_panel_wrapper .Multiline_Textbox textarea {
+  width: 96%;
+}
+
+.write_panel_wrapper input.datepicker_mf {
+  margin-left: 0;
+  background-color: #eeeeee
+}
+
+.write_panel_wrapper input.datebotton_mf,
+.write_panel_wrapper input.todaybotton_mf {
+  font-size: 10px;
+  background-color: #ddd;
+  cursor: pointer;
+  position: relative;
+  top: -1px;
+}  
+
+.write_panel_wrapper .Radiobutton_List .mf_custom_field {
+  overflow: hidden;
+  zoom: 100%;
+}
+
+.write_panel_wrapper .Radiobutton_List label.selectit {
+  font-weight: normal;
+  cursor: default;
+}
+
+.write_panel_wrapper .selectit {
+  float: left;
+  padding-right: 10px;
+}
+
