@@ -857,7 +857,9 @@ class RCCWP_WritePostPage
 		} ?>
 		<div class="mul_mf">
 		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> <?php echo $classEditor; ?> <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $idField; ?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"><?php echo $value?></textarea>
-		</div></div>
+		</div>
+		
+		<?php if (!$hideEditor){?></div><?php } ?>
 		<?php if ($customField->required_field){ ?>
 			<div class="mf_message_error"><label for="<?php echo $idField; ?>" class="error_magicfields error">This field is required.</label></div>
 		<?php } ?>
