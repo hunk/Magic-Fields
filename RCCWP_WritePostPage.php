@@ -644,6 +644,18 @@ class RCCWP_WritePostPage
 		<?php }
 	}
 	
+	// traversal
+	function RelatedTypeFieldsFilter($fields) {
+    return "*";
+  }
+  
+  function RelatedTypeOrderByFilter($orderby) {
+	  global $wpdb;
+	  $orderby = "$wpdb->postmeta.meta_value,$wpdb->posts.post_title";
+    return $orderby;
+  }
+
+
 	//eeble
 	function RelatedTypeInterface($customField, $inputName, $groupCounter, $fieldCounter)
 	{
@@ -670,6 +682,9 @@ class RCCWP_WritePostPage
 			<option value=""><?php _e('--Select--', $mf_domain); ?></option>
 		
 		<?php
+		
+    $pn_cache = array(); // setup a panel name cache (so we only look up the panel name ONCe for each panel ID)
+
 		if($panel_id == -4){
 			$options=get_posts("post_type=post&numberposts=-1&order=ASC&orderby=title");
 		}elseif($panel_id == -3){
@@ -678,18 +693,78 @@ class RCCWP_WritePostPage
 				$options=get_posts("post_type=post&meta_key=_mf_write_panel_id&numberposts=-1&order=ASC&orderby=title");
 		}elseif($panel_id == -1){
 					$options=get_posts("post_type=page&meta_key=_mf_write_panel_id&numberposts=-1&order=ASC&orderby=title");
-		}else{
+		}elseif($panel_id == -6){
+			$options=get_posts("post_type=any&numberposts=-1");
+    }elseif($panel_id == -5){
+      add_filter('posts_fields', 'RelatedTypeFieldsFilter');
+      add_filter('posts_orderby', 'RelatedTypeOrderByFilter');
+
+      $options = get_posts( array( 
+        'suppress_filters' => false, 
+        'post_type' => 'any', 
+        'meta_key' =>  '_mf_write_panel_id',
+        'numberposts' => -1,
+        'order' => 'ASC'
+      ));
+      remove_filter('posts_fields', 'RelatedTypeFieldsFilter');
+      remove_filter('posts_orderby', 'RelatedTypeOrderByFilter');
+    }
+		else{
 			$options=get_posts("post_type=any&meta_key=_mf_write_panel_id&numberposts=-1&meta_value=$panel_id&order=ASC&orderby=title");
 		}
 		
+		$last_panel_name = ""; // traversal (for grouping)
+
 		foreach ($options as $option) :
+
+  /* TRAVERSAL ADDITION - Adds grouping of related type fields when all write panels are listed -- */
+      $panel_name = "";
+		  $display_panel_name = "";
+		  
+		  if ( $panel_id == -5 || $panel_id == -2 || $panel_id == -1 ) {
+		  	
+		  	$panel_name = $pn_cache[$option->meta_value];
+		  	
+		  	if (!$panel_name) {
+		  	  // look it up
+		  	  $panel_name = $wpdb->get_var("SELECT `name` FROM ".MF_TABLE_PANELS." WHERE id = ".$option->meta_value);
+          if ($panel_name) {
+            $pn_cache[$option->meta_value] = $panel_name;
+          }
+	  	  }
+	  	  
+	  	  
+        if (!$panel_name) {
+          $panel_name = "";
+	  	    $display_panel_name = Inflect::singularize($panel_name);
+        } else {
+  	  	  $display_panel_name = Inflect::singularize($panel_name)." - ";
+        }
+        
+        if ($panel_name != "" && $panel_name != $last_panel_name) {
+          if ($last_panel_name != "") {
+            echo "</optgroup>";
+          }
+
+          echo '<optgroup label="'.Inflect::pluralize($panel_name).'">';
+          $last_panel_name = $panel_name;
+        }
+      }
+      /* END TRAVERSAL ADDITION */
+      
 			$selected = $option->ID == $value ? 'selected="selected"' : '';
 		?>
-			<option value="<?php echo $option->ID ?>" <?php echo $selected?>><?php echo $option->post_title ?></option>
+			<option value="<?php echo $option->ID ?>" <?php echo $selected?>><?php echo $display_panel_name.$option->post_title ?></option><!-- TRAVERSAL UPDATE, adds display panel name as prefix -->
 		<?php
 		endforeach;
+
+    // TRAVERSAL ADDITION, closes optgroup 
+		if ($last_panel_name != "") {
+		  echo "</optgroup>";
+	  }
+		// END TRAVERSAL ADDITION 
 		?>
-		
+
 		</select></div>
 		<?php if ($customField->required_field){ ?>
 			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>

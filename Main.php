@@ -67,6 +67,9 @@ require_once 'RCCWP_CreateCustomFieldPage.php';
 //Debug tool
 require_once 'tools/debug.php';
 
+//Inflection class
+require_once 'tools/inflect.php';
+
  /**
   * function for languages
   */
