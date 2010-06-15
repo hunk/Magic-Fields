@@ -2,6 +2,18 @@
 /**
  * This class content all  type of fields for the panels
  */
+ 
+ // traversal
+	function RelatedTypeFieldsFilter($fields) {
+    return "*";
+  }
+  
+  function RelatedTypeOrderByFilter($orderby) {
+	  global $wpdb;
+	  $orderby = "$wpdb->postmeta.meta_value,$wpdb->posts.post_title";
+    return $orderby;
+  }
+  
 class RCCWP_WritePostPage 
 {
 	function ApplyWritePanelAssignedCategoriesOrTemplate(){
@@ -650,16 +662,7 @@ class RCCWP_WritePostPage
 		<?php }
 	}
 	
-	// traversal
-	function RelatedTypeFieldsFilter($fields) {
-    return "*";
-  }
-  
-  function RelatedTypeOrderByFilter($orderby) {
-	  global $wpdb;
-	  $orderby = "$wpdb->postmeta.meta_value,$wpdb->posts.post_title";
-    return $orderby;
-  }
+	
 
 
 	//eeble
@@ -857,9 +860,7 @@ class RCCWP_WritePostPage
 		} ?>
 		<div class="mul_mf">
 		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> <?php echo $classEditor; ?> <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $idField; ?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"><?php echo $value?></textarea>
-		</div>
-		
-		<?php if (!$hideEditor){?></div><?php } ?>
+		</div><?php if (!$hideEditor){?></div><?php } ?>
 		<?php if ($customField->required_field){ ?>
 			<div class="mf_message_error"><label for="<?php echo $idField; ?>" class="error_magicfields error">This field is required.</label></div>
 		<?php } ?>
