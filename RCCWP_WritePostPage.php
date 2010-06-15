@@ -668,7 +668,7 @@ class RCCWP_WritePostPage
 	//eeble
 	function RelatedTypeInterface($customField, $inputName, $groupCounter, $fieldCounter)
 	{
-		global $mf_domain;
+		global $mf_domain, $wpdb;
 		$customFieldId = '';
 		if (isset($_REQUEST['post']))
 		{
