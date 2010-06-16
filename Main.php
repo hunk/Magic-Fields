@@ -133,6 +133,7 @@ if (is_admin()) {
 	}
 }
 
+require_once ('RCCWP_Options.php');
 require_once ('RCCWP_Query.php');
 add_action('pre_get_posts', array('RCCWP_Query', 'FilterPrepare'));
 add_filter('posts_where', array('RCCWP_Query', 'FilterCustomPostsWhere'));
@@ -141,7 +142,9 @@ add_filter('posts_orderby', array('RCCWP_Query', 'FilterCustomPostsOrderby'));
 add_filter('posts_fields', array('RCCWP_Query', 'FilterCustomPostsFields'));
 add_filter('posts_join_paged', array('RCCWP_Query', 'FilterCustomPostsJoin'));
 
-if( isset($customWritePanelOptions['condense-menu']) ){
+
+$condense = RCCWP_Options::Get('condense-menu');
+if($condense ){
 	//adding Column for posts
 	add_filter('manage_posts_columns',array('RCCWP_Query','ColumnWritePanel'));
 	add_action('manage_posts_custom_column',array('RCCWP_Query','ColumnWritePanelData'));
