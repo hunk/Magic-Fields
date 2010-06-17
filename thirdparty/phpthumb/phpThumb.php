@@ -1,5 +1,5 @@
 <?php
-//TODO: The Original Image MUST be  bigger to the thumb
+ob_start();
 //use wp-load. Normally right here, but if it's not...
 if( file_exists('../../../../../wp-load.php')){
 	require_once('../../../../../wp-load.php');
@@ -13,6 +13,7 @@ if( file_exists('../../../../../wp-load.php')){
 if($loaded  !== true){
 	die('Could not load wp-load.php, edit/add mf-config.php and define MF_WP_LOAD to point to a valid wp-load file');
 }
+ob_end_clean();
 
 $MFthumb = MF_PATH.'/MF_thumb.php';
 require_once($MFthumb);
