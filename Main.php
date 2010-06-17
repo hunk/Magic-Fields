@@ -308,3 +308,12 @@ function change_botton_new_in_manage($where){
   }
   return $where;
 }
+
+/** Wordpress 3.0 and beyond**/
+
+
+/**
+ * Post Type Panels
+ **/
+require_once('MF_PostTypesPage.php'); 
+add_action('admin_menu',array('MF_PostTypePages','top_menu'));
