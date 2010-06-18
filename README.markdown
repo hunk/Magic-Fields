@@ -2,7 +2,7 @@
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
 * Contributors: [Freshout](http://freshout.us "Freshout"), [Jeff Minard](http://jrm.cc/ "Jeff Minard"),[Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"),Michael Bayard,[Doc4](doc4design.com/ "Doc4")
 * Tested up to: Wordpress 2.9
-* Stable tag: 1.4
+* Stable tag: 1.4.1
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -17,6 +17,12 @@ Follow the following steps to install this plugin.
 2.	Activate the plugin through the 'Plugins' menu in WordPress.
 
 ## Changelog ##
+
+###1.4.1###
+* fixed </div> issue with Multiline text fields when the visual editor is turned off.
+* Adding a little fix in the "condense" menu mode 
+* Fixed issue in the generate image.
+
 
 ###1.4###
 * Magic Fields works fine with  the next release of Wordpress (v3.0)
