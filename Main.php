@@ -342,6 +342,13 @@ function change_botton_new_in_manage($where){
             jQuery(this).children('span').text(<?php printf('"(%s)"', $num_posts_mf->draft); ?>);
           }
           break;
+        case <?php printf('"%s"',__("Draft")); ?>:
+          url_all = jQuery(this).attr('href');
+          if(url_all == post_mf+'?post_status=draft'){
+            jQuery(this).attr('href',url_all+'&'+add_all_links);
+            jQuery(this).children('span').text(<?php printf('"(%s)"', $num_posts_mf->draft); ?>);
+          }
+          break;
         case <?php printf('"%s"',__("Private")); ?>:
           url_all = jQuery(this).attr('href');
           if(url_all == post_mf+'?post_status=private'){
