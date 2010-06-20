@@ -288,20 +288,77 @@ function mf_load_modules() {
 }
 
 add_filter('manage_posts_columns','change_botton_new_in_manage');
+add_filter('manage_pages_columns','change_botton_new_in_manage');
 
 function change_botton_new_in_manage($where){
-  global $wpdb, $parent_file;
-  if( $parent_file != 'edit.php' ) return $where;
-  
+  global $wpdb, $parent_file; 
+  $types = array('edit.php','edit-pages.php');
+  $type_add_new = array('edit.php' => 'post-new.php' ,'edit-pages.php' => 'page-new.php');
+  if( !in_array($parent_file, $types) ) return $where;
   if(isset($_GET['custom-write-panel-id'])){
     ?>
     <script>
     jQuery().ready(function() {
+      type_mf = <?php printf("'%s'",$type_add_new[$parent_file]); ?>;
+      post_mf = <?php printf("'%s'",$parent_file); ?>;
+      
       add = <?php printf("'?custom-write-panel-id=%s'",$_GET['custom-write-panel-id']); ?>;
       tmp_url = jQuery(".wrap").children('h2').children('a').attr('href');
-      if(tmp_url == "post-new.php"){
+      if(tmp_url == type_mf){
         jQuery(".wrap").children('h2').children('a').attr('href',tmp_url+add);
       }
+      
+      <?php $num_posts_mf = RCCWP_CustomWritePanel::GetCountPstWritePanel($_GET['custom-write-panel-id']); ?>
+  
+      add_all_links = <?php printf("'filter-posts=1&custom-write-panel-id=%s'",$_GET['custom-write-panel-id']); ?>;
+      jQuery('.subsubsub li > a').each(function(){
+      element = jQuery(this).text().split(" (");
+      switch(element[0]) {
+        case <?php printf('"%s"',__("All")); ?>:
+          url_all = jQuery(this).attr('href');
+          if(url_all == post_mf){
+            jQuery(this).attr('href',url_all+'?'+add_all_links);
+            jQuery(this).children('span').text(<?php printf('"(%s)"',array_sum( (array) $num_posts_mf ) - $num_posts_mf->trash); ?>);
+            }
+          break;
+        case <?php printf('"%s"',__("Published")); ?>:
+          url_all = jQuery(this).attr('href');
+          if(url_all == post_mf +'?post_status=publish'){
+            jQuery(this).attr('href',url_all+'&'+add_all_links);
+            jQuery(this).children('span').text(<?php printf('"(%s)"', $num_posts_mf->publish); ?>);
+          }
+          break;
+        case <?php printf('"%s"',__("Pending Review")); ?>:
+          url_all = jQuery(this).attr('href');
+          if(url_all == post_mf+'?post_status=pending'){
+            jQuery(this).attr('href',url_all+'&'+add_all_links);
+            jQuery(this).children('span').text(<?php printf('"(%s)"', $num_posts_mf->pending); ?>);
+          }
+          break;
+        case <?php printf('"%s"',__("Drafts")); ?>:
+          url_all = jQuery(this).attr('href');
+          if(url_all == post_mf+'?post_status=draft'){
+            jQuery(this).attr('href',url_all+'&'+add_all_links);
+            jQuery(this).children('span').text(<?php printf('"(%s)"', $num_posts_mf->draft); ?>);
+          }
+          break;
+        case <?php printf('"%s"',__("Private")); ?>:
+          url_all = jQuery(this).attr('href');
+          if(url_all == post_mf+'?post_status=private'){
+            jQuery(this).attr('href',url_all+'&'+add_all_links);
+            jQuery(this).children('span').text(<?php printf('"(%s)"', $num_posts_mf->private); ?>);
+          }
+          break;
+        case <?php printf('"%s"',__("Trash")); ?>:
+          url_all = jQuery(this).attr('href');
+          if(url_all == post_mf+'?post_status=trash'){
+            jQuery(this).attr('href',url_all+'&'+add_all_links);
+            jQuery(this).children('span').text(<?php printf('"(%s)"', $num_posts_mf->trash); ?>);
+          }
+          break;
+      }
+    });
+      
     });
     </script>
     <?php

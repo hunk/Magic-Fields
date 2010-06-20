@@ -61,8 +61,8 @@ class RCCWP_Query
 	 */
 	function ExcludeWritepanelsPosts($where){
 		global $wpdb, $parent_file;
-		
-		if( $parent_file != 'edit.php' ) return $where;
+		$types = array('edit.php','edit-pages.php');
+		if( !in_array($parent_file, $types) ) return $where;
 	
 		require_once ('RCCWP_Options.php');
 		$exclude = RCCWP_Options::Get('hide-non-standart-content');

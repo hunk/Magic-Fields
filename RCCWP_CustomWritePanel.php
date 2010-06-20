@@ -682,4 +682,23 @@ class RCCWP_CustomWritePanel
 		
 		return $properties->name;
 	}
+	
+	function GetCountPstWritePanel($write_panel_id){
+	  global $wpdb;
+
+  	$user = wp_get_current_user();
+
+    $query = "SELECT COUNT(p.ID) AS num_posts, p.post_status FROM {$wpdb->posts} p JOIN {$wpdb->postmeta} pm  ON p.id = pm.post_id WHERE meta_key ='_mf_write_panel_id' AND meta_value = '%s' GROUP BY p.post_status";
+  	
+  	$count = $wpdb->get_results( $wpdb->prepare( $query, $write_panel_id ), ARRAY_A );
+
+  	$stats = array( 'publish' => 0, 'private' => 0, 'draft' => 0, 'pending' => 0, 'future' => 0, 'trash' => 0 );
+  	foreach( (array) $count as $row_num => $row ) {
+  		$stats[$row['post_status']] = $row['num_posts'];
+  	}
+
+  	$stats = (object) $stats;
+
+  	return $stats;
+	}
 }
