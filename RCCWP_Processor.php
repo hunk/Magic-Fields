@@ -26,15 +26,15 @@ class RCCWP_Processor {
 		else if (isset($_POST['edit-with-custom-write-panel']) && isset($_POST['custom-write-panel-id']) && (int) $_POST['custom-write-panel-id'] > 0)
 		{
 			if(substr($wp_version, 0, 3) >= 3.0){
-					$ptype->type = 'post';
+					$ptype = 'post';
 			}else{
-					$type = RCCWP_Post::GetCustomWritePanel();
+					$type = RCCWP_Post::GetCustomWritePanel(); 
 					if( is_object($type) )
 							$ptype = $type->type;
 					else
-							$ptype->type = (strpos($_SERVER['REQUEST_URI'], 'page.php') !== FALSE ) ? 'page' : 'post';
+							$ptype = (strpos($_SERVER['REQUEST_URI'], 'page.php') !== FALSE ) ? 'page' : 'post';
 			}
-			wp_redirect($ptype->type.'.php?action=edit&post=' . $_POST['post-id'] . '&custom-write-panel-id=' . $_POST['custom-write-panel-id']);
+			wp_redirect($ptype.'.php?action=edit&post=' . $_POST['post-id'] . '&custom-write-panel-id=' . $_POST['custom-write-panel-id']);
 		}
 	
 		if(empty($_REQUEST['mf_action'])){
