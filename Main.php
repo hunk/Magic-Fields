@@ -182,16 +182,11 @@ function cwp_add_type_identifier(){
 	
 	if( isset($_GET['custom-write-panel-id']) && !empty($_GET['custom-write-panel-id'])){
 		$getPostID = $wpdb->get_results("SELECT id, type FROM ". MF_TABLE_PANELS ." WHERE id='".$_GET['custom-write-panel-id']."'");
-		echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"". $getPostID[0]->type ."\" />";
+		echo "<input type=\"hidden\" class='muse' id=\"post_type\" name=\"post_type\" value=\"". $getPostID[0]->type ."\" />";
 
 	}else{
-		if($post->post_type == 'page') { 
-			echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"page\" />";
- 		}else{
-			echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"post\" />";
- 		}
-
- 	}
+		printf('<input type="hidden" id="post_type" name="post_type" value="%s" />',$post->post_type);
+ }
 }
 
 function cwp_add_pages_identifiers(){
