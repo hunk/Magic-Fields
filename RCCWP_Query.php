@@ -61,7 +61,7 @@ class RCCWP_Query
 	 */
 	function ExcludeWritepanelsPosts($where){
 		global $wpdb, $parent_file;
-		$types = array('edit.php','edit-pages.php');
+		$types = array('edit.php','edit-pages.php','edit.php?post_type=page');
 		if( !in_array($parent_file, $types) ) return $where;
 	
 		require_once ('RCCWP_Options.php');
