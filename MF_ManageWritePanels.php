@@ -83,3 +83,26 @@ function change_number_manage($where){
   }
   return $where;
 }
+
+// change the title manage page
+add_filter('manage_posts_columns','change_title_manage');
+add_filter('manage_pages_columns','change_title_manage');
+
+function change_title_manage($where){
+  if(isset($_GET['custom-write-panel-id'])){
+    
+    $write_panel = RCCWP_CustomWritePanel::Get($_GET['custom-write-panel-id']);
+    printf("
+      <script type=\"text/javascript\">
+      //<![CDATA[
+        jQuery().ready(function() {
+          change_title_manage('%s');
+        });
+      //]]>
+      </script>",
+    $write_panel->name
+    );
+  }
+    
+  return $where;
+}
