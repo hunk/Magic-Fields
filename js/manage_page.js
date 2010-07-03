@@ -141,3 +141,36 @@ function add_input_search_manage(write_panel){
     jQuery("#posts-filter .search-box").after(add_input);
   }
 }
+
+function change_number_manage_not_write_panel(all, published, pending, draft, private_,trash){
+  jQuery('.subsubsub li > a').each(function(){
+    element = jQuery(this).text().split(" (");
+
+    switch(element[0]) {
+      case "All":
+        jQuery(this).children('span').text(all);
+        break;
+      case "Published":
+        jQuery(this).children('span').text(published);
+        break;
+      case "Pending Review":
+        jQuery(this).children('span').text(pending);
+        break;
+      case "Pending":
+        jQuery(this).children('span').text(pending);
+        break;
+      case "Drafts":
+        jQuery(this).children('span').text(draft);
+        break;
+      case "Draft":
+        jQuery(this).children('span').text(draft);
+        break;
+      case "Private":
+        jQuery(this).children('span').text(private_);
+        break;
+      case "Trash":
+        jQuery(this).children('span').text(trash);
+        break;
+      }
+  });
+}

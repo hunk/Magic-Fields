@@ -128,3 +128,43 @@ function add_input_search_manage($where){
   }
   return $where;
 }
+
+// change the number for edit in post or page when hide post with write panel
+add_filter('manage_posts_columns','change_number_not_write_panel_manage');
+add_filter('manage_pages_columns','change_number_not_write_panel_manage');
+
+function change_number_not_write_panel_manage($where){
+  global $parent_file;
+  
+  $types = array('edit.php','edit-pages.php','edit.php?post_type=page');
+  
+  if( !in_array($parent_file, $types) ) return $where;
+  if(isset($_GET['custom-write-panel-id'])) return $where;
+  if( !RCCWP_Options::Get('hide-non-standart-content') ) return $where;
+
+  $type = 'post';
+  if(is_wp30()){
+    if($parent_file == 'edit.php?post_type=page') $type = 'page';
+  }else{
+    if($parent_file == 'edit-pages.php') $type = 'page';
+  }
+
+  $num_posts_mf = RCCWP_CustomWritePanel::GetCountPostNotWritePanel($type);
+  printf("
+    <script type=\"text/javascript\">
+    //<![CDATA[
+      jQuery().ready(function() {
+        change_number_manage_not_write_panel('(%s)','(%s)','(%s)','(%s)','(%s)','(%s)');
+      });
+    //]]>
+    </script>",
+    array_sum( (array) $num_posts_mf ) - $num_posts_mf->trash,
+    $num_posts_mf->publish,
+    $num_posts_mf->pending,
+    $num_posts_mf->draft,
+    $num_posts_mf->private,
+    $num_posts_mf->trash
+  );
+  
+  return $where;
+}
