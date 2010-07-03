@@ -132,3 +132,12 @@ function change_title_manage(write_panel){
     jQuery(".wrap").children('h2').html('Manage >> ' + write_panel +tmp[1]);
   }
 }
+
+function add_input_search_manage(write_panel){
+  check = jQuery('#input_mf_write_panel');
+  if(check.length == 0){
+    add_input  = '<input type="hidden" value="1"  id="input_mf_write_panel" name="filter-posts">';
+    add_input += '<input type="hidden" value="'+write_panel+'"  name="custom-write-panel-id">';
+    jQuery("#posts-filter .search-box").after(add_input);
+  }
+}

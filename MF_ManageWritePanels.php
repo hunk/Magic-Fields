@@ -106,3 +106,25 @@ function change_title_manage($where){
     
   return $where;
 }
+
+// add input for search in manage page for write panels
+add_filter('manage_posts_columns','add_input_search_manage');
+add_filter('manage_pages_columns','add_input_search_manage');
+
+function add_input_search_manage($where){
+  if(isset($_GET['custom-write-panel-id'])){
+    
+    $write_panel = RCCWP_CustomWritePanel::Get($_GET['custom-write-panel-id']);
+    printf("
+      <script type=\"text/javascript\">
+      //<![CDATA[
+        jQuery().ready(function() {
+          add_input_search_manage('%s');
+        });
+      //]]>
+      </script>",
+      $_GET['custom-write-panel-id']
+    );
+  }
+  return $where;
+}
