@@ -32,4 +32,12 @@ jQuery(document).ready(function(){
             }
         }
     });
+
+	jQuery('input[name=is_public]').click(function(){
+		jQuery('.is_public_options').toggle("slow");	
+	});
+
+	jQuery('input[name=supports]').click(function(){
+		jQuery('.supports_options').toggle("slow");	
+	});
 });

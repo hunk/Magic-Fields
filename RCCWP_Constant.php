@@ -141,3 +141,14 @@ define('MF_CACHE_DIR', MF_FILES_PATH . MF_CACHE_NAME . DIRECTORY_SEPARATOR);
 
 // Capabilities names
 define('MF_CAPABILITY_PANELS', "Create Magic Fields Panels");
+
+
+//return TRUE is WP version >= 3.0
+function is_wp30(){
+	global $wp_version;
+	
+	if(substr($wp_version, 0, 3) >= 3.0)
+		return TRUE;
+	 
+	return FALSE;
+}

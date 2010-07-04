@@ -160,3 +160,43 @@
 	margin-top: -16px;
 	padding-left: 3px;
 }
+
+/** Post types Form*/
+
+.mf_form  label span{
+	color:red;
+}
+
+.mf_form label{
+	display: block;
+}
+
+.mf_form{
+	padding:15px;
+}
+
+.mf_form .form-field{
+	margin-bottom:10px;
+}
+
+.mf_form .form-field p{
+	color:#666;
+	font-style: italic;
+	margin-top:0px;
+}
+
+.mf_form .form-field input[type="checkbox"]{
+	width:20px;
+}
+
+.mf_form .form-field .label_checkbox{
+	display:inline;
+}
+
+.mf_form .sub-options{
+	margin-left:10px;
+	padding:15px;
+	border:1px solid #333;
+	background:#eee;
+	display:none;
+}

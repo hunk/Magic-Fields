@@ -161,7 +161,7 @@ class RCCWP_Post {
 	
 			if (empty($customWritePanelId))
 			{
-				$customWritePanelId = (int)isset($_REQUEST['custom-write-panel-id']);
+				$customWritePanelId = (int)($_REQUEST['custom-write-panel-id']);
 			}
 		}
 		else if (function_exists('icl_t') && isset($_GET['trid']) )

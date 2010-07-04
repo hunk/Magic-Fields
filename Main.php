@@ -185,13 +185,8 @@ function cwp_add_type_identifier(){
 		echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"". $getPostID[0]->type ."\" />";
 
 	}else{
-		if($post->post_type == 'page') { 
-			echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"page\" />";
- 		}else{
-			echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"post\" />";
- 		}
-
- 	}
+		printf('<input type="hidden" id="post_type" name="post_type" value="%s" />',$post->post_type);
+ }
 }
 
 function cwp_add_pages_identifiers(){
@@ -287,33 +282,23 @@ function mf_load_modules() {
         }
 }
 
-add_filter('manage_posts_columns','change_botton_new_in_manage');
+/* Function for manage page (write panels) */
+require_once('MF_ManageWritePanels.php');
 
-function change_botton_new_in_manage($where){
-  global $wpdb, $parent_file;
-  if( $parent_file != 'edit.php' ) return $where;
-  
-  if(isset($_GET['custom-write-panel-id'])){
-    ?>
-    <script>
-    jQuery().ready(function() {
-      add = <?php printf("'?custom-write-panel-id=%s'",$_GET['custom-write-panel-id']); ?>;
-      tmp_url = jQuery(".wrap").children('h2').children('a').attr('href');
-      if(tmp_url == "post-new.php"){
-        jQuery(".wrap").children('h2').children('a').attr('href',tmp_url+add);
-      }
-    });
-    </script>
-    <?php
-  }
-  return $where;
-}
 
 /** Wordpress 3.0 and beyond**/
+if( is_wp30() ){
+	/**
+	 * Post Type Panels
+	 **/
+	require_once('MF_PostTypesPage.php'); 
+	add_action('admin_menu',array('MF_PostTypePages','TopMenu'));
 
+	/**CSS**/
+	add_action('admin_init','mf_css');
 
-/**
- * Post Type Panels
- **/
-require_once('MF_PostTypesPage.php'); 
-add_action('admin_menu',array('MF_PostTypePages','top_menu'));
+	function mf_css(){
+		wp_enqueue_style('mf_base',MF_URI.'css/base.css',false,'1.5','all');
+	}
+	/** /CSS**/
+}
