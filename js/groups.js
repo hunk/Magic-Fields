@@ -47,11 +47,17 @@ jQuery(document).ready(function(){
     //delete duplicate field
     jQuery(".delete_duplicate_field").live("click",function(event){
         id = jQuery(this).attr("id");
-        div = id.split("-")[1]; 
+		pattern =  /delete\_field\_repeat\-(([0-9]+)\_([0-9]+)\_([0-9]+)\_([0-9]+)\_([a-z0-9\_\-]+))/i;
+		items =  pattern.exec(id);
+
+		div =  items[1];
         div = "row_"+div;
         deleteGroupDuplicate(div);
+
+		inputName = items[6];
+		groupCounter = items[3];	
         
-        counter_field = id.split("_")[6] +"_"+ div.split("_")[2];   
+        counter_field = inputName +"_"+ groupCounter;
         fixcounter("counter_"+counter_field);
     });
 
@@ -74,20 +80,26 @@ jQuery(document).ready(function(){
 
     //duplicate field
     jQuery(".typeHandler").live("click",function(event){
-        inputName = jQuery(this).attr("id").split("-")[1];
-        customFieldId =  inputName.split("_")[0];
-        groupCounter = inputName.split("_")[1];
+		pattern =  /type_handler\-(([0-9]+)\_([0-9]+)\_([0-9]+)\_([0-9]+)\_([a-z0-9\_\-]+))/i;
+		
+		id =  jQuery(this).attr("id");
+		items = pattern.exec(id); 
 
-        groupId = inputName.split("_")[3];
+		inputNameId =  items[1];
+		inputName = items[6];
+		customFieldId = items[2];
+		groupCounter = items[3];	
+        groupId = items[5];
 
-        oldval = jQuery("#c"+inputName+"Counter").val();
+        oldval = jQuery("#c"+inputNameId+"Counter").val();
         newval = parseInt(oldval) + 1; 
-        jQuery("#c"+inputName+"Counter").val(newval);
+        jQuery("#c"+inputNameId+"Counter").val(newval);
 
-        counter = jQuery("#c"+inputName+"Counter").val();
-        div  = "c"+inputName+"Duplicate";
-        counter_field = inputName.split("_")[4] +"_"+ inputName.split("_")[1];
-        getDuplicate(customFieldId,counter,div,groupCounter,groupId,counter_field);
+        counter = jQuery("#c"+inputNameId+"Counter").val();
+        div  = "c"+inputNameId+"Duplicate";
+        counter_field = inputName +"_"+ groupCounter;
+       	
+		getDuplicate(customFieldId,counter,div,groupCounter,groupId,counter_field);
     });
 });
 
