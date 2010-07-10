@@ -1,10 +1,24 @@
 
 // change url for button new in manage page
-function change_button_new(url_type, add_url){
+function change_button_new(url_type, add_url,write_panel){
   tmp_url = jQuery(".wrap").children('h2').children('a').attr('href');
   if(tmp_url == url_type){
     jQuery(".wrap").children('h2').children('a').attr('href',tmp_url+add_url);
+
+    jQuery('li.wp-has-current-submenu > a.wp-has-current-submenu').removeClass('wp-has-current-submenu');
+    jQuery('li.wp-has-current-submenu').removeClass('wp-has-current-submenu');
+    
+    jQuery('li#mf-menu-'+write_panel).addClass('wp-has-current-submenu');
+    jQuery('li#mf-menu-'+write_panel+' > a.wp-has-submenu').addClass('wp-has-current-submenu');
   }
+}
+
+function change_highlight_custom_panel(write_panel){
+  jQuery('li.wp-has-current-submenu > a.wp-has-current-submenu').removeClass('wp-has-current-submenu');
+  jQuery('li.wp-has-current-submenu').removeClass('wp-has-current-submenu');
+  
+  jQuery('li#mf-menu-'+write_panel).addClass('wp-has-current-submenu');
+  jQuery('li#mf-menu-'+write_panel+' > a.wp-has-submenu').addClass('wp-has-current-submenu');
 }
 
 function change_number_manage_wp30(all, published, pending, draft, private_,trash,page,add_url){

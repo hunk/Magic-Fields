@@ -73,7 +73,7 @@ class RCCWP_WritePostPage
 		var mf_path = "<?php echo MF_URI ?>" ;
 	</script>
 	<?php
-	
+      
 		wp_enqueue_script('jquery-ui-sortable');
 		
 		//loading  jquery ui datepicker
@@ -162,6 +162,8 @@ class RCCWP_WritePostPage
       	);
 	  }
 	  
+	   
+	  
   		
 	}	
 	
@@ -210,6 +212,16 @@ class RCCWP_WritePostPage
 		</script>
 
 		<?php
+		
+		printf("
+        <script type=\"text/javascript\">
+        //<![CDATA[
+          jQuery().ready(function() {
+            change_highlight_custom_panel('%s');
+          });
+        //]]>
+        </script>",$CUSTOM_WRITE_PANEL->id);
+        
 		//change title
 		global $post,$title;
 		if($post->ID == 0){

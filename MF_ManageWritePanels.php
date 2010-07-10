@@ -32,10 +32,10 @@ function change_botton_new_in_manage($where){
       <script type=\"text/javascript\">
       //<![CDATA[
         jQuery().ready(function() {
-          change_button_new('%s','%scustom-write-panel-id=%s');
+          change_button_new('%s','%scustom-write-panel-id=%s','%s');
         });
       //]]>
-      </script>",$type_add_new[$parent_file],$contact,$_GET['custom-write-panel-id']);
+      </script>",$type_add_new[$parent_file],$contact,$_GET['custom-write-panel-id'],$_GET['custom-write-panel-id']);
   }
   return $where;
 }
