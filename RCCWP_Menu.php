@@ -309,8 +309,9 @@ class RCCWP_Menu
 								add_submenu_page($base+$offset.'.php',__($panel->name),"Edit",$requiredPostsCap,'post.php?action=edit&post='.$has_posts);
 							}
 						}else{
+						  add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPostsCap, 'edit.php?filter-posts=1&custom-write-panel-id=' . $panel->id);
 							add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPostsCap, 'post-new.php?custom-write-panel-id=' . $panel->id);
-							add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPostsCap, 'edit.php?filter-posts=1&custom-write-panel-id=' . $panel->id);
+							
 						}
 					}else{
 						if($panel->single == 1){ //if the page is single
@@ -320,8 +321,8 @@ class RCCWP_Menu
 								add_submenu_page($base+$offset.'.php',__($panel->name),"Edit",$requiredPagesCap,$page_edit.'action=edit&post='.$has_posts);
 							}
 						}else{
+						  add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPagesCap, $page_manage.'filter-posts=1&custom-write-panel-id=' . $panel->id);
 							add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPagesCap, $page_new.'custom-write-panel-id=' . $panel->id);
-							add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPagesCap, $page_manage.'filter-posts=1&custom-write-panel-id=' . $panel->id);
 						}
 					}
 				}else{//if condenced is activated
