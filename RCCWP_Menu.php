@@ -394,7 +394,7 @@ class RCCWP_Menu
 	
 	function HighlightCustomPanel(){
 		global $wpdb, $submenu_file, $post; 
-		
+
 		if(empty($post)){
 			return True;
 		}
@@ -403,15 +403,33 @@ class RCCWP_Menu
 						FROM $wpdb->postmeta
 						WHERE post_id = '".$post->ID."' and meta_key = '_mf_write_panel_id'", ARRAY_A );
 		$currPage = basename($_SERVER['SCRIPT_NAME']);
-		if (count($result) > 0 && $currPage =="post.php" ){
-			$id = $result[0]['meta_value'];
-			$submenu_file = "edit.php?filter-posts=1&custom-write-panel-id=$id";
+	
+		if(is_wp30()){
+      if (count($result) > 0 && $currPage =="edit.php" ){
+        $id = $result[0]['meta_value'];
+        $base = 'edit.php?';
+        if($_GET['post_type'] == 'page') $base = 'edit.php?post_type=page&';
+  			$submenu_file = $base."filter-posts=1&custom-write-panel-id=$id";
+      }elseif($_GET['custom-write-panel-id'] ){
+        $id = $result[0]['meta_value'];
+        $base = 'post-new.php?';
+        if($_GET['post_type'] == 'page') $base = 'post-new.php?post_type=page&';
+    		$submenu_file = $base."custom-write-panel-id=".$_GET['custom-write-panel-id'];
+      }elseif (count($result) > 0 && $currPage =="post.php" ){
+        $id = $result[0]['meta_value'];
+        $base = 'edit.php?';
+        if($post->post_type == 'page') $base = 'edit.php?post_type=page&';
+  			$submenu_file = $base."filter-posts=1&custom-write-panel-id=$id";
+      }
+		}else{
+		  if (count($result) > 0 && $currPage =="post.php" ){
+    	  $id = $result[0]['meta_value'];
+    		$submenu_file = "edit.php?filter-posts=1&custom-write-panel-id=$id";
+    	}elseif (count($result) > 0 && $currPage == "page.php" ){
+    		$id = $result[0]['meta_value'];
+    		$submenu_file = "edit-pages.php?filter-posts=1&custom-write-panel-id=$id";
+    	}
 		}
-		elseif (count($result) > 0 && $currPage == "page.php" ){
-			$id = $result[0]['meta_value'];
-			$submenu_file = "edit-pages.php?filter-posts=1&custom-write-panel-id=$id";
-		}
-		
 		
 	}
 
