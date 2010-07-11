@@ -10,7 +10,6 @@ jQuery(document).ready(function(){
 	
 	jQuery('.update_field_media_upload').live('click', function(){
 	   window.mf_field_id = jQuery(this).attr('id');
-  	  console.log(jQuery(this).attr('id'));
 	});
 	
 	jQuery('#set-post-thumbnail , #add_image').click( function(){
