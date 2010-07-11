@@ -253,6 +253,7 @@ class RCCWP_Application
 			$wpdb->query($sql6);
 			
 			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (15, 'Markdown Textbox', NULL, 'false', 'false', 'false')";
+			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (16, 'Image (Upload Media)', NULL, 'false', 'true', 'false')";
 			$wpdb->query($sql6);
 			
 		}
@@ -294,6 +295,11 @@ class RCCWP_Application
 	  if (RC_CWP_DB_VERSION <= 4){
   	  $sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (15, 'Markdown Textbox', NULL, 'false', 'false', 'false')";
 			$wpdb->query($sql6);
+  	}
+  	
+  	if (RC_CWP_DB_VERSION <= 5){
+  	  $sql = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (16, 'Image (Upload Media)', NULL, 'false', 'true', 'false')";
+			$wpdb->query($sql);
   	}
 	}
 

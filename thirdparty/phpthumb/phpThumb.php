@@ -28,14 +28,14 @@ $default = array(
 				);
 				
 //getting the name of the image
-preg_match('/\/files_mf\/([0-9\_a-z\-]+\.(jpg|png|gif))/i',$_GET['src'],$match);
+preg_match('/\/wp-content\/([0-9\_a-z\/\-]+\.(jpg|png|gif))/i',$_GET['src'],$match);
 $image_name_clean = $match[1];
 $extension = $match[2];
 
 //Getting the original size of the image
-$file = MF_UPLOAD_FILES_DIR.$image_name_clean;
+$file = MF_WPCONTENT.$image_name_clean; 
 if(file_exists($file) && (empty($_GET['w']) || empty($_GET['h']))){
-	$size = @getimagesize(MF_UPLOAD_FILES_DIR.$image_name_clean);
+	$size = @getimagesize(MF_WPCONTENT.$image_name_clean);
 	$default['w'] = $size[0];
 	$default['h'] = $size[1];
 }
@@ -57,8 +57,12 @@ if(!in_array($extension,array('jpg','png','gif'))){
 	return false;
 }
 
+
+//
+$image_sin = preg_split('/\//',$image_name_clean);
+$new_image_clean = $image_sin[count($image_sin)-1];
 //name with a png extension
-$image_name = $md5_params."_".$image_name_clean;
+$image_name = $md5_params."_".$new_image_clean;
 //this code can be refactored
 if(file_exists(MF_CACHE_DIR.$image_name)){
 	//Displaying the image
@@ -78,7 +82,7 @@ if(file_exists(MF_CACHE_DIR.$image_name)){
 }else{
 	//generating the image
 	$thumb = new mfthumb();
-	$thumb_path = $thumb->image_resize(MF_UPLOAD_FILES_DIR.$image_name_clean,$params['w'],$params['h'],$params['zc'],MF_CACHE_DIR.$image_name);
+	$thumb_path = $thumb->image_resize($file,$params['w'],$params['h'],$params['zc'],MF_CACHE_DIR.$image_name);
 	//Displaying the image
 	if(file_exists($thumb_path)){
 		$size = getimagesize($thumb_path);

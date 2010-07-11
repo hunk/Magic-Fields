@@ -1,5 +1,6 @@
 jQuery(document).ready(function(){
     jQuery(".remove").live('click',remove_photo);
+    jQuery(".remove_media").live('click',remove_photo_media);
 });
 
 remove_photo = function(){
@@ -18,6 +19,22 @@ remove_photo = function(){
          }else{
             jQuery('#magicfields_remove_files').val(image);
          }
+         
+         jQuery('#'+id).val('');
+         jQuery("#img_thumb_"+id).attr("src",mf_path+"images/noimage.jpg");
+         jQuery("#photo_edit_link_"+id).empty();
+    }
+}
+
+remove_photo_media = function(){
+     if(confirm("Are you sure?")){
+         //get the  name to the image
+         pattern =  /remove\-(.+)/i;
+         id = jQuery(this).attr('id');
+         id = pattern.exec(id);
+         id = id[1];
+
+         image = jQuery('#'+id).val();
          
          jQuery('#'+id).val('');
          jQuery("#img_thumb_"+id).attr("src",mf_path+"images/noimage.jpg");

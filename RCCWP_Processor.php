@@ -230,7 +230,7 @@ class RCCWP_Processor {
 					{
 						$custom_field_properties['format'] = $_POST['custom-field-date-format'];
 					}
-					else if( in_array( $current_field->name, array('Image') ) )
+					else if( in_array( $current_field->name, array('Image','Image (Upload Media)') ) )
 					{
 						$params = '';
 						if( $_POST['custom-field-photo-height'] != '' && is_numeric( $_POST['custom-field-photo-height']) )
@@ -329,7 +329,7 @@ class RCCWP_Processor {
 						$custom_field_properties['width'] = $_POST['custom-field-width'];
 						if( isset($_POST['hide-visual-editor']) ) $custom_field_properties['hide-visual-editor'] = 1;
 					}
-					else if( in_array( $current_field->name, array('Image') ) )
+					else if( in_array( $current_field->name, array('Image','Image (Upload Media)') ) )
 					{ 
 						$params = '';
 						

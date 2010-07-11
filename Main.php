@@ -282,6 +282,19 @@ function mf_load_modules() {
         }
 }
 
+/* add filter for upload attachment image (new field image)*/
+/* load_link_media_upload in custom_fields/media_image.js */
+add_filter('attachment_fields_to_edit', 'charge_link_after_upload_image', 10, 2);
+
+function charge_link_after_upload_image(){
+   printf("
+      <script type=\"text/javascript\">
+      //<![CDATA[
+        load_link_in_media_upload();
+      //]]>
+      </script>");
+}
+
 /* Function for manage page (write panels) */
 require_once('MF_ManageWritePanels.php');
 

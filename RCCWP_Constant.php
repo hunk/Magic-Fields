@@ -11,7 +11,7 @@ if (!defined('DIRECTORY_SEPARATOR'))
 }
 
 // General Constants
-define('RC_CWP_DB_VERSION', 4);
+define('RC_CWP_DB_VERSION', 5);
 define('RC_CWP_POST_WRITE_PANEL_ID_META_KEY', '_mf_write_panel_id');
 define('RC_CWP_OPTION_KEY', 'mf_custom_write_panel');
 
@@ -75,6 +75,7 @@ $FIELD_TYPES = array(
 					'slider' => 13,
 					'related_type' => 14,
 					'markdown_textbox' => 15,
+					'Image (Upload Media)' => 16
 					);
 
 // Field Types
@@ -128,7 +129,7 @@ if($is_wordpress_mu){
 }
 
 define('MF_FILES_PATH', $path_content.DIRECTORY_SEPARATOR.MF_FILES_NAME.DIRECTORY_SEPARATOR);
-
+define('MF_WPCONTENT', $path_content.DIRECTORY_SEPARATOR);
 if($is_wordpress_mu){
 	define('MF_FILES_URI',WP_CONTENT_URL."/"."blogs.dir"."/".$blog_id."/".MF_FILES_NAME."/");
   define('MF_CACHE_URI',WP_CONTENT_URL."/"."blogs.dir"."/".$blog_id."/".MF_FILES_NAME."/".MF_CACHE_NAME."/");
