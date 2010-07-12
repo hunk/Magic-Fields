@@ -21,8 +21,8 @@ class RCCWP_Post {
 				return $postId;
 			
 			//the user  can edit posts?
-			if (!current_user_can('edit_post', $postId)){
-				return $postId;
+			if (!(current_user_can('edit_posts', $postId) || current_user_can('edit_published_pages', $postId))){
+			 return $postId;
 			}
 			
 			RCCWP_Post::SetCustomWritePanel($postId);
