@@ -1359,7 +1359,7 @@ class RCCWP_WritePostPage
 				if(is_wp30()) $thumb_class= 'thickbox';
 				?>
 				
-			<a class="thickbox1 <?php echo $thumb_class; ?>" id="thumb_<?php echo $idField ?>" href="media-upload.php?post_id=<?php echo $post->ID; ?>&#038;type=image&#038;TB_iframe=1" >Set Image</a>
+			<a class="<?php echo $thumb_class; ?> update_field_media_upload" id="thumb_<?php echo $idField ?>" href="media-upload.php?post_id=<?php echo $post->ID; ?>&#038;type=image&#038;TB_iframe=1" >Set Image</a>
 			</div>
 			<?php
 			if(!is_wp30()):
