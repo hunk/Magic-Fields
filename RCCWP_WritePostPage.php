@@ -1355,8 +1355,22 @@ class RCCWP_WritePostPage
 				value="<?php echo $hidValue?>"
 				<?php if ($customField->required_field) echo 'validate="required:true"'; ?>
 				/>
-			<a class="thickbox update_field_media_upload" id="thumb_<?php echo $idField ?>" href="media-upload.php?post_id=<?php echo $post->ID; ?>&#038;type=image&#038;TB_iframe=1" >Set Image</a>
+			<a class="thickbox1 update_field_media_upload" id="thumb_<?php echo $idField ?>" href="media-upload.php?post_id=<?php echo $post->ID; ?>&#038;type=image&#038;TB_iframe=1" >Set Image</a>
 			</div>
+			<?php
+			if(!is_wp30()):
+			?>
+			<script>
+			jQuery(document).ready(function(){
+      	tb_init('a#thumb_<?php echo $idField ?>');
+      	jQuery('a#thumb_<?php echo $idField ?>').click( function(){
+      	  window.mf_field_id = jQuery(this).attr('id');
+      	});
+      });
+			</script>
+			<?php
+			endif;
+			?>
 		</div>
 		
 		<div style="clear: both; height: 1px;"> </div>
