@@ -404,7 +404,9 @@ function aux_image($fieldValue,$params_image,$fieldType = NULL){
   		'w'	=> 0,
   		'h'	=> 0,
   		'q'	=>  85,
-  		'src' => $image_path
+  		'src' => $image_path,
+                'far' => false,
+                'iar' => false
   	);
 
 	$size = @getimagesize($image_path);
@@ -433,9 +435,12 @@ function aux_image($fieldValue,$params_image,$fieldType = NULL){
 	  $default['w'],
 	  $default['h'],
 	  $default['zc'],
+          $default['far'],
+          $default['iar'],
 	  $output_filename,
 	  $default['q']
 	);
+        
 	
 	if ( is_wp_error($thumb_path) )
      return $thumb_path->get_error_message();

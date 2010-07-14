@@ -19,7 +19,7 @@ class mfthumb{
 	/**
 	 * This function is almost equal to the image_resize (native function of wordpress)
 	 */
-	function image_resize( $file, $max_w, $max_h, $crop = false, $dest_path = null,$jpeg_quality = 90 ) {
+	function image_resize( $file, $max_w, $max_h, $crop = false, $far = false, $iar = false, $dest_path = null, $jpeg_quality = 90 ) {
 		$image = wp_load_image( $file );
 		if ( !is_resource( $image ) )
 			return new WP_Error('error_loading_image', $image);
@@ -29,7 +29,7 @@ class mfthumb{
 				return new WP_Error('invalid_image', __('Could not read image size'), $file);
 		list($orig_w, $orig_h, $orig_type) = $size;
 		
-		$dims = mf_image_resize_dimensions($orig_w, $orig_h, $max_w, $max_h, $crop);
+		$dims = mf_image_resize_dimensions($orig_w, $orig_h, $max_w, $max_h, $crop, $far, $iar);
 		
 		if ( !$dims ){
 			$dims = array(0,0,0,0,$orig_w,$orig_h,$orig_w,$orig_h);
@@ -37,7 +37,8 @@ class mfthumb{
 		list($dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) = $dims;
 
 		$newimage = imagecreatetruecolor( $dst_w, $dst_h );
-		imagecopyresampled( $newimage, $image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+                imagecopyresampled( $newimage, $image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+                
 
 		// convert from full colors to index colors, like original PNG.
 		if ( IMAGETYPE_PNG == $orig_type && !imageistruecolor( $image ) )
@@ -79,7 +80,8 @@ class mfthumb{
 /**
  * Based in the image_resize_dimensions of wordpress
  */
-function mf_image_resize_dimensions($orig_w, $orig_h, $dest_w, $dest_h, $crop = false) {
+function mf_image_resize_dimensions($orig_w, $orig_h, $dest_w, $dest_h, $crop = false, $far = false, $iar = false) {
+        
 
 	if ($orig_w <= 0 || $orig_h <= 0)
 		return false;
@@ -108,18 +110,66 @@ function mf_image_resize_dimensions($orig_w, $orig_h, $dest_w, $dest_h, $crop = 
 
 		$s_x = floor( ($orig_w - $crop_w) / 2 );
 		$s_y = floor( ($orig_h - $crop_h) / 2 );
+                
 	} else {
-		// don't crop, just resize using $dest_w x $dest_h as a maximum bounding box
-		$crop_w = $orig_w;
-		$crop_h = $orig_h;
+            // don't crop, just resize using $dest_w x $dest_h as a maximum bounding box
+		$crop_w = $dest_w;
+		$crop_h = $dest_h;
 
 		$s_x = 0;
 		$s_y = 0;
 
-		$new_w = $dest_w;
-		$new_h = $dest_h;
-	}
+		$new_w = $crop_w;
+		$new_h = $crop_h;
+        }
 
+        if( $far ) {
+            switch ( $far ) {
+			case 'L':
+			case 'TL':
+			case 'BL':
+				$s_x = 0;
+				$s_y = round(($dest_h - $origin_h) / 2);
+				break;
+			case 'R':
+			case 'TR':
+			case 'BR':
+				$s_x =  round($dest_w  - $origin_w);
+				$s_y = round(($dest_h - $origin_h) / 2);
+				break;
+			case 'T':
+			case 'TL':
+			case 'TR':
+				$s_x = round(($dest_w  - $origin_w)  / 2);
+				$s_y = 0;
+				break;
+			case 'B':
+			case 'BL':
+			case 'BR':
+				$s_x = round(($dest_w  - $origin_w)  / 2);
+				$s_y =  round($dest_h - $origin_h);
+				break;
+			case 'C':
+			default:
+				$s_x = round(($dest_w  - $origin_w)  / 2);
+				$s_y = round(($dest_h - $origin_h) / 2);
+                                
+		}
+                
+        }
+        if ( $iar ) {
+                //ignore aspect radio and resize the image
+                $crop_w = $orig_w;
+                $crop_h = $orig_h;
+
+                $s_x = 0;
+                $s_y = 0;
+               
+                $new_w = ceil($orig_w * $dest_w / $orig_w);
+                $new_h = ceil($orig_h * $dest_h / $orig_h);
+
+	}
+ 
 	// if the resulting image would be the same size we don't want to resize it
 	if ( $new_w == $orig_w && $new_h == $orig_h )
 		return false;

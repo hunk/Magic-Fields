@@ -20,7 +20,9 @@ require_once($MFthumb);
 
 //Default Values
 $default = array(
-					'zc'=> 1,
+                                        'iar'   => 0,
+                                        'far'   => 0,
+					'zc'    => 1,
 					'q'	=>  95,
 					'w'	=>  0,
 					'h'	=> 0,
@@ -42,14 +44,14 @@ if(file_exists($file) && (empty($_GET['w']) || empty($_GET['h']))){
 //TODO: sanitize the variables
 $params = array();				
 foreach($_GET as $key => $value){
-	if(in_array($key,array('zc','w','h','q','src'))){
+	if(in_array($key,array('zc','w','h','q','src','far','iar'))){
 		$params[$key] = $value;
 	}
 }
 
 
 $params = array_merge($default,$params);
-$md5_params =  md5("w=".$params['w']."&h=".$params['h']."&q=".$params['q']."&zc=".$params['zc']);
+$md5_params =  md5("w=".$params['w']."&h=".$params['h']."&q=".$params['q']."&zc=".$params['zc']."&far=".$params['far']."&iar=".$params['iar']);
 
 
 //The file must be "jpg" or "png" or "gif" 
@@ -82,7 +84,7 @@ if(file_exists(MF_CACHE_DIR.$image_name)){
 }else{
 	//generating the image
 	$thumb = new mfthumb();
-	$thumb_path = $thumb->image_resize($file,$params['w'],$params['h'],$params['zc'],MF_CACHE_DIR.$image_name);
+	$thumb_path = $thumb->image_resize($file,$params['w'],$params['h'],$params['zc'],$params['far'],$params['iar'],MF_CACHE_DIR.$image_name);
 	//Displaying the image
 	if(file_exists($thumb_path)){
 		$size = getimagesize($thumb_path);
