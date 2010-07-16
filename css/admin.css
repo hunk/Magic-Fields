@@ -37,3 +37,6 @@ label.error_magicfields {
 	padding-left:7px;
 }
 .mul_mf .wp_themeSkin .mceStatusbar a.mceResize {top:auto !important;}
+.has-right-sidebar .inner-sidebar {
+z-index:1;
+}
