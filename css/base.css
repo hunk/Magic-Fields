@@ -73,6 +73,7 @@
 	display: block;
 	margin-right:10px;
 }
+
 .edButtonHTML_mf {
     background-color:#F1F1F1;
 	border-color:#DFDFDF;
@@ -83,7 +84,7 @@
     border-width:1px;
     cursor:pointer;
     display:block;
-    float:right;
+    float:left;
     height:18px;
     margin:5px 5px 0 0;
     padding:4px 5px 2px;
@@ -360,8 +361,12 @@
   -webkit-border-top-left-radius: 3px;
 }
 
-.write_panel_wrapper .tab_multi_mf a {
+.write_panel_wrapper .tab_multi_mf {
   float: left;
+}
+
+.write_panel_wrapper .tab_multi_mf a {
+  float: right;
   line-height: 18px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -371,9 +376,9 @@
 }
 
 .write_panel_wrapper .tab_multi_mf a.current {
-    background-color: #e3e3e3;
+    background-color: #DCEFF7;
     color: #666666 !important;
-    border-color: #ccc;
+    border-color: #73bee0;
     font-weight: bold;
 }
 
