@@ -43,9 +43,7 @@ class RCCWP_Post {
 		$customWritePanelId = $_POST['rc-cwp-custom-write-panel-id'];
 		if (isset($customWritePanelId)) {
 			if (!empty($customWritePanelId)) {	
-				if (!update_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, $customWritePanelId)) {
-					add_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, $customWritePanelId);
-				}
+			  update_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, $customWritePanelId);
 			} else {
 				delete_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY);
 			}
