@@ -36,9 +36,12 @@ class mfthumb{
 		}
 		list($dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) = $dims;
 
-		$newimage = imagecreatetruecolor( $dst_w, $dst_h );
-                imagecopyresampled( $newimage, $image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
-                
+    $newimage = imagecreatetruecolor( $dst_w, $dst_h );
+    imagealphablending($newimage, false);
+    imagesavealpha($newimage, true);
+    $transparent = imagecolorallocatealpha($newimage, 255, 255, 255, 127);
+    imagefilledrectangle($newimage, 0, 0, $dst_w, $dst_h, $transparent);
+    imagecopyresampled( $newimage, $image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
 
 		// convert from full colors to index colors, like original PNG.
 		if ( IMAGETYPE_PNG == $orig_type && !imageistruecolor( $image ) )
