@@ -213,10 +213,10 @@ class RCCWP_Menu
 		$panelsAndModulesFunctions = RCCWP_Menu::PrepareModulesPanelsMenuItems();
 
 		// Add top menu
-		add_menu_page(__('Magic Fields > Manage',$mf_domain), __('Magic Fields',$mf_domain), 10, __FILE__, $panelsAndModulesFunctions->panelsMenuFunction);
+		add_menu_page(__('Magic Fields > Manage',$mf_domain), __('Magic Fields',$mf_domain), 10, 'MagicFieldsMenu', $panelsAndModulesFunctions->panelsMenuFunction);
 
 		// Add Magic Fields submenus
-		add_submenu_page(__FILE__, __('Write Panels',$mf_domain), __('Write Panels',$mf_domain), 10, __FILE__, $panelsAndModulesFunctions->panelsMenuFunction);		
+		add_submenu_page('MagicFieldsMenu', __('Write Panels',$mf_domain), __('Write Panels',$mf_domain), 10,'MagicFieldsMenu', $panelsAndModulesFunctions->panelsMenuFunction);		
 		
 	}
 
@@ -255,6 +255,7 @@ class RCCWP_Menu
 			
 			// fix for WP 3.0
 			if(substr($wp_version, 0, 3) < 3.0){
+				
 			  // WP <= 2.9
     		$page_new    = "page-new.php?";
     		$page_edit   = "page.php?";

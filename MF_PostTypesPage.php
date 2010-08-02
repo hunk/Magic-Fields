@@ -15,8 +15,7 @@ Class MF_PostTypePages{
 		/**
 		 * For now this menu is only displayed for the admin user, i think to this will change soon 
 		 */ 
-		$post_type_screen = add_menu_page(__('Magic Fields Post Types',$mf_domain), __('Post Types',$mf_domain),10,'mf_posttypes',array('MF_PostTypePages','Dispacher'));
-	
+		$post_type_screen = add_submenu_page('MagicFieldsMenu', __('Post Types',$mf_domain), __('Post types',$mf_domain),10,'mf_posttypes',array('MF_PostTypePages','Dispacher'));
 
 		add_contextual_help($post_type_screen,
 			'<p>' . __('Hi you can create and manage Post Types here'). '</p>'
@@ -24,7 +23,7 @@ Class MF_PostTypePages{
 	}
 
 	/** 
-	 *
+	 * Determine which action will be executed
 	 *
 	 */
 	function Dispacher(){
@@ -43,6 +42,8 @@ Class MF_PostTypePages{
 			case "add":
 				MF_PostTypePages::AddPostType();
 			break;	
+			case "save":
+				MF_PostTypePages::SavePostType();
 		}
 	}
 
@@ -104,12 +105,12 @@ Class MF_PostTypePages{
 			"<div class='wrap'>".
 				"<div id='icon-edit-pages' class='icon32'></div>".
 				"<h2>".__('Add New Post Type',$mf_domain)."</h2>".
-				"<form method='POST' action=''>".
+				"<form method='POST' action='?page=mf_posttypes&action=save'>".
 					"<div class='mf_form'>".
 						"<div class='form-field'>".
 							"<label for='post_type_name'>".__('Name',$mf_domain)."<span>*</span>:</label>".
 							"<input type='text' id='post_type_name' maxlength='20' size='23' name='post_type_name' value=''/>".
-							"<p>".__('Put the name of your Post Type (the max limit is 20 characters')."</p>".
+							"<p>".__('Put the name of your Post Type')."</p>".
 						"</div>".	
 						"<div class='form-field'>".
 							"<label for='description'>".__('Description',$mf_domain).":<span>*</span></label>".
@@ -150,9 +151,46 @@ Class MF_PostTypePages{
 								"<p>".__('Page Attributes',$mf_domain)."</p>".
 							"</div>".
 						"</div>".
+						"<p class='submit'>".
+						"<input name='save_post_type' type='submit' value='Create post Type'/>".
+						"</p>".
 					"</div>".	
 				"</form>".
 			"</div>";
+	}
+
+	/** 
+	 * Save a New Post type
+	 */
+	function SavePostType(){
+		global $wpdb;
+		if(!empty($_POST)){
+
+			//Inserting the new post type
+
+		}
+	}
+
+	/**	
+	 * Install Function, add the post types tables into 
+	 * the wordpress instalation
+	 */
+	function CreatePostTypesTables(){
+		global $wpdb;
+		
+		//this table is already installed?
+		if($wpdb->get_var("SHOW TABLES LIKE '".MF_TABLE_POST_TYPES."'") != MF_TABLE_POST_TYPES) {
+			$sql =	"CREATE TABLE ".MF_TABLE_POST_TYPES. " (
+						id mediumint(9) NOT NULL AUTO_INCREMENT ,
+						time bigint(11) DEFAULT '0' NOT NULL,
+						name tinytext NOT NULL,
+						description text NOT NULL,
+						settings text,
+						UNIQUE KEY id (id)
+			)";
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+			dbDelta($sql);
+		}
 	}
 }
 ?>

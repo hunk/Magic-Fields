@@ -204,7 +204,7 @@ class RCCWP_Application
 			} else {
 					update_option('RC_CWP_DB_VERSION', RC_CWP_DB_VERSION);
 			}
-		
+
 		}
 
 		// Insert standard fields definition
@@ -267,6 +267,12 @@ class RCCWP_Application
 			if (get_option('MAGIC_FIELDS_fist_time') == ''){
 				update_option('MAGIC_FIELDS_fist_time', '1');
 			}
+		}
+
+		//Post types
+		if(is_wp30()){
+			require_once(MF_PATH.'/MF_PostTypesPage.php');
+			MF_PostTypePages::CreatePostTypesTables();
 		}
 	}
 	
