@@ -166,8 +166,25 @@ Class MF_PostTypePages{
 		global $wpdb;
 		if(!empty($_POST)){
 
-			//Inserting the new post type
+			//Sanitize data
+			$data = array();
+			foreach($_POST as $key => $value){
+				$key = esc_html($key);
+				$value = esc_html($value); 
+				$data[$key] = $value;
+			}
 
+			$name = esc_html($data['post_type_name']);
+			$desc = esc_html($data['description']);
+			
+			unset($data['post_type_name']);
+			unset($data['description']);
+
+			$settings = json_encode($data);
+ 
+			//Saving the new post type
+			$wpdb->insert(MF_TABLE_POSTTYPES_TAXONOMIES,array('type' => 'posttype','name' => $name,'description' => $desc,'settings' => $settings),array('%s','%s','%s','%s'));
+			print_r($_POST);	
 		}
 	}
 
@@ -179,10 +196,10 @@ Class MF_PostTypePages{
 		global $wpdb;
 		
 		//this table is already installed?
-		if($wpdb->get_var("SHOW TABLES LIKE '".MF_TABLE_POST_TYPES."'") != MF_TABLE_POST_TYPES) {
-			$sql =	"CREATE TABLE ".MF_TABLE_POST_TYPES. " (
+		if($wpdb->get_var("SHOW TABLES LIKE '".MF_TABLE_POSTTYPES_TAXONOMIES."'") != MF_TABLE_POSTTYPES_TAXONOMIES) {
+			$sql =	"CREATE TABLE ".MF_TABLE_POSTTYPES_TAXONOMIES. " (
 						id mediumint(9) NOT NULL AUTO_INCREMENT ,
-						time bigint(11) DEFAULT '0' NOT NULL,
+						type varchar(10) NOT NULL DEFAULT 'posttype',
 						name tinytext NOT NULL,
 						description text NOT NULL,
 						settings text,

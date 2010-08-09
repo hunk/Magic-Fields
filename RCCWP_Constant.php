@@ -58,7 +58,7 @@ define('MF_TABLE_CUSTOM_FIELD_PROPERTIES', $mf_prefix  . 'mf_custom_field_proper
 define('MF_TABLE_POST_META', $wpdb->prefix . 'mf_post_meta');
 
 // Post Type table
-define('MF_TABLE_POST_TYPES', $wpdb->prefix. 'mf_post_types');
+define('MF_TABLE_POSTTYPES_TAXONOMIES', $wpdb->prefix. 'mf_posttypes_taxonomies');
 
 // Field Types
 global $FIELD_TYPES;
