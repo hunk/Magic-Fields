@@ -137,19 +137,25 @@ class RCCWP_CustomField {
 	 * @return an object containing information about fields. The object contains 
 	 * 			3 objects: properties, options and default_value
 	 */
-	function Get($customFieldId)
-	{
-		global $wpdb;
-		$sql = "SELECT cf.group_id, cf.id, cf.name, cf.CSS, tt.id AS type_id, tt.name AS type, cf.description, cf.display_order, cf.required_field, co.options, co.default_option AS default_value, tt.has_options, cp.properties, tt.has_properties, tt.allow_multiple_values, duplicate,cf.help_text FROM " . MF_TABLE_GROUP_FIELDS .
+	function Get($customFieldId) {
+		global $wpdb,$mf_field_types;
+		$sql = "SELECT cf.group_id, cf.id, cf.name, cf.CSS,cf.type as custom_field_type, cf.description, cf.display_order, cf.required_field, co.options, co.default_option AS default_value, cp.properties,duplicate,cf.help_text FROM " . MF_TABLE_GROUP_FIELDS .
 			" cf LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " co ON cf.id = co.custom_field_id" .
 			" LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " cp ON cf.id = cp.custom_field_id" .
-			" JOIN " . MF_TABLE_CUSTOM_FIELD_TYPES . " tt ON cf.type = tt.id" . 
 			" WHERE cf.id = " . $customFieldId;
+
 		$results = $wpdb->get_row($sql);
-			
+
+		$results->type 					= $mf_field_types[$results->custom_field_type]['name'];
+		$results->type_id 				= $results->custom_field_type;
+		$results->has_options 			= $mf_field_types[$results->custom_field_type]['has_options'];
+		$results->has_properties 		= $mf_field_types[$results->custom_field_type]['has_properties'];
+		$results->allow_multiple_values = $mf_field_types[$results->custom_field_type]['allow_multiple_values'];
+		
 		$results->options = unserialize($results->options);
 		$results->properties = unserialize($results->properties);
 		$results->default_value = unserialize($results->default_value);
+
 		return $results;
 	}
 	
@@ -157,30 +163,23 @@ class RCCWP_CustomField {
 	 * Retrieves information about a specified type
 	 *
 	 * @param integer $customFieldTypeId the type id, if null, a list of all types will be returned
+	 * @todo This option should be deprecated
 	 * @return a list/object containing information about the specified type. The information 
 	 * 			includes id, name, description, has_options, has_properties, and
 	 * 			allow_multiple_values (whether fields of that type can have more than one default value)
 	 */
-	function GetCustomFieldTypes($customFieldTypeId = null)
-	{
-		global $wpdb;
+	function GetCustomFieldTypes($customFieldTypeId = null) {
+		global $wpdb,$mf_field_types;
 	
-		if (isset($customFieldTypeId))
-		{
-			$sql = "SELECT id, name, description, has_options, has_properties, allow_multiple_values FROM " . MF_TABLE_CUSTOM_FIELD_TYPES .
-				" WHERE id = " . (int)$customFieldTypeId;
-			$results = $wpdb->get_row($sql);	
-		}
-		else
-		{
-			$sql = "SELECT id, name, description, has_options, has_properties, allow_multiple_values FROM " . MF_TABLE_CUSTOM_FIELD_TYPES;
-			$results = $wpdb->get_results($sql);
-			if (!isset($results))
-				$results = array();
+		if (isset($customFieldTypeId) && is_numeric($customFieldTypeId)){
+			$results = (object)$mf_field_types[$customFieldTypeId];
+		}else{
+			foreach($mf_field_types as $type){
+				$results[] = (object)$type;
+			}
 		}
 		return $results;
 	}
-	
 	
 	/**
 	 *  Get the Meta ID from a custom field with this id is possible get the value of the custom field
@@ -200,7 +199,6 @@ class RCCWP_CustomField {
 		return $wpdb->get_var("SELECT id FROM " . MF_TABLE_POST_META . 
 						" WHERE field_name = '$customFieldName' AND group_count = $groupIndex ". 
 						" AND field_count = $fieldIndex AND post_id = $postId" );
-		
 		
 	}
 	

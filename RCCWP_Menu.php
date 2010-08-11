@@ -29,9 +29,8 @@ class RCCWP_Menu
 
 			case 'continue-create-custom-field':		
 				if(isset($_REQUEST['custom-group-id']) && !empty($_REQUEST['custom-group-id']) )
-					$customGroupId = (int)$_REQUEST['custom-group-id'];
+				$customGroupId = (int)$_REQUEST['custom-group-id'];
 				$customGroup = RCCWP_CustomGroup::Get($customGroupId);
-	
 				$current_field = RCCWP_CustomField::GetCustomFieldTypes((int)$_REQUEST['custom-field-type']);
 				if ($current_field->has_options == "true" || $current_field->has_properties == "true")
 				{

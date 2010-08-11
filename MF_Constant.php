@@ -15,7 +15,6 @@ define('RC_CWP_DB_VERSION', 5);
 define('RC_CWP_POST_WRITE_PANEL_ID_META_KEY', '_mf_write_panel_id');
 define('RC_CWP_OPTION_KEY', 'mf_custom_write_panel');
 
-
 // Magic Fields paths
 preg_match('/wp-content(.*)(RCCWP_Constant\.php)$/',__FILE__,$mfpath);
 $mfpath = str_replace('\\', '/', $mfpath);
@@ -33,11 +32,6 @@ if(isset($current_blog)){
 	$mf_prefix=$wpdb->prefix;
 }
 // -- Tables names
-
-// Tables containing somehow constant data
-define('MF_TABLE_CUSTOM_FIELD_TYPES', $mf_prefix  . 'mf_custom_field_types');
-//TODO: check this table
-define('MF_TABLE_STANDARD_FIELDS', $mf_prefix  . 'mf_standard_fields');
 
 // Panels - Groups - Fields
 define('MF_TABLE_PANELS', $mf_prefix  . 'mf_write_panels');
@@ -61,6 +55,9 @@ define('MF_TABLE_POST_META', $wpdb->prefix . 'mf_post_meta');
 define('MF_TABLE_POSTTYPES_TAXONOMIES', $wpdb->prefix. 'mf_posttypes_taxonomies');
 
 // Field Types
+/*
+ * @todo : This Global variable should be deprecated, we need make sure of this var is not longer used
+ */
 global $FIELD_TYPES;
 $FIELD_TYPES = array(
 					"textbox" => 1,
@@ -80,6 +77,146 @@ $FIELD_TYPES = array(
 					'markdown_textbox' => 15,
 					'Image (Upload Media)' => 16
 					);
+
+
+// Magic Fields Field Types
+/**
+ * @todo : The  keys 'has_options', 'has_properties' and 'allow_multiple_values'  are really neccesary?
+ */
+global $mf_field_types;
+$mf_field_types = array(
+	1	=> array(
+		'id'					=> 1,
+		'name'					=> 'Textbox',
+		'description'			=>	'',
+		'has_options'			=>	'false',
+		'has_properties'		=>	'true',
+		'allow_multiple_values'	=>	'false' 
+	),
+	2	=> array(
+		'id'					=> 2,
+		'name'					=> 'Multiline Textbox',
+		'description'			=>	'',
+		'has_options'			=>	'false',
+		'has_properties'		=>	'true',
+		'allow_multiple_values'	=>	'false' 
+	),
+	3	=> array(
+		'id'					=> 3,
+		'name'					=> 'Checkbox',
+		'description'			=>	'',
+		'has_options'			=>	'false',
+		'has_properties'		=>	'false',
+		'allow_multiple_values'	=>	'false' 
+	),
+	4	=> array(
+		'id'					=> 4,
+		'name'					=> 'Checkbox List',
+		'description'			=>	'',
+		'has_options'			=>	'true',
+		'has_properties'		=>	'false',
+		'allow_multiple_values'	=>	'true' 
+	),
+	5	=> array(
+		'id'					=> 5,
+		'name'					=> 'Radiobutton List',
+		'description'			=>	'',
+		'has_options'			=>	'true',
+		'has_properties'		=>	'false',
+		'allow_multiple_values'	=>	'false' 
+	),
+	6	=> array(
+		'id'					=> 6,
+		'name'					=> 'Dropdown List',
+		'description'			=>	'',
+		'has_options'			=>	'true',
+		'has_properties'		=>	'false',
+		'allow_multiple_values'	=>	'false' 
+	),
+	7	=> array(
+		'id'					=> 7,
+		'name'					=> 'Listbox',
+		'description'			=>	'',
+		'has_options'			=>	'true',
+		'has_properties'		=>	'true',
+		'allow_multiple_values'	=>	'true' 
+	),
+	8	=> array(
+		'id'					=> 8,
+		'name'					=> 'File',
+		'description'			=>	'',
+		'has_options'			=>	'false',
+		'has_properties'		=>	'false',
+		'allow_multiple_values'	=>	'false' 
+	),
+	9	=> array(
+		'id'					=> 9,
+		'name'					=> 'Image',
+		'description'			=>	'',
+		'has_options'			=>	'false',
+		'has_properties'		=>	'true',
+		'allow_multiple_values'	=>	'false' 
+	),
+	10	=> array(
+		'id'					=> 10,
+		'name'					=> 'Date',
+		'description'			=>	'',
+		'has_options'			=>	'false',
+		'has_properties'		=>	'true',
+		'allow_multiple_values'	=>	'false' 
+	),
+	11	=> array(
+		'id'					=> 11,
+		'name'					=> 'Audio',
+		'description'			=>	'',
+		'has_options'			=>	'false',
+		'has_properties'		=>	'false',
+		'allow_multiple_values'	=>	'false' 
+	),
+	12	=> array(
+		'id'					=> 12,
+		'name'					=> 'Color Picker',
+		'description'			=>	'',
+		'has_options'			=>	'false',
+		'has_properties'		=>	'false',
+		'allow_multiple_values'	=>	'false' 
+	),
+	13	=> array(
+		'id'					=> 13,
+		'name'					=> 'Slider',
+		'description'			=>	'',
+		'has_options'			=>	'false',
+		'has_properties'		=>	'true',
+		'allow_multiple_values'	=>	'false' 
+	),
+	14	=> array(
+		'id'					=> 14,
+		'name'					=> 'Related Type',
+		'description'			=>	'',
+		'has_options'			=>	'false',
+		'has_properties'		=>	'true',
+		'allow_multiple_values'	=>	'false' 
+	),
+	15	=> array(
+		'id'					=> 15,
+		'name'					=> 'textbox',
+		'description'			=>	'',
+		'has_options'			=>	'false',
+		'has_properties'		=>	'true',
+		'allow_multiple_values'	=>	'false' 
+	),
+	16	=> array(
+		'id'					=> 16,
+		'name'					=> 'Image (Upload Media)',
+		'description'			=>	'',
+		'has_options'			=>	'false',
+		'has_properties'		=>	'true',
+		'allow_multiple_values'	=>	'false' 
+	)
+);
+
+
+
 
 // Field Types
 global $STANDARD_FIELDS;

@@ -103,28 +103,30 @@ class RCCWP_CustomGroup
 	 * @return an array of objects containing information about fields. Each object contains 
 	 * 			3 objects: properties, options and default_value   
 	 */
-	function GetCustomFields($customGroupId)
-	{
-		global $wpdb;
-		$sql = "SELECT cf.id, cf.name, tt.name AS type, cf.description, cf.display_order, cf.required_field,cf.css, co.options, co.default_option AS default_value, tt.has_options, cp.properties, tt.has_properties, tt.allow_multiple_values, cf.duplicate,cf.help_text FROM " . MF_TABLE_GROUP_FIELDS .
+	function GetCustomFields($customGroupId) {
+		global $wpdb,$mf_field_types;
+		$sql = "SELECT cf.id,cf.type as custom_field_type, cf.name,cf.description, cf.display_order, cf.required_field,cf.css, co.options, co.default_option AS default_value,cp.properties,cf.duplicate,cf.help_text FROM " . MF_TABLE_GROUP_FIELDS .
 			" cf LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " co ON cf.id = co.custom_field_id" .
 			" LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " cp ON cf.id = cp.custom_field_id" .
-			" JOIN " . MF_TABLE_CUSTOM_FIELD_TYPES . " tt ON cf.type = tt.id" . 
 			" WHERE group_id = " . $customGroupId .
 			" ORDER BY cf.display_order,cf.id ASC";
 
 		$results =$wpdb->get_results($sql);
-
 		if (!isset($results))
 			$results = array();
 		
-		for ($i = 0; $i < $wpdb->num_rows; ++$i)
-		{
+		for ($i = 0; $i < $wpdb->num_rows; ++$i) {
+			$results[$i]->type 					= $mf_field_types[$results[$i]->custom_field_type]['name'];
+			$results[$i]->type_id				= $results[$i]->custom_field_type;
+			$results[$i]->has_options 			= $mf_field_types[$results[$i]->custom_field_type]['has_options'];
+			$results[$i]->has_properties 		= $mf_field_types[$results[$i]->custom_field_type]['has_properties'];
+			$results[$i]->allow_multiple_values = $mf_field_types[$results[$i]->custom_field_type]['allow_multiple_values'];
+
 			$results[$i]->options = unserialize($results[$i]->options);
 			$results[$i]->properties = unserialize($results[$i]->properties);
 			$results[$i]->default_value = unserialize($results[$i]->default_value);
 		}
-		
+	
 		return $results;
 	}
 	
