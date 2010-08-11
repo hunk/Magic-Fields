@@ -43,7 +43,7 @@ class RCCWP_CustomWritePanel
 	 * @param string $name write panel name
 	 * @param string $description write panel description
 	 * @param array $standardFields a list of standard fields ids that are to be displayed in 
-	 * 							in the panel. Use $STANDARD_FIELDS defined in RCCWP_Constant.php
+	 * 							in the panel. Use $STANDARD_FIELDS defined in MF_Constant.php
 	 * @param array $categories array of category ids that are checked by default when the user
 	 * 							opens Write tab for that panel.
 	 * @param integer $display_order the order of the panel in Magic Fields > Write Panels tab
@@ -320,7 +320,7 @@ class RCCWP_CustomWritePanel
 	 * Get a list of the standard fields of a the write panel
 	 *
 	 * @param integer $customWritePanelId panel id
-	 * @return array of ids of the standard fields (see $STANDARD_FIELDS defined in RCCWP_Constant.php) 
+	 * @return array of ids of the standard fields (see $STANDARD_FIELDS defined in MF_Constant.php) 
 	 */
 	function GetStandardFields($customWritePanelId)
 	{
@@ -341,7 +341,7 @@ class RCCWP_CustomWritePanel
 	 * @param string $name write panel name
 	 * @param string $description write panel description
 	 * @param array $standardFields a list of standard fields ids that are to be displayed in 
-	 * 							in the panel. Use $STANDARD_FIELDS defined in RCCWP_Constant.php
+	 * 							in the panel. Use $STANDARD_FIELDS defined in MF_Constant.php
 	 * @param array $categories array of category ids that are checked by default when the user
 	 * 							opens Write tab for that panel.
 	 * @param integer $display_order the order of the panel in Magic Fields > Write Panels tab

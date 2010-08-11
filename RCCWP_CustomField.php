@@ -23,7 +23,7 @@ class RCCWP_CustomField {
 	 * @param integer $required_field whether this field is a required field. Required fields
 	 * 							doesn't allow users to save a post if they are null. 
 	 * 
-	 * @param integer $type the type of the field. Use $FIELD_TYPES defined in RCCWP_Constant.php
+	 * @param integer $type the type of the field. Use $FIELD_TYPES defined in MF_Constant.php
 	 * @param array $options array of strings that represent the list of the field if
 	 * 							its type is list.
 	 * @param array $default_value array of strings that represent default value(s) of
@@ -364,7 +364,7 @@ class RCCWP_CustomField {
 	 * 							the Write tab.
 	 * @param integer $required_field whether this field is a required field. Required fields
 	 * 							doesn't allow users to save a post if they are null. 
-	 * @param integer $type the type of the field. Use $FIELD_TYPES defined in RCCWP_Constant.php
+	 * @param integer $type the type of the field. Use $FIELD_TYPES defined in MF_Constant.php
 	 * @param array $options array of strings that represent the list of the field if
 	 * 							its type is list.
 	 * @param array $default_value array of strings that represent default value(s) of

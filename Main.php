@@ -46,7 +46,7 @@ require_once 'PanelFields.php';
 require_once 'RCCWP_CustomGroup.php';
 
 // Getting the constants
-require_once 'RCCWP_Constant.php';
+require_once 'MF_Constant.php';
 
 // Getting the RCCWP_CustomField object for work with  Custom Fields
 require_once 'RCCWP_CustomField.php';

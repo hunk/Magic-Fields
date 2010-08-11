@@ -1,6 +1,6 @@
 <?php
 
-require_once 'RCCWP_Constant.php';
+require_once 'MF_Constant.php';
 require_once 'tools/debug.php';
 
 /**

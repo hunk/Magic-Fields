@@ -53,7 +53,20 @@ Class MF_PostTypePages{
 	 *
 	 */
 	function ManagePosttype(){
-		global $mf_domain;
+		global $mf_domain,$wpdb;
+
+		//Getting the  Custom types
+		$items = $wpdb->get_results('SELECT id,name FROM '.MF_TABLE_POSTTYPES_TAXONOMIES);
+	
+		$customtypes =  "";
+		foreach($items as $key => $value){
+			$customtypes .=  "<tr>".
+								"<td>".$value->id."</td>".
+								"<td>".$value->name."</td>".
+								"<td>Post</td>".
+								"<td>".__('Edit')."|".__('Delete')."</td>".
+							"</tr>";
+		}
 
 		print 
 			"<div class ='wrap'>".
@@ -69,12 +82,7 @@ Class MF_PostTypePages{
 						"</tr>".	
 					"</thead>".
 					"<tbody>".
-						"<tr>".
-							"<td>1</td>".
-							"<td>Custom Type Demo 1</td>".
-							"<td>Post</td>".
-							"<td>".__('Edit')."|".__('Delete')."</td>".
-						"</tr>".
+					$customtypes.
 					"</tbody>".
 					"<tfoot>".
 						"<tr>".
