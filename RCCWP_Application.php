@@ -232,6 +232,12 @@ class RCCWP_Application
 			$wpdb->query('ALTER TABLE '.MF_TABLE_GROUP_FIELDS.' ADD COLUMN help_text text after duplicate');
 			$wpdb->query('ALTER TABLE '.MF_TABLE_PANELS.' MODIFY display_order INTEGER');
 		}
+
+		if (RC_CWP_DB_VERSION >= 6){
+			if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."mf_custom_field_types'") == $wpdb->prefix."mf_custom_field_types"){
+				$wpdb->query("DROP TABLE ".$wpdb->prefix."mf_custom_field_types");
+			}
+		}
 	}
 
 	/**
