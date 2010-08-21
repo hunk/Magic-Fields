@@ -16,7 +16,7 @@ define('RC_CWP_POST_WRITE_PANEL_ID_META_KEY', '_mf_write_panel_id');
 define('RC_CWP_OPTION_KEY', 'mf_custom_write_panel');
 
 // Magic Fields paths
-preg_match('/wp-content(.*)(RCCWP_Constant\.php)$/',__FILE__,$mfpath);
+preg_match('/wp-content(.*)(MF_Constant\.php)$/',__FILE__,$mfpath);
 $mfpath = str_replace('\\', '/', $mfpath);
 define('MF_PLUGIN_DIR', dirname(plugin_basename(__FILE__))); 
 define("MF_PATH", dirname(__FILE__));
