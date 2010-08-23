@@ -18,6 +18,23 @@ Follow the following steps to install this plugin.
 
 ## Changelog ##
 
+###1.4.5###
+* Issue  17  fixed. http://bit.ly/b8AMUQ
+* Issue 6  fixed. http://bit.ly/cFV9bi
+* Issue 10 fixed. http://bit.ly/alvcS6
+* Issue 12 fixed. http://bit.ly/atiK2v
+* Issue 29 fixed. http://bit.ly/9RKJeW
+* Issue 31 fixed. http://bit.ly/bjYrWn
+* Issue 32 fixed. http://bit.ly/cIpJno
+* Issue 35 fixed. http://bit.ly/9gifQ1
+* Fixed some issues related with permissions
+* New custom field  for images (this custom field use the media library of wordpress)
+
+###1.4.1###
+* fixed issue with Multiline text fields when the visual editor is turned off.
+* Adding a little fix in the "condense" menu mode
+* Fixed issue in the generate image.
+
 ###1.4###
 * Magic Fields works fine with  the next release of Wordpress (v3.0)
 * Was removed phpthumb, and was added a specific functions for make the same things to phpthumb would  do, this means to magic fields is now 7000 lines more lightweight
