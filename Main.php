@@ -300,18 +300,20 @@ require_once('MF_ManageWritePanels.php');
 
 
 /** Wordpress 3.0 and beyond**/
+/*
 if( is_wp30() ){
-	/**
-	 * Post Type Panels
-	 **/
+	///
+	// Post Type Panels
+	//
 	require_once('MF_PostTypesPage.php'); 
 	add_action('admin_menu',array('MF_PostTypePages','TopMenu'));
 
-	/**CSS**/
+	//CSS/
 	add_action('admin_init','mf_css');
 
 	function mf_css(){
 		wp_enqueue_style('mf_base',MF_URI.'css/base.css',false,'1.5','all');
 	}
-	/** /CSS**/
+	 //CSS//
 }
+*/
