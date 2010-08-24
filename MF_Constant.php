@@ -199,7 +199,7 @@ $mf_field_types = array(
 	),
 	15	=> array(
 		'id'					=> 15,
-		'name'					=> 'textbox',
+		'name'					=> 'Markdown Textbox',
 		'description'			=>	'',
 		'has_options'			=>	'false',
 		'has_properties'		=>	'true',
