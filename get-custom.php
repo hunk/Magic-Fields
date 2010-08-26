@@ -598,7 +598,7 @@ function get_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 	return $info;
 }
 
-/*Added By Justin Grover to allow us to get a repeating field that is a multiline field without applying the "the_content" filter */
+/*Added By Justin Grover to allow us to get a repeating field that is a multiline field without applying the "the_content" filter*/
 
 function get_clean_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 	global $wpdb, $post, $FIELD_TYPES;
@@ -629,8 +629,8 @@ function get_clean_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 				$info[$data->field_count] = $data->meta_value;
 				break;
 			case $FIELD_TYPES['multiline_textbox']:
-				//$info[$data->field_count] = apply_filters('the_content', $data->meta_value);
-				//break;
+				$info[$data->field_count] = $data->meta_value;
+				break;
 			case $FIELD_TYPES["checkbox"]: 		
 					if ($data->meta_value == 'true')  $fieldValue = 1; else $fieldValue = 0;
 					$info[$data->field_count] = $fieldValue; 
