@@ -40,3 +40,10 @@ label.error_magicfields {
 .has-right-sidebar .inner-sidebar {
 z-index:1;
 }
+#wpbody-content span.required {
+color: #F00;
+}
+#wpbody-content .help_text {
+color: #666;
+font-style: italic;
+}
