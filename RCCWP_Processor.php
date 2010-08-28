@@ -151,6 +151,44 @@ class RCCWP_Processor {
 				$customGroup = RCCWP_CustomGroup::Get((int)$_REQUEST['custom-group-id']);
 				RCCWP_CustomGroup::Delete($_GET['custom-group-id']);
 				break;
+			 
+			case 'unlink-write-panel':
+			 global $wpdb;
+				$postId = (int)preg_replace('/post-/','',$_REQUEST['post-id']);
+				$dashboard = $_REQUEST['dashboard'];
+				if($postId){
+					//only delete images and postmeta fields with write panels
+					if(count(get_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY))){
+						$query = sprintf('SELECT wp_pm.meta_value 
+						FROM %s mf_pm, %s mf_cf, %s wp_pm
+						WHERE mf_pm.field_name = mf_cf.name AND mf_cf.type = 9 AND mf_pm.post_id = %d AND wp_pm.meta_id = mf_pm.id',
+						MF_TABLE_POST_META,
+						MF_TABLE_GROUP_FIELDS,
+						$wpdb->postmeta,
+						$postId
+						);
+						$images = $wpdb->get_results($query);
+						foreach($images as $image){
+							if($image->meta_value != ''){
+								$tmp = sprintf('%s%s',MF_FILES_PATH,$image->meta_value);
+								@unlink($tmp);
+							}
+						}
+						
+						//delete all data of postmeta (WP and MF)
+						$query = sprintf('DELETE a,b from %s a INNER JOIN %s b WHERE a.meta_id = b.id AND a.post_id = %d',
+						$wpdb->postmeta,
+						MF_TABLE_POST_META,
+						$postId
+						);
+						$wpdb->query($query);
+					}
+		
+				 delete_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY);
+				 wp_redirect($dashboard);
+				 exit();
+				}
+			 break;
 
 			case 'submit-edit-custom-group':				
 				include_once('RCCWP_CustomGroup.php');
