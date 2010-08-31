@@ -37,3 +37,43 @@ label.error_magicfields {
 	padding-left:7px;
 }
 .mul_mf .wp_themeSkin .mceStatusbar a.mceResize {top:auto !important;}
+
+.mf-panel-info {
+  background: url("../images/mf_field.png") repeat-x scroll 0 0 #F8F8F8;
+  padding: 6px 10px;
+  border: 1px solid #EAEAEA;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+
+#poststuff .inside .mf-panel-info p {
+  margin: 0;
+}
+
+.mf-panel-info span {
+  font-weight: bold;
+}
+.mf-panel-info span.none {
+  color: #999;
+}
+
+div.mf-panel-info h5 {
+  padding: 7px 2px;
+  border-bottom: 1px solid #ddd;
+  margin: 0 0 0px 0;
+  font-size: 11px;
+  color: #666;
+}
+
+div.mf-panel-info p {
+  border-top: 1px solid #fff;
+  line-height: 20px !important;
+  padding: 4px 2px 4px 2px; 
+}
+
+#rc-cwp-change-custom-write-panel-id {
+  width: 90%;
+  margin-left: 4px;
+}
+
+

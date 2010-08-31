@@ -448,6 +448,13 @@ class RCCWP_Processor {
 										 )
 								  );
 
+            // traversal addition
+            add_action('admin_menu',
+  								array(	'RCCWP_WritePostPage',
+  										'CreateAttributesBox'
+  									 )
+  							  );
+
 					}
 					else if (!isset($_REQUEST['no-custom-write-panel']) && isset($_REQUEST['post']))
 					{

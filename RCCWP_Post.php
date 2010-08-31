@@ -40,16 +40,47 @@ class RCCWP_Post {
 	 *  @param integer $postId
 	 */
 	function SetCustomWritePanel($postId) {
-		$customWritePanelId = $_POST['rc-cwp-custom-write-panel-id'];
+	  
+	  if (array_key_exists('rc-cwp-change-custom-write-panel-id', $_POST)) {
+		  $customWritePanelId = $_POST['rc-cwp-change-custom-write-panel-id'];
+	  } else {
+		  $customWritePanelId = $_POST['rc-cwp-custom-write-panel-id'];
+    }
+	  
 		if (isset($customWritePanelId)) {
-			if (!empty($customWritePanelId)) {	
+			if (!empty($customWritePanelId) || $customWritePanelId == "-1") {	
 				if (!update_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, $customWritePanelId)) {
 					add_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, $customWritePanelId);
 				}
+				
+				$changeTemplate = $_POST['rc-cwp-change-custom-page-template'];
+          
+        if (isset($changeTemplate) && $changeTemplate == "yes") {
+          // update the template for this page as well
+        
+          // lookup the theme for the new write panel
+          $panel = RCCWP_CustomWritePanel::Get($customWritePanelId);
+      
+        
+          if ($panel && isset($panel->name)) {
+            $panel_theme = RCCWP_CustomWritePanel::GetThemePage($panel->name);
+              
+        		if (!update_post_meta($postId, '_wp_page_template', $panel_theme)) {
+        			add_post_meta($postId, '_wp_page_template', $panel_theme);
+        		}
+        		
+      	  }
+
+        }
+
+				
 			} else {
 				delete_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY);
 			}
+    
 		}
+		
+		
 	}
 	
 	/**

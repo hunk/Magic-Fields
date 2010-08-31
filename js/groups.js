@@ -1,5 +1,7 @@
 jQuery(document).ready(function(){
     
+    moveAddToLast();
+
     //sorteable
     jQuery(".write_panel_wrapper").sortable({ 
         handle: ".sortable_mf",
@@ -21,7 +23,7 @@ jQuery(document).ready(function(){
                 groupCounter =  kids[i].id.split("_")[2];
                 ids = kids[i].id.split("_")[3];
                 jQuery("#order_"+groupCounter+"_"+ids).val(i+1);
-                jQuery("#counter_"+groupCounter+"_"+ids).text(i+1);
+                jQuery("#counter_"+groupCounter+"_"+ids).text("(" + (i+1) + ")");
             }
 			//add the editor visual in textareas
 			jQuery("#"+jQuery(this).attr("id")+" :input[type='textarea'].temp_remove_editor").each( function(inputField){
@@ -29,19 +31,24 @@ jQuery(document).ready(function(){
 				tinyMCE.execCommand('mceAddControl', false, editor_text);
 				jQuery('#'+editor_text).removeClass('temp_remove_editor');
 			});
+			
+			  moveAddToLast();
+			  
         }
     });
 
     //duplicate  group
-    jQuery(".duplicate_button").click(function(){
+    jQuery(".duplicate_button").live("click", function(){
         id = jQuery(this).attr("id"); 
         id = id.split("_"); 
         group = id[2];
         customGroupID =  id[3];
         order = id[4];
         order =  parseInt(order) + 1;
+        
+        jQuery(this).data("originalText", jQuery(this).html()).html("Adding - Please Wait...");
         GetGroupDuplicate(group,customGroupID,order);
-
+        
     });
 
     //delete duplicate field
@@ -89,8 +96,32 @@ jQuery(document).ready(function(){
         counter_field = inputName.split("_")[4] +"_"+ inputName.split("_")[1];
         getDuplicate(customFieldId,counter,div,groupCounter,groupId,counter_field);
     });
+    
+
 });
 
+moveAddToLast = function(context, bt) {
+    if (bt && context) {
+      bt.prependTo(context.find(".mf_toolbox:last .add_mf"));
+
+      if (bt.data("originalText")) {
+        bt.html(bt.data("originalText"));
+      }
+
+    } else {
+
+      jQuery('.duplicate_button', context).each( function() {
+        var el = jQuery(this);
+        el.prependTo(el.closest(".write_panel_wrapper").find(".mf_toolbox:last .add_mf"));
+        
+        if (el.data("originalText")) {
+          el.html(el.data("originalText"));
+        }
+        
+      });
+
+    }
+};
 
 /**
  * field duplicate 
@@ -108,6 +139,7 @@ getDuplicate = function(fId,fcounter,div,gcounter,groupId,counter_field){
 			
 			//fixing the order in the indexes of the custom fields
 		    fixcounter("counter_"+counter_field);
+		    
         }
     });
 }
@@ -138,7 +170,8 @@ GetGroupDuplicate = function(div,customGroupID,order){
         url     : mf_path+'RCCWP_GetDuplicate.php',
         data    : "flag=group&groupId="+customGroupID+"&groupCounter="+customGroupCounter+"&order="+order,
         success : function(msg){
-            jQuery("#write_panel_wrap_"+customGroupID).append(msg);
+            var newel = jQuery(msg);
+            jQuery("#write_panel_wrap_"+customGroupID).append(newel);
             kids =  jQuery("#write_panel_wrap_"+customGroupID).children().filter(".magicfield_group");
                 for(i=0;i < kids.length; i++){
                     groupCounter =  kids[i].id.split("_")[2];
@@ -146,6 +179,11 @@ GetGroupDuplicate = function(div,customGroupID,order){
                     jQuery("#order_"+groupCounter+"_"+ids).val(i+1);
                     value =  i + 1;
                     jQuery("#counter_"+groupCounter+"_"+ids).text("(" + value + ")");
+
+            		    // move the add button to the last panel
+            		    moveAddToLast(jQuery("#write_panel_wrap_"+customGroupID));
+                    newel.find("input,textarea").eq(0).focus();
+                    jQuery.scrollTo(newel, 500);
                 }
 				// set the editor in textarea
 				add_editor_text();
@@ -160,7 +198,10 @@ GetGroupDuplicate = function(div,customGroupID,order){
  *
  */
 deleteGroupDuplicate = function(div){
-    jQuery("#"+div).remove();
+    var parent = jQuery("#"+div);
+    var db = parent.find(".duplicate_button").clone();
+    var context = parent.closest(".write_panel_wrapper");
+    parent.fadeOut({ duration: "normal", complete: function() { parent.remove(); moveAddToLast(context, db); } });
 }
 
 /**

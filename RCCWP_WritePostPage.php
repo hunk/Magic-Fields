@@ -133,6 +133,10 @@ class RCCWP_WritePostPage
 		wp_enqueue_script( 'mf_validate',
 							MF_URI.'js/jquery.validate.pack.js'
 						);
+		///loading handler for scrollTo
+		wp_enqueue_script( 'mf_scrollto',
+							MF_URI.'js/jquery.scrollto.pack.js'
+						);
 		//loading the code for validation
 		wp_enqueue_script( 'mf_validate_fields',
 							MF_URI.'js/custom_fields/validate.js'
@@ -1360,6 +1364,95 @@ class RCCWP_WritePostPage
   }
 	
 	
+							
+
+
+  function CreateAttributesBox() {
+  
+    add_meta_box('mfattributes', __('Magic Fields Settings'), array('RCCWP_WritePostPage','attributesBoxContent'), 'page', 'side', 'core');
+
+  }
+
+
+  function attributesBoxContent($post) {
+  ?>
+    <p><strong><?php _e('Write Panel') ?></strong></p>
+    <label class="screen-reader-text" for="parent_id"><?php _e('Write Panel') ?></label>
+    <?php 
+  
+      // get a list of the write panels 
+  
+        $customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
+    		$promptEditingPost = RCCWP_Options::Get('prompt-editing-post');
+        
+        $templates_by_filename = array();
+			  $templates = get_page_templates();
+        // get the reverse map
+        
+        foreach ($templates as $name => $file) {
+          $templates_by_filename[$file] = $name;
+        }
+        
+        
+        ?>
+    		<select name="rc-cwp-change-custom-write-panel-id" id="rc-cwp-change-custom-write-panel-id">
+          <?php if ($promptEditingPost == 1) : ?><option value="0"><?php _e('(None)', $mf_domain); ?></option><?php endif; ?>
+          
+    		<?php
+		
+      
+    		$panel_id = get_post_meta($post->ID, "_mf_write_panel_id", TRUE);
+		    $items = array();
+		    
+    		foreach ($customWritePanels as $panel) :
+    			$selected = $panel->id == $panel_id ? 'selected="selected"' : '';
+		      $panel_theme = RCCWP_CustomWritePanel::GetThemePage($panel->name);
+    		  $parent_page = RCCWP_CustomWritePanel::GetParentPage($panel->name);
+    		  
+    		  if ($parent_page != '') {
+    		    $pp = get_page( $parent_page );
+    		    
+    		    if ($pp) {
+    		      $parent_page_title = $pp->post_title;
+            }
+          
+  		    }
+  		    
+    		?>
+    			<option value="<?php echo $panel->id?>" <?php echo $selected?>><?php echo $panel->name?></option>
+    		<?php
+    		  $items[$panel->id] = "{ panel_theme: '".$panel_theme."', template_name: '".addslashes($templates_by_filename[$panel_theme])."', parent_page: '".$parent_page."', parent_page_title: '".$parent_page_title."' }";
+    		endforeach;
+    		?>
+    		</select>
+
+        <script type="text/javascript">
+        var mf_panel_items = {};
+        
+        <?php foreach ($items as $key => $value) : ?> 
+        mf_panel_items[<?php echo $key ?>] = <?php echo $value; ?>; 
+        <?php endforeach; ?>
+        
+        </script>
+
+
+    <p><?php _e('Click the button(s) below to also set the template and/or parent page in Page Attributes to match the defaults for the selected write panel') ?></p>
+    <div class="inside">
+      <input class="button" type="button" id="rc-cwp-set-page-template" value="<?php _e('Set Page Template') ?>" />
+      <input class="button" type="button" id="rc-cwp-set-page-parent" value="<?php _e('Set Page Parent') ?>" />
+    </div>
+    <div class="mf-panel-info">
+    <h5 class="mf-hd-panel-info">Default settings for selected write panel</h5>
+    <p>
+      Template - <span id="mf-page-template-display"></span><br />
+      Parent Page - <span id="mf-page-parent-display"></span>
+    </p>
+  </div>
+  
+    <?php
+  }
+
+
 	
 	//Change the nameinput magicfields[type][id gruop index][id field index] => magicfields_{type}_{id group index}_{if field index}
 	function changeNameInput($inputName){
