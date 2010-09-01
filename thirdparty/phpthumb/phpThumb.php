@@ -30,12 +30,17 @@ $default = array(
 				);
 				
 //getting the name of the image
-preg_match('/\/wp-content\/([0-9\_a-z\/\-]+\.(jpg|png|gif))/i',$_GET['src'],$match);
+preg_match('/\/wp-content\/([0-9\_a-z\/\-\.]+\.(jpg|png|gif))/i',$_GET['src'],$match);
 $image_name_clean = $match[1];
 $extension = $match[2];
 
+//is wp mu o wp network
+if(isset($current_blog)){
+  $image_name_clean = preg_replace('/blogs.dir\/(\d+)\//','',$image_name_clean);
+}
 //Getting the original size of the image
 $file = MF_WPCONTENT.$image_name_clean; 
+
 if(file_exists($file) && (empty($_GET['w']) || empty($_GET['h']))){
 	$size = @getimagesize(MF_WPCONTENT.$image_name_clean);
 	$default['w'] = $size[0];
