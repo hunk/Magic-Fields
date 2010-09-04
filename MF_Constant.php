@@ -21,6 +21,9 @@ $mfpath = str_replace('\\', '/', $mfpath);
 define('MF_PLUGIN_DIR', dirname(plugin_basename(__FILE__))); 
 define("MF_PATH", dirname(__FILE__));
 
+// Define Cache Dir
+define("MF_CACHE_DIR", ABSPATH. 'cache/' );
+
 define("MF_URI", get_bloginfo('wpurl').'/wp-content'.$mfpath[1]); 
 define("MF_URI_RELATIVE", 'wp-content'.$mfpath[1]);
 define("PHPTHUMB",MF_URI."thirdparty/phpthumb/phpThumb.php");
