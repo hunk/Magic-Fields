@@ -485,8 +485,9 @@ class RCCWP_WritePostPage
 						$titleCounter = "";
 					}
 				?>
-				<?php echo $customFieldTitle.$titleCounter?>
-				<?php if (!empty($customFieldHelp)) {?>
+				<?php echo $customFieldTitle.$titleCounter;
+				if( $customField->required_field == 1 ) { ?> <span class="required">*</span><?php }
+				if (!empty($customFieldHelp)) {?>
 					<small class="tip">(what's this?)<span class="field_help"><?php echo $customFieldHelp; ?></span></small>
 				<?php } ?>
 			</label>
