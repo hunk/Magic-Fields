@@ -366,11 +366,11 @@ class RCCWP_CustomWritePanelPage
   		<thead>
 	  		<tr>
 	  			<th width="20%" scope="col"><?php _e('Name', $mf_domain)?></th>
-					<th width="10%" scope="col"><?php _e('Key', $mf_domain)?></th>
-					<th width="30%" scope="col"><?php _e('Help', $mf_domain)?></th>
-	  			<th width="20%" scope="col"><?php _e('Type', $mf_domain)?></th>
-					<th width="20%" scope="col"><?php _e('Actions', $mf_domain)?></th>
-				</tr>
+				<th width="15%" scope="col"><?php _e('Key', $mf_domain)?></th>
+				<th width="35%" scope="col"><?php _e('Help')?></th>
+	  			<th width="15%" scope="col"><?php _e('Type', $mf_domain)?></th>
+				<th width="15%" scope="col"><?php _e('Actions', $mf_domain)?></th>
+			</tr>
   		</thead>
   		<tbody>
 	  		<?php
@@ -380,8 +380,8 @@ class RCCWP_CustomWritePanelPage
 		  			<tr>
 		  				<td><strong><a style="color:#D54E21" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-group')."&custom-group-id={$group->id}"?>"><?php echo $group->name?></a></strong>&nbsp;&nbsp;(<a style="font-size:very-small" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field')."&custom-group-id={$group->id}"?>"><?php _e('create field',$mf_domain); ?></a>) </td>
 		  				<td></td>
-							<td></td>
-							<td><?php _e('Group', $mf_domain)?></td>
+						<td></td>
+						<td><?php _e('Group', $mf_domain)?></td>
 		  				<td><a onclick="return confirmBeforeDelete();" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-group')."&custom-group-id={$group->id}"?>">&times; <?php _e('Delete',$mf_domain); ?></a></td>
 		  				
 		  			</tr>
@@ -404,10 +404,15 @@ class RCCWP_CustomWritePanelPage
 		foreach ($custom_fields as $field) :
 		?>
 			<tr>
-				<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-field')."&custom-field-id=$field->id"?> " ><?php if ($intended){ ?><img align="top" src="<?php echo MF_URI; ?>images/arrow_right.gif" alt=""/> <?php } ?><?php echo $field->description?></a><?php if( $field->required_field == 1 ) echo '<span class="required">*</span>'; ?></td>
-		  	<td><?=$field->name?></td>
+				<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-field')."&custom-field-id=$field->id"?> " ><?php if ($intended){ ?><img align="top" src="<?php echo MF_URI; ?>images/arrow_right.gif" alt=""/> <?php } ?><?php echo $field->description?></a><?php if( $field->required_field == 1 ) echo ' <span class="required">*</span>'; ?></td>
+		  		<td><?php echo $field->name;
+				if( $field->type == 'Textbox' && isset( $field->properties['size'] ) ) { echo ' <sup class="help_text">['.$field->properties['size'].']</sup>'; }
+				if( $field->type == 'Multiline Textbox' && isset( $field->properties['height'] ) && isset( $field->properties['width'] ) ) { echo ' <sup class="help_text">['.$field->properties['height']. '&times;'. $field->properties['width'] .']</sup>'; };
+				?></td>
 				<td class="help_text"><?=$field->help_text?></td>
-				<td><?php echo $field->type?></td>
+				<td><?php echo $field->type?><?php
+				if( $field->type == 'Multiline Textbox' && isset( $field->properties['hide-visual-editor'] ) && $field->properties['hide-visual-editor'] == 1 ) { echo ' <sup class="help_text">[simple]</sup>'; }
+				?></td>
 		  	<td><a onclick="return confirmBeforeDelete();" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-field')."&custom-field-id=$field->id"?>" >&times; <?php _e('Delete',$mf_domain); ?></a></td>
 		  		
 			</tr>
