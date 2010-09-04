@@ -3,6 +3,58 @@
 require_once 'MF_Constant.php';
 require_once 'tools/debug.php';
 
+/*
+ * THE CACHE FUNCTIONS
+ * by martin@attitude.sk 
+ *
+ * When online you can end up with tons of get requests in theme files and site tends to get slow.
+ * The simple caching mechanism makes it like 6-times faster depending on your server configuration.
+ *
+ */
+
+	/*
+	 * Function to return data if not older than Time To Live
+	 * 
+	 * @param string $file - Relative path to cached folder
+	 * @param int $ttl - Duration in seconds file is considered to be up to date. Defaut is 5 minutes.
+	 */
+	function MF_get_cached_data( $file, $ttl = 300 ) {
+		if( !MF_CACHE_IS_ON ) return FALSE;
+		
+		if( file_exists( MF_CACHE_DIR . $file ) ) {
+			// If you set $ttl to FALSE or negative value, no mod. file time is checked
+			if( !$ttl || $ttl <= 0 ) {
+				return file_get_contents( MF_CACHE_DIR . $file );
+			}
+			
+			if( ( time() - filemtime( MF_CACHE_DIR . $file ) ) < $ttl ) {
+				return file_get_contents( MF_CACHE_DIR . $file );
+			}
+		}
+	return FALSE;
+	}
+	
+	/*
+	 * Function to cache data to specified file
+	 * 
+	 * @param string $file - Relative path to cached folder
+	 * @param string $data - String data to store.
+	 */
+	function MF_put_cached_data( $file, $data ) {
+		if( !MF_CACHE_IS_ON ) return FALSE;
+		if( !file_exists( dirname( MF_CACHE_DIR . $file ) ) ) {
+			// Recursion to create directories
+			if( !mkdir( dirname( MF_CACHE_DIR . $file ), 0777, TRUE) ) {
+				return FALSE;
+			}
+		}
+		if( file_put_contents( MF_CACHE_DIR . $file, $data ) ) {
+			return TRUE;
+		}else {
+			return FALSE;
+		}
+	}
+
 /**
  * Get number of group duplicates given field name. The function returns 1
  * if there are no duplicates (just the original group), 2 if there is one
