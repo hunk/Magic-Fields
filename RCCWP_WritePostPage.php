@@ -476,9 +476,23 @@ class RCCWP_WritePostPage
  		if( $fieldCounter > 1) $titleCounter = " (<span class='counter_{$customFieldName}_{$groupCounter}'>$fieldCounter</span>)";
 
  		$field_group = RCCWP_CustomGroup::Get($customField->group_id);
-
+		
+		/* 
+		 * Add the lang attribute if last part of the field name matches defined languages
+		 * 
+		 * define( 'ADMIN_LANGS', 'en|fr|de' );
+		 * example: field name 'the_about_text_en' matches 'en' and sets ' lang="en"'
+		 *
+		 */  
+		if( defined( 'ADMIN_LANGS' ) ) {
+			$customFieldNameParts = explode( '_', $customFieldName );
+			$lang_switch = ( preg_match( '/'.ADMIN_LANGS.'/', $customFieldNameParts[ sizeof( $customFieldNameParts) - 1 ] ) ) ? ' lang="'.$customFieldNameParts[ sizeof( $customFieldNameParts) - 1 ].'"' : '';
+		}else {
+			$lang_switch = '';
+		}
+		
 		?>
-		<div class="mf-field <?php echo str_replace(" ","_",$customField->type); ?>" id="row_<?php echo $inputCustomName?>">
+		<div class="mf-field <?php echo str_replace(" ","_",$customField->type); ?>" id="row_<?php echo $inputCustomName?>"<?php echo $lang_switch;?>>
 			<label for="<?php echo $inputCustomName?>">
 				<?php
 					if(empty($titleCounter)){
