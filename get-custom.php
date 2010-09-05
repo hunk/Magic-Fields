@@ -134,7 +134,11 @@ function get_clean($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$
 	global $post, $FIELD_TYPES;
 	
 	if(!$post_id){ $post_id = $post->ID; }
-	$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
+	$cache_name = $post_id.'/_clean-'.$fieldName.'--'.$groupIndex.'--'.$fieldIndex.'.txt';
+	if( !$field = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE ) ) {
+		$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
+		MF_put_cached_data( $cache_name, json_encode( $field ) );
+	}
 	if(!$field) return FALSE;
 	
 	$fieldType = $field['type'];
