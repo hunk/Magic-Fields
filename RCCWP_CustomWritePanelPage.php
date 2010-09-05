@@ -470,8 +470,10 @@ class RCCWP_CustomWritePanelPage
 		<table cellpadding="3" cellspacing="3" width="100%" class="widefat">
 			<thead>
 				<tr>
-					<th scope="col" width="60%"><?php _e('Name',$mf_domain); ?></th>
-					<th colspan="4" style="text-align:center"><?php _e('Actions',$mf_domain); ?></th>
+					<th scope="col" width="40%"><?php _e('Name',$mf_domain); ?></th>
+					<th width="10%"><?php _e('Id',$mf_domain); ?></th>
+					<th width="10%"><?php _e('Type',$mf_domain); ?></th>
+					<th width="40%" colspan="4" style="text-align:center"><?php _e('Actions',$mf_domain); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -479,7 +481,9 @@ class RCCWP_CustomWritePanelPage
 				foreach ($customWritePanels as $panel) :
 				?>
 					<tr>
-						<td><?php echo $panel->name ?></td>			
+						<td><?php echo $panel->name;?></td>
+						<td><?php echo $panel->id ?></td>
+						<td><?php echo ucwords( $panel->type ); if( $panel->single != 1 ) echo ' <sup class="multiple" title="Multiple Posts/Pages">[+]</sup>'; ?></td>
 						<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('view-custom-write-panel', $panel->id)?>" ><?php _e('Edit Fields/Groups',$mf_domain) ?></a></td>
 						<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $panel->id)?>" ><?php _e('Edit Write Panel',$mf_domain) ?></a></td>
 						<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('export-custom-write-panel', $panel->id); ?>" ><?php _e('Export',$mf_domain); ?></a></td>		
