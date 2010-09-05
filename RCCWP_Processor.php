@@ -407,6 +407,8 @@ class RCCWP_Processor {
 
 			default:
 								
+  			
+  							  
 				if (RCCWP_Application::InWritePostPanel())
 				{
 					include_once('RCCWP_Menu.php');
@@ -447,13 +449,6 @@ class RCCWP_Processor {
 											'CustomFieldCollectionInterface'
 										 )
 								  );
-
-            // traversal addition
-            add_action('admin_menu',
-  								array(	'RCCWP_WritePostPage',
-  										'CreateAttributesBox'
-  									 )
-  							  );
 
 					}
 					else if (!isset($_REQUEST['no-custom-write-panel']) && isset($_REQUEST['post']))
@@ -509,6 +504,16 @@ class RCCWP_Processor {
 						
 					}
 				}
+				
+				if (isset($_REQUEST['post'])) {
+  				// traversal addition to change write panel
+          add_action('admin_menu',
+    						array(	'RCCWP_WritePostPage',
+    								'CreateAttributesBox'
+    							 )
+    					  );
+  			}
+  			
 		}
 		
 	}

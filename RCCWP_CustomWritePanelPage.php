@@ -313,9 +313,10 @@ class RCCWP_CustomWritePanelPage
 		$customWritePanel = RCCWP_CustomWritePanel::Get($customWritePanelId);
 		$custom_groups = RCCWP_CustomWritePanel::GetCustomGroups($customWritePanelId);
 		
+		
 		// get default group id
 		foreach ($custom_groups as $group){
-			if ($group->name == '__default'){
+			if ($group->name == '__default' && $group->panel_id == $customWritePanelId){ // traversal added extra condition to handle globals
 				$customDefaultGroupId = $group->id;
 				break;
 			}
@@ -374,7 +375,8 @@ class RCCWP_CustomWritePanelPage
   		<tbody>
 	  		<?php
 	  		foreach ($custom_groups as $group) :
-				if ($customDefaultGroupId != $group->id){			
+	  		
+				if ($group->panel_id == $customWritePanelId && $customDefaultGroupId != $group->id && $group->name != "__default"){			 // added extra conditions to handle global fields
 	  		?>
 		  			<tr>
 		  				<td><strong><a style="color:#D54E21" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-group')."&custom-group-id={$group->id}"?>"><?php echo $group->name?></a></strong>&nbsp;&nbsp;(<a style="font-size:very-small" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field')."&custom-group-id={$group->id}"?>"><?php _e('create field',$mf_domain); ?></a>) </td>
@@ -386,6 +388,7 @@ class RCCWP_CustomWritePanelPage
 	  				RCCWP_CustomWritePanelPage::DisplayGroupFields($group->id, true);
 				}
 	  		endforeach;
+	  		
 	  		RCCWP_CustomWritePanelPage::DisplayGroupFields($customDefaultGroupId);
 	  		?>
   		</tbody>
@@ -398,7 +401,7 @@ class RCCWP_CustomWritePanelPage
 	function DisplayGroupFields($customGroupId, $intended = false){
 		global $mf_domain;
 		$custom_fields = RCCWP_CustomGroup::GetCustomFields($customGroupId);
-		foreach ($custom_fields as $field) :
+		foreach ($custom_fields as $field) : 
 		?>
 			<tr>
 				<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-field')."&custom-field-id=$field->id"?> " ><?php if ($intended){ ?><img align="top" src="<?php echo MF_URI; ?>images/arrow_right.gif" alt=""/> <?php } ?><?php echo $field->description?></a></td>
@@ -440,7 +443,7 @@ class RCCWP_CustomWritePanelPage
 	function ViewWritePanels()
 	{
 		global $mf_domain;	
-		$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
+		$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels(TRUE);
 		?>
 
 		<div class="wrap">
@@ -469,10 +472,10 @@ class RCCWP_CustomWritePanelPage
 				foreach ($customWritePanels as $panel) :
 				?>
 					<tr>
-						<td><?php echo $panel->name.' <span style="color: #999;">('.$panel->display_order.')</span>' ?></td>			
+						<td><?php echo $panel->name ?><?php if ($panel->name != '* Global Fields'): echo ' <span style="color: #999;">('.$panel->display_order.')</span>' ?><?php endif; ?></td>			
 						<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('view-custom-write-panel', $panel->id)?>" ><?php _e('Edit Fields/Groups',$mf_domain) ?></a></td>
-						<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $panel->id)?>" ><?php _e('Edit Write Panel',$mf_domain) ?></a></td>
-						<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('export-custom-write-panel', $panel->id); ?>" ><?php _e('Export',$mf_domain); ?></a></td>		
+						<td><?php if ($panel->name != '* Global Fields'): ?><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $panel->id)?>" ><?php _e('Edit Write Panel',$mf_domain) ?></a>&nbsp;<?php endif; ?></td>
+						<td><?php if ($panel->name != '* Global Fields'): ?><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $panel->id)?>" ><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('export-custom-write-panel', $panel->id); ?>" ><?php _e('Export',$mf_domain); ?></a><?php endif; ?></td>		
 					</tr>
 				<?php
 				endforeach;

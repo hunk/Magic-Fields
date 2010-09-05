@@ -133,10 +133,6 @@ class RCCWP_WritePostPage
 		wp_enqueue_script( 'mf_validate',
 							MF_URI.'js/jquery.validate.pack.js'
 						);
-		///loading handler for scrollTo
-		wp_enqueue_script( 'mf_scrollto',
-							MF_URI.'js/jquery.scrollto.pack.js'
-						);
 		//loading the code for validation
 		wp_enqueue_script( 'mf_validate_fields',
 							MF_URI.'js/custom_fields/validate.js'
@@ -237,7 +233,7 @@ class RCCWP_WritePostPage
 			$blu = RCCWP_CustomWritePanel::Get($CUSTOM_WRITE_PANEL->id);
 			if($post->post_type == "post"){ $name_title = "Post";}
 			else{$name_title = "Page";}
-			$title="Edit ".$name_title." >> " .$blu->name;
+			$title="Edit " .Inflect::singularize($blu->name);
 		}
 
 		
@@ -1364,17 +1360,26 @@ class RCCWP_WritePostPage
   }
 	
 	
-							
-
 
   function CreateAttributesBox() {
   
-    add_meta_box('mfattributes', __('Magic Fields Settings'), array('RCCWP_WritePostPage','attributesBoxContent'), 'page', 'side', 'core');
+    add_meta_box('mfattributespage', __('Magic Fields Attributes'), array('RCCWP_WritePostPage','attributesBoxContentPage'), 'page', 'side', 'core');
+    add_meta_box('mfattributespost', __('Magic Fields Attributes'), array('RCCWP_WritePostPage','attributesBoxContentPost'), 'post', 'side', 'core');
 
   }
 
 
-  function attributesBoxContent($post) {
+  function attributesBoxContentPage($post) {
+    
+    global $wpdb;
+    
+    $single_panel = FALSE;
+    $panel_id = get_post_meta($post->ID, "_mf_write_panel_id", TRUE);
+    
+    if ($panel_id) {
+      $panel =  RCCWP_CustomWritePanel::Get($panel_id);
+    }
+      
   ?>
     <p><strong><?php _e('Write Panel') ?></strong></p>
     <label class="screen-reader-text" for="parent_id"><?php _e('Write Panel') ?></label>
@@ -1384,6 +1389,7 @@ class RCCWP_WritePostPage
   
         $customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
     		$promptEditingPost = RCCWP_Options::Get('prompt-editing-post');
+        
         
         $templates_by_filename = array();
 			  $templates = get_page_templates();
@@ -1396,12 +1402,10 @@ class RCCWP_WritePostPage
         
         ?>
     		<select name="rc-cwp-change-custom-write-panel-id" id="rc-cwp-change-custom-write-panel-id">
-          <?php if ($promptEditingPost == 1) : ?><option value="0"><?php _e('(None)', $mf_domain); ?></option><?php endif; ?>
+          <option value="-1"><?php _e('(None)', $mf_domain); ?></option>
           
     		<?php
-		
-      
-    		$panel_id = get_post_meta($post->ID, "_mf_write_panel_id", TRUE);
+			
 		    $items = array();
 		    
     		foreach ($customWritePanels as $panel) :
@@ -1418,16 +1422,29 @@ class RCCWP_WritePostPage
           
   		    }
   		    
+  		    $allow = $panel->type == "page";
+  		    
+  		    if ($panel->single && $panel->id != $panel_id) {
+  		      // check to see if there are any posts with this panel already. If so, we can't allow it to be used.
+            $sql = "SELECT COUNT(*) FROM $wpdb->postmeta WHERE $wpdb->postmeta.meta_value = ".$panel->id." AND $wpdb->postmeta.meta_key = '_mf_write_panel_id'";
+		        $count = $wpdb->get_var($sql);
+            $allow = $count == 0;
+		      }
+  		    
+  		    if ($allow) :  // cannot change to "single" panels
     		?>
     			<option value="<?php echo $panel->id?>" <?php echo $selected?>><?php echo $panel->name?></option>
     		<?php
     		  $items[$panel->id] = "{ panel_theme: '".$panel_theme."', template_name: '".addslashes($templates_by_filename[$panel_theme])."', parent_page: '".$parent_page."', parent_page_title: '".$parent_page_title."' }";
+
+          endif;
+          
     		endforeach;
     		?>
     		</select>
 
         <script type="text/javascript">
-        var mf_panel_items = {};
+        var mf_panel_items = { "-1" : { panel_theme: '', template_name: '', parent_page: '', parent_page_title: '' } };
         
         <?php foreach ($items as $key => $value) : ?> 
         mf_panel_items[<?php echo $key ?>] = <?php echo $value; ?>; 
@@ -1436,23 +1453,76 @@ class RCCWP_WritePostPage
         </script>
 
 
-    <p><?php _e('Click the button(s) below to also set the template and/or parent page in Page Attributes to match the defaults for the selected write panel') ?></p>
-    <div class="inside">
-      <input class="button" type="button" id="rc-cwp-set-page-template" value="<?php _e('Set Page Template') ?>" />
-      <input class="button" type="button" id="rc-cwp-set-page-parent" value="<?php _e('Set Page Parent') ?>" />
+    <div id="rc-cwp-set-buttons">
+      <p><?php _e('Note: Custom fields and groups associated with the selected write panel will be only be displayed once you have saved this page or post.')?></p>
+      <p><?php _e('Before saving you may also like to set the <strong>Template</strong> and/or <strong>Parent</strong> in the <strong>Page Attributes</strong> panel to match the defaults for the selected write panel (recommended)') ?></p>
+      <div class="inside">
+        <input class="button" type="button" id="rc-cwp-set-page-template" value="<?php _e('Set Page Template') ?>" />
+        <input class="button" type="button" id="rc-cwp-set-page-parent" value="<?php _e('Set Page Parent') ?>" />
+      </div>
+      <div class="mf-panel-info">
+      <h5 class="mf-hd-panel-info">Defaults for the selected write panel</h5>
+      <p>
+        Template: <span id="mf-page-template-display"></span><br />
+        Parent: <span id="mf-page-parent-display"></span>
+      </p>
     </div>
-    <div class="mf-panel-info">
-    <h5 class="mf-hd-panel-info">Default settings for selected write panel</h5>
-    <p>
-      Template - <span id="mf-page-template-display"></span><br />
-      Parent Page - <span id="mf-page-parent-display"></span>
-    </p>
+    
   </div>
-  
     <?php
   }
 
 
+  function attributesBoxContentPost($post) {
+    
+    global $wpdb;
+    
+    $single_panel = FALSE;
+    
+    $panel_id = get_post_meta($post->ID, "_mf_write_panel_id", TRUE);
+    
+    if ($panel_id) {
+      $panel =  RCCWP_CustomWritePanel::Get($panel_id);
+    }
+      
+  ?>
+    <p><strong><?php _e('Write Panel') ?></strong></p>
+    <label class="screen-reader-text" for="parent_id"><?php _e('Write Panel') ?></label>
+    <?php 
+  
+      // get a list of the write panels 
+      $customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
+        
+        ?>
+    		<select name="rc-cwp-change-custom-write-panel-id" id="rc-cwp-change-custom-write-panel-id">
+          <option value="-1"><?php _e('(None)', $mf_domain); ?></option>
+    		<?php
+			
+		    $items = array();
+		    
+    		foreach ($customWritePanels as $panel) :
+    			$selected = $panel->id == $panel_id ? 'selected="selected"' : '';
+  		    $allow = $panel->type == "post";
+  		    
+  		    if ($panel->single && $panel->id != $panel_id) {
+  		      // check to see if there are any posts with this panel already. If so, we can't allow it to be used.
+            $sql = "SELECT COUNT(*) FROM $wpdb->postmeta WHERE $wpdb->postmeta.meta_value = ".$panel->id." AND $wpdb->postmeta.meta_key = '_mf_write_panel_id'";
+		        $count = $wpdb->get_var($sql);
+            $allow = $count == 0;
+		      }
+  		    
+  		    if ($allow) :  // cannot change to "single" panels
+    		  ?>
+    			<option value="<?php echo $panel->id?>" <?php echo $selected?>><?php echo $panel->name?></option>
+    		  <?php
+          endif;
+          
+    		endforeach;
+    		?>
+    		</select>
+    <?php
+  }
+  
 	
 	//Change the nameinput magicfields[type][id gruop index][id field index] => magicfields_{type}_{id group index}_{if field index}
 	function changeNameInput($inputName){

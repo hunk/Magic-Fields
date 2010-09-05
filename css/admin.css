@@ -61,14 +61,19 @@ div.mf-panel-info h5 {
   padding: 7px 2px;
   border-bottom: 1px solid #ddd;
   margin: 0 0 0px 0;
-  font-size: 11px;
+  font-size: 10px;
   color: #666;
 }
 
 div.mf-panel-info p {
+  font-size: 10px;
   border-top: 1px solid #fff;
   line-height: 20px !important;
   padding: 4px 2px 4px 2px; 
+}
+
+#rc-cwp-set-buttons {
+  display: none;
 }
 
 #rc-cwp-change-custom-write-panel-id {

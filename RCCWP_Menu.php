@@ -115,7 +115,6 @@ class RCCWP_Menu
 				$page_type = 'Edit';
 				break;
 				
-				
 
 			// ------------ Custom Write Panels
 
@@ -177,6 +176,7 @@ class RCCWP_Menu
 					$page_group = 'RCCWP_ManagementPage';
 					$page_type = 'ViewGroups';
 				}
+				
 				// ------- Default behavior
 				else{
 					$page_group = 'RCCWP_CustomWritePanelPage';
@@ -268,6 +268,7 @@ class RCCWP_Menu
 			// end fix
 			
 			foreach ($customWritePanels as $panel){
+			  if ($panel->name != '* Global Fields') { // traversal: fix to ignore the global group
 				//exists a single write panel? and if exists  this write panel have posts?
 				if($panel->single == 1){
 					$has_posts = $wpdb->get_var('SELECT post_id FROM '.$wpdb->prefix.'postmeta  where meta_key = "_mf_write_panel_id" and  meta_value = '.$panel->id);
@@ -345,6 +346,8 @@ class RCCWP_Menu
 			 			}
 					}
 				}
+				
+			} // traversal: endif '$panel->name == '* Global Fields'
 		}
 		foreach ($menu as $k => $v) {
 			if($k > 5) $new_menu[$k+$offset]=$v;

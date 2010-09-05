@@ -183,7 +183,7 @@ GetGroupDuplicate = function(div,customGroupID,order){
             		    // move the add button to the last panel
             		    moveAddToLast(jQuery("#write_panel_wrap_"+customGroupID));
                     newel.find("input,textarea").eq(0).focus();
-                    jQuery.scrollTo(newel, 500);
+                    //jQuery.scrollTo(newel, 500);
                 }
 				// set the editor in textarea
 				add_editor_text();

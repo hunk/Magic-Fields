@@ -10,12 +10,11 @@ class RCCWP_Post {
 	function SaveCustomFields($postId){
 		global $flag;
 		
+			
 		if($flag == 0){
 			
 			//with this  the save_post action don't will be execute twice
 			$flag = 1;
-			
-			
 			//security
 			if(!wp_verify_nonce($_REQUEST['rc-custom-write-panel-verify-key'], 'rc-custom-write-panel'))
 				return $postId;
@@ -24,6 +23,7 @@ class RCCWP_Post {
 			if (!current_user_can('edit_post', $postId)){
 				return $postId;
 			}
+			
 			
 			RCCWP_Post::SetCustomWritePanel($postId);
 			RCCWP_Post::PrepareFieldsValues($postId);
@@ -46,34 +46,13 @@ class RCCWP_Post {
 	  } else {
 		  $customWritePanelId = $_POST['rc-cwp-custom-write-panel-id'];
     }
+    
 	  
 		if (isset($customWritePanelId)) {
-			if (!empty($customWritePanelId) || $customWritePanelId == "-1") {	
+			if (!empty($customWritePanelId) && $customWritePanelId != "-1") {	
 				if (!update_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, $customWritePanelId)) {
 					add_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, $customWritePanelId);
 				}
-				
-				$changeTemplate = $_POST['rc-cwp-change-custom-page-template'];
-          
-        if (isset($changeTemplate) && $changeTemplate == "yes") {
-          // update the template for this page as well
-        
-          // lookup the theme for the new write panel
-          $panel = RCCWP_CustomWritePanel::Get($customWritePanelId);
-      
-        
-          if ($panel && isset($panel->name)) {
-            $panel_theme = RCCWP_CustomWritePanel::GetThemePage($panel->name);
-              
-        		if (!update_post_meta($postId, '_wp_page_template', $panel_theme)) {
-        			add_post_meta($postId, '_wp_page_template', $panel_theme);
-        		}
-        		
-      	  }
-
-        }
-
-				
 			} else {
 				delete_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY);
 			}
