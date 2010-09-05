@@ -47,3 +47,7 @@ color: #F00;
 color: #666;
 font-style: italic;
 }
+#wpbody-content sup.multiple {
+color: #21759B;
+}
+
