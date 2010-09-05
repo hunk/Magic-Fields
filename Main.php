@@ -46,7 +46,7 @@ require_once 'PanelFields.php';
 require_once 'RCCWP_CustomGroup.php';
 
 // Getting the constants
-require_once 'RCCWP_Constant.php';
+require_once 'MF_Constant.php';
 
 // Getting the RCCWP_CustomField object for work with  Custom Fields
 require_once 'RCCWP_CustomField.php';
@@ -138,6 +138,7 @@ if (is_admin()) {
 	}
 }
 
+require_once ('RCCWP_Options.php');
 require_once ('RCCWP_Query.php');
 add_action('pre_get_posts', array('RCCWP_Query', 'FilterPrepare'));
 add_filter('posts_where', array('RCCWP_Query', 'FilterCustomPostsWhere'));
@@ -146,7 +147,9 @@ add_filter('posts_orderby', array('RCCWP_Query', 'FilterCustomPostsOrderby'));
 add_filter('posts_fields', array('RCCWP_Query', 'FilterCustomPostsFields'));
 add_filter('posts_join_paged', array('RCCWP_Query', 'FilterCustomPostsJoin'));
 
-if( isset($customWritePanelOptions['condense-menu']) ){
+
+$condense = RCCWP_Options::Get('condense-menu');
+if($condense ){
 	//adding Column for posts
 	add_filter('manage_posts_columns',array('RCCWP_Query','ColumnWritePanel'));
 	add_action('manage_posts_custom_column',array('RCCWP_Query','ColumnWritePanelData'));
@@ -188,13 +191,8 @@ function cwp_add_type_identifier(){
 		echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"". $getPostID[0]->type ."\" />";
 
 	}else{
-		if($post->post_type == 'page') { 
-			echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"page\" />";
- 		}else{
-			echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"post\" />";
- 		}
-
- 	}
+		printf('<input type="hidden" id="post_type" name="post_type" value="%s" />',$post->post_type);
+ }
 }
 
 function cwp_add_pages_identifiers(){
@@ -290,24 +288,39 @@ function mf_load_modules() {
         }
 }
 
-add_filter('manage_posts_columns','change_botton_new_in_manage');
+/* add filter for upload attachment image (new field image)*/
+/* load_link_media_upload in custom_fields/media_image.js */
+add_filter('attachment_fields_to_edit', 'charge_link_after_upload_image', 10, 2);
 
-function change_botton_new_in_manage($where){
-  global $wpdb, $parent_file;
-  if( $parent_file != 'edit.php' ) return $where;
-  
-  if(isset($_GET['custom-write-panel-id'])){
-    ?>
-    <script>
-    jQuery().ready(function() {
-      add = <?php printf("'?custom-write-panel-id=%s'",$_GET['custom-write-panel-id']); ?>;
-      tmp_url = jQuery(".wrap").children('h2').children('a').attr('href');
-      if(tmp_url == "post-new.php"){
-        jQuery(".wrap").children('h2').children('a').attr('href',tmp_url+add);
-      }
-    });
-    </script>
-    <?php
-  }
-  return $where;
+function charge_link_after_upload_image($fields){
+   printf("
+      <script type=\"text/javascript\">
+      //<![CDATA[
+        load_link_in_media_upload();
+      //]]>
+      </script>");
+      return $fields;
 }
+
+/* Function for manage page (write panels) */
+require_once('MF_ManageWritePanels.php');
+
+
+/** Wordpress 3.0 and beyond**/
+/*
+if( is_wp30() ){
+	///
+	// Post Type Panels
+	//
+	require_once('MF_PostTypesPage.php'); 
+	add_action('admin_menu',array('MF_PostTypePages','TopMenu'));
+
+	//CSS/
+	add_action('admin_init','mf_css');
+
+	function mf_css(){
+		wp_enqueue_style('mf_base',MF_URI.'css/base.css',false,'1.5','all');
+	}
+	 //CSS//
+}
+*/

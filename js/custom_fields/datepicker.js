@@ -72,6 +72,10 @@ switch_formats = function(date){
         return "yy-dd-mm";
     }
     
+    if(date == "Y-m-d"){
+        return "yy-mm-dd";
+    }
+    
     if(date == "d-M-y"){
         return "dd-M-y";
     }

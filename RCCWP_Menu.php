@@ -29,9 +29,8 @@ class RCCWP_Menu
 
 			case 'continue-create-custom-field':		
 				if(isset($_REQUEST['custom-group-id']) && !empty($_REQUEST['custom-group-id']) )
-					$customGroupId = (int)$_REQUEST['custom-group-id'];
+				$customGroupId = (int)$_REQUEST['custom-group-id'];
 				$customGroup = RCCWP_CustomGroup::Get($customGroupId);
-	
 				$current_field = RCCWP_CustomField::GetCustomFieldTypes((int)$_REQUEST['custom-field-type']);
 				if ($current_field->has_options == "true" || $current_field->has_properties == "true")
 				{
@@ -213,10 +212,10 @@ class RCCWP_Menu
 		$panelsAndModulesFunctions = RCCWP_Menu::PrepareModulesPanelsMenuItems();
 
 		// Add top menu
-		add_menu_page(__('Magic Fields > Manage',$mf_domain), __('Magic Fields',$mf_domain), 10, __FILE__, $panelsAndModulesFunctions->panelsMenuFunction);
+		add_menu_page(__('Magic Fields > Manage',$mf_domain), __('Magic Fields',$mf_domain), 10, 'MagicFieldsMenu', $panelsAndModulesFunctions->panelsMenuFunction);
 
 		// Add Magic Fields submenus
-		add_submenu_page(__FILE__, __('Write Panels',$mf_domain), __('Write Panels',$mf_domain), 10, __FILE__, $panelsAndModulesFunctions->panelsMenuFunction);		
+		add_submenu_page('MagicFieldsMenu', __('Write Panels',$mf_domain), __('Write Panels',$mf_domain), 10,'MagicFieldsMenu', $panelsAndModulesFunctions->panelsMenuFunction);		
 		
 	}
 
@@ -255,6 +254,7 @@ class RCCWP_Menu
 			
 			// fix for WP 3.0
 			if(substr($wp_version, 0, 3) < 3.0){
+				
 			  // WP <= 2.9
     		$page_new    = "page-new.php?";
     		$page_edit   = "page.php?";
@@ -299,7 +299,7 @@ class RCCWP_Menu
 				//IF we has unactivated the condenced menu
 				if(!$condence){
 					//adding the top parent menus
-					$new_menu[$base+$offset] = array( __($panel->name), $type_write_panel, $base+$offset.'.php', '', 'mf-menu-'.sanitize_title_with_dashes($panel->name). ' wp-menu-open menu-top mf-menu-'.$type_write_panel, 'mf-menu-'.($base+$offset), 'div');
+					$new_menu[$base+$offset] = array( __($panel->name), $type_write_panel, $base+$offset.'.php', '', 'mf-menu-'.sanitize_title_with_dashes($panel->name). ' wp-menu-open menu-top mf-menu-'.$type_write_panel, 'mf-menu-'.$panel->id, 'div');
 					
 					//adding submenu options (add new and manage for each write panel)
 					if ($panel->type == "post"){
@@ -310,8 +310,9 @@ class RCCWP_Menu
 								add_submenu_page($base+$offset.'.php',__($panel->name),"Edit",$requiredPostsCap,'post.php?action=edit&post='.$has_posts);
 							}
 						}else{
+						  add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPostsCap, 'edit.php?filter-posts=1&custom-write-panel-id=' . $panel->id);
 							add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPostsCap, 'post-new.php?custom-write-panel-id=' . $panel->id);
-							add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPostsCap, 'edit.php?filter-posts=1&custom-write-panel-id=' . $panel->id);
+							
 						}
 					}else{
 						if($panel->single == 1){ //if the page is single
@@ -321,8 +322,8 @@ class RCCWP_Menu
 								add_submenu_page($base+$offset.'.php',__($panel->name),"Edit",$requiredPagesCap,$page_edit.'action=edit&post='.$has_posts);
 							}
 						}else{
+						  add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPagesCap, $page_manage.'filter-posts=1&custom-write-panel-id=' . $panel->id);
 							add_submenu_page($base+$offset.'.php', __($panel->name), $new_indicator_text, $requiredPagesCap, $page_new.'custom-write-panel-id=' . $panel->id);
-							add_submenu_page($base+$offset.'.php', __($panel->name), $edit_indicator_text, $requiredPagesCap, $page_manage.'filter-posts=1&custom-write-panel-id=' . $panel->id);
 						}
 					}
 				}else{//if condenced is activated
@@ -396,7 +397,7 @@ class RCCWP_Menu
 	
 	function HighlightCustomPanel(){
 		global $wpdb, $submenu_file, $post; 
-		
+
 		if(empty($post)){
 			return True;
 		}
@@ -405,15 +406,33 @@ class RCCWP_Menu
 						FROM $wpdb->postmeta
 						WHERE post_id = '".$post->ID."' and meta_key = '_mf_write_panel_id'", ARRAY_A );
 		$currPage = basename($_SERVER['SCRIPT_NAME']);
-		if (count($result) > 0 && $currPage =="post.php" ){
-			$id = $result[0]['meta_value'];
-			$submenu_file = "edit.php?filter-posts=1&custom-write-panel-id=$id";
+	
+		if(is_wp30()){
+      if (count($result) > 0 && $currPage =="edit.php" ){
+        $id = $result[0]['meta_value'];
+        $base = 'edit.php?';
+        if($_GET['post_type'] == 'page') $base = 'edit.php?post_type=page&';
+  			$submenu_file = $base."filter-posts=1&custom-write-panel-id=$id";
+      }elseif($_GET['custom-write-panel-id'] ){
+        $id = $result[0]['meta_value'];
+        $base = 'post-new.php?';
+        if($_GET['post_type'] == 'page') $base = 'post-new.php?post_type=page&';
+    		$submenu_file = $base."custom-write-panel-id=".$_GET['custom-write-panel-id'];
+      }elseif (count($result) > 0 && $currPage =="post.php" ){
+        $id = $result[0]['meta_value'];
+        $base = 'edit.php?';
+        if($post->post_type == 'page') $base = 'edit.php?post_type=page&';
+  			$submenu_file = $base."filter-posts=1&custom-write-panel-id=$id";
+      }
+		}else{
+		  if (count($result) > 0 && $currPage =="post.php" ){
+    	  $id = $result[0]['meta_value'];
+    		$submenu_file = "edit.php?filter-posts=1&custom-write-panel-id=$id";
+    	}elseif (count($result) > 0 && $currPage == "page.php" ){
+    		$id = $result[0]['meta_value'];
+    		$submenu_file = "edit-pages.php?filter-posts=1&custom-write-panel-id=$id";
+    	}
 		}
-		elseif (count($result) > 0 && $currPage == "page.php" ){
-			$id = $result[0]['meta_value'];
-			$submenu_file = "edit-pages.php?filter-posts=1&custom-write-panel-id=$id";
-		}
-		
 		
 	}
 

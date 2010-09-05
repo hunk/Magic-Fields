@@ -60,9 +60,9 @@ elseif ( empty($_COOKIE[AUTH_COOKIE]) && !empty($_REQUEST['auth_cookie']) )
 	$_COOKIE[AUTH_COOKIE] = $_REQUEST['auth_cookie'];
 	unset($current_user);
 
-if (!(is_user_logged_in() && current_user_can('edit_posts'))){
-	die(__('Athentication failed!',$mf_domain));
-}
+if (!(is_user_logged_in() &&
+      (current_user_can('edit_posts') || current_user_can('edit_published_pages'))))
+	die(__("Athentication failed!",$mf_domain));
 
 if (!empty($_POST['upload_url'])) { 		
 	// file was send from browser 

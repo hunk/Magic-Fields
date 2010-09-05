@@ -57,7 +57,6 @@ class RCCWP_CustomFieldPage{
 				<input name="custom-field-order" id="custom-field-order" size="2" type="text" value="<?php echo $custom_field->display_order?>" />
 			</td>	
 		</tr>
-		
 		<?php if (in_array($custom_field->type_id, 
 							array(  $FIELD_TYPES['textbox'],
 									$FIELD_TYPES['multiline_textbox'],
@@ -69,7 +68,8 @@ class RCCWP_CustomFieldPage{
 									$FIELD_TYPES['file'],
 									$FIELD_TYPES['image'],
 									$FIELD_TYPES['audio'],
-									$FIELD_TYPES['related_type']
+									$FIELD_TYPES['related_type'],
+									$FIELD_TYPES['Image (Upload Media)']
 							))){  ?>
 		<tr valign="top">
 			<th scope="row"><?php _e('Required',$mf_domain); ?>:</th>
@@ -245,11 +245,16 @@ class RCCWP_CustomFieldPage{
 			</td>
 		</tr>
 		<!-- START :: For Image/Photo' Css -->
-		<?php 
-		  if ( $custom_field->type == "Image" ){
-		    $h = $w = $c = NULL;
-			  $isDisplay = $custom_field->type == "Image" ? 'display:inline;' : 'display:none;';
-			  
+		<?php
+		  if ( $custom_field->type == "Image" || $custom_field->type == "Image (Upload Media)" ){
+		    $h = $w = $c = NULL; 
+		    
+		    if( $custom_field->type == "Image")
+			    $isDisplay = $custom_field->type == "Image" ? 'display:inline;' : 'display:none;';
+
+		    if( $custom_field->type == "Image (Upload Media)")
+		      $isDisplay = $custom_field->type == "Image (Upload Media)" ? 'display:inline;' : 'display:none;';
+		    			  
 			  if( isset($custom_field->properties['params']) ){
 			    preg_match('/w\=[0-9]+/',$custom_field->properties['params'],$match_w);
 			    if($match_w){

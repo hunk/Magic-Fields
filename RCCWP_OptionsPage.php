@@ -5,6 +5,11 @@ wp_enqueue_script( 'mf_options_page',
 					MF_URI.'js/options.js'
 				);
 
+//loading javascript fiel by image medi
+wp_enqueue_script( 'mf_media_upload_fiel',
+					MF_URI.'js/custom_fields/media_image.js'
+				);
+
 include_once('RCCWP_Options.php');
 
 class RCCWP_OptionsPage {

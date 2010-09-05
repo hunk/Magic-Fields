@@ -1,5 +1,5 @@
 <?php
-//TODO: The Original Image MUST be  bigger to the thumb
+ob_start();
 //use wp-load. Normally right here, but if it's not...
 if( file_exists('../../../../../wp-load.php')){
 	require_once('../../../../../wp-load.php');
@@ -13,13 +13,16 @@ if( file_exists('../../../../../wp-load.php')){
 if($loaded  !== true){
 	die('Could not load wp-load.php, edit/add mf-config.php and define MF_WP_LOAD to point to a valid wp-load file');
 }
+ob_end_clean();
 
 $MFthumb = MF_PATH.'/MF_thumb.php';
 require_once($MFthumb);
 
 //Default Values
 $default = array(
-					'zc'=> 1,
+                                        'iar'   => 0,
+                                        'far'   => 0,
+					'zc'    => 1,
 					'q'	=>  95,
 					'w'	=>  0,
 					'h'	=> 0,
@@ -27,28 +30,33 @@ $default = array(
 				);
 				
 //getting the name of the image
-preg_match('/\/files_mf\/([0-9\_a-z\-]+\.(jpg|png|gif))/i',$_GET['src'],$match);
+preg_match('/\/wp-content\/([0-9\_a-z\/\-\.]+\.(jpg|png|gif))/i',$_GET['src'],$match);
 $image_name_clean = $match[1];
 $extension = $match[2];
 
+//is wp mu o wp network
+if(isset($current_blog)){
+  $image_name_clean = preg_replace('/blogs.dir\/(\d+)\//','',$image_name_clean);
+}
 //Getting the original size of the image
-$file = MF_UPLOAD_FILES_DIR.$image_name_clean;
+$file = MF_WPCONTENT.$image_name_clean; 
+
 if(file_exists($file) && (empty($_GET['w']) || empty($_GET['h']))){
-	$size = @getimagesize(MF_UPLOAD_FILES_DIR.$image_name_clean);
+	$size = @getimagesize(MF_WPCONTENT.$image_name_clean);
 	$default['w'] = $size[0];
 	$default['h'] = $size[1];
 }
 //TODO: sanitize the variables
 $params = array();				
 foreach($_GET as $key => $value){
-	if(in_array($key,array('zc','w','h','q','src'))){
+	if(in_array($key,array('zc','w','h','q','src','far','iar'))){
 		$params[$key] = $value;
 	}
 }
 
 
 $params = array_merge($default,$params);
-$md5_params =  md5("w=".$params['w']."&h=".$params['h']."&q=".$params['q']."&zc=".$params['zc']);
+$md5_params =  md5("w=".$params['w']."&h=".$params['h']."&q=".$params['q']."&zc=".$params['zc']."&far=".$params['far']."&iar=".$params['iar']);
 
 
 //The file must be "jpg" or "png" or "gif" 
@@ -56,8 +64,12 @@ if(!in_array($extension,array('jpg','png','gif'))){
 	return false;
 }
 
+
+//
+$image_sin = preg_split('/\//',$image_name_clean);
+$new_image_clean = $image_sin[count($image_sin)-1];
 //name with a png extension
-$image_name = $md5_params."_".$image_name_clean;
+$image_name = $md5_params."_".$new_image_clean;
 //this code can be refactored
 if(file_exists(MF_CACHE_DIR.$image_name)){
 	//Displaying the image
@@ -77,7 +89,7 @@ if(file_exists(MF_CACHE_DIR.$image_name)){
 }else{
 	//generating the image
 	$thumb = new mfthumb();
-	$thumb_path = $thumb->image_resize(MF_UPLOAD_FILES_DIR.$image_name_clean,$params['w'],$params['h'],$params['zc'],MF_CACHE_DIR.$image_name);
+	$thumb_path = $thumb->image_resize($file,$params['w'],$params['h'],$params['zc'],$params['far'],$params['iar'],MF_CACHE_DIR.$image_name);
 	//Displaying the image
 	if(file_exists($thumb_path)){
 		$size = getimagesize($thumb_path);

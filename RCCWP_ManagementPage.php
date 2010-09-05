@@ -123,24 +123,7 @@ class RCCWP_ManagementPage
 		$url = '?page=' . urlencode(MF_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'RCCWP_Menu.php') . '&delete-custom-panel-module=' . $panelModuleId . '&custom-write-panel-id=' . $customWritePanelId;
 		return $url;
 	}
-	
-	
-	function GetCustomWriteModuleGenericUrl($mfAction, $moduleId = null)
-	{
-		if (empty($moduleId) && isset($_REQUEST['custom-write-module-id'])){
-			$moduleId = $_REQUEST['custom-write-module-id'];
-		}
-			
-		if (!empty($moduleId)){
-			$url = RCCWP_ManagementPage::GetModulePage() . "&custom-write-module-id=$moduleId&mf_action=$mfAction";
-		}
-		else{
-			$url = RCCWP_ManagementPage::GetModulePage() . "&mf_action=$mfAction";
-		}
 		
-		return $url;
-	}
-	
 	/**
 	 * Generates a url containing the write panel id and the action
 	 *
@@ -163,10 +146,6 @@ class RCCWP_ManagementPage
 	}
 	
 	function GetPanelPage(){
-		return '?page=' . urlencode(MF_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'RCCWP_Menu.php');
-	}
-	
-	function GetModulePage(){
-		return '?page=Magic_FieldsManageModules';
+		return '?page=MagicFieldsMenu';
 	}
 }

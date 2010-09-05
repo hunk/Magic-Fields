@@ -1,6 +1,6 @@
 <?php
 
-require_once 'RCCWP_Constant.php';
+require_once 'MF_Constant.php';
 require_once 'tools/debug.php';
 
 /**
@@ -56,7 +56,7 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 	$fieldObject = $field['properties'];
 	$fieldValues = (array)$field['meta_value'];
 	$fieldMetaID = $field['meta_id'];
-	
+
 	$results = GetProcessedFieldValue($fieldValues, $fieldType, $fieldObject);
 	
 	//filter for multine line
@@ -117,6 +117,12 @@ function GetProcessedFieldValue($fieldValues, $fieldType, $fieldProperties=array
 			  if(!$fieldValue) return false;
 				$fieldValue = date($fieldProperties['format'],strtotime($fieldValue)); 
 				break;
+		  case $FIELD_TYPES["Image (Upload Media)"]:
+		    	if ($fieldValue != ""){ 
+		    	  $data = wp_get_attachment_image_src($fieldValue,'original');
+		    	  $fieldValue = $data[0];
+		    	 }
+  				break;
 		}
 		
 		array_push($results, $fieldValue); 
@@ -213,8 +219,7 @@ function getFieldOrder($field_name,$group=1,$post_id=NULL){
  * 
  * @param boolean $safe make the return name 'url safe'
  */
-function get_panel_name($safe=true)
-{
+function get_panel_name($safe=true){
 	global $wpdb, $post;
 
 	$panel_id = $wpdb->get_var("SELECT `meta_value` FROM {$wpdb->postmeta} WHERE post_id = ".$post->ID.' AND meta_key = "'.RC_CWP_POST_WRITE_PANEL_ID_META_KEY.'"');
@@ -309,6 +314,11 @@ function create_image($options)
 	$fieldObject = $field['properties'];
 	$fieldValue = $field['meta_value'];
 
+  if($fieldType == 16){
+    $data = wp_get_attachment_image_src($fieldValue,'original');
+    $fieldValue = $data[0];
+  }
+
 	if(empty($fieldValue)) return "";
 	
 	// override the default phpthumb parameters if needed
@@ -333,10 +343,12 @@ function create_image($options)
 
 	// check if exist params, if not exist params, return original image
 	if (empty($fieldObject['params']) && (FALSE === strstr($fieldValue, "&"))){
-		$fieldValue = MF_FILES_URI.$fieldValue;
+    if($fieldType == 9){
+		  $fieldValue = MF_FILES_URI.$fieldValue;
+	  }
 	}else{
 	  //generate or check de thumb
-	  $fieldValue = aux_image($fieldValue,$fieldObject['params']);
+	  $fieldValue = aux_image($fieldValue,$fieldObject['params'],$fieldType);
 	}
 	if($tag_img){
 		// make sure the attributes are an array
@@ -363,13 +375,27 @@ function create_image($options)
 	return $finalString;
 }
 
-function aux_image($fieldValue,$params_image){
+function aux_image($fieldValue,$params_image,$fieldType = NULL){
+
 	$md5_params = md5($params_image);
-	if (file_exists(MF_CACHE_DIR.'th_'.$md5_params."_".$fieldValue)) {
-		$fieldValue = MF_CACHE_URI.'th_'.$md5_params."_".$fieldValue;
+  
+  $thumb_path = MF_CACHE_DIR.'th_'.$md5_params."_".$fieldValue;
+  $thumb_url = MF_CACHE_URI.'th_'.$md5_params."_".$fieldValue;
+  $image_path = MF_UPLOAD_FILES_DIR.$fieldValue;
+  $name_image = $fieldValue;
+  if($fieldType == 16){
+    $data = preg_split('/\//',$fieldValue);
+    $thumb_path = MF_CACHE_DIR.'th_'.$md5_params."_".$data[count($data)-1];
+    $thumb_url = MF_CACHE_URI.'th_'.$md5_params."_".$data[count($data)-1];
+    $image_path = str_replace(WP_CONTENT_URL.DIRECTORY_SEPARATOR,MF_WPCONTENT,$fieldValue);
+    $name_image = $data[count($data)-1];
+  }
+
+	if (file_exists($thumb_path)) {
+		$fieldValue = $thumb_url;
 	}else{
 	//generate thumb
-	$create_md5_filename = 'th_'.$md5_params."_".$fieldValue;
+	$create_md5_filename = 'th_'.$md5_params."_".$name_image;
 	$output_filename = MF_CACHE_DIR.$create_md5_filename;
 	$final_filename = MF_CACHE_URI.$create_md5_filename;
 
@@ -378,10 +404,12 @@ function aux_image($fieldValue,$params_image){
   		'w'	=> 0,
   		'h'	=> 0,
   		'q'	=>  85,
-  		'src' => MF_FILES_PATH.$fieldValue
+  		'src' => $image_path,
+                'far' => false,
+                'iar' => false
   	);
 
-	$size = @getimagesize(MF_UPLOAD_FILES_DIR.$fieldValue);
+	$size = @getimagesize($image_path);
 	$defaults['w'] = $size[0];
 	$defaults['h'] = $size[1];
 
@@ -392,7 +420,7 @@ function aux_image($fieldValue,$params_image){
 			$default[$p_image[0]] = $p_image[1];
 		}
 	}
-	
+
 	if( ($default['w'] > 0) && ($default['h'] == 0) ){
 	  $default['h'] = round( ($default['w']*$defaults['h']) / $defaults['w'] );
 	}elseif( ($default['w'] == 0) && ($default['h'] > 0) ){
@@ -407,9 +435,12 @@ function aux_image($fieldValue,$params_image){
 	  $default['w'],
 	  $default['h'],
 	  $default['zc'],
+          $default['far'],
+          $default['iar'],
 	  $output_filename,
 	  $default['q']
 	);
+        
 	
 	if ( is_wp_error($thumb_path) )
      return $thumb_path->get_error_message();
@@ -467,6 +498,15 @@ function get_group($name_group,$post_id=NULL){
 					$info[$data->order_id][$data->field_name][$data->field_count]['o'] = MF_FILES_URI.$data->meta_value;		
 				}
 				break;
+		  case $FIELD_TYPES['Image (Upload Media)']:
+  			if($data->meta_value != ""){
+					$format = unserialize($data->properties);
+  				$image = wp_get_attachment_image_src($data->meta_value,'original');
+  				if($format) $info[$data->order_id][$data->field_name][$data->field_count]['t'] = aux_image($image[0],$format['params'],$data->type);
+
+  				$info[$data->order_id][$data->field_name][$data->field_count]['o'] = $image[0];		
+  			}
+  			break;
 			case $FIELD_TYPES['date']:
 				$format = unserialize($data->properties);
 				$fieldValue = GetProcessedFieldValue($data->meta_value, $data->type, $format);
@@ -544,6 +584,87 @@ function get_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 				$fieldValue = GetProcessedFieldValue($data->meta_value, $data->type, $format);
 				$info[$data->field_count] = $fieldValue;
 				break;
+	    case $FIELD_TYPES['Image (Upload Media)']:
+  			if($data->meta_value != ""){
+  				$format = unserialize($data->properties);
+  				$image = wp_get_attachment_image_src($data->meta_value,'original');
+  				if($format) $info[$data->order_id][$data->field_name][$data->field_count]['t'] = aux_image($image[0],$format['params'],$data->type);
+
+    			$info[$data->order_id][$data->field_name][$data->field_count]['o'] = $image[0];		
+    		}
+    		break;
+		}
+	}
+	return $info;
+}
+
+/*Added By Justin Grover to allow us to get a repeating field that is a multiline field without applying the "the_content" filter*/
+
+function get_clean_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
+	global $wpdb, $post, $FIELD_TYPES;
+	
+	if(!$post_id){ $post_id = $post->ID; }
+	
+	$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
+			FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
+						".MF_TABLE_GROUP_FIELDS." cf 
+			LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
+			WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND
+						pm_wp.meta_id=pm.id AND pm.field_name='$fieldName' AND pm.group_count = $groupIndex
+						AND pm_wp.meta_value <> '' 
+			ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
+			
+		$data_fields = $wpdb->get_results($sql);
+
+	$info = null;
+	foreach($data_fields as $data){
+		switch($data->type){
+			case $FIELD_TYPES["textbox"]:
+			case $FIELD_TYPES["radiobutton_list"]:
+			case $FIELD_TYPES["dropdown_list"]:
+			case $FIELD_TYPES["color_picker"]:
+			case $FIELD_TYPES["slider"]:
+			case $FIELD_TYPES["related_type"]:
+			case $FIELD_TYPES['markdown_textbox']:
+				$info[$data->field_count] = $data->meta_value;
+				break;
+			case $FIELD_TYPES['multiline_textbox']:
+				$info[$data->field_count] = $data->meta_value;
+				break;
+			case $FIELD_TYPES["checkbox"]: 		
+					if ($data->meta_value == 'true')  $fieldValue = 1; else $fieldValue = 0;
+					$info[$data->field_count] = $fieldValue; 
+					break;
+			case $FIELD_TYPES["checkbox_list"]:
+			case $FIELD_TYPES["listbox"]:
+					$info[$data->field_count] = unserialize($data->meta_value);
+				break;
+			case $FIELD_TYPES["audio"]:
+			case $FIELD_TYPES["file"]:
+				if ($data->meta_value != ""){ $fieldValue = MF_FILES_URI.$data->meta_value;}else{$fieldValue= null;}
+				$info[$data->field_count] = $fieldValue;
+				break;
+			case $FIELD_TYPES['image']:
+				if($data->meta_value != ""){
+					$format = unserialize($data->properties);
+					if($format) $info[$data->field_count]['t'] = aux_image($data->meta_value,$format['params']);
+					$info[$data->field_count]['o'] = MF_FILES_URI.$data->meta_value;		
+				}
+				break;
+			case $FIELD_TYPES['date']:
+				$format = unserialize($data->properties);
+				$fieldValue = GetProcessedFieldValue($data->meta_value, $data->type, $format);
+				$info[$data->field_count] = $fieldValue;
+				break;
+	    case $FIELD_TYPES['Image (Upload Media)']:
+  			if($data->meta_value != ""){
+  				$format = unserialize($data->properties);
+  				$image = wp_get_attachment_image_src($data->meta_value,'original');
+  				if($format) $info[$data->order_id][$data->field_name][$data->field_count]['t'] = aux_image($image[0],$format['params'],$data->type);
+
+    			$info[$data->order_id][$data->field_name][$data->field_count]['o'] = $image[0];		
+    		}
+    		break;
 		}
 	}
 	return $info;

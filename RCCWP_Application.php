@@ -130,15 +130,6 @@ class RCCWP_Application
 				capability_name varchar(255) NOT NULL,
 				type varchar(255) NOT NULL,
 				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
-			
-			$qst_tables[] = "CREATE TABLE " . MF_TABLE_CUSTOM_FIELD_TYPES . " (
-				id tinyint(11) NOT NULL auto_increment,
-				name varchar(255) NOT NULL,
-				description varchar(100),
-				has_options enum('true', 'false') NOT NULL,
-				has_properties enum('true', 'false') NOT NULL,
-				allow_multiple_values enum('true', 'false') NOT NULL,
-				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 				
 			$qst_tables[] = "CREATE TABLE " . MF_TABLE_GROUP_FIELDS . " (
 				id int(11) NOT NULL auto_increment,
@@ -204,59 +195,9 @@ class RCCWP_Application
 			} else {
 					update_option('RC_CWP_DB_VERSION', RC_CWP_DB_VERSION);
 			}
-		
+
 		}
 
-		// Insert standard fields definition
-		if($not_installed){
-		
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (1, 'Textbox', NULL, 'false', 'true', 'false')";
-			$wpdb->query($sql6);
-			
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (2, 'Multiline Textbox', NULL, 'false', 'true', 'false')";
-			$wpdb->query($sql6);
-			
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (3, 'Checkbox', NULL, 'false', 'false', 'false')";
-			$wpdb->query($sql6);
-			
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (4, 'Checkbox List', NULL, 'true', 'false', 'true')";
-			$wpdb->query($sql6);
-			
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (5, 'Radiobutton List', NULL, 'true', 'false', 'false')";
-			$wpdb->query($sql6);
-			
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (6, 'Dropdown List', NULL, 'true', 'false', 'false')";
-			$wpdb->query($sql6);
-			
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (7, 'Listbox', NULL, 'true', 'true', 'true')";
-			$wpdb->query($sql6);
-			
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (8, 'File', NULL, 'false', 'false', 'false')";
-			$wpdb->query($sql6);
-			
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (9, 'Image', NULL, 'false', 'true', 'false')";
-			$wpdb->query($sql6);
-	
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (10, 'Date', NULL, 'false', 'true', 'false')";
-			$wpdb->query($sql6);
-	
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (11, 'Audio', NULL, 'false', 'false', 'false')";
-			$wpdb->query($sql6);
-			
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (12, 'Color Picker', NULL, 'false', 'false', 'false')";
-			$wpdb->query($sql6);
-			
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (13, 'Slider', NULL, 'false', 'true', 'false')";
-			$wpdb->query($sql6);
-			
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (14, 'Related Type', NULL, 'false', 'true', 'false')";
-			$wpdb->query($sql6);
-			
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (15, 'Markdown Textbox', NULL, 'false', 'false', 'false')";
-			$wpdb->query($sql6);
-			
-		}
-		
 		//Import Default modules 
 		if (RCCWP_Application::IsWordpressMu()){
 			if (get_site_option('MAGIC_FIELDS_fist_time') == ''){
@@ -266,6 +207,12 @@ class RCCWP_Application
 			if (get_option('MAGIC_FIELDS_fist_time') == ''){
 				update_option('MAGIC_FIELDS_fist_time', '1');
 			}
+		}
+
+		//Post types
+		if(is_wp30()){
+			require_once(MF_PATH.'/MF_PostTypesPage.php');
+			MF_PostTypePages::CreatePostTypesTables();
 		}
 	}
 	
@@ -285,16 +232,12 @@ class RCCWP_Application
 			$wpdb->query('ALTER TABLE '.MF_TABLE_GROUP_FIELDS.' ADD COLUMN help_text text after duplicate');
 			$wpdb->query('ALTER TABLE '.MF_TABLE_PANELS.' MODIFY display_order INTEGER');
 		}
-		
-		if (RC_CWP_DB_VERSION <= 3){
-			$sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (14, 'Related Type', NULL, 'false', 'true', 'false')";
-			$wpdb->query($sql6);
+
+		if (RC_CWP_DB_VERSION >= 6){
+			if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."mf_custom_field_types'") == $wpdb->prefix."mf_custom_field_types"){
+				$wpdb->query("DROP TABLE ".$wpdb->prefix."mf_custom_field_types");
+			}
 		}
-		
-	  if (RC_CWP_DB_VERSION <= 4){
-  	  $sql6 = "INSERT IGNORE INTO " . MF_TABLE_CUSTOM_FIELD_TYPES . " VALUES (15, 'Markdown Textbox', NULL, 'false', 'false', 'false')";
-			$wpdb->query($sql6);
-  	}
 	}
 
 	/**
@@ -321,9 +264,6 @@ class RCCWP_Application
 		$sql = "DELETE FROM $wpdb->postmeta WHERE meta_key = '" . RC_CWP_POST_WRITE_PANEL_ID_META_KEY . "'";
  		$wpdb->query($sql);
 
-		$sql = "DROP TABLE " . MF_TABLE_CUSTOM_FIELD_TYPES;
-		$wpdb->query($sql);
-		
 		$sql = "DROP TABLE " . MF_TABLE_STANDARD_FIELDS;
 		$wpdb->query($sql);
 		

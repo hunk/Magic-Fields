@@ -98,7 +98,7 @@ class RCCWP_CreateCustomFieldPage
 					submitForm = false;
 					function fun(name)
 					{
-						if(name == "Image")
+						if(name == "Image" || name == 'Image (Upload Media)')
 						{
 							document.getElementById('divLbl').style.display = 'inline';
 							document.getElementById('divCSS').style.display = 'inline';
@@ -314,7 +314,7 @@ class RCCWP_CreateCustomFieldPage
 		<?php endif; ?>
 
 
-		<?php if( $current_field->has_properties && $current_field->name == 'Image' ) : ?>
+		<?php if( $current_field->has_properties && ($current_field->name == 'Image' || $current_field->name == 'Image (Upload Media)' ) ) : ?>
 		<tr valign="top">
 			<th scope="row"><?php _e('Options', $mf_domain);?>:</th>
 			<td>

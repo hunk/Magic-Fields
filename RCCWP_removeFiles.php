@@ -4,10 +4,9 @@ require( dirname(__FILE__) . "/../../../wp-load.php");
 
 //check if the user  is logged in
 global $mf_domain;
-if(!(is_user_logged_in() && current_user_can('edit_posts'))){
-	die(__('Authentication failed!',$mf_domain));   
-};
-
+if(!(is_user_logged_in() &&
+      (current_user_can('edit_posts') || current_user_can('edit_published_pages'))))
+	die(__("Athentication failed!",$mf_domain));
 
 if(empty($_GET['action'])){
 	exit();
