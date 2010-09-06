@@ -19,16 +19,16 @@ require_once 'tools/debug.php';
 	 * @param int $ttl - Duration in seconds file is considered to be up to date. Defaut is 5 minutes.
 	 */
 	function MF_get_cached_data( $file, $ttl = 300 ) {
-		if( !MF_CACHE_IS_ON ) return FALSE;
+		if( !MF_GET_CACHE_IS_ON ) return FALSE;
 		
-		if( file_exists( MF_CACHE_DIR . $file ) ) {
+		if( file_exists( MF_GET_CACHE_DIR . $file ) ) {
 			// If you set $ttl to FALSE or negative value, no mod. file time is checked
 			if( !$ttl || $ttl <= 0 ) {
-				return file_get_contents( MF_CACHE_DIR . $file );
+				return file_get_contents( MF_GET_CACHE_DIR . $file );
 			}
 			
-			if( ( time() - filemtime( MF_CACHE_DIR . $file ) ) < $ttl ) {
-				return file_get_contents( MF_CACHE_DIR . $file );
+			if( ( time() - filemtime( MF_GET_CACHE_DIR . $file ) ) < $ttl ) {
+				return file_get_contents( MF_GET_CACHE_DIR . $file );
 			}
 		}
 	return FALSE;
@@ -41,14 +41,14 @@ require_once 'tools/debug.php';
 	 * @param string $data - String data to store.
 	 */
 	function MF_put_cached_data( $file, $data ) {
-		if( !MF_CACHE_IS_ON ) return FALSE;
-		if( !file_exists( dirname( MF_CACHE_DIR . $file ) ) ) {
+		if( !MF_GET_CACHE_IS_ON ) return FALSE;
+		if( !file_exists( dirname( MF_GET_CACHE_DIR . $file ) ) ) {
 			// Recursion to create directories
-			if( !mkdir( dirname( MF_CACHE_DIR . $file ), 0777, TRUE) ) {
+			if( !mkdir( dirname( MF_GET_CACHE_DIR . $file ), 0777, TRUE) ) {
 				return FALSE;
 			}
 		}
-		if( file_put_contents( MF_CACHE_DIR . $file, $data ) ) {
+		if( file_put_contents( MF_GET_CACHE_DIR . $file, $data ) ) {
 			return TRUE;
 		}else {
 			return FALSE;
