@@ -62,14 +62,12 @@ require_once 'tools/debug.php';
 	 *
 	 */
 	function purge_cache_dir($dir) {
-		if( file_exists( $dir ) ) {
-			foreach (glob($dir) as $file) {
-				if (is_dir($file)) { 
-					rmrf("$file/*");
-					rmdir($file);
-				} else {
-					unlink($file);
-				}
+		foreach (glob($dir) as $file) {
+			if (is_dir($file)) { 
+				purge_cache_dir("$file/*");
+				rmdir($file);
+			} else {
+				unlink($file);
 			}
 		}
 	}
