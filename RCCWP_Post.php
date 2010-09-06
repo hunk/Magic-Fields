@@ -118,6 +118,9 @@ class RCCWP_Post {
 					$groups_index++;
 				} 		
 			}
+			if( MF_GET_CACHE_IS_ON ) {
+				purge_cache_dir( MF_GET_CACHE_DIR.$postId );
+			}
 		}
 	}
 	
