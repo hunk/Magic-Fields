@@ -22,8 +22,9 @@ define('MF_PLUGIN_DIR', dirname(plugin_basename(__FILE__)));
 define("MF_PATH", dirname(__FILE__));
 
 // Define Cache Bool and Dir
-define("MF_GET_CACHE_IS_ON", TRUE );
-define("MF_GET_CACHE_DIR", ABSPATH. 'cache/' );
+// Conditionals for overriding on per site basis without touching this file
+if( !defined( "MF_GET_CACHE_IS_ON" ) ) { define("MF_GET_CACHE_IS_ON", TRUE );}
+if( !defined( "MF_GET_CACHE_DIR" ) ) { define("MF_GET_CACHE_DIR", ABSPATH. 'cache/' ); }
 
 define("MF_URI", get_bloginfo('wpurl').'/wp-content'.$mfpath[1]); 
 define("MF_URI_RELATIVE", 'wp-content'.$mfpath[1]);
