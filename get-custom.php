@@ -55,6 +55,26 @@ require_once 'tools/debug.php';
 		}
 	}
 
+	/*
+	 * Purge any files and folder in directiory.
+	 *
+	 * @param string $dir - absolute path to the dir
+	 *
+	 */
+	function purge_cache_dir($dir) {
+		if( file_exists( $dir ) ) {
+			foreach (glob($dir) as $file) {
+				if (is_dir($file)) { 
+					rmrf("$file/*");
+					rmdir($file);
+				} else {
+					unlink($file);
+				}
+			}
+		}
+	}
+
+
 /**
  * Get number of group duplicates given field name. The function returns 1
  * if there are no duplicates (just the original group), 2 if there is one
