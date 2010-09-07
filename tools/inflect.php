@@ -114,6 +114,8 @@ class Inflect
 
     function pluralize( $string )
     {
+        global $Inflect_Uncountable, $Inflect_Irregular, $Inflect_Singular, $Inflect_Plural;
+
         // save some time in the case that singular and plural are the same
         if ( in_array( strtolower( $string ), $Inflect_Uncountable ) )
             return $string;
@@ -139,6 +141,7 @@ class Inflect
 
     function singularize( $string )
     {
+        global $Inflect_Uncountable, $Inflect_Irregular, $Inflect_Singular;
         // save some time in the case that singular and plural are the same
         if ( in_array( strtolower( $string ), $Inflect_Uncountable ) )
             return $string;
