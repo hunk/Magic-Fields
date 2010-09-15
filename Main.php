@@ -286,13 +286,14 @@ function mf_load_modules() {
 /* load_link_media_upload in custom_fields/media_image.js */
 add_filter('attachment_fields_to_edit', 'charge_link_after_upload_image', 10, 2);
 
-function charge_link_after_upload_image(){
+function charge_link_after_upload_image($fields){
    printf("
       <script type=\"text/javascript\">
       //<![CDATA[
         load_link_in_media_upload();
       //]]>
       </script>");
+      return $fields;
 }
 
 /* Function for manage page (write panels) */

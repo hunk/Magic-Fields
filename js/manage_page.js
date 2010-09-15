@@ -13,6 +13,29 @@ function change_button_new(url_type, add_url,write_panel){
   }
 }
 
+function unlink_write_panel(){
+  
+  if( jQuery('span.unlink-writepanel').length == 0){
+   jQuery('div.row-actions').each(function(){
+    
+    id = jQuery(this).parent().parent().attr('id');
+    page = escape(document.location.href);
+     jQuery(this).append(' | <span class="unlink-writepanel"><a title="unlink this post fo write panel" onclick="return confirm_unlink_write_panel();" href="?page=MagicFieldsMenu&mf_action=unlink-write-panel&post-id='+id+'&dashboard='+page+'">Unlink Post of write panel</a></span>');    
+   });
+  
+ 
+  }
+}
+
+function confirm_unlink_write_panel(){
+  var answer = confirm("Unlink write panel delete all data of custom fields (include  images), are you sure?");
+	if (answer){
+    return true;
+  }else{
+    return false;
+  }
+}
+
 function change_highlight_custom_panel(write_panel){
   jQuery('li.wp-has-current-submenu > a.wp-has-current-submenu').removeClass('wp-has-current-submenu');
   jQuery('li.wp-has-current-submenu').removeClass('wp-has-current-submenu');
