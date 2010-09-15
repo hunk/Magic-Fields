@@ -73,7 +73,7 @@
           case "textbox" : {
             content = $.trim(f.find("input[type=text]").val());
             
-            content = $.stripTags(content).substring(0, 80);
+            content = $.stripTags(content).substring(0, 45);
             
             if (content == "") {
               content = "( none )";
