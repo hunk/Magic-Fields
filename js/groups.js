@@ -73,10 +73,13 @@
           case "textbox" : {
             content = $.trim(f.find("input[type=text]").val());
             
+            content = $.stripTags(content).substring(0, 80);
+            
             if (content == "") {
               content = "( none )";
               td.addClass("none");
             } else {
+              content = content + "&hellip;";
               el.removeClass("empty");
             }
             
