@@ -27,11 +27,9 @@
 //   Added rule for potato -> potatoes
 //   Added rule for *us -> *uses
 
-// Traversal Changes:
-//   Converted this class to a PHP 4-style class to allow compatibility with Wordpress
-
-
-$Inflect_Plural = array(
+class Inflect
+{
+    static $plural = array(
         '/(quiz)$/i'               => "$1zes",
         '/^(ox)$/i'                => "$1en",
         '/([m|l])ouse$/i'          => "$1ice",
@@ -53,7 +51,7 @@ $Inflect_Plural = array(
         '/$/'                      => "s"
     );
 
-$Inflect_Singular = array(
+    static $singular = array(
         '/(quiz)zes$/i'             => "$1",
         '/(matr)ices$/i'            => "$1ix",
         '/(vert|ind)ices$/i'        => "$1ex",
@@ -84,7 +82,7 @@ $Inflect_Singular = array(
         '/s$/i'                     => ""
     );
 
-$Inflect_Irregular = array(
+    static $irregular = array(
         'move'   => 'moves',
         'foot'   => 'feet',
         'goose'  => 'geese',
@@ -95,7 +93,7 @@ $Inflect_Irregular = array(
         'person' => 'people'
     );
 
-$Inflect_Uncountable = array(
+    static $uncountable = array(
         'sheep',
         'fish',
         'deer',
@@ -106,22 +104,15 @@ $Inflect_Uncountable = array(
         'information',
         'equipment'
     );
-    
 
-class Inflect
-{
-    
-
-    function pluralize( $string )
+    public static function pluralize( $string )
     {
-        global $Inflect_Uncountable, $Inflect_Irregular, $Inflect_Singular, $Inflect_Plural;
-
         // save some time in the case that singular and plural are the same
-        if ( in_array( strtolower( $string ), $Inflect_Uncountable ) )
+        if ( in_array( strtolower( $string ), self::$uncountable ) )
             return $string;
 
         // check for irregular singular forms
-        foreach ( $Inflect_Irregular as $pattern => $result )
+        foreach ( self::$irregular as $pattern => $result )
         {
             $pattern = '/' . $pattern . '$/i';
 
@@ -130,7 +121,7 @@ class Inflect
         }
 
         // check for matches using regular expressions
-        foreach ( $Inflect_Plural as $pattern => $result )
+        foreach ( self::$plural as $pattern => $result )
         {
             if ( preg_match( $pattern, $string ) )
                 return preg_replace( $pattern, $result, $string );
@@ -139,15 +130,14 @@ class Inflect
         return $string;
     }
 
-    function singularize( $string )
+    public static function singularize( $string )
     {
-        global $Inflect_Uncountable, $Inflect_Irregular, $Inflect_Singular;
         // save some time in the case that singular and plural are the same
-        if ( in_array( strtolower( $string ), $Inflect_Uncountable ) )
+        if ( in_array( strtolower( $string ), self::$uncountable ) )
             return $string;
 
         // check for irregular plural forms
-        foreach ( $Inflect_Irregular as $result => $pattern )
+        foreach ( self::$irregular as $result => $pattern )
         {
             $pattern = '/' . $pattern . '$/i';
 
@@ -156,7 +146,7 @@ class Inflect
         }
 
         // check for matches using regular expressions
-        foreach ( $Inflect_Singular as $pattern => $result )
+        foreach ( self::$singular as $pattern => $result )
         {
             if ( preg_match( $pattern, $string ) )
                 return preg_replace( $pattern, $result, $string );
@@ -165,12 +155,12 @@ class Inflect
         return $string;
     }
 
-    function pluralize_if($count, $string)
+    public static function pluralize_if($count, $string)
     {
         if ($count == 1)
             return "1 $string";
         else
-            return $count . " " . Inflect::pluralize($string);
+            return $count . " " . self::pluralize($string);
     }
 }
 

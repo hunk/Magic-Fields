@@ -475,10 +475,10 @@ class RCCWP_CustomWritePanelPage
 				foreach ($customWritePanels as $panel) :
 				?>
 					<tr>
-						<td><?php echo $panel->name ?><?php if ($panel->name != '* Global Fields'): echo ' <span style="color: #999;">('.$panel->display_order.')</span>' ?><?php endif; ?></td>			
+						<td><?php echo $panel->name ?><?php if ($panel->name != '_Global'): echo ' <span style="color: #999;">('.$panel->display_order.')</span>' ?><?php endif; ?></td>			
 						<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('view-custom-write-panel', $panel->id)?>" ><?php _e('Edit Fields/Groups',$mf_domain) ?></a></td>
-						<td><?php if ($panel->name != '* Global Fields'): ?><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $panel->id)?>" ><?php _e('Edit Write Panel',$mf_domain) ?></a>&nbsp;<?php endif; ?></td>
-						<td><?php if ($panel->name != '* Global Fields'): ?><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $panel->id)?>" ><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('export-custom-write-panel', $panel->id); ?>" ><?php _e('Export',$mf_domain); ?></a><?php endif; ?></td>		
+						<td><?php if ($panel->name != '_Global'): ?><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $panel->id)?>" ><?php _e('Edit Write Panel',$mf_domain) ?></a>&nbsp;<?php endif; ?></td>
+						<td><?php if ($panel->name != '_Global'): ?><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $panel->id)?>" ><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('export-custom-write-panel', $panel->id); ?>" ><?php _e('Export',$mf_domain); ?></a><?php endif; ?></td>		
 					</tr>
 				<?php
 				endforeach;

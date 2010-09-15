@@ -1,0 +1,108 @@
+
+.jspContainer {
+overflow:hidden;
+position:relative;
+}
+
+.jspPane {
+position:absolute;
+}
+
+.jspVerticalBar {
+background:none repeat scroll 0 0;
+height:100%;
+position:absolute;
+right:0;
+top:0;
+width:16px;
+}
+
+.jspHorizontalBar {
+background:none repeat scroll 0 0;
+bottom:0;
+height:12px;
+left:0;
+position:absolute;
+width:100%;
+}
+
+.jspVerticalBar *, .jspHorizontalBar * {
+margin:0;
+padding:0;
+}
+
+.jspCap {
+display:none;
+}
+
+.jspHorizontalBar .jspCap {
+float:left;
+}
+
+.jspTrack {
+background:none repeat scroll 0 0 #EFEFEF;
+position:relative;
+}
+
+.jspDrag {
+background:none repeat scroll 0 0 #c8d9e8;
+cursor:pointer;
+left:0;
+position:relative;
+top:0;
+}
+
+
+.jspDrag.jspHover,
+.jspDrag.jspActive {
+  background-color: #A4C0D9;
+}
+
+
+.jspHorizontalBar .jspTrack, .jspHorizontalBar .jspDrag {
+float:left;
+height:100%;
+}
+
+.jspHorizontalBar .jspDrag {
+  height: 9px;
+  margin-top: 2px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.jspArrow {
+background:none repeat scroll 0 0 #50506D;
+cursor:pointer;
+display:block;
+text-indent:-20000px;
+}
+
+.jspArrow.jspDisabled {
+background:none repeat scroll 0 0 #80808D;
+cursor:default;
+}
+
+.jspVerticalBar .jspArrow {
+height:16px;
+}
+
+.jspHorizontalBar .jspArrow {
+float:left;
+height:100%;
+width:16px;
+}
+
+.jspVerticalBar .jspArrow:focus {
+outline:medium none;
+}
+
+.jspCorner {
+background:none repeat scroll 0 0 #EEEEF4;
+float:left;
+height:100%;
+}
+* html .jspCorner {
+margin:0 -3px 0 0;
+}
