@@ -114,7 +114,6 @@ class RCCWP_Menu
 				$page_type = 'Edit';
 				break;
 				
-				
 
 			// ------------ Custom Write Panels
 
@@ -176,6 +175,7 @@ class RCCWP_Menu
 					$page_group = 'RCCWP_ManagementPage';
 					$page_type = 'ViewGroups';
 				}
+				
 				// ------- Default behavior
 				else{
 					$page_group = 'RCCWP_CustomWritePanelPage';
@@ -268,6 +268,7 @@ class RCCWP_Menu
 			// end fix
 			
 			foreach ($customWritePanels as $panel){
+			  if ($panel->name != '_Global') { // traversal: fix to ignore the global group
 				//exists a single write panel? and if exists  this write panel have posts?
 				if($panel->single == 1){
 					$has_posts = $wpdb->get_var('SELECT post_id FROM '.$wpdb->prefix.'postmeta  where meta_key = "_mf_write_panel_id" and  meta_value = '.$panel->id);
@@ -298,7 +299,7 @@ class RCCWP_Menu
 				//IF we has unactivated the condenced menu
 				if(!$condence){
 					//adding the top parent menus
-					$new_menu[$base+$offset] = array( __($panel->name), $type_write_panel, $base+$offset.'.php', '', 'wp-menu-open menu-top mf-menu-'.$type_write_panel, 'mf-menu-'.$panel->id, 'div' );
+					$new_menu[$base+$offset] = array( __($panel->name), $type_write_panel, $base+$offset.'.php', '', 'mf-menu-'.sanitize_title_with_dashes($panel->name). ' wp-menu-open menu-top mf-menu-'.$type_write_panel, 'mf-menu-'.$panel->id, 'div');
 					
 					//adding submenu options (add new and manage for each write panel)
 					if ($panel->type == "post"){
@@ -346,6 +347,8 @@ class RCCWP_Menu
 			 			}
 					}
 				}
+				
+			} // traversal: endif '$panel->name == '_Global'
 		}
 		foreach ($menu as $k => $v) {
 			if($k > 5) $new_menu[$k+$offset]=$v;

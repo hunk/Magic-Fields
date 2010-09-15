@@ -10,12 +10,11 @@ class RCCWP_Post {
 	function SaveCustomFields($postId){
 		global $flag;
 		
+			
 		if($flag == 0){
 			
 			//with this  the save_post action don't will be execute twice
 			$flag = 1;
-			
-			
 			//security
 			if(!wp_verify_nonce($_REQUEST['rc-custom-write-panel-verify-key'], 'rc-custom-write-panel'))
 				return $postId;
@@ -24,6 +23,7 @@ class RCCWP_Post {
 			if (!(current_user_can('edit_posts', $postId) || current_user_can('edit_published_pages', $postId))){
 			 return $postId;
 			}
+			
 			
 			RCCWP_Post::SetCustomWritePanel($postId);
 			RCCWP_Post::PrepareFieldsValues($postId);
@@ -40,14 +40,24 @@ class RCCWP_Post {
 	 *  @param integer $postId
 	 */
 	function SetCustomWritePanel($postId) {
-		$customWritePanelId = $_POST['rc-cwp-custom-write-panel-id'];
+	  
+	  if (array_key_exists('rc-cwp-change-custom-write-panel-id', $_POST)) {
+		  $customWritePanelId = $_POST['rc-cwp-change-custom-write-panel-id'];
+	  } else {
+		  $customWritePanelId = $_POST['rc-cwp-custom-write-panel-id'];
+    }
+    
+	  
 		if (isset($customWritePanelId)) {
-			if (!empty($customWritePanelId)) {	
+			if (!empty($customWritePanelId) && $customWritePanelId != "-1") {	
 			  update_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, $customWritePanelId);
 			} else {
 				delete_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY);
 			}
+    
 		}
+		
+		
 	}
 	
 	/**
