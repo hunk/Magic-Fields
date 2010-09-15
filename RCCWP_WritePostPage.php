@@ -368,8 +368,22 @@ class RCCWP_WritePostPage
 				?> 
 				<div class="write_panel_wrapper"  id="write_panel_wrap_<?php echo $group->id;?>">
 				
+				<?php if ($group->duplicate) : ?>
+				
+        <div class="mf-group-controls">
+          <div class="mf-group-count"></div>
+          <div class="buttons">
+            <a href="#" class="mf-expand-all-button">Expand All</a>
+            <a href="#" class="mf-collapse-all-button">Collapse All</a>
+          </div>
+        
+        </div>
+        
+        <?php endif; ?>
+        
         <div class="mf-group-save-warning">Note: to save your changes you must also <strong>Publish or Update</strong> this <?php echo $post->post_type?>.</div> 
 
+        
 				<?php
 				
 				

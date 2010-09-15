@@ -11,7 +11,7 @@
       count++;
       
       var el = $(this);
-      var d = {};
+      var d = el.data("mf_group_summary") || {};
       el.data("mf_group_summary", d);
       
       // record the field containers
@@ -71,15 +71,16 @@
         switch (tc) {
           
           case "textbox" : {
-            content = $.trim(f.find("input[type=text]").val());
-            
-            content = $.stripTags(content).substring(0, 45);
+            var orig = $.trim(f.find("input[type=text]").val());
+            content = $.stripTags(orig).substring(0, 50);
             
             if (content == "") {
               content = "( none )";
               td.addClass("none");
             } else {
-              content = content + "&hellip;";
+              if (orig != content) {
+                content = content + "&hellip;";
+              }
               el.removeClass("empty");
             }
             
@@ -174,7 +175,7 @@
             val = f.find("select").val();
             
             if (val) {
-              content = val.join(", ")
+              content = val.join(", ");
               el.removeClass("empty");
             } else {
               content = "";
@@ -261,7 +262,15 @@
         th.addClass(cn.join(" "));
         
         // set the label (based on the label inside the field)
-        th.html($.trim(lb.html()));
+        
+        var origLabel = $.trim(lb.html());
+        var exLabel = origLabel.substring(0, 28);
+        
+        if (origLabel != exLabel) {
+          exLabel = exLabel + "&hellip;";
+        }
+        
+        th.html(exLabel);
         td.html(content);
         
         d.thr.append(th);
@@ -288,6 +297,21 @@
     });
     
     
+  };
+
+  $.fn.mf_group_update_count = function() {
+    return this.each( function() {
+      
+      var wrapper = $(this).closest(".write_panel_wrapper");
+      var status = wrapper.find(".mf-group-count");
+      
+      if (status) {
+        var count = wrapper.find(".magicfield_group").length;
+        var it = count == 1 ? "item" : "items";
+        status.html(count + " " + it);
+      }
+      
+    });
   };
   
   $.fn.mf_group_show_save_warning = function() {
@@ -332,8 +356,7 @@
       });
       
       if (el.data("mf_group_summary")) {
-        // remove the group summary, and data
-        el.data("mf_group_summary", null);
+        // remove the group summary
         el.find(".mf-group-summary").remove();
       }
 
@@ -348,6 +371,21 @@
   
   jQuery(document).ready(function(){
 
+    // update group counts
+    
+    var wrappers = $('.write_panel_wrapper')
+    
+    wrappers.mf_group_update_count();
+      
+      wrappers.find(".mf-expand-all-button").live("click", function() {
+        $(this).closest(".write_panel_wrapper").find(".magicfield_group").mf_group_expand();
+      });
+
+      wrappers.find(".mf-collapse-all-button").live("click", function() {
+        $(this).closest(".write_panel_wrapper").find(".magicfield_group").mf_group_summary();
+      });
+      
+      
       var mf_groups = $('.magicfield_group');
       
       // make the save warning appear when fields are clicked
@@ -601,6 +639,7 @@
               		    // move the add button to the last panel
               		    moveAddToLast(jQuery("#write_panel_wrap_"+customGroupID));
                       newel.find("input,textarea").eq(0).focus();
+                      newel.mf_group_update_count();
                       
                       //jQuery.scrollTo(newel, 500);
                   }
@@ -620,7 +659,7 @@ deleteGroupDuplicate = function(div){
     var parent = jQuery("#"+div);
     var db = parent.find(".duplicate_button").clone();
     var context = parent.closest(".write_panel_wrapper");
-    parent.fadeOut({ duration: "normal", complete: function() { parent.remove(); moveAddToLast(context, db); } });
+    parent.fadeOut({ duration: "normal", complete: function() { parent.remove(); context.mf_group_update_count(); moveAddToLast(context, db); } });
 }
 
 /**

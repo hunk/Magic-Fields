@@ -432,12 +432,55 @@
   background-position: 6px 4px; 
 }
 
-.mf-group-save-warning {
-  display: none;
-  padding: 8px 10px 8px 28px;
-  background: #ffffee url(../images/mf-group-save-warning.png) no-repeat 6px 7px;
+.mf-group-controls {
+  padding: 6px 10px 6px 6px;
+  background: #f3f3f3;
   border-bottom: 1px solid #EAEAEA;
   line-height: 16px;
+  overflow: hidden;
+  zoom: 100%;
+}
+
+.mf-group-controls .buttons {
+  float: right;
+}
+
+.mf-group-controls a {
+  display: block;
+  float: left;
+  line-height: 16px;
+  background-repeat: no-repeat;
+  margin-right: 0px;
+  padding-left: 18px;
+  text-decoration: none;
+  color: #5686B2;
+}
+
+.mf-group-controls a:hover {
+  color: #d54E21;
+}
+
+.mf-group-controls a.mf-collapse-all-button {
+  background-image: url(../images/mf-collapse-all-button.png);
+}
+
+.mf-group-controls a.mf-expand-all-button {
+  background-image: url(../images/mf-expand-all-button.png);
+  margin-right: 18px;
+}
+
+
+.mf-group-controls .mf-group-count {
+  float: left;
+  color: #666;
+  padding-left: 2px;
+}
+ 
+.mf-group-save-warning {
+  display: none;
+  background: #ffffee url(../images/mf-group-save-warning.png) no-repeat 6px 6px;
+  padding: 8px 10px 8px 28px;
+  border-bottom: 1px solid #EAEAEA;
 }
 
 .write_panel_wrapper .Multiline_Textbox table.mceLayout {
@@ -864,7 +907,7 @@ input.button.disabled {
 }
 
 .write_panel_wrapper .mf_toolbox_controls a:hover {
-  color: #436C92;
+  color: #d54E21;
 }
 
 .write_panel_wrapper .mf-field-title {
