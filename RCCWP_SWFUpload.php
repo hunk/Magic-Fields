@@ -25,12 +25,11 @@ class RCCWP_SWFUpload
 
 		$iframePath = MF_URI."RCCWP_upload.php?input_name=".urlencode($inputName)."&type=$fileType&imageThumbID=img_thumb_$idField&canvas=$isCanvas".$inputSizeParam ;
 		?>
-			<div id='upload_iframe_<?php echo $idField;?>'>
-				<iframe id='upload_internal_iframe_<?php echo $idField ?>' src='<?php echo $iframePath;?>' frameborder='' scrolling='no' style="border-width: 0px; height: <?php echo $iframeHeight ?>px; width: <?php echo $iframeWidth ?>px;vertical-align:top;"></iframe>
+			<div id='upload_iframe_<?php echo $idField;?>' class="iframeload { iframe: { id: 'upload_internal_iframe_<?php echo $idField ?>', src: '<?php echo $iframePath;?>', height: <?php echo $iframeHeight ?>, width: <?php echo $iframeWidth ?> } }">
 			</div>
 			<table border="0">
 				<tr >
-					<td style="border-bottom-width: 0px;padding: 0; padding-bottom:32px;"><label for="upload_url"><?php _e('Or URL', $mf_domain); ?>:</label></td>
+					<td style="border-bottom-width: 0px; padding: 0;"><label for="upload_url"><?php _e('Or URL', $mf_domain); ?>:</label></td>
 					<td style="border-bottom-width: 0px">
 						<input id="upload_url_<?php echo $idField;  ?>"
 							name="upload_url_<?php echo $inputName ?>"

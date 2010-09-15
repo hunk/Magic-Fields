@@ -51,7 +51,8 @@
 
 
 .mf-checkbox-list {
-	display: inline !important;
+  overflow: hidden;
+  zoom: 100%;
 }
 
 .mf-field label {
@@ -61,8 +62,14 @@
 	display: block;
 }
 
+.mf-field label .name em {
+  font-style: normal;
+  color: #666;
+  font-weight: normal;
+}
+
 .textboxinterface{
-	width: 100%;
+	/*width: 100%; */
 }
 
 /**
@@ -107,23 +114,17 @@
 }
 /**  css for the editor **/
 
-.checkbox_mf{
-    margin-left: 15%;
+.checkbox_mf {
+  margin-left: 10px;
 }
 
-.checkbox_list_mf{
-    margin-top:5px;
-    margin-left: 15%;
-}
-
-.listbox_mf{
-    margin-top: 5px;
-    margin-left: 15%;
-    width: 20%;
+.listbox_mf {
+  margin-left: 15%;
+  min-width: 200px;
 }
 
 .datepicker_mf{
-    margin-left: 15%;
+  margin-left: 15%;
 }
 
 .mf-field small.tip {
@@ -132,6 +133,25 @@
 /*test */
 .mf-field small.tip {
 	position: relative;
+}
+
+.mf-upload-success,
+.mf-upload-error {
+  background-repeat: no-repeat;
+  display: block;
+  padding-left: 20px;
+  display: block;
+  line-height: 16px;
+}
+
+.mf-upload-success {
+  color: #11A122;
+  background-image: url(../images/mf-upload-success.png); 
+}
+
+.mf-upload-error {
+  color: #9E1111; 
+  background-image: url(../images/mf-upload-error.png); 
 }
 
 .mf-field small.tip span {
@@ -166,23 +186,23 @@
 
 .write_panel_wrapper .checkbox_list_mf {
   margin-left: 4px;
-  margin-top: 4px;
 }
 
 .write_panel_wrapper .mf_custom_field input {
   margin-bottom: 4px;
 }
 
+.write_panel_wrapper .mf_custom_field input.textboxinterface {
+  float: left;
+}
+
 #poststuff .magicfield_group .inside {
   margin: 0;
 }
 
-
 .write_panel_wrapper {
   border: 1px solid #eaeaea;
-  -webkit-border-top-left-radius: 6px 6px;
-  -webkit-border-top-right-radius: 6px 6px;
-  background: url(../images/mf_field.png) repeat-x #f8f8f8;
+  background: url(../images/mf-field.png) repeat-x #f8f8f8;
 }
 
 .write_panel_wrapper .mf_custom_field br {
@@ -194,9 +214,10 @@
 
 .write_panel_wrapper .mf-field {
   padding: 10px 7px 0px 7px;
-  margin-top: 12px;
+  margin-top: 8px;
   border-top: 1px solid #eaeaea;
-  background: url(../images/mf_field.png) repeat-x;
+  background: url(../images/mf-field.png) repeat-x;
+  padding-bottom: 6px;
 }
 
 .write_panel_wrapper .inside .mf-field:first-child {
@@ -207,7 +228,7 @@
 
 .write_panel_wrapper .mf-field input.textboxinterface {
   background: #fff;
-  width: 99%;
+  /*width: 99%; */
 }
 
 .write_panel_wrapper .mf-field label {
@@ -226,15 +247,24 @@
   margin-bottom: 0;
 }
 
-.write_panel_wrapper label.mf-checkbox-list {
-  margin-top: 9px;
-  margin-bottom: 2px;
-  margin-left: 2px;
-  font-weight: normal;
-  font-size: 11px;
-  margin-right: 6px;
+.write_panel_wrapper .magicfield_group {
+  position: relative;
 }
 
+.write_panel_wrapper label.mf-checkbox-list,
+.write_panel_wrapper .mf-t-radiobutton-list label.selectit {
+  margin: 0px 0px 2px 0px;
+  font-weight: normal;
+  font-size: 11px;
+}
+
+.write_panel_wrapper .mf-t-radiobutton-list .mf_custom_field {
+  padding-left: 2px;
+  overflow: hidden;
+  zoom: 100%;
+}
+
+.write_panel_wrapper label.mf-checkbox-list input
 .write_panel_wrapper input.checkbox_list_mf {
   height: 14px;
   width: 14px;
@@ -257,10 +287,8 @@
   font-weight: bold;
 }
 
-.write_panel_wrapper a.typeHandler img,
-.write_panel_wrapper a.delete_duplicate_field img,
-.write_panel_wrapper a.delete_duplicate_button img,
-.write_panel_wrapper a.duplicate_button img {
+
+.write_panel_wrapper a.typeHandler img {
   margin-top: -3px;
   padding: 0;
   margin-right: 4px;
@@ -270,11 +298,6 @@
 .write_panel_wrapper small.tip:hover {
   font-size: 10px;
 }
-
-.write_panel_wrapper select {
-  width: 90%;
-}
-
 
 .write_panel_wrapper .mf_toolbox {
   height: 22px;
@@ -287,11 +310,49 @@
 }
 
 .write_panel_wrapper a.delete_duplicate_button,
-.write_panel_wrapper a.duplicate_button {
+.write_panel_wrapper a.duplicate_button,
+.write_panel_wrapper a.delete_duplicate_field,
+.write_panel_wrapper a.duplicate_field,
+.write_panel_wrapper a.collapse_button {
+  color: #5686b2;
   text-decoration: none;
   line-height: 16px;
-  margin-left: 8px;
+  font-weight: normal;
+  padding-left: 19px;
+  background-repeat: no-repeat;
+  display: block;
 }
+
+.write_panel_wrapper .delete_duplicate_field,
+.write_panel_wrapper .duplicate_field {
+  margin-left: 2px;
+  margin-top: 4px;
+}
+
+.write_panel_wrapper .mf-duplicate-controls {
+  overflow: hidden;
+  zoom: 100%;
+  clear: left;
+  padding-top: 3px;
+}
+
+.write_panel_wrapper .ui-slider-2 {
+  margin: 20px 10px;
+}
+
+
+.write_panel_wrapper .duplicate_button,
+.write_panel_wrapper .duplicate_field {
+  background-image: url(../images/mf-toolbox-duplicate-button.png);
+  padding-left: 19px;
+  float: left;
+}
+
+.write_panel_wrapper .delete_duplicate_button,
+.write_panel_wrapper .delete_duplicate_field {
+  background-image: url(../images/mf-toolbox-delete-duplicate-button.png);
+}
+
 
 .write_panel_wrapper .image_photo {
   border: 1px solid #EAEAEA;
@@ -331,7 +392,7 @@
 
 .write_panel_wrapper .listbox_mf {
   margin-left: 0;
-  width: 96%;
+  /*width: 96%; */
 }
 
 .write_panel_wrapper .tab_multi_mf {
@@ -339,19 +400,44 @@
   padding-bottom: 3px;
 }
 
-.write_panel_wrapper .mf_message_error {
+.write_panel_wrapper .error_magicfields {
   color: #cc0000;
-  width: 94%;
 }
 
-.write_panel_wrapper .mf_message_error label {
-  margin-left: 0;
+.write_panel_wrapper label.error_magicfields,
+#mf-publish-errors {
+  margin-left: 4px;
+  margin-top: 2px;
   overflow: hidden;
   zoom: 100%;
-  padding: 6px;
+  color: red;
+  padding: 0px 6px 0px 24px;
+  line-height: 20px;
   font-size: 10px;
   height: auto;
-  background-color: #FFFFCC;
+  display: block;
+  background: #FFFFCC url(../images/error-magicfields.png) no-repeat 4px 1px;
+  float: left;
+  border: 1px solid #DCCD4D;
+}
+
+#mf-publish-errors {
+  float: none;
+  margin-left: 0;
+  margin-top: 6px;
+  line-height: 14px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 28px;
+  background-position: 6px 4px; 
+}
+
+.mf-group-save-warning {
+  display: none;
+  padding: 8px 10px 8px 28px;
+  background: #ffffee url(../images/mf-group-save-warning.png) no-repeat 6px 7px;
+  border-bottom: 1px solid #EAEAEA;
+  line-height: 16px;
 }
 
 .write_panel_wrapper .Multiline_Textbox table.mceLayout {
@@ -407,9 +493,11 @@
   zoom: 100%;
 }
 
-.write_panel_wrapper .Radiobutton_List label.selectit {
+.write_panel_wrapper .Radiobutton_List label.selectit,
+.write_panel_wrapper .Checkbox_List label.selectit {
   font-weight: normal;
   cursor: default;
+  padding-top: 3px;
 }
 
 .write_panel_wrapper .selectit {
@@ -460,3 +548,467 @@ input.button.disabled {
 	background:#eee;
 	display:none;
 }
+
+
+
+/* Dream UI Additions */
+
+
+.write_panel_wrapper .mf_duplicate_group {
+  border-bottom-color: #ddd;
+  border-top-color: #FFF;
+  border-left-color: #FFF;
+  border-right: none;
+}
+
+.mf-group-summary {
+  cursor: pointer;
+  background-color: #F8F8F8;
+	width: 100%;
+	height: auto;
+	max-height: 114px;
+}
+
+
+
+.mf-group-summary .jspPane:hover,
+.mf-group-summary table:hover {
+  background-color: #FFF;
+}
+
+.mf-group-summary td,
+.mf-group-summary th {
+  padding: 5px 8px;
+  border-left: 1px solid #FFF;
+  border-right: 1px solid #DEDEDE;
+  vertical-align: top;
+  min-width: 80px;
+}
+
+.mf-group-summary table:hover td,
+.mf-group-summary table:hover th {
+}
+
+.mf-group-summary td.mf-t-image,
+.mf-group-summary th.mf-t-image {
+  min-width: 60px;
+}
+
+.mf-group-summary thead th {
+  text-align: left;
+  font-size: 11px;
+  white-space: nowrap;
+  text-align: left;
+  padding-top: 8px;
+  color: #333;
+}
+  
+.mf-group-summary table {
+  width: 200px;
+}
+
+.mf-group-summary th {
+  background-repeat: no-repeat;
+  background-position: 7px 5px;
+  padding-left: 28px;
+  white-space: nowrap;
+}
+
+.mf-group-summary th em {
+  font-weight: normal;
+  font-style: normal;
+  color: #666;
+}
+
+.mf-group-summary td:last-child,
+.mf-group-summary th:last-child {
+  border-right: none;
+}
+
+.mf-group-summary td:first-child,
+.mf-group-summary th:first-child {
+  border-left: none;
+}
+
+.mf-group-summary tbody td {
+  font-size: 11px;
+  line-height: 1.4em;
+  padding-bottom: 20px;
+  height: 54px;
+} 
+
+.mf-group-summary tbody td.none {
+  color: #999;
+} 
+
+.mf-group-summary th.mf-t-checkbox,
+.mf-group-summary th.mf-t-checkbox-checked,
+.mf-group-summary th.mf-t-radio,
+.mf-group-summary th.mf-t-radio-checked {
+  background-position: 4px 5px;
+  padding-left: 22px;
+}
+
+
+.mf-group-summary th.mf-t-audio {
+  background-image: url(../images/mf-t-audio.png);
+}
+
+.mf-group-summary th.mf-t-checkbox {
+  background-image: url(../images/mf-t-checkbox.png);
+}
+
+.mf-group-summary th.mf-t-checkbox-checked {
+  background-image: url(../images/mf-t-checkbox-checked.png);
+}
+
+.mf-group-summary th.mf-t-checkbox-list {
+  background-image: url(../images/mf-t-checkbox-list.png);
+}
+
+.mf-group-summary th.mf-t-color-picker {
+  background-image: url(../images/mf-t-color-picker.png);
+}
+
+.mf-group-summary th.mf-t-date {
+  background-image: url(../images/mf-t-date.png);
+}
+
+.mf-group-summary th.mf-t-date-selected {
+  background-image: url(../images/mf-t-date-selected.png);
+}
+
+.mf-group-summary th.mf-t-file {
+  background-image: url(../images/mf-t-file.png);
+}
+
+.mf-group-summary th.mf-t-image {
+  background-image: url(../images/mf-t-image.png);
+}
+
+.mf-group-summary th.mf-t-image- {
+  background-image: url(../images/mf-t-image.png);
+}
+
+.mf-group-summary th.mf-t-listbox {
+  background-image: url(../images/mf-t-listbox.png);
+}
+
+.mf-group-summary th.mf-t-dropdown-list {
+  background-image: url(../images/mf-t-dropdown-list.png);
+}
+
+.mf-group-summary th.mf-t-markdown-textbox {
+  background-image: url(../images/mf-t-markdown-textbox.png);
+}
+
+.mf-group-summary th.mf-t-multiline-textbox {
+  background-image: url(../images/mf-t-multiline-textbox.png);
+}
+
+.mf-group-summary th.mf-t-radiobutton-list {
+  background-image: url(../images/mf-t-radiobutton-list.png);
+}
+
+.mf-group-summary th.mf-t-related-type {
+  background-image: url(../images/mf-t-related-type.png);
+}
+
+.mf-group-summary th.mf-t-slider {
+  background-image: url(../images/mf-t-slider.png);
+}
+
+.mf-group-summary th.mf-t-textbox {
+  background-image: url(../images/mf-t-textbox.png);
+}
+
+.mf-group-summary table:hover th.mf-t-audio {
+  background-image: url(../images/hover-mf-t-audio.png);
+}
+
+.mf-group-summary table:hover th.mf-t-checkbox {
+  background-image: url(../images/hover-mf-t-checkbox.png);
+}
+
+.mf-group-summary table:hover th.mf-t-checkbox-checked {
+  background-image: url(../images/hover-mf-t-checkbox-checked.png);
+}
+
+.mf-group-summary table:hover th.mf-t-checkbox-list {
+  background-image: url(../images/hover-mf-t-checkbox-list.png);
+}
+
+.mf-group-summary table:hover th.mf-t-color-picker {
+  background-image: url(../images/hover-mf-t-color-picker.png);
+}
+
+.mf-group-summary table:hover th.mf-t-date {
+  background-image: url(../images/hover-mf-t-date.png);
+}
+
+.mf-group-summary table:hover th.mf-t-date-selected {
+  background-image: url(../images/hover-mf-t-date-selected.png);
+}
+
+.mf-group-summary table:hover th.mf-t-file {
+  background-image: url(../images/hover-mf-t-file.png);
+}
+
+.mf-group-summary table:hover th.mf-t-image {
+  background-image: url(../images/hover-mf-t-image.png);
+}
+
+.mf-group-summary table:hover th.mf-t-image- {
+  background-image: url(../images/hover-mf-t-image.png);
+}
+
+.mf-group-summary table:hover th.mf-t-listbox {
+  background-image: url(../images/hover-mf-t-listbox.png);
+}
+
+.mf-group-summary table:hover th.mf-t-dropdown-list {
+  background-image: url(../images/hover-mf-t-dropdown-list.png);
+}
+
+.mf-group-summary table:hover th.mf-t-markdown-textbox {
+  background-image: url(../images/hover-mf-t-markdown-textbox.png);
+}
+
+.mf-group-summary table:hover th.mf-t-multiline-textbox {
+  background-image: url(../images/hover-mf-t-multiline-textbox.png);
+}
+
+.mf-group-summary table:hover th.mf-t-radiobutton-list {
+  background-image: url(../images/hover-mf-t-radiobutton-list.png);
+}
+
+.mf-group-summary table:hover th.mf-t-related-type {
+  background-image: url(../images/hover-mf-t-related-type.png);
+}
+
+.mf-group-summary table:hover th.mf-t-slider {
+  background-image: url(../images/hover-mf-t-slider.png);
+}
+
+.mf-group-summary table:hover th.mf-t-textbox {
+  background-image: url(../images/hover-mf-t-textbox.png);
+}
+
+
+.mf-group-summary td.mf-t-image img {
+  margin-top: 2px;
+  display: block;
+  border: 1px solid #FFF;
+  outline: 1px solid #ccc;
+}
+
+.mf-group-loading {
+  background: url(../images/spinner.gif) no-repeat 6px 6px;
+  line-height: 16px;
+  padding: 6px;
+  padding-left: 26px;
+}
+
+.mf-group-summary .mf-t-image {
+  width: 10px;
+  max-width: 200px;
+}
+
+.mf-group-summary .mf-t-text {
+  width: 100px;
+}
+
+.mf-group-summary .mf-t-multiline-textbox,
+.mf-group-summary .mf-t-markdown-textbox {
+  min-width: 300px;
+}
+
+
+/* -- Toolbox Modifications -- */
+
+
+.write_panel_wrapper .mf_toolbox {
+  padding-top: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  height: 20px;
+}
+
+.write_panel_wrapper .mf_toolbox .hndle {
+  background: url(../images/mf-toolbox-hndle.png) no-repeat 1px 3px;
+  width: 12px;
+  height: 16px;
+  display: block;
+}
+
+.write_panel_wrapper .magicfield_group .mf-field {
+  display: none;
+}
+
+.write_panel_wrapper .mf_toolbox_controls {
+  float: right;
+  overflow: hidden;
+  zoom: 100%;
+  padding-right: 4px;
+}
+
+.write_panel_wrapper .mf_toolbox_controls a {
+  font-size: 10px;
+}
+
+.write_panel_wrapper .mf_toolbox_controls a,
+.write_panel_wrapper .mf_counter {
+  float: left;
+  background-repeat: no-repeat;
+  display: block;
+}
+
+.write_panel_wrapper .mf_toolbox_controls a:hover {
+  color: #436C92;
+}
+
+.write_panel_wrapper .mf-field-title {
+  overflow: hidden;
+  zoom: 100%;
+}
+
+.write_panel_wrapper .mf-field-title .duplicate_field,
+.write_panel_wrapper .mf-field-title .delete_duplicate_field {
+  float: left;
+}
+
+.write_panel_wrapper .mf-field label {
+  float: left;
+}
+
+
+.write_panel_wrapper .delete_duplicate_button {
+  margin-left: 14px;
+}
+
+.write_panel_wrapper a.collapse_button {
+  background-image: url(../images/mf-toolbox-collapse-button.png);
+  background-repeat: no-repeat;
+  padding-left: 19px;
+  margin-left: 14px;
+  display: none; 
+  position: absolute;
+  top: 0px;
+  right: 8px;
+  z-index: 10;
+}
+
+.write_panel_wrapper .mf_duplicate_group a.collapse_button {
+  top: 6px;
+}
+
+.write_panel_wrapper .mf_counter {
+  background-image: url(../images/mf-toolbox-mf-counter.png);
+  color: #FFF;
+  font-weight: bold;
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  font-size: 9px;
+  line-height: 16px;
+  cursor: move;
+}
+
+.mf-t-multiline-textbox .mf-duplicate-controls,
+.mf-t-image .mf-duplicate-controls,
+.mf-t-audio .mf-duplicate-controls,
+.mf-t-file .mf-duplicate-controls {
+  padding-top: 3px;
+}
+
+
+
+#poststuff .inside p.error_msg_txt {
+  margin-left: 4px;
+}
+
+#_seven_color_selecter {
+  z-index: 50;
+}
+
+.ui-datepicker,
+.ui-datepicker .ui-datepicker-title select,
+.ui-datepicker .ui-datepicker-month,
+.ui-datepicker td,
+.ui-datepicker th {
+  font-size: 11px !important;
+}
+
+.mf-field .colorpicker_submit,
+.mf-field .colorpicker_current_color {
+  display: none;
+}
+
+.mf-field .colorpicker_new_color {
+  width: 130px;
+} 
+
+.mf-field input.mf_color_picker {
+  border: 1px solid #BFC4CE;
+  margin-left: 4px;
+}
+
+.mf-t-color-picker .mf-color-swatch {
+  border: 1px solid #ccc;
+  background: #FFF;
+  padding: 2px;
+  overflow: hidden;
+  zoom: 100%;
+}
+
+.mf-t-color-picker .mf-color-swatch span {
+  width: 16px;
+  height: 16px;
+  display: block;
+  float: left;
+  border: 1px solid #CCC;
+}
+
+.mf-t-color-picker .mf-color-swatch strong {
+  float: left;
+  margin-left: 10px;
+  line-height: 16px;
+  font-weight: normal;
+  color: #666;
+}
+
+
+.mf-file-links {
+  overflow: hidden;
+  zoom: 100%;
+  padding-bottom: 6px;
+}
+
+.mf-file-links a {
+  display: block;
+  float: left;
+  padding-left: 20px;
+  text-decoration: none;
+  line-height: 16px;
+  color: #5686B2;
+  background-repeat: no-repeat;
+} 
+
+.mf-file-links a.mf-file-delete {
+  margin-left: 10px;
+}
+
+.mf-file-links a.mf-file-delete {
+  background-image: url(../images/mf-file-delete.png);
+}
+
+.mf-file-links a.mf-file-view {
+  background-image: url(../images/mf-file-view.png);
+  margin-left: 2px;
+}
+
+.colorpicker input {
+  outline: none;
+  height: 14px !important;
+}
+
