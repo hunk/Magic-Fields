@@ -79,7 +79,7 @@
               content = $.stripTags(orig).substring(0, 50);
             
               if (content == "") {
-                content = "( none )";
+                content = "( empty )";
                 td.addClass("none");
               } else {
                 if (orig != content) {
@@ -208,7 +208,7 @@
               content = orig.substring(0, 150);
 
               if (content == "") {
-                content = "( none )";
+                content = "( empty )";
                 td.addClass("none");
               } else {
                 el.removeClass("empty");
