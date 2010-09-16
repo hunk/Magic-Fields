@@ -311,8 +311,11 @@
       var wrapper = $(this).closest(".write_panel_wrapper");
       var status = wrapper.find(".mf-group-count");
       
+      var toolbox = wrapper.find(".mf_toolbox");
+      
       var buttons = wrapper.find(".mf-expand-all-button,.mf-collapse-all-button");
       
+      toolbox.show();
       buttons.show();
       
       if (status) {
@@ -325,6 +328,7 @@
           if (groups.eq(0).hasClass("empty")) {
             count = 0;
             status.html("No items. Click summary below to create a new item.");
+            toolbox.hide();
           } else {
             status.html("1 item");
           }
