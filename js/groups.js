@@ -204,14 +204,18 @@
                 }
         		  }
       		
-              content = $.stripTags(ta.val()).substring(0, 150);
+      		    var orig = $.stripTags(ta.val());
+              content = orig.substring(0, 150);
 
               if (content == "") {
                 content = "( none )";
                 td.addClass("none");
               } else {
                 el.removeClass("empty");
-                content += "&hellip;";
+                
+                if (orig != content) {
+                  content += "&hellip;";
+                }
               }
             
               break;
@@ -367,7 +371,7 @@
       fields.show();
     
       // set the editor in textarea
-  		add_editor_text();
+  		add_editor_text($(this));
   		add_color_picker($(this));
 
       // load any internal iframes - this speeds up the intial load time by a whole lot if there are a lot of file upload controls, since the browser doesn't load them all initially!
@@ -624,7 +628,7 @@
               
               jQuery("#"+div).before(newel);
         			// set the editor in textarea
-        			add_editor_text(); 
+        			add_editor_text(newel); 
         			add_color_picker(newel);
 			        
               newel.find('.mf_message_error .error_magicfields').hide();
@@ -710,25 +714,58 @@ deleteGroupDuplicate = function(div){
  * Add the editor in new textarea
  *
  */
-add_editor_text = function(){
-  tinyMCE.init(
-    jQuery.extend(true, {}, tinyMCEPreInit.mceInit, { 
-      editor_selector: "pre_editor", 
-      setup : function(ed) {
-        ed.onClick.add( function(ed, l) {
-          var el = ed.getElement();
-          if (el) {
-            jQuery(el).mf_group_show_save_warning().mf_group_update_count();
-          }
-        })
-      }
-    })
-  );
-	jQuery(".Multiline_Textbox :input[type='textarea'].pre_editor").each( function(inputField){
-		var editor_text = jQuery(this).attr('id');
-		tinyMCE.execCommand('mceAddControl', true, editor_text); 
-		jQuery('#'+editor_text).removeClass('pre_editor');
-	});
+add_editor_text = function(context){
+  var $ = jQuery;
+  
+  var options = jQuery.extend(true, {}, tinyMCEPreInit.mceInit, { 
+    setup : function(ed) {
+      ed.onClick.add( function(ed, l) {
+        var el = ed.getElement();
+        if (el) {
+          jQuery(el).mf_group_show_save_warning().mf_group_update_count();
+        }
+      })
+    }
+  });
+  
+  
+  var doInit = true;
+  
+  if (context && context.length) {
+    // find textareas inside the context element (much faster than ALL available textareas)
+    
+    var editors = context.find('textarea.pre_editor');
+    
+    var ids = [];
+    
+    if (editors.length) {
+      // gather the ids of the editors
+      editors.each( function() {
+        ids.push($(this).attr("id"));
+      });
+      
+      options.elements = ids.join(",");
+      options.mode = "exact";
+      
+    } else {
+      options.editor_selector = "pre_editor";
+      doInit = false; // there are no editors, so don't initialise
+    }
+  
+  } else {
+    options.editor_selector = "pre_editor";
+  }
+  
+  if (doInit) {
+    tinyMCE.init(options);
+  
+  	jQuery(".Multiline_Textbox :input[type='textarea'].pre_editor", context).each( function(inputField){
+      var editor_text = jQuery(this).attr('id');
+  		tinyMCE.execCommand('mceAddControl', true, editor_text); 
+  		jQuery('#'+editor_text, context).removeClass('pre_editor');
+  	});
+  }
+  
 	jQuery(".markdowntextboxinterface:not(.markItUpEditor)").markItUp(mySettings);
 }
 
