@@ -406,6 +406,35 @@
   
   jQuery(document).ready(function(){
     
+    var tt_template = 
+   '<div class="tt"> \
+    <div class="tthl"><div class="tthr"><div class="tth"></div></div></div> \
+    <div class="ttbl"><div class="ttbr"><div class="ttb"><div class="ttbc">#{content}</div></div></div></div> \
+    <div class="ttfl"><div class="ttfr"><div class="ttf"></div></div></div> \
+    </div>';
+
+    $('small.tip').live("mouseenter", function(event) {
+      var el = $(this);
+
+      if (!el.data("tt")) {
+        // create a tooltip
+        var fh = $.trim(el.find(".field_help").html());
+
+        if (fh && fh != "") {
+          var tt = $($.tmpl(tt_template, { content: fh }));
+          
+          tt.hide().appendTo("body");
+
+          // setup the reveal
+          el.revealTooltip({el: tt, affix: { to: 'nw', offset: [-12, 0] }});
+          el.data("tt", tt);
+
+          // show the tooltip
+          setTimeout( function() { el.reveal('show') }, 100 );
+        }
+      } 
+    });
+    
     var wrappers = $('.write_panel_wrapper')
       
       wrappers.find(".mf-expand-all-button").live("click", function() {
