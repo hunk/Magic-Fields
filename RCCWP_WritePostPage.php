@@ -168,9 +168,10 @@ class RCCWP_WritePostPage
 							MF_URI.'js/jquery.tmpl.js'
 						);
 
+
     //loading jquery colorpicker plugin
 		wp_enqueue_script(	'jquerycolorpicker', 
-							MF_URI.'js/jquery.colorpicker.min.js'
+							MF_URI.'js/jquery.colorpicker.js'
 						);
 					
           
