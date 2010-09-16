@@ -1056,7 +1056,7 @@ input.button.disabled {
 
 .tt {
   position: absolute;
-  max-width: 200px;
+  max-width: 400px;
 }
 
 .tth,  /* head */
