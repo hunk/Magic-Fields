@@ -101,6 +101,23 @@ jQuery(document).ready(function(){
        	
 		getDuplicate(customFieldId,counter,div,groupCounter,groupId,counter_field);
     });
+
+	//validate maxlength
+	jQuery('.mf-field.maxlength input, .mf-field.maxlength textarea').keyup(function(){
+		var maximal = parseInt(jQuery(this).attr('maxlength'));
+		var actual = parseInt(jQuery(this).val().length);
+		//alert( maximal + ' - ' + actual );
+		if(actual > maximal){
+			jQuery(this).val(jQuery(this).val().substr(0, maximal));
+		}
+		
+		if(maximal - actual < 10) {
+			jQuery(this).parents(".mf-field").find('.charsRemaining').addClass('extreme');
+		}else {
+			jQuery(this).parents(".mf-field").find('.charsRemaining').removeClass('extreme');
+		}
+		jQuery(this).parents(".mf-field").find('.charsRemaining').html(maximal - actual);
+	});
 });
 
 
