@@ -44,9 +44,12 @@ z-index:1;
 color: #F00;
 }
 #wpbody-content .help_text {
-color: #666;
-font-style: italic;
-}
+	color: #666;
+	font-style: italic;
+	}
+	#wpbody-content .help_text.strict {
+		color: #F00;
+		}
 #wpbody-content sup.multiple {
 color: #21759B;
 }
