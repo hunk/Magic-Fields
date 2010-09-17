@@ -219,8 +219,8 @@ class RCCWP_CreateCustomFieldPage
 		</tr>
 		<?php if ($current_field->name == 'Textbox'){  ?>
 		<tr valign="top">
-			<th scope="row"><?php _e('Evaluate Max Lenght',$mf_domain); ?>:</th>
-			<td><input name="strict-max-lenght" id="strict-max-lenght" value="1" type="checkbox" ></td>
+			<th scope="row"><?php _e('Evaluate Max Length',$mf_domain); ?>:</th>
+			<td><input name="strict-max-length" id="strict-max-length" value="1" type="checkbox" ></td>
 		</tr>
 		<?php } ?>
 		<?php endif; ?>
@@ -243,8 +243,8 @@ class RCCWP_CreateCustomFieldPage
 			<td><input name="hide-visual-editor" id="hide-visual-editor" value="1" type="checkbox"></td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><?php _e('Evaluate Max Lenght',$mf_domain); ?>:</th>
-			<td><input name="strict-max-lenght" id="strict-max-lenght" value="1" type="checkbox" ></td>
+			<th scope="row"><?php _e('Evaluate Max Length',$mf_domain); ?>:</th>
+			<td><input name="strict-max-length" id="strict-max-length" value="1" type="checkbox" ></td>
 		</tr>
 		<?php endif; ?>
 		
