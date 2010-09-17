@@ -108,8 +108,8 @@ class RCCWP_CustomFieldPage{
 									$FIELD_TYPES['multiline_textbox']
 							))){  ?>
 		<tr valign="top">
-			<th scope="row"><?php _e('Evaluate Max Lenght',$mf_domain); ?>:</th>
-			<td><input name="strict-max-lenght" id="strict-max-lenght" value="1" type="checkbox" <?php echo $custom_field->properties['strict-max-lenght']==0 ? "":"checked" ?> ></td>
+			<th scope="row"><?php _e('Evaluate Max Length',$mf_domain); ?>:</th>
+			<td><input name="strict-max-length" id="strict-max-length" value="1" type="checkbox" <?php echo $custom_field->properties['strict-max-length']==0 ? "":"checked" ?> ></td>
 		</tr>
 		<?php } ?>
 
