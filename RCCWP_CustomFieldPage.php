@@ -82,6 +82,15 @@ class RCCWP_CustomFieldPage{
 		</tr>
 		
 		<?php } ?>
+		<?php if (in_array($custom_field->type_id, 
+							array(  $FIELD_TYPES['textbox'],
+									$FIELD_TYPES['multiline_textbox']
+							))){  ?>
+		<tr valign="top">
+			<th scope="row"><?php _e('Max Lenght',$mf_domain); ?>:</th>
+			<td><input name="strict-max-lenght" id="strict-max-lenght" value="1" type="checkbox" <?php echo $custom_field->properties['strict-max-lenght']==0 ? "":"checked" ?> ></td>
+		</tr>
+		<?php } ?>
 		<?php if (in_array($custom_field->type, array('Textbox', 'Listbox'))) : ?>
 		<tr valign="top">
 			<th scope="row"><?php _e('Size',$mf_domain); ?>:</th>
