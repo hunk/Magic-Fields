@@ -885,6 +885,18 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		?>
 		<div class="mf_custom_field">
 		<input <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> textboxinterface" tabindex="3" id="<?php echo $idField ?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>"<?php echo $maxlength?> />
+<?php
+if( isset( $customField->properties['strict-max-length'] ) && $customField->properties['strict-max-length'] == 1 ) {
+?>		<script language="javascript">
+			jQuery(document).ready(function(){			
+				var maximal = parseInt(jQuery('#<?php echo $idField; ?>').attr('maxlength'));
+				var actual = parseInt(jQuery('#<?php echo $idField; ?>').val().length);
+				jQuery('#<?php echo $idField; ?>').parents(".mf-field").find('.charsRemaining').html(maximal - actual);
+			});
+		</script>
+<?php
+}
+?>
 		</div>
 
 			<?php if ($customField->required_field){ ?>
