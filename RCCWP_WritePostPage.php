@@ -168,9 +168,20 @@ class RCCWP_WritePostPage
 							MF_URI.'js/jquery.tmpl.js'
 						);
 
+
     //loading jquery colorpicker plugin
 		wp_enqueue_script(	'jquerycolorpicker', 
-							MF_URI.'js/jquery.colorpicker.min.js'
+							MF_URI.'js/jquery.colorpicker.js'
+						);
+
+    //load affix plugin (for tooltips)
+		wp_enqueue_script(	'jqueryaffix', 
+							MF_URI.'js/jquery.affix.min.js'
+						);
+					
+    //load reveal plugin (for tooltips)
+		wp_enqueue_script(	'jqueryreveal', 
+							MF_URI.'js/jquery.reveal.min.js'
 						);
 					
           
@@ -540,7 +551,7 @@ class RCCWP_WritePostPage
 				?>
 				<span class="name"><?php echo $customFieldTitle?><em><?php echo $titleCounter ?></em></span>
 				<?php if (!empty($customFieldHelp)) {?>
-					<small class="tip">(what's this?)<span class="field_help"><?php echo $customFieldHelp; ?></span></small>
+					<small class="tip">what's this?<span class="field_help"><?php echo $customFieldHelp; ?></span></small>
 				<?php } ?>
 				
 			</label>

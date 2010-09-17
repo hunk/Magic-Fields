@@ -11,288 +11,298 @@
       count++;
       
       var el = $(this);
-      var d = el.data("mf_group_summary") || {};
-      el.data("mf_group_summary", d);
       
-      // record the field containers
-      d.fc = el.find("div.mf-field");
-      d.fc.hide();
+      if (!el.data("mf_summarised")) {
+        
+        var d = el.data("mf_group_summary") || {};
+        el.data("mf_group_summary", d);
+        el.data("mf_summarised", true);
+        // record the field containers
+        d.fc = el.find("div.mf-field");
+        d.fc.hide();
 
-      el.find(".collapse_button").hide();
+        el.find(".collapse_button").hide();
       
-      // create summary container
+        // create summary container
       
-      if (d.container) {
-        d.container.remove(); // remove any existing summaries
-      }
-      
-      d.container = $('<div title="click to edit field data" class="mf-group-summary"></div>');
-      
-      if (el.hasClass("mf_duplicate_group")) {
-        d.container.addClass("sortable_mf"); 
-      }
-
-      d.table = $('<table cellspacing="0"><thead><tr></tr></thead><tbody><tr></tr></tbody></table>');
-      
-      d.thr = d.table.find("thead tr");
-      d.tbr = d.table.find("tbody tr");
-      
-      el.addClass("empty");
-
-      // convert the fields 
-      
-      d.fc.each( function() {
-        
-        var f = $(this);
-        var cn = [];
-        
-        var lb = $(this).find("label span.name").eq(0);
-        var content = "&nbsp;";
-        
-        var td = $('<td>&nbsp;</td>');
-        var th = $('<th></th>');
-        
-        var t;
-        
-        // derive the "type" class
-        var matches = f.attr("class").match(/mf-t-[a-z0-9\-]+/);
-        
-        if (matches.length) {
-          t = matches[0];
-          cn.push(t);
+        if (d.container) {
+          d.container.remove(); // remove any existing summaries
         }
+      
+        d.container = $('<div title="click to edit field data" class="mf-group-summary"></div>');
+      
+        if (el.hasClass("mf_duplicate_group")) {
+          d.container.addClass("sortable_mf"); 
+        }
+
+        d.table = $('<table cellspacing="0"><thead><tr></tr></thead><tbody><tr></tr></tbody></table>');
+      
+        d.thr = d.table.find("thead tr");
+        d.tbr = d.table.find("tbody tr");
+      
+        el.addClass("empty");
+
+        // convert the fields 
+      
+        d.fc.each( function() {
         
-        td.data("rid", f.attr("id"));
-        th.data("rid", f.attr("id"));
+          var f = $(this);
+          var cn = [];
         
-        var tc = t.replace("mf-t-", "");
+          var lb = $(this).find("label span.name").eq(0);
+          var content = "&nbsp;";
         
-        // derive the content display
-        switch (tc) {
+          var td = $('<td>&nbsp;</td>');
+          var th = $('<th></th>');
+        
+          var t;
+        
+          // derive the "type" class
+          var matches = f.attr("class").match(/mf-t-[a-z0-9\-]+/);
+        
+          if (matches.length) {
+            t = matches[0];
+            cn.push(t);
+          }
+        
+          td.data("rid", f.attr("id"));
+          th.data("rid", f.attr("id"));
+        
+          var tc = t.replace("mf-t-", "");
+        
+        
+          // derive the content display
+          switch (tc) {
           
-          case "textbox" : {
-            var orig = $.trim(f.find("input[type=text]").val());
-            content = $.stripTags(orig).substring(0, 50);
+            case "textbox" : {
+              var orig = $.trim(f.find("input[type=text]").val());
+              content = $.stripTags(orig).substring(0, 50);
             
-            if (content == "") {
-              content = "( none )";
-              td.addClass("none");
-            } else {
-              if (orig != content) {
-                content = content + "&hellip;";
-              }
-              el.removeClass("empty");
-            }
-            
-            break;
-          }
-          case "checkbox" : {
-            var checked = f.find("input[type=checkbox]:checked").length;
-            
-            if (!checked) {
-              content = "( not checked )";
-              td.addClass("none");
-            } else {
-              th.addClass("mf-t-checkbox-checked");
-              content = "( checked )";
-              el.removeClass("empty");
-            }
-            
-            break;
-          }
-          case "checkbox-list" :
-          case "radiobutton-list" : {
-            val = f.find("input:checked");
-            
-            var v = [];
-            
-            val.each( function() {
-              v.push($(this).attr("value"));
-            });
-            
-            if (v.length) {
-              content = v.join(", ");
-              el.removeClass("empty");
-            } else {
-              content = "( none selected )";
-              td.addClass("none");
-            }
-            break;
-          }
-          case "color-picker" : {
-            var color = $.trim(f.find("input[type=text]").val());
-            
-            if (color) {
-              content = $('<div class="mf-color-swatch"><span style="background-color: ' + color + '"></span><strong>' + color + '</strong></div>');
-              el.removeClass("empty");
-            } else {
-              content = "( none )";
-              td.addClass("none");
-            }
-
-            break;
-          }
-          case "date" : {
-            content = $.trim(f.find("input[type=text]").val());
-
-            if (content == "") {
-              content = "( none )";
-              td.addClass("none");
-            } else {
-              th.addClass("mf-t-date-selected");
-              el.removeClass("empty");
-            }
-            
-            break;
-          }
-          case "file" : {
-            content = f.find("a.mf-file-view").attr("href");
-            
-            if (!content || content == "") {
-              content = "( none )";
-              td.addClass("none");
-            } else {
-              content = '<a href="' + content + '" target="_blank" class="mf-s-file-view">View File</a>';
-              el.removeClass("empty");
-            }
-            break;
-          }
-          case "image" : 
-          case "image-" : {
-            var img = f.find("img");
-            content = img.clone().attr("height", 60).attr("id", "s_" + img.attr("id"));
-
-            var src = img.attr("src");
-            
-            if (src && src.find) {
-              if (!src.find("noimage.jpg")) {
+              if (content == "") {
+                content = "( empty )";
+                td.addClass("none");
+              } else {
+                if (orig != content) {
+                  content = content + "&hellip;";
+                }
                 el.removeClass("empty");
               }
-            }
-            break;
-          }
-          case "listbox" : {
-            val = f.find("select").val();
             
-            if (val) {
-              content = val.join(", ");
-              el.removeClass("empty");
-            } else {
-              content = "";
+              break;
             }
+            case "checkbox" : {
+              var checked = f.find("input[type=checkbox]:checked").length;
             
-            if (content == "") {
-              content = "( none selected )";
-              td.addClass("none");
-            }
-            break;
-          }
-          case "multiline-textbox" :
-          case "markdown-textbox" : {
-            var ta = f.find("textarea");
-            var editor_text = ta.attr('id');
-            
-            if (tinyMCE) {
-              var editor = tinyMCE.get(editor_text);
-              
-              if (editor) {
-                ta.attr('value', editor.getContent());
+              if (!checked) {
+                content = "( not checked )";
+                td.addClass("none");
+              } else {
+                th.addClass("mf-t-checkbox-checked");
+                content = "( checked )";
+                el.removeClass("empty");
               }
-      		  }
+            
+              break;
+            }
+            case "checkbox-list" :
+            case "radiobutton-list" : {
+              val = f.find("input:checked");
+            
+              var v = [];
+            
+              val.each( function() {
+                v.push($(this).attr("value"));
+              });
+            
+              if (v.length) {
+                content = v.join(", ");
+                el.removeClass("empty");
+              } else {
+                content = "( none selected )";
+                td.addClass("none");
+              }
+              break;
+            }
+            case "color-picker" : {
+              var color = $.trim(f.find("input[type=text]").val());
+            
+              if (color) {
+                content = $('<div class="mf-color-swatch"><span style="background-color: ' + color + '"></span><strong>' + color + '</strong></div>');
+                el.removeClass("empty");
+              } else {
+                content = "( none )";
+                td.addClass("none");
+              }
+
+              break;
+            }
+            case "date" : {
+              content = $.trim(f.find("input[type=text]").val());
+
+              if (content == "") {
+                content = "( none )";
+                td.addClass("none");
+              } else {
+                th.addClass("mf-t-date-selected");
+                el.removeClass("empty");
+              }
+            
+              break;
+            }
+            case "file" : {
+              content = f.find("a.mf-file-view").attr("href");
+            
+              if (!content || content == "") {
+                content = "( none )";
+                td.addClass("none");
+              } else {
+                content = '<a href="' + content + '" target="_blank" class="mf-s-file-view">View File</a>';
+                el.removeClass("empty");
+              }
+              break;
+            }
+            case "image" : 
+            case "image-" : {
+              var img = f.find("img");
+              content = img.clone().attr("height", 60).attr("id", "s_" + img.attr("id"));
+
+              var src = img.attr("src");
+            
+              if (src && src.find) {
+                if (!src.find("noimage.jpg")) {
+                  el.removeClass("empty");
+                }
+              }
+              break;
+            }
+            case "listbox" : {
+              val = f.find("select").val();
+            
+              if (val) {
+                content = val.join(", ");
+                el.removeClass("empty");
+              } else {
+                content = "";
+              }
+            
+              if (content == "") {
+                content = "( none selected )";
+                td.addClass("none");
+              }
+              break;
+            }
+            case "multiline-textbox" :
+            case "markdown-textbox" : {
+              var ta = f.find("textarea");
+              var editor_text = ta.attr('id');
+            
+              if (tinyMCE) {
+                var editor = tinyMCE.get(editor_text);
+              
+                if (editor) {
+                  ta.attr('value', editor.getContent());
+                }
+        		  }
       		
-            content = $.stripTags(ta.val()).substring(0, 150);
+      		    var orig = $.stripTags(ta.val());
+              content = orig.substring(0, 150);
 
-            if (content == "") {
-              content = "( none )";
-              td.addClass("none");
-            } else {
-              el.removeClass("empty");
-              content += "&hellip;";
-            }
+              if (content == "") {
+                content = "( empty )";
+                td.addClass("none");
+              } else {
+                el.removeClass("empty");
+                
+                if (orig != content) {
+                  content += "&hellip;";
+                }
+              }
             
-            break;
-          }
-          case "related-type" :
-          case "dropdown-list" : {
-            var sel = f.find("select");
-            var val = sel.val();
+              break;
+            }
+            case "related-type" :
+            case "dropdown-list" : {
+              var sel = f.find("select");
+              var val = sel.val();
              
-            content = $.trim(sel.find("option:selected").text());
+              content = $.trim(sel.find("option:selected").text());
             
-            if (val == "") {
-              content = "( not selected )";
-              td.addClass("none");
-            } else {
-              el.removeClass("empty"); 
+              if (val == "") {
+                content = "( not selected )";
+                td.addClass("none");
+              } else {
+                el.removeClass("empty"); 
+              }
+            
+              break;
             }
+            case "audio" : {
+              var content = f.find('input[type=hidden]').val();
             
-            break;
+              if (content != "") {
+                el.removeClass("empty"); 
+              } else {
+                content = "( none )";
+                td.addClass("none");
+              }
+            
+              break;
+            
+            }
+            case "slider" : {
+              var content = f.find('input[type=hidden]').val();
+
+              if (content != "") {
+                content = "( " + content + " )";
+              }
+            
+              if (content != "0") {
+                el.removeClass("empty"); 
+              }
+              break;
+            }
+
           }
-          case "audio" : {
-            var content = f.find('input[type=hidden]').val();
-            
-            if (content != "") {
-              el.removeClass("empty"); 
-            } else {
-              content = "( none )";
-              td.addClass("none");
-            }
-            
-            break;
-            
+
+
+        
+          td.addClass(cn.join(" "));
+          th.addClass(cn.join(" "));
+        
+          // set the label (based on the label inside the field)
+        
+          var origLabel = $.trim(lb.html());
+          var exLabel = origLabel.substring(0, 28);
+        
+          if (origLabel != exLabel) {
+            exLabel = exLabel + "&hellip;";
           }
-          case "slider" : {
-            var content = f.find('input[type=hidden]').val();
-
-            if (content != "") {
-              content = "( " + content + " )";
-            }
-            
-            if (content != "0") {
-              el.removeClass("empty"); 
-            }
-            break;
-          }
-
-        }
-
-
         
-        td.addClass(cn.join(" "));
-        th.addClass(cn.join(" "));
+          th.html(exLabel);
+          td.html(content);
         
-        // set the label (based on the label inside the field)
-        
-        var origLabel = $.trim(lb.html());
-        var exLabel = origLabel.substring(0, 28);
-        
-        if (origLabel != exLabel) {
-          exLabel = exLabel + "&hellip;";
-        }
-        
-        th.html(exLabel);
-        td.html(content);
-        
-        d.thr.append(th);
-        d.tbr.append(td);
-        
-      });
+          d.thr.append(th);
+          d.tbr.append(td);
+          
+          el.mf_group_update_count();
+        });
       
-      if (el.hasClass("empty")) {
-        // if no data has been provided yet, hide the "add" button, since it's likely people will click this to try to add the initial record
-        // and this is not what the button does. We will show the button as soon as they expand the initial field.
-        el.find(".duplicate_button").hide();
-      }
+        if (el.hasClass("empty")) {
+          // if no data has been provided yet, hide the "add" button, since it's likely people will click this to try to add the initial record
+          // and this is not what the button does. We will show the button as soon as they expand the initial field.
+          el.find(".duplicate_button").hide();
+        }
         
-      el.find(".mf-group-loading").hide();
+        el.find(".mf-group-loading").hide();
 
-      d.container.append(d.table).insertAfter(d.fc.eq(0));
+        d.container.append(d.table).insertAfter(d.fc.eq(0));
 
-      d.container.find(".mf-s-file-view").windowopen({ width: 'aw', height: 'ah'});
+        d.container.find(".mf-s-file-view").windowopen({ width: 'aw', height: 'ah'});
       
-      d.container.jScrollPane({ selectorStrut: 'table', novscroll: true });
+        d.container.jScrollPane({ selectorStrut: 'table', novscroll: true });
     
-      
+      }
+    
     
     });
     
@@ -305,10 +315,33 @@
       var wrapper = $(this).closest(".write_panel_wrapper");
       var status = wrapper.find(".mf-group-count");
       
+      var toolbox = wrapper.find(".mf_toolbox");
+      
+      var buttons = wrapper.find(".mf-expand-all-button,.mf-collapse-all-button");
+      
+      toolbox.show();
+      buttons.show();
+      
       if (status) {
-        var count = wrapper.find(".magicfield_group").length;
-        var it = count == 1 ? "item" : "items";
-        status.html(count + " " + it);
+        var groups = wrapper.find(".magicfield_group");
+        var count = groups.length;
+        
+        if (count == 1) {
+          // check that the first element isn't empty
+          
+          if (groups.eq(0).hasClass("empty")) {
+            count = 0;
+            status.html("No items. Click summary below to create a new item.");
+            toolbox.hide();
+          } else {
+            status.html("1 item");
+          }
+          
+          buttons.hide();
+          
+        } else {
+          status.html(count + " items");
+        }
       }
       
     });
@@ -316,7 +349,7 @@
   
   $.fn.mf_group_show_save_warning = function() {
     return this.each( function() {
-      var warning = $(this).closest(".write_panel_wrapper").find(".mf-group-save-warning")
+      var warning = $(this).closest(".write_panel_wrapper").find(".mf-group-save-warning");
       
       if (warning.not(":visible")) {
         warning.fadeIn("normal");
@@ -327,16 +360,18 @@
   
   $.fn.mf_group_expand = function() {
     return this.each( function() {
-        
+
       var el = $(this);
       
+      el.data("mf_summarised", false);
+
         
       el.find(".collapse_button,.duplicate_button").fadeIn();
       var fields = $(this).find(".mf-field");
       fields.show();
     
       // set the editor in textarea
-  		add_editor_text();
+  		add_editor_text($(this));
   		add_color_picker($(this));
 
       // load any internal iframes - this speeds up the intial load time by a whole lot if there are a lot of file upload controls, since the browser doesn't load them all initially!
@@ -370,19 +405,48 @@
   });
   
   jQuery(document).ready(function(){
+    
+    var tt_template = 
+   '<div class="tt"> \
+    <div class="tthl"><div class="tthr"><div class="tth"></div></div></div> \
+    <div class="ttbl"><div class="ttbr"><div class="ttb"><div class="ttbc">#{content}</div></div></div></div> \
+    <div class="ttfl"><div class="ttfr"><div class="ttf"></div></div></div> \
+    </div>';
 
-    // update group counts
+    $('small.tip').live("mouseenter", function(event) {
+      var el = $(this);
+
+      if (!el.data("tt")) {
+        // create a tooltip
+        var fh = $.trim(el.find(".field_help").html());
+
+        if (fh && fh != "") {
+          var tt = $($.tmpl(tt_template, { content: fh }));
+          
+          tt.hide().appendTo("body");
+
+          // setup the reveal
+          el.revealTooltip({el: tt, affix: { to: 'nw', offset: [-12, 0] }});
+          el.data("tt", tt);
+
+          // show the tooltip
+          setTimeout( function() { el.reveal('show') }, 100 );
+        }
+      } 
+    });
     
     var wrappers = $('.write_panel_wrapper')
-    
-    wrappers.mf_group_update_count();
       
       wrappers.find(".mf-expand-all-button").live("click", function() {
         $(this).closest(".write_panel_wrapper").find(".magicfield_group").mf_group_expand();
+
+        return false;
       });
 
       wrappers.find(".mf-collapse-all-button").live("click", function() {
         $(this).closest(".write_panel_wrapper").find(".magicfield_group").mf_group_summary();
+        
+        return false;
       });
       
       
@@ -399,18 +463,29 @@
       $('.mf_message_error .error_magicfields').hide();
     
       mf_groups.mf_group_summary();
+      
+      wrappers.mf_group_update_count();
+
       mf_groups.live( "dblclick", function(event) {
         
         if (!$(event.target).closest("input,textarea,button,a").length) {
           // don't collapse if we double click on a summayr, form field, or link!
           $(this).closest(".magicfield_group").mf_group_summary();
         }
+        
       });
 
       $('.mf-group-summary').live( "click", function(event) {
         
         if (!$(event.target).closest(".jspTrack,a").length) {
-          $(this).closest(".magicfield_group").mf_group_expand();
+          var group = $(this).closest(".magicfield_group");
+          
+          if (group.hasClass("empty")) {
+            group.removeClass("empty");
+            group.mf_group_update_count();
+          }
+          
+          group.mf_group_expand();
           
           var cells = $(event.target).closest("td,th");
           
@@ -420,6 +495,8 @@
       
       mf_groups.find('.collapse_button').live( "click", function() {
         $(this).closest(".magicfield_group").mf_group_summary();
+        
+        return false;
       });
       
       
@@ -580,7 +657,7 @@
               
               jQuery("#"+div).before(newel);
         			// set the editor in textarea
-        			add_editor_text(); 
+        			add_editor_text(newel); 
         			add_color_picker(newel);
 			        
               newel.find('.mf_message_error .error_magicfields').hide();
@@ -666,25 +743,58 @@ deleteGroupDuplicate = function(div){
  * Add the editor in new textarea
  *
  */
-add_editor_text = function(){
-  tinyMCE.init(
-    jQuery.extend(true, {}, tinyMCEPreInit.mceInit, { 
-      editor_selector: "pre_editor", 
-      setup : function(ed) {
-        ed.onClick.add( function(ed, l) {
-          var el = ed.getElement();
-          if (el) {
-            jQuery(el).mf_group_show_save_warning();
-          }
-        })
-      }
-    })
-  );
-	jQuery(".Multiline_Textbox :input[type='textarea'].pre_editor").each( function(inputField){
-		var editor_text = jQuery(this).attr('id');
-		tinyMCE.execCommand('mceAddControl', true, editor_text); 
-		jQuery('#'+editor_text).removeClass('pre_editor');
-	});
+add_editor_text = function(context){
+  var $ = jQuery;
+  
+  var options = jQuery.extend(true, {}, tinyMCEPreInit.mceInit, { 
+    setup : function(ed) {
+      ed.onClick.add( function(ed, l) {
+        var el = ed.getElement();
+        if (el) {
+          jQuery(el).mf_group_show_save_warning().mf_group_update_count();
+        }
+      })
+    }
+  });
+  
+  
+  var doInit = true;
+  
+  if (context && context.length) {
+    // find textareas inside the context element (much faster than ALL available textareas)
+    
+    var editors = context.find('textarea.pre_editor');
+    
+    var ids = [];
+    
+    if (editors.length) {
+      // gather the ids of the editors
+      editors.each( function() {
+        ids.push($(this).attr("id"));
+      });
+      
+      options.elements = ids.join(",");
+      options.mode = "exact";
+      
+    } else {
+      options.editor_selector = "pre_editor";
+      doInit = false; // there are no editors, so don't initialise
+    }
+  
+  } else {
+    options.editor_selector = "pre_editor";
+  }
+  
+  if (doInit) {
+    tinyMCE.init(options);
+  
+  	jQuery(".Multiline_Textbox :input[type='textarea'].pre_editor", context).each( function(inputField){
+      var editor_text = jQuery(this).attr('id');
+  		tinyMCE.execCommand('mceAddControl', true, editor_text); 
+  		jQuery('#'+editor_text, context).removeClass('pre_editor');
+  	});
+  }
+  
 	jQuery(".markdowntextboxinterface:not(.markItUpEditor)").markItUp(mySettings);
 }
 
@@ -692,6 +802,7 @@ add_editor_text = function(){
  * Add the color picker, only inputs with class mf_color_picker
  */
 add_color_picker = function(context){
+  
   jQuery(".mf-cp", context).each( function() {
     var f = jQuery(this).closest('.mf-field');
     var input = f.find('input.mf_color_picker');
@@ -702,6 +813,7 @@ add_color_picker = function(context){
     input.attr('readonly', 'readonly');
     
     var val = jQuery.trim(input.val());
+    
     
     if (!jQuery(this).data("ColorPicker")) {
       jQuery(this).ColorPicker({

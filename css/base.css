@@ -62,6 +62,29 @@
 	display: block;
 }
 
+.mf-field label .name {
+  float: left;
+  margin-top: 1px;
+}
+
+.mf-field small.tip {
+  color: #5386B1;
+  margin-left: 10px;
+  padding-left: 20px;
+  background: url(../images/small-tip.png) no-repeat;
+  float: left;
+  line-height: 16px;
+}
+
+.mf-field small.tip span {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  height: 0;
+  width: 0;
+}
+
+
 .mf-field label .name em {
   font-style: normal;
   color: #666;
@@ -126,10 +149,7 @@
 .datepicker_mf{
   margin-left: 15%;
 }
-
-.mf-field small.tip {
-    color: #ff0000;
-}
+  
 /*test */
 .mf-field small.tip {
 	position: relative;
@@ -154,30 +174,8 @@
   background-image: url(../images/mf-upload-error.png); 
 }
 
-.mf-field small.tip span {
-	display: none;
-	position: absolute;
-	top: 20px;
-	left: -10px;
-	width: 125px;
-	padding: 5px;
-	z-index: 100;
-	background: #888;
-	color: #fff;
-        line-height: 1.5em;
-	-moz-border-radius: 5px; /* this works only in camino/firefox */
-	-webkit-border-radius: 5px; /* this is just for Safari */
-}
 
-.mf-field small:hover.tip {
-	font-size: 79%; /* this is just for IE */
-}
-
-.mf-field small:hover.tip span {
-	display: block;
-}
-
-.slider_numeber_show{
+.slider_numeber_show {
 	margin-top: -16px;
 	padding-left: 3px;
 }
@@ -294,10 +292,7 @@
   margin-right: 4px;
 }
 
-.write_panel_wrapper small.tip,
-.write_panel_wrapper small.tip:hover {
-  font-size: 10px;
-}
+
 
 .write_panel_wrapper .mf_toolbox {
   height: 22px;
@@ -925,6 +920,7 @@ input.button.disabled {
 }
 
 
+
 .write_panel_wrapper .delete_duplicate_button {
   margin-left: 14px;
 }
@@ -1053,5 +1049,85 @@ input.button.disabled {
 .colorpicker input {
   outline: none;
   height: 14px !important;
+}
+
+
+/* -- Tooltips -- */
+
+.tt {
+  position: absolute;
+  max-width: 400px;
+}
+
+.tth,  /* head */
+.tthl,
+.tthr {
+  height: 9px;
+  line-height: 0;
+  font-size: 0;
+}
+
+.tthl {
+  padding-left: 10px;
+  background: url(../images/tthl.png) no-repeat top left;
+}
+
+.tthr {
+  padding-right: 10px;
+  background: url(../images/tthr.png) no-repeat top right;
+}
+
+.tth {
+  background: url(../images/tth.png) repeat-x;
+}
+
+.ttb, /* body */
+.ttbl,
+.ttbr {
+  zoom: 100%;
+  overflow: hidden;
+}
+
+.ttbl {
+  padding-left: 4px;
+  background: url(../images/ttbl.png) repeat-y top left;
+}
+
+.ttbr {
+  padding-right: 4px;
+  background: url(../images/ttbr.png) repeat-y top right;
+}
+
+.ttb {
+  background: url(../images/ttb.png) repeat-x #FDFCE4;
+}
+
+.ttbc {
+  padding: 0 10px 2px 10px;
+  font-size: 11px;
+  color: #33330B;
+  line-height: 18px;
+}
+  
+.ttf, /* foot */
+.ttfl,
+.ttfr {
+  height: 16px;
+  line-height: 0;
+  font-size: 0;
+}
+
+.ttfl {
+  padding-left: 27px;
+  background: url(../images/ttfl.png) no-repeat bottom left;
+}
+
+.ttfr {
+  padding-right: 10px;
+  background: url(../images/ttfr.png) no-repeat bottom right;
+}
+
+.ttf {
+  background: url(../images/ttf.png) repeat-x;
 }
 

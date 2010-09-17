@@ -493,7 +493,7 @@
 				return function()
 				{
 					arrowScroll(dirX, dirY, this, ele);
-					//this.blur();
+					this.blur();
 					return false;
 				}
 			}
