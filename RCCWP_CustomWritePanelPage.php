@@ -407,9 +407,16 @@ class RCCWP_CustomWritePanelPage
 		global $mf_domain;
 		$custom_fields = RCCWP_CustomGroup::GetCustomFields($customGroupId);
 		foreach ($custom_fields as $field) :
+			if( isset( $field->properties['strict-max-length'] ) && $field->properties['strict-max-length'] == 1 ) {
+				if( $field->type == 'Multiline Textbox' ) {
+					$maxlength = ' <sup class="help_text strict">[max:'.( $field->properties['width']*$field->properties['height'] ).']</sup>';
+				}else {
+					$maxlength = ' <sup class="help_text strict">[max:'.$field->properties['size'].']</sup>';
+				}
+			}
 		?>
 			<tr>
-				<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-field')."&custom-field-id=$field->id"?> " ><?php if ($intended){ ?><img align="top" src="<?php echo MF_URI; ?>images/arrow_right.gif" alt=""/> <?php } ?><?php echo $field->description?></a><?php if( $field->required_field == 1 ) echo ' <span class="required">*</span>'; ?></td>
+				<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-field')."&custom-field-id=$field->id"?> " ><?php if ($intended){ ?><img align="top" src="<?php echo MF_URI; ?>images/arrow_right.gif" alt=""/> <?php } ?><?php echo $field->description . $maxlength?></a><?php if( $field->required_field == 1 ) echo ' <span class="required">*</span>'; ?></td>
 		  		<td><?php echo $field->name;
 				if( $field->type == 'Textbox' && isset( $field->properties['size'] ) ) { echo ' <sup class="help_text">['.$field->properties['size'].']</sup>'; }
 				if( $field->type == 'Multiline Textbox' && isset( $field->properties['height'] ) && isset( $field->properties['width'] ) ) { echo ' <sup class="help_text">['.$field->properties['height']. '&times;'. $field->properties['width'] .']</sup>'; };
