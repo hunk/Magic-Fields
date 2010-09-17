@@ -82,20 +82,9 @@ class RCCWP_CustomWritePanelPage
 				
 				<?php
 				$cats = get_categories( "get=all" );
-	
-				foreach ($cats as $cat) : 
-					$checked = "";
-					if(isset($customWritePanel->id) && !empty($customWritePanel->id))
-					{
-						if (in_array($cat->cat_ID, $customWritePanelCategoryIds))
-						{
-							$checked = "checked=\"checked\"";
-						}
-					}
-				?>
-					<input type="checkbox" name="custom-write-panel-categories[]" value="<?php echo $cat->cat_ID?>" <?php echo $checked?> /> <?php echo $cat->cat_name ?> <br/>
-				<?php
-				endforeach;
+				if(isset($customWritePanel->id) && !empty($customWritePanel->id)) {
+					RCCWP_CustomWritePanelPage::PrintNestedCats( &$cats, 0, 0, &$customWritePanelCategoryIds );
+				}
 				?>
 				
 			</td>
@@ -249,6 +238,22 @@ class RCCWP_CustomWritePanelPage
 		<?php
 	}
 	
+	function PrintNestedCats( $cats, $parent = 0, $depth = 0, $customWritePanelCategoryIds ) {
+		foreach ($cats as $cat) : 
+			if( $cat->parent == $parent ) {
+				$checked = "";
+				if (in_array($cat->cat_ID, $customWritePanelCategoryIds))
+				{
+					$checked = "checked=\"checked\"";
+				}
+				echo str_repeat('&nbsp;', $depth * 4);
+?>					<input type="checkbox" name="custom-write-panel-categories[]" value="<?php echo $cat->cat_ID?>" <?php echo $checked?> /> <?php echo $cat->cat_name ?> <br/>
+<?php				
+			RCCWP_CustomWritePanelPage::PrintNestedCats( &$cats, $cat->term_id, $depth+1, &$customWritePanelCategoryIds );
+			}
+		endforeach;
+	}				
+
 	function Edit()
 	{
 		global $mf_domain;
