@@ -492,7 +492,11 @@ class RCCWP_WritePostPage
 		}
 		
 		?>
-		<div class="mf-field <?php echo str_replace(" ","_",$customField->type); ?>" id="row_<?php echo $inputCustomName?>"<?php echo $lang_switch;?>>
+		<div class="mf-field <?php echo str_replace(" ","_",$customField->type);
+		if( isset( $customField->properties['strict-max-lenght'] ) && $customField->properties['strict-max-lenght'] == 1 ) {
+			echo ' maxlength';
+		}
+		?>" id="row_<?php echo $inputCustomName?>"<?php echo $lang_switch;?>>
 			<label for="<?php echo $inputCustomName?>">
 				<?php
 					if(empty($titleCounter)){
@@ -503,7 +507,16 @@ class RCCWP_WritePostPage
 				if( $customField->required_field == 1 ) { ?> <span class="required">*</span><?php }
 				if (!empty($customFieldHelp)) {?>
 					<small class="tip">(what's this?)<span class="field_help"><?php echo $customFieldHelp; ?></span></small>
-				<?php } ?>
+				<?php }
+				if( isset( $customField->properties['strict-max-lenght'] ) && $customField->properties['strict-max-lenght'] == 1 ) {
+					if( $customField->type == 'Multiline Textbox' ) {
+						$charsRemainingSize = $customField->properties['height']*$customField->properties['width'];
+					}else {
+						$charsRemainingSize = $customField->properties['size'];
+					}
+				?><span class="charsRemaining" title="<?php _e('Characters Left', $mf_domain); ?>"><?=$charsRemainingSize?></span><?php
+				}
+				?>
 			</label>
 			<span>
 				<p class="error_msg_txt" id="fieldcellerror_<?php echo $inputCustomName?>" style="display:none"></p>
@@ -790,6 +803,12 @@ class RCCWP_WritePostPage
 		$inputWidth = (int)$customField->properties['width'];
 		$hideEditor = (int)$customField->properties['hide-visual-editor'];
 		
+		if( isset( $customField->properties['strict-max-lenght'] ) && $customField->properties['strict-max-lenght'] == 1 ) {
+			$maxlength = ' maxlength="'. ($customField->properties['height'] * $customField->properties['width']) .'"';
+		}else {
+			$maxlength = '';
+		}
+		
 		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 		
@@ -811,7 +830,19 @@ class RCCWP_WritePostPage
 			$pre_text='';
 		} ?>
 		<div class="mul_mf">
-		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> <?php echo $classEditor; ?> <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $idField; ?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"><?php echo $value?></textarea>
+		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> <?php echo $classEditor; ?> <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $idField; ?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"<?php echo $maxlength?>><?php echo $value?></textarea>
+<?php
+if( isset( $customField->properties['strict-max-lenght'] ) && $customField->properties['strict-max-lenght'] == 1 ) {
+?>		<script language="javascript">
+			jQuery(document).ready(function(){			
+				var maximal = parseInt(jQuery('#<?php echo $idField; ?>').attr('maxlength'));
+				var actual = parseInt(jQuery('#<?php echo $idField; ?>').val().length);
+				jQuery('#<?php echo $idField; ?>').parents(".mf-field").find('.charsRemaining').html(maximal - actual);
+			});
+		</script>
+<?php
+}
+?>
 		</div>
 		
 		<?php if (!$hideEditor){?></div><?php } ?>
@@ -844,9 +875,16 @@ class RCCWP_WritePostPage
 		if ($field_group->at_right){
 			if ($inputSize>14) $inputSize = 14;
 		}
+
+		if( isset( $customField->properties['strict-max-lenght'] ) && $customField->properties['strict-max-lenght'] == 1 ) {
+			$maxlength = ' maxlength="'.$customField->properties['size'].'"';
+		}else {
+			$maxlength = '';
+		}
+
 		?>
 		<div class="mf_custom_field">
-		<input <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> textboxinterface" tabindex="3" id="<?php echo $idField ?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>" />
+		<input <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> textboxinterface" tabindex="3" id="<?php echo $idField ?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>"<?php echo $maxlength?> />
 		</div>
 
 			<?php if ($customField->required_field){ ?>
