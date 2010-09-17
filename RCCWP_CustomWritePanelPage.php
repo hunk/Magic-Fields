@@ -413,6 +413,8 @@ class RCCWP_CustomWritePanelPage
 				}else {
 					$maxlength = ' <sup class="help_text strict">[max:'.$field->properties['size'].']</sup>';
 				}
+			}else {
+				$maxlength = '';
 			}
 		?>
 			<tr>
