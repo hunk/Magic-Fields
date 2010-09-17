@@ -60,6 +60,14 @@
 	margin-bottom: 10px;
 	display: block;
 }
+.mf-field label .charsRemaining {
+	position: absolute;
+	right: 10px;
+	color: #999;
+	}
+	.mf-field label .charsRemaining.extreme {
+		color: #F00;
+		}
 
 .textboxinterface{
 	width: 100%;
