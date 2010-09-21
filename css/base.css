@@ -953,6 +953,11 @@ input.button.disabled {
   min-width: 300px;
 }
 
+.mf-group-summary .mf-t-multiline-textbox.none,
+.mf-group-summary .mf-t-markdown-textbox.none {
+  min-width: 80px;
+}
+
 
 /* -- Toolbox Modifications -- */
 
