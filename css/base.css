@@ -69,7 +69,7 @@
 }
 
 .mf-field small.tip {
-  color: #5386B1;
+  color: #6F9ABE;
   margin-left: 10px;
   padding-left: 20px;
   background: url(../images/small-tip.png) no-repeat;
@@ -219,6 +219,12 @@
   padding-bottom: 6px;
 }
 
+.write_panel_wrapper .mf-field-duplicate {
+  background-image: none;
+  border-top: none;
+  padding-top: 0px;
+}
+
 .write_panel_wrapper .inside .mf-field:first-child {
   border-top: none;
   padding-top: 0px;
@@ -312,13 +318,18 @@
 .write_panel_wrapper a.delete_duplicate_field,
 .write_panel_wrapper a.duplicate_field,
 .write_panel_wrapper a.collapse_button {
-  color: #5686b2;
+  color: #999;
   text-decoration: none;
   line-height: 16px;
   font-weight: normal;
   padding-left: 19px;
   background-repeat: no-repeat;
   display: block;
+  font-size: 10px;
+}
+
+.write_panel_wrapper a.collapse_button {
+  color: #5686B2;
 }
 
 .write_panel_wrapper .delete_duplicate_field,
@@ -346,9 +357,42 @@
   float: left;
 }
 
+.write_panel_wrapper .duplicate_button span,
+.write_panel_wrapper .duplicate_field span {
+  color: #39A944;
+}
+
+
 .write_panel_wrapper .delete_duplicate_button,
 .write_panel_wrapper .delete_duplicate_field {
   background-image: url(../images/mf-toolbox-delete-duplicate-button.png);
+}
+
+.write_panel_wrapper .delete_duplicate_button span,
+.write_panel_wrapper .delete_duplicate_field span {
+  color: #BB3939;
+}
+
+
+
+.write_panel_wrapper .duplicate_button:hover,
+.write_panel_wrapper .duplicate_field:hover {
+  color: #666 !important;
+}
+
+.write_panel_wrapper .delete_duplicate_button:hover,
+.write_panel_wrapper .delete_duplicate_field:hover {
+  color: #666 !important;
+}
+
+.write_panel_wrapper .duplicate_button:hover span,
+.write_panel_wrapper .duplicate_field:hover span {
+  color: #26702d;
+}
+
+.write_panel_wrapper .delete_duplicate_button:hover span,
+.write_panel_wrapper .delete_duplicate_field:hover span {
+  color: #802727;
 }
 
 

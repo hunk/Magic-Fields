@@ -515,9 +515,9 @@ class RCCWP_WritePostPage
 					<?php
 						if($groupCounter != 1):
 						?>
-							<a class ="delete_duplicate_button" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"><?php _e('Remove '.$sgn, $mf_domain); ?></a>
+							<a class ="delete_duplicate_button" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"><span><?php _e('Remove', $mf_domain); ?></span> <?php echo $sgn ?></a>
 						<?php else:?> 
-							<a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);">Add Another <?=$sgn?></a>
+							<a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);"><span>Add Another</span> <?=$sgn?></a>
 					   <?php endif;?> 
 				</span>
 			</div>
@@ -549,9 +549,14 @@ class RCCWP_WritePostPage
  		if( $fieldCounter > 1) $titleCounter = " (<span class='counter_{$customFieldName}_{$groupCounter}'>$fieldCounter</span>)";
 
  		$field_group = RCCWP_CustomGroup::Get($customField->group_id);
-
+    
+    $duplicateClass = "";
+    if ($fieldCounter > 1) {
+      $duplicateClass = "mf-field-duplicate";
+    }
+    
 		?>
-		<div class="mf-field mf-t-<?php echo strtolower(str_replace(" ","-",$customField->type)); ?> <?php echo str_replace(" ","_",$customField->type); ?>" id="row_<?php echo $inputCustomName?>">
+		<div class="mf-field <?php echo $duplicateClass ?> mf-t-<?php echo strtolower(str_replace(" ","-",$customField->type)); ?> <?php echo str_replace(" ","_",$customField->type); ?>" id="row_<?php echo $inputCustomName?>">
 			<div class="mf-field-title">
 			<label for="<?php echo $inputCustomName?>">
 				<?php
@@ -631,13 +636,13 @@ class RCCWP_WritePostPage
 				if($fieldCounter == 1) {
 					?>
 					<?php if($customField->duplicate != 0 ){ ?>
-            <a href="javascript:void(0);" id="type_handler-<?php echo $inputCustomName ?>" class="typeHandler duplicate_field"><?php _e('Add Another '.$cfd, $mf_domain); ?></a>
+            <a href="javascript:void(0);" id="type_handler-<?php echo $inputCustomName ?>" class="typeHandler duplicate_field"><span><?php _e('Add Another', $mf_domain); ?></span> <?php echo $cfd ?></a>
 					<?php } ?>
 					<?php
 				}
 				else {
 				?>
-					<a class="delete_duplicate_field" href="javascript:void(0)" id="delete_field_repeat-<?php echo $inputCustomName?>"><?php _e('Remove '.$cfd, $mf_domain); ?></a>
+					<a class="delete_duplicate_field" href="javascript:void(0)" id="delete_field_repeat-<?php echo $inputCustomName?>"><span><?php _e('Remove', $mf_domain); ?></span> <?php echo $cfd ?></a>
 				<?php
 				}
 				?>
