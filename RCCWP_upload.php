@@ -208,7 +208,7 @@ input.mf-file {
 }
 
 label.label-file {
-  font-size: 11px;
+  font-size: 12px;
   padding-left: 2px;
 }
 

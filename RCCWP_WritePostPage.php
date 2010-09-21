@@ -183,6 +183,11 @@ class RCCWP_WritePostPage
 		wp_enqueue_script(	'jqueryreveal', 
 							MF_URI.'js/jquery.reveal.min.js'
 						);
+
+    //load zoombox plugin (for transition between field groups and summaries)
+		wp_enqueue_script(	'jqueryzoombox', 
+							MF_URI.'js/jquery.zoombox.js'
+						);
 					
           
 
@@ -458,6 +463,7 @@ class RCCWP_WritePostPage
       
       <div>
 			<div class="inside">
+			<div class="mf-fields">
 				<?php	
 					foreach ($customFields as $field) {
 
@@ -491,11 +497,15 @@ class RCCWP_WritePostPage
 						<input type="text" name="c<?php echo $inputName ?>Counter" id="c<?php echo $inputName ?>Counter" value='<?php echo $top ?>' /> 
 					</span>
 				<?php } ?>
+      </div>
+	    <!-- /.mf-fields -->
+
 			<?php
 				if( $customGroup->duplicate != 0 ){
 				  $sgn = Inflect::singularize($customGroup->name);
 			?>
 			
+	    
 			<div class="mf_toolbox">
 				<span class="mf_counter sortable_mf" id="counter_<?php echo $customGroup->id;?>_<?php echo $groupCounter;?>"><?php echo $order;?></span>
 				<span class="hndle sortable_mf row_mf">&nbsp;</span>
@@ -530,7 +540,7 @@ class RCCWP_WritePostPage
 		$customField = RCCWP_CustomField::Get($customFieldId);
 		$customFieldName = $customField->name;
 		$customFieldTitle = attribute_escape($customField->description);
-		$customFieldHelp = htmlentities($customField->help_text,ENT_COMPAT,'UTF-8');
+		$customFieldHelp = $customField->help_text; // htmlentities($customField->help_text,ENT_COMPAT,'UTF-8');
 		$groupId = $customGroup_id;
 		$inputCustomName = $customFieldId."_".$groupCounter."_".$fieldCounter."_".$groupId."_".$customFieldName; // Create input tag name
 		

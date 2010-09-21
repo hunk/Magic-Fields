@@ -29,8 +29,8 @@ class RCCWP_SWFUpload
 			</div>
 			<table border="0">
 				<tr >
-					<td style="border-bottom-width: 0px; padding: 0;"><label for="upload_url"><?php _e('Or URL', $mf_domain); ?>:</label></td>
-					<td style="border-bottom-width: 0px">
+					<td style="border-bottom-width: 0px; padding: 0"><label for="upload_url"><?php _e('Or URL', $mf_domain); ?>:</label></td>
+					<td style="border-bottom-width: 0px; padding-left: 4px;">
 						<input id="upload_url_<?php echo $idField;  ?>"
 							name="upload_url_<?php echo $inputName ?>"
 							type="text"
