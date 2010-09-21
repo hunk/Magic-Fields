@@ -69,13 +69,15 @@
 }
 
 .mf-field small.tip {
-  color: #6F9ABE;
+  color: #5d8eb6;
   margin-left: 10px;
   padding-left: 20px;
   background: url(../images/small-tip.png) no-repeat;
   float: left;
   line-height: 16px;
   cursor: default;
+  font-size: 10px;
+  font-weight: normal;
 }
 
 .mf-field small.tip span {
@@ -335,7 +337,7 @@
 .write_panel_wrapper .delete_duplicate_field,
 .write_panel_wrapper .duplicate_field {
   margin-left: 2px;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .write_panel_wrapper .mf-duplicate-controls {
@@ -350,10 +352,16 @@
 }
 
 
-.write_panel_wrapper .duplicate_button,
-.write_panel_wrapper .duplicate_field {
+.write_panel_wrapper .duplicate_button {
   background-image: url(../images/mf-toolbox-duplicate-button.png);
   padding-left: 19px;
+  float: left;
+}
+
+.write_panel_wrapper .duplicate_field {
+  background-image: url(../images/duplicate-field.png);
+  padding-left: 16px !important;
+  line-height: 14px !important;
   float: left;
 }
 
@@ -363,10 +371,17 @@
 }
 
 
-.write_panel_wrapper .delete_duplicate_button,
-.write_panel_wrapper .delete_duplicate_field {
+.write_panel_wrapper .delete_duplicate_button {
   background-image: url(../images/mf-toolbox-delete-duplicate-button.png);
 }
+
+.write_panel_wrapper .delete_duplicate_field {
+  background-image: url(../images/delete-duplicate-field.png);
+  padding-left: 16px !important;
+  line-height: 14px !important;
+  float: left;
+}
+
 
 .write_panel_wrapper .delete_duplicate_button span,
 .write_panel_wrapper .delete_duplicate_field span {

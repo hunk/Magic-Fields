@@ -707,7 +707,7 @@
 			        
               newel.find('.mf_message_error .error_magicfields').hide();
 			        newel.fadeIn();
-
+              newel.mf_group_show_save_warning();
 			        
   			//fixing the order in the indexes of the custom fields
   		    fixcounter("counter_"+counter_field);
@@ -762,6 +762,7 @@
               		    moveAddToLast(jQuery("#write_panel_wrap_"+customGroupID));
                       newel.find("input,textarea").eq(0).focus();
                       newel.mf_group_update_count();
+                      newel.mf_group_show_save_warning();
                       
                       //jQuery.scrollTo(newel, 500);
                   }

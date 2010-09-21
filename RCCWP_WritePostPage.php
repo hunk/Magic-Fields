@@ -544,11 +544,14 @@ class RCCWP_WritePostPage
 		$groupId = $customGroup_id;
 		$inputCustomName = $customFieldId."_".$groupCounter."_".$fieldCounter."_".$groupId."_".$customFieldName; // Create input tag name
 		
+		
 		$inputName = "magicfields[{$customFieldName}][{$groupCounter}][{$fieldCounter}]";
  		if( $fieldCounter > 1 && $customField->duplicate == 0 ) return ;
  		if( $fieldCounter > 1) $titleCounter = " (<span class='counter_{$customFieldName}_{$groupCounter}'>$fieldCounter</span>)";
 
  		$field_group = RCCWP_CustomGroup::Get($customField->group_id);
+    
+    $fieldCustomClass = "mf-field-$customFieldName"; // allows some special styling in wordpress filters
     
     $duplicateClass = "";
     if ($fieldCounter > 1) {
@@ -556,7 +559,7 @@ class RCCWP_WritePostPage
     }
     
 		?>
-		<div class="mf-field <?php echo $duplicateClass ?> mf-t-<?php echo strtolower(str_replace(" ","-",$customField->type)); ?> <?php echo str_replace(" ","_",$customField->type); ?>" id="row_<?php echo $inputCustomName?>">
+		<div class="mf-field <?php echo $duplicateClass ?> <?php echo $fieldCustomClass ?> mf-t-<?php echo strtolower(str_replace(" ","-",$customField->type)); ?> <?php echo str_replace(" ","_",$customField->type); ?>" id="row_<?php echo $inputCustomName?>">
 			<div class="mf-field-title">
 			<label for="<?php echo $inputCustomName?>">
 				<?php
