@@ -184,12 +184,6 @@ class RCCWP_WritePostPage
 							MF_URI.'js/jquery.reveal.min.js'
 						);
 
-    //load zoombox plugin (for transition between field groups and summaries)
-		wp_enqueue_script(	'jqueryzoombox', 
-							MF_URI.'js/jquery.zoombox.js'
-						);
-					
-          
 
 		$hide_visual_editor = RCCWP_Options::Get('hide-visual-editor');
 		if ($hide_visual_editor == '' || $hide_visual_editor ==  0){
@@ -422,6 +416,23 @@ class RCCWP_WritePostPage
 			}else{
 			?>
 				<div class="write_panel_wrapper" id="write_panel_wrap_<?php echo $group->id;?>">
+
+      <?php if ($group->duplicate) : ?>
+				
+        <div class="mf-group-controls">
+          <div class="mf-group-count"></div>
+          <div class="buttons">
+            <a href="#" class="mf-expand-all-button">Expand All</a>
+            <a href="#" class="mf-collapse-all-button">Collapse All</a>
+          </div>
+        
+        </div>
+        
+        <?php endif; ?>
+        
+        <div class="mf-group-save-warning">Note: to save your changes you must also <strong>Publish or Update</strong> this <?php echo $post->post_type?>.</div> 
+
+
 				<?php
 					RCCWP_WritePostPage::GroupDuplicate($group,1,1,false);
 					$gc = 1;
@@ -682,6 +693,8 @@ class RCCWP_WritePostPage
 	function CheckboxListInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		$customFieldId = '';
 		
+		$defClass = '';
+		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
 		$values = array();
@@ -689,12 +702,13 @@ class RCCWP_WritePostPage
 			$customFieldId = $customField->id;
 			$values = (array) RCCWP_CustomField::GetCustomFieldValues(false, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 		}else{
+		  $defClass = "mf-default";
 			$values = $customField->default_value;
 		}
 		
 		?>
 		
-		<div class="mf_custom_field">
+		<div class="mf_custom_field <?php echo $defClass ?>">
 		<?php
 		foreach ($customField->options as $option) :
 			$checked = in_array($option, (array)$values) ? 'checked="checked"' : '';
@@ -719,6 +733,9 @@ class RCCWP_WritePostPage
 	{
 		global $mf_domain;
 		$customFieldId = '';
+		
+		$defClass = '';
+
 		if (isset($_REQUEST['post']))
 		{
 			$customFieldId = $customField->id;
@@ -726,13 +743,14 @@ class RCCWP_WritePostPage
 		}
 		else
 		{
+		  $defClass = "mf-default";
 			$value = $customField->default_value[0];
 		}
 		
 		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 		?>
-		<div class="mf_custom_field">
+		<div class="mf_custom_field <?php echo $defClass ?>">
 		<select tabindex="3" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf" name="<?php echo $inputName?>">
 			<option value=""><?php _e('--Select--', $mf_domain); ?></option>
 		
@@ -880,19 +898,22 @@ class RCCWP_WritePostPage
 	function ListboxInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		$customFieldId = '';
+		$defClass = "";
+
 		if (isset($_REQUEST['post'])){
 			$customFieldId = $customField->id;
 			$values = (array) RCCWP_CustomField::GetCustomFieldValues(false, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 			
 		}else{
 			$values = $customField->default_value;
+		  $defClass = "mf-default";
 		}
 		
 		$inputSize = (int)$customField->properties['size'];
 		$requiredClass = "mf_listbox";
 		if ($customField->required_field) $requiredClass = "mf_listbox field_required";
 		?>
-		<div class="mf_custom_field">
+		<div class="mf_custom_field <?php echo $defClass ?>">
 		<select <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf"  tabindex="3" id="<?php echo $idField;?>" name="<?php echo $inputName?>[]" multiple size="<?php echo $inputSize?>" style="height: auto;">
 		
 		<?php
@@ -1159,7 +1180,8 @@ class RCCWP_WritePostPage
 	
 	function RadiobuttonListInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		$customFieldId = '';
-		
+    $defClass = "";
+
 		if (isset($_REQUEST['post']))
 		{
 			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
@@ -1167,9 +1189,10 @@ class RCCWP_WritePostPage
 		else
 		{
 			$value = $customField->default_value[0];
+		  $defClass = "mf-default";
 		}
 		?>
-		<div class="mf_custom_field">
+		<div class="mf_custom_field <?php echo $defClass ?>">
 		<?php
 		foreach ($customField->options as $option) :
 			$checked = $option == $value ? 'checked="checked"' : '';
@@ -1373,6 +1396,8 @@ class RCCWP_WritePostPage
 	
 	function SliderInterface($customField, $inputName, $groupCounter, $fieldCounter,$fieldValue = NULL){
 		
+    $defClass = '';
+
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
 		$customFieldId = $customField->id;
@@ -1380,6 +1405,7 @@ class RCCWP_WritePostPage
 		$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
 		}else{
 			$value = 0;
+      $defClass = 'mf-default';
 		}
 
 		if($fieldValue){
@@ -1389,6 +1415,7 @@ class RCCWP_WritePostPage
 				$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
 			}else{
 				$value = 0;
+        $defClass = 'mf-default';
 			}
 		}
 		
@@ -1420,7 +1447,7 @@ class RCCWP_WritePostPage
 						});
 				});
 			</script>
-			<div id='slider_<?php echo $idField; ?>' class="ui-slider-2">
+			<div id='slider_<?php echo $idField; ?>' class="mf_custom_field  <?php echo $defClass ?> ui-slider-2">
 				<div class='ui-slider-handle'>
 					<div class="slider_numeber_show" id="slide_value_<?php echo $idField; ?>">
 						<?php echo $value?>

@@ -70,13 +70,14 @@
         
           var tc = t.replace("mf-t-", "");
         
+          var def = f.find(".mf_custom_field").hasClass("mf-default");
         
           // derive the content display
           switch (tc) {
           
             case "textbox" : {
               var orig = $.trim(f.find("input[type=text]").val());
-              content = $.stripTags(orig).substring(0, 50);
+              content = $.stripTags(orig).substring(0, 70);
             
               if (content == "") {
                 content = "( empty )";
@@ -86,7 +87,7 @@
                 if (orig != content) {
                   content = content + "&hellip;";
                 }
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               }
             
               break;
@@ -101,7 +102,7 @@
               } else {
                 th.addClass("mf-t-checkbox-checked");
                 content = "( checked )";
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               }
             
               break;
@@ -118,7 +119,7 @@
             
               if (v.length) {
                 content = v.join(", ");
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               } else {
                 content = "( none selected )";
                 td.addClass("none");
@@ -131,7 +132,7 @@
             
               if (color) {
                 content = $('<div class="mf-color-swatch"><span style="background-color: ' + color + '"></span><strong>' + color + '</strong></div>');
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               } else {
                 content = "( none )";
                 td.addClass("none");
@@ -149,7 +150,7 @@
                 th.addClass("none");
               } else {
                 th.addClass("mf-t-date-selected");
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               }
             
               break;
@@ -163,7 +164,7 @@
                 th.addClass("none");
               } else {
                 content = '<a href="' + content + '" target="_blank" class="mf-s-file-view">View File</a>';
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               }
               break;
             }
@@ -174,11 +175,13 @@
 
               var src = img.attr("src");
             
-              if (src && src.find) {
-                if (!src.find("noimage.jpg")) {
-                  el.removeClass("empty");
+              if (src && src.search) {
+                
+                if (src.search("noimage.jpg") == -1) {
+                  if (!def) { el.removeClass("empty"); }
                 } else {
                   th.addClass("none");
+                  td.addClass("none");
                 }
               }
               break;
@@ -188,7 +191,7 @@
             
               if (val) {
                 content = val.join(", ");
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               } else {
                 content = "";
               }
@@ -221,7 +224,7 @@
                 td.addClass("none");
                 th.addClass("none");
               } else {
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
                 
                 if (orig != content) {
                   content += "&hellip;";
@@ -237,12 +240,12 @@
              
               content = $.trim(sel.find("option:selected").text());
             
-              if (val == "") {
+              if (val == "" || def) {
                 content = "( not selected )";
                 td.addClass("none");
                 th.addClass("none");
               } else {
-                el.removeClass("empty"); 
+                if (!def) { el.removeClass("empty"); } 
               }
             
               break;
@@ -251,7 +254,7 @@
               var content = f.find('input[type=hidden]').val();
             
               if (content != "") {
-                el.removeClass("empty"); 
+                if (!def) { el.removeClass("empty"); } 
               } else {
                 content = "( none )";
                 td.addClass("none");
@@ -269,13 +272,17 @@
               }
             
               if (content != "0") {
-                el.removeClass("empty"); 
+                if (!def) { el.removeClass("empty"); } 
               }
               break;
             }
 
           }
 
+          if (def) {
+            th.addClass("none");
+            td.addClass("none");
+          }
         
           td.addClass(cn.join(" "));
           th.addClass(cn.join(" "));
@@ -300,6 +307,14 @@
           // if no data has been provided yet, hide the "add" button, since it's likely people will click this to try to add the initial record
           // and this is not what the button does. We will show the button as soon as they expand the initial field.
           el.find(".duplicate_button").hide();
+        }
+        
+        var lth = d.table.find("thead th:last");
+
+        d.container.removeClass("last-none");
+        
+        if (lth.hasClass("none")) {
+          d.container.addClass("last-none");
         }
         
         el.find(".mf-group-loading").hide();
@@ -346,6 +361,8 @@
       var wrapper = $(this).closest(".write_panel_wrapper");
       var status = wrapper.find(".mf-group-count");
       
+      var gc = wrapper.find(".mf-group-controls");
+      
       var toolbox = wrapper.find(".mf_toolbox");
       
       var btca = wrapper.find('.mf-collapse-all-button');
@@ -357,6 +374,8 @@
       buttons.show();
       
       if (status) {
+        
+        gc.removeClass("hl");
         var groups = wrapper.find(".magicfield_group");
         var count = groups.length;
         
@@ -367,6 +386,7 @@
             count = 0;
             status.html("No items. Click summary below to create a new item.");
             toolbox.hide();
+            gc.addClass("hl");
           } else {
             status.html("1 item");
           }
@@ -427,6 +447,8 @@
       
       fc.show();
 
+      fc.find("input,textrea,select").eq(0).focus();
+      
       if (el.data("mf_group_summary")) {
         // remove the group summary
         el.find(".mf-group-summary").remove();
@@ -500,6 +522,7 @@
       // make the save warning appear when fields are clicked
       
       mf_groups.find("input,select,textarea").live("change", function() {
+        $(this).closest(".mf_custom_field").removeClass("mf-default");
         $(this).mf_group_show_save_warning();
         $('#mf-publish-errors').hide();
       });

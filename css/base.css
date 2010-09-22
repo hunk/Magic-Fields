@@ -310,7 +310,7 @@
   padding-left: 8px;
   padding-right: 8px;
   padding-top: 6px;
-  background: url(../images/mf_toolbox.png) repeat-x #F3F3F3;
+  background: #F3F3F3;
   border-top: 1px solid #EAEAEA;
   border-bottom: 1px solid #EAEAEA;
 }
@@ -544,9 +544,14 @@
   padding-left: 2px;
 }
  
+.mf-group-controls.hl {
+  background: url(../images/small-tip.png) no-repeat 6px 6px;
+  padding-left: 24px;
+}
+ 
 .mf-group-save-warning {
   display: none;
-  background: #ffffee url(../images/mf-group-save-warning.png) no-repeat 6px 6px;
+  background: #ffffee url(../images/mf-group-save-warning.png) no-repeat 6px 5px;
   padding: 8px 10px 8px 28px;
   border-bottom: 1px solid #EAEAEA;
 }
@@ -674,16 +679,26 @@ input.button.disabled {
 
 .mf-group-summary {
   cursor: pointer;
-  background-color: #F8F8F8;
+  background-color: #fbfbfb;
 	width: 100%;
 	height: auto;
 	max-height: 114px;
 }
 
+.mf-group-summary.last-none {
+  background-color: #F7F7F7; 
+}
 
 
 .mf-group-summary .jspPane:hover,
 .mf-group-summary table:hover {
+  background-color: #FFF;
+}
+
+.mf-group-summary .jspPane:hover td,
+.mf-group-summary .jspPane:hover th,
+.mf-group-summary table:hover td,
+.mf-group-summary table:hover th {
   background-color: #FFF;
 }
 
@@ -694,6 +709,7 @@ input.button.disabled {
   border-right: 1px solid #DEDEDE;
   vertical-align: top;
   min-width: 80px;
+  background-color: #fbfbfb;
 }
 
 .mf-group-summary table:hover td,
@@ -750,7 +766,8 @@ input.button.disabled {
 
 .mf-group-summary tbody td.none,
 .mf-group-summary thead th.none {
-  color: #aaa;
+  color: #999;
+  background-color: #f7f7f7;
 } 
 
 .mf-group-summary th.mf-t-checkbox,
@@ -944,8 +961,9 @@ input.button.disabled {
   max-width: 200px;
 }
 
-.mf-group-summary .mf-t-text {
-  width: 100px;
+.mf-group-summary table td.mf-t-textbox,
+.mf-group-summary table th.mf-t-textbox {
+  min-width: 140px;
 }
 
 .mf-group-summary .mf-t-multiline-textbox,
