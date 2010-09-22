@@ -521,11 +521,17 @@
       
       // make the save warning appear when fields are clicked
       
-      mf_groups.find("input,select,textarea").live("change", function() {
+      var fieldchange = function() {
+        $(this).closest(".magicfield_group").find(".mf-default").removeClass("mf-default");
         $(this).closest(".mf_custom_field").removeClass("mf-default");
         $(this).mf_group_show_save_warning();
         $('#mf-publish-errors').hide();
-      });
+      };
+         
+      mf_groups.find("input[type=text],textarea").live("keydown", fieldchange);
+      mf_groups.find("input[type=checkbox],input[type=radio]").live("click", fieldchange);
+      mf_groups.find("select").live("change", fieldchange);
+
       
       
       $('.mf_message_error .error_magicfields').hide();
