@@ -183,8 +183,7 @@ class RCCWP_WritePostPage
 		wp_enqueue_script(	'jqueryreveal', 
 							MF_URI.'js/jquery.reveal.min.js'
 						);
-					
-          
+
 
 		$hide_visual_editor = RCCWP_Options::Get('hide-visual-editor');
 		if ($hide_visual_editor == '' || $hide_visual_editor ==  0){
@@ -417,6 +416,23 @@ class RCCWP_WritePostPage
 			}else{
 			?>
 				<div class="write_panel_wrapper" id="write_panel_wrap_<?php echo $group->id;?>">
+
+      <?php if ($group->duplicate) : ?>
+				
+        <div class="mf-group-controls">
+          <div class="mf-group-count"></div>
+          <div class="buttons">
+            <a href="#" class="mf-expand-all-button">Expand All</a>
+            <a href="#" class="mf-collapse-all-button">Collapse All</a>
+          </div>
+        
+        </div>
+        
+        <?php endif; ?>
+        
+        <div class="mf-group-save-warning">Note: to save your changes you must also <strong>Publish or Update</strong> this <?php echo $post->post_type?>.</div> 
+
+
 				<?php
 					RCCWP_WritePostPage::GroupDuplicate($group,1,1,false);
 					$gc = 1;
@@ -458,6 +474,7 @@ class RCCWP_WritePostPage
       
       <div>
 			<div class="inside">
+			<div class="mf-fields">
 				<?php	
 					foreach ($customFields as $field) {
 
@@ -491,11 +508,15 @@ class RCCWP_WritePostPage
 						<input type="text" name="c<?php echo $inputName ?>Counter" id="c<?php echo $inputName ?>Counter" value='<?php echo $top ?>' /> 
 					</span>
 				<?php } ?>
+      </div>
+	    <!-- /.mf-fields -->
+
 			<?php
 				if( $customGroup->duplicate != 0 ){
 				  $sgn = Inflect::singularize($customGroup->name);
 			?>
 			
+	    
 			<div class="mf_toolbox">
 				<span class="mf_counter sortable_mf" id="counter_<?php echo $customGroup->id;?>_<?php echo $groupCounter;?>"><?php echo $order;?></span>
 				<span class="hndle sortable_mf row_mf">&nbsp;</span>
@@ -505,9 +526,9 @@ class RCCWP_WritePostPage
 					<?php
 						if($groupCounter != 1):
 						?>
-							<a class ="delete_duplicate_button" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"><?php _e('Remove '.$sgn, $mf_domain); ?></a>
+							<a class ="delete_duplicate_button" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"><span><?php _e('Remove', $mf_domain); ?></span> <?php echo $sgn ?></a>
 						<?php else:?> 
-							<a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);">Add Another <?=$sgn?></a>
+							<a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);"><span>Add Another</span> <?=$sgn?></a>
 					   <?php endif;?> 
 				</span>
 			</div>
@@ -530,18 +551,26 @@ class RCCWP_WritePostPage
 		$customField = RCCWP_CustomField::Get($customFieldId);
 		$customFieldName = $customField->name;
 		$customFieldTitle = attribute_escape($customField->description);
-		$customFieldHelp = htmlentities($customField->help_text,ENT_COMPAT,'UTF-8');
+		$customFieldHelp = $customField->help_text; // htmlentities($customField->help_text,ENT_COMPAT,'UTF-8');
 		$groupId = $customGroup_id;
 		$inputCustomName = $customFieldId."_".$groupCounter."_".$fieldCounter."_".$groupId."_".$customFieldName; // Create input tag name
+		
 		
 		$inputName = "magicfields[{$customFieldName}][{$groupCounter}][{$fieldCounter}]";
  		if( $fieldCounter > 1 && $customField->duplicate == 0 ) return ;
  		if( $fieldCounter > 1) $titleCounter = " (<span class='counter_{$customFieldName}_{$groupCounter}'>$fieldCounter</span>)";
 
  		$field_group = RCCWP_CustomGroup::Get($customField->group_id);
-
+    
+    $fieldCustomClass = "mf-field-$customFieldName"; // allows some special styling in wordpress filters
+    
+    $duplicateClass = "";
+    if ($fieldCounter > 1) {
+      $duplicateClass = "mf-field-duplicate";
+    }
+    
 		?>
-		<div class="mf-field mf-t-<?php echo strtolower(str_replace(" ","-",$customField->type)); ?> <?php echo str_replace(" ","_",$customField->type); ?>" id="row_<?php echo $inputCustomName?>">
+		<div class="mf-field <?php echo $duplicateClass ?> <?php echo $fieldCustomClass ?> mf-t-<?php echo strtolower(str_replace(" ","-",$customField->type)); ?> <?php echo str_replace(" ","_",$customField->type); ?>" id="row_<?php echo $inputCustomName?>">
 			<div class="mf-field-title">
 			<label for="<?php echo $inputCustomName?>">
 				<?php
@@ -621,13 +650,13 @@ class RCCWP_WritePostPage
 				if($fieldCounter == 1) {
 					?>
 					<?php if($customField->duplicate != 0 ){ ?>
-            <a href="javascript:void(0);" id="type_handler-<?php echo $inputCustomName ?>" class="typeHandler duplicate_field"><?php _e('Add Another '.$cfd, $mf_domain); ?></a>
+            <a href="javascript:void(0);" id="type_handler-<?php echo $inputCustomName ?>" class="typeHandler duplicate_field"><span><?php _e('Add Another', $mf_domain); ?></span> <?php echo $cfd ?></a>
 					<?php } ?>
 					<?php
 				}
 				else {
 				?>
-					<a class="delete_duplicate_field" href="javascript:void(0)" id="delete_field_repeat-<?php echo $inputCustomName?>"><?php _e('Remove '.$cfd, $mf_domain); ?></a>
+					<a class="delete_duplicate_field" href="javascript:void(0)" id="delete_field_repeat-<?php echo $inputCustomName?>"><span><?php _e('Remove', $mf_domain); ?></span> <?php echo $cfd ?></a>
 				<?php
 				}
 				?>
@@ -664,6 +693,8 @@ class RCCWP_WritePostPage
 	function CheckboxListInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		$customFieldId = '';
 		
+		$defClass = '';
+		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
 		$values = array();
@@ -671,12 +702,13 @@ class RCCWP_WritePostPage
 			$customFieldId = $customField->id;
 			$values = (array) RCCWP_CustomField::GetCustomFieldValues(false, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 		}else{
+		  $defClass = "mf-default";
 			$values = $customField->default_value;
 		}
 		
 		?>
 		
-		<div class="mf_custom_field">
+		<div class="mf_custom_field <?php echo $defClass ?>">
 		<?php
 		foreach ($customField->options as $option) :
 			$checked = in_array($option, (array)$values) ? 'checked="checked"' : '';
@@ -701,6 +733,9 @@ class RCCWP_WritePostPage
 	{
 		global $mf_domain;
 		$customFieldId = '';
+		
+		$defClass = '';
+
 		if (isset($_REQUEST['post']))
 		{
 			$customFieldId = $customField->id;
@@ -708,13 +743,14 @@ class RCCWP_WritePostPage
 		}
 		else
 		{
+		  $defClass = "mf-default";
 			$value = $customField->default_value[0];
 		}
 		
 		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 		?>
-		<div class="mf_custom_field">
+		<div class="mf_custom_field <?php echo $defClass ?>">
 		<select tabindex="3" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf" name="<?php echo $inputName?>">
 			<option value=""><?php _e('--Select--', $mf_domain); ?></option>
 		
@@ -862,19 +898,22 @@ class RCCWP_WritePostPage
 	function ListboxInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		$customFieldId = '';
+		$defClass = "";
+
 		if (isset($_REQUEST['post'])){
 			$customFieldId = $customField->id;
 			$values = (array) RCCWP_CustomField::GetCustomFieldValues(false, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
 			
 		}else{
 			$values = $customField->default_value;
+		  $defClass = "mf-default";
 		}
 		
 		$inputSize = (int)$customField->properties['size'];
 		$requiredClass = "mf_listbox";
 		if ($customField->required_field) $requiredClass = "mf_listbox field_required";
 		?>
-		<div class="mf_custom_field">
+		<div class="mf_custom_field <?php echo $defClass ?>">
 		<select <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> listbox_mf"  tabindex="3" id="<?php echo $idField;?>" name="<?php echo $inputName?>[]" multiple size="<?php echo $inputSize?>" style="height: auto;">
 		
 		<?php
@@ -1141,7 +1180,8 @@ class RCCWP_WritePostPage
 	
 	function RadiobuttonListInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		$customFieldId = '';
-		
+    $defClass = "";
+
 		if (isset($_REQUEST['post']))
 		{
 			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
@@ -1149,9 +1189,10 @@ class RCCWP_WritePostPage
 		else
 		{
 			$value = $customField->default_value[0];
+		  $defClass = "mf-default";
 		}
 		?>
-		<div class="mf_custom_field">
+		<div class="mf_custom_field <?php echo $defClass ?>">
 		<?php
 		foreach ($customField->options as $option) :
 			$checked = $option == $value ? 'checked="checked"' : '';
@@ -1355,6 +1396,8 @@ class RCCWP_WritePostPage
 	
 	function SliderInterface($customField, $inputName, $groupCounter, $fieldCounter,$fieldValue = NULL){
 		
+    $defClass = '';
+
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
 		$customFieldId = $customField->id;
@@ -1362,6 +1405,7 @@ class RCCWP_WritePostPage
 		$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
 		}else{
 			$value = 0;
+      $defClass = 'mf-default';
 		}
 
 		if($fieldValue){
@@ -1371,6 +1415,7 @@ class RCCWP_WritePostPage
 				$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
 			}else{
 				$value = 0;
+        $defClass = 'mf-default';
 			}
 		}
 		
@@ -1402,7 +1447,7 @@ class RCCWP_WritePostPage
 						});
 				});
 			</script>
-			<div id='slider_<?php echo $idField; ?>' class="ui-slider-2">
+			<div id='slider_<?php echo $idField; ?>' class="mf_custom_field  <?php echo $defClass ?> ui-slider-2">
 				<div class='ui-slider-handle'>
 					<div class="slider_numeber_show" id="slide_value_<?php echo $idField; ?>">
 						<?php echo $value?>

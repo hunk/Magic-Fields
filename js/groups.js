@@ -3,7 +3,7 @@
 
   $.stripTags = function(str) { return $.trim(str.replace(/<\/?[^>]+>/gi, '')); };
 
-  $.fn.mf_group_summary = function() {
+  $.fn.mf_group_summary = function(options) {
     
     var count = 0;
     
@@ -18,8 +18,8 @@
         el.data("mf_group_summary", d);
         el.data("mf_summarised", true);
         // record the field containers
-        d.fc = el.find("div.mf-field");
-        d.fc.hide();
+        d.fields = el.find("div.mf-field");
+        d.fc = el.find(".mf-fields");
 
         el.find(".collapse_button").hide();
       
@@ -44,7 +44,7 @@
 
         // convert the fields 
       
-        d.fc.each( function() {
+        d.fields.each( function() {
         
           var f = $(this);
           var cn = [];
@@ -70,22 +70,24 @@
         
           var tc = t.replace("mf-t-", "");
         
+          var def = f.find(".mf_custom_field").hasClass("mf-default");
         
           // derive the content display
           switch (tc) {
           
             case "textbox" : {
               var orig = $.trim(f.find("input[type=text]").val());
-              content = $.stripTags(orig).substring(0, 50);
+              content = $.stripTags(orig).substring(0, 70);
             
               if (content == "") {
                 content = "( empty )";
                 td.addClass("none");
+                th.addClass("none");
               } else {
                 if (orig != content) {
                   content = content + "&hellip;";
                 }
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               }
             
               break;
@@ -96,10 +98,11 @@
               if (!checked) {
                 content = "( not checked )";
                 td.addClass("none");
+                th.addClass("none");
               } else {
                 th.addClass("mf-t-checkbox-checked");
                 content = "( checked )";
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               }
             
               break;
@@ -116,10 +119,11 @@
             
               if (v.length) {
                 content = v.join(", ");
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               } else {
                 content = "( none selected )";
                 td.addClass("none");
+                th.addClass("none");
               }
               break;
             }
@@ -128,10 +132,11 @@
             
               if (color) {
                 content = $('<div class="mf-color-swatch"><span style="background-color: ' + color + '"></span><strong>' + color + '</strong></div>');
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               } else {
                 content = "( none )";
                 td.addClass("none");
+                th.addClass("none");
               }
 
               break;
@@ -142,9 +147,10 @@
               if (content == "") {
                 content = "( none )";
                 td.addClass("none");
+                th.addClass("none");
               } else {
                 th.addClass("mf-t-date-selected");
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               }
             
               break;
@@ -155,9 +161,10 @@
               if (!content || content == "") {
                 content = "( none )";
                 td.addClass("none");
+                th.addClass("none");
               } else {
                 content = '<a href="' + content + '" target="_blank" class="mf-s-file-view">View File</a>';
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               }
               break;
             }
@@ -168,9 +175,13 @@
 
               var src = img.attr("src");
             
-              if (src && src.find) {
-                if (!src.find("noimage.jpg")) {
-                  el.removeClass("empty");
+              if (src && src.search) {
+                
+                if (src.search("noimage.jpg") == -1) {
+                  if (!def) { el.removeClass("empty"); }
+                } else {
+                  th.addClass("none");
+                  td.addClass("none");
                 }
               }
               break;
@@ -180,7 +191,7 @@
             
               if (val) {
                 content = val.join(", ");
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
               } else {
                 content = "";
               }
@@ -188,6 +199,7 @@
               if (content == "") {
                 content = "( none selected )";
                 td.addClass("none");
+                th.addClass("none");
               }
               break;
             }
@@ -210,8 +222,9 @@
               if (content == "") {
                 content = "( empty )";
                 td.addClass("none");
+                th.addClass("none");
               } else {
-                el.removeClass("empty");
+                if (!def) { el.removeClass("empty"); }
                 
                 if (orig != content) {
                   content += "&hellip;";
@@ -227,11 +240,12 @@
              
               content = $.trim(sel.find("option:selected").text());
             
-              if (val == "") {
+              if (val == "" || def) {
                 content = "( not selected )";
                 td.addClass("none");
+                th.addClass("none");
               } else {
-                el.removeClass("empty"); 
+                if (!def) { el.removeClass("empty"); } 
               }
             
               break;
@@ -240,10 +254,11 @@
               var content = f.find('input[type=hidden]').val();
             
               if (content != "") {
-                el.removeClass("empty"); 
+                if (!def) { el.removeClass("empty"); } 
               } else {
                 content = "( none )";
                 td.addClass("none");
+                th.addClass("none");
               }
             
               break;
@@ -257,21 +272,24 @@
               }
             
               if (content != "0") {
-                el.removeClass("empty"); 
+                if (!def) { el.removeClass("empty"); } 
               }
               break;
             }
 
           }
 
-
+          if (def) {
+            th.addClass("none");
+            td.addClass("none");
+          }
         
           td.addClass(cn.join(" "));
           th.addClass(cn.join(" "));
         
           // set the label (based on the label inside the field)
         
-          var origLabel = $.trim(lb.html());
+          var origLabel = $.trim($.stripTags(lb.html()));
           var exLabel = origLabel.substring(0, 28);
         
           if (origLabel != exLabel) {
@@ -283,8 +301,6 @@
         
           d.thr.append(th);
           d.tbr.append(td);
-          
-          el.mf_group_update_count();
         });
       
         if (el.hasClass("empty")) {
@@ -293,11 +309,22 @@
           el.find(".duplicate_button").hide();
         }
         
+        var lth = d.table.find("thead th:last");
+
+        d.container.removeClass("last-none");
+        
+        if (lth.hasClass("none")) {
+          d.container.addClass("last-none");
+        }
+        
         el.find(".mf-group-loading").hide();
 
+        // hide the field container
+        d.fc.hide();
         d.container.append(d.table).insertAfter(d.fc.eq(0));
-
         d.container.find(".mf-s-file-view").windowopen({ width: 'aw', height: 'ah'});
+
+        el.mf_group_update_count();
       
         d.container.jScrollPane({ selectorStrut: 'table', novscroll: true });
     
@@ -309,20 +336,46 @@
     
   };
 
+  $.fn.mf_group_update_header_buttons = function() {
+    return this.each( function() {
+      var wrapper = $(this).closest(".write_panel_wrapper");
+
+      var btca = wrapper.find('.mf-collapse-all-button');
+      var btea = wrapper.find('.mf-expand-all-button');
+      
+      var buttons = btca.add(btea).removeClass("disabled");
+      
+      if (wrapper.find(".mf-fields:visible").length == 0) {
+        btca.addClass("disabled");
+      }
+
+      if (!wrapper.find(".mf-group-summary").length) {
+        btea.addClass("disabled");
+      }
+    });
+  };
+  
   $.fn.mf_group_update_count = function() {
     return this.each( function() {
       
       var wrapper = $(this).closest(".write_panel_wrapper");
       var status = wrapper.find(".mf-group-count");
       
+      var gc = wrapper.find(".mf-group-controls");
+      
       var toolbox = wrapper.find(".mf_toolbox");
       
-      var buttons = wrapper.find(".mf-expand-all-button,.mf-collapse-all-button");
+      var btca = wrapper.find('.mf-collapse-all-button');
+      var btea = wrapper.find('.mf-expand-all-button');
+      
+      var buttons = btca.add(btea).removeClass("disabled");
       
       toolbox.show();
       buttons.show();
       
       if (status) {
+        
+        gc.removeClass("hl");
         var groups = wrapper.find(".magicfield_group");
         var count = groups.length;
         
@@ -333,6 +386,7 @@
             count = 0;
             status.html("No items. Click summary below to create a new item.");
             toolbox.hide();
+            gc.addClass("hl");
           } else {
             status.html("1 item");
           }
@@ -343,6 +397,8 @@
           status.html(count + " items");
         }
       }
+      
+      $(this).mf_group_update_header_buttons();
       
     });
   };
@@ -364,11 +420,10 @@
       var el = $(this);
       
       el.data("mf_summarised", false);
-
-        
+    
       el.find(".collapse_button,.duplicate_button").fadeIn();
+      var fc = el.find(".mf-fields");
       var fields = $(this).find(".mf-field");
-      fields.show();
     
       // set the editor in textarea
   		add_editor_text($(this));
@@ -390,10 +445,16 @@
         }
       });
       
+      fc.show();
+
+      fc.find("input,textrea,select").eq(0).focus();
+      
       if (el.data("mf_group_summary")) {
         // remove the group summary
         el.find(".mf-group-summary").remove();
       }
+
+      el.mf_group_update_header_buttons();
 
     });
   };
@@ -438,14 +499,20 @@
     var wrappers = $('.write_panel_wrapper')
       
       wrappers.find(".mf-expand-all-button").live("click", function() {
-        $(this).closest(".write_panel_wrapper").find(".magicfield_group").mf_group_expand();
 
+        if (!$(this).hasClass("disabled")) {
+          $(this).closest(".write_panel_wrapper").find(".magicfield_group").mf_group_expand();
+        }
+      
         return false;
       });
 
       wrappers.find(".mf-collapse-all-button").live("click", function() {
-        $(this).closest(".write_panel_wrapper").find(".magicfield_group").mf_group_summary();
         
+        if (!$(this).hasClass("disabled")) {
+          $(this).closest(".write_panel_wrapper").find(".magicfield_group").mf_group_summary();
+        }
+      
         return false;
       });
       
@@ -454,15 +521,22 @@
       
       // make the save warning appear when fields are clicked
       
-      mf_groups.find("input,select,textarea").live("change", function() {
+      var fieldchange = function() {
+        $(this).closest(".magicfield_group").find(".mf-default").removeClass("mf-default");
+        $(this).closest(".mf_custom_field").removeClass("mf-default");
         $(this).mf_group_show_save_warning();
         $('#mf-publish-errors').hide();
-      });
+      };
+         
+      mf_groups.find("input[type=text],textarea").live("keydown", fieldchange);
+      mf_groups.find("input[type=checkbox],input[type=radio]").live("click", fieldchange);
+      mf_groups.find("select").live("change", fieldchange);
+
       
       
       $('.mf_message_error .error_magicfields').hide();
     
-      mf_groups.mf_group_summary();
+      mf_groups.mf_group_summary({ init: true });
       
       wrappers.mf_group_update_count();
 
@@ -662,7 +736,7 @@
 			        
               newel.find('.mf_message_error .error_magicfields').hide();
 			        newel.fadeIn();
-
+              newel.mf_group_show_save_warning();
 			        
   			//fixing the order in the indexes of the custom fields
   		    fixcounter("counter_"+counter_field);
@@ -717,6 +791,7 @@
               		    moveAddToLast(jQuery("#write_panel_wrap_"+customGroupID));
                       newel.find("input,textarea").eq(0).focus();
                       newel.mf_group_update_count();
+                      newel.mf_group_show_save_warning();
                       
                       //jQuery.scrollTo(newel, 500);
                   }
@@ -736,7 +811,7 @@ deleteGroupDuplicate = function(div){
     var parent = jQuery("#"+div);
     var db = parent.find(".duplicate_button").clone();
     var context = parent.closest(".write_panel_wrapper");
-    parent.fadeOut({ duration: "normal", complete: function() { parent.remove(); context.mf_group_update_count(); moveAddToLast(context, db); } });
+    parent.fadeOut({ duration: "normal", complete: function() { parent.remove(); context.mf_group_update_count(); context.mf_group_show_save_warning(); moveAddToLast(context, db); } });
 }
 
 /**

@@ -80,6 +80,7 @@ class RCCWP_CustomFieldPage{
 				</select>
 			</td>	
 		</tr>
+
 		
 		<?php } ?>
 		<?php if (in_array($custom_field->type, array('Textbox', 'Listbox'))) : ?>
