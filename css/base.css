@@ -685,9 +685,6 @@ input.button.disabled {
 	max-height: 114px;
 }
 
-.mf-group-summary.last-none {
-  background-color: #F7F7F7; 
-}
 
 
 .mf-group-summary .jspPane:hover,
@@ -765,10 +762,15 @@ input.button.disabled {
 } 
 
 .mf-group-summary tbody td.none,
+.mf-group-summary thead th.none,
+.mf-group-summary.last-none {
+  background-color: #f5f5f5;
+} 
+
+.mf-group-summary tbody td.none,
 .mf-group-summary thead th.none {
   color: #999;
-  background-color: #f7f7f7;
-} 
+}
 
 .mf-group-summary th.mf-t-checkbox,
 .mf-group-summary th.mf-t-checkbox-checked,
@@ -1251,4 +1253,3 @@ input.button.disabled {
 .ttf {
   background: url(../images/ttf.png) repeat-x;
 }
-
