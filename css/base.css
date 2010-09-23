@@ -959,7 +959,7 @@ input.button.disabled {
 }
 
 .mf-group-loading {
-  background: url(../images/spinner2.gif) no-repeat 6px 6px;
+  background: url(../images/spinner.gif) no-repeat 6px 6px;
   line-height: 16px;
   padding: 6px;
   padding-left: 26px;
@@ -1408,7 +1408,7 @@ input.button.disabled {
 
 .ajax-upload-spinner {
   display:inline-block; 
-  background: url("../images/spinner2.gif"); 
+  background: url("../images/spinner.gif"); 
   width:16px; height:16px; 
   vertical-align:text-bottom;
 }
