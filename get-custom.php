@@ -449,6 +449,84 @@ function aux_image($fieldValue,$params_image,$fieldType = NULL){
   return $fieldValue;
 }
 
+/* 
+
+New function to get a "set" of values, where a set is simply a group 
+that is not able to be duplicated. This is a common way to related a 
+group of fields together in Magic Fields, and this function is an easier
+and faster way than "get" on each field individually.
+
+*/
+
+
+function get_set($name_group, $options = array("flat_fields" => TRUE, "prefix" => ""), $post_id = NULL) {
+  
+  $ret = array();
+
+  $group = get_group($name_group, $post_id);
+  
+  if (count($group) > 0) {
+    $single = $group[1];
+    
+    foreach ($single as $key=>$value) {
+      $newkey = $key;
+      
+      if ($options["prefix"] != "") {
+        $newkey = preg_replace("^".preg_quote($options["prefix"]), "", $newkey);
+      }
+      
+      if ($options["flat_fields"]) {
+        $ret[$newkey] = $value[1];
+      } else {
+        $ret[$newkey] = $value;
+      }
+    }
+  }
+
+  return $ret; 
+}
+
+
+
+function get_group_options($name_group, $options = array(), $post_id = NULL) {
+  
+  $use_options = array("flat_fields" => TRUE, "prefix" => "");
+  
+  if (array_key_exists("flat_fields", $options)) {
+    
+  }
+  
+  $ret = array();
+  
+  $group = get_group($name_group, $post_id);
+  
+  foreach ($group as $item) {
+    
+    $newitem = array();
+    
+    foreach ($item as $key => $value) {
+      
+      $newkey = $key;
+      
+      if ($options["prefix"] != "") {
+          $newkey = preg_replace("^".preg_quote($options["prefix"]), "", $newkey);
+      }
+      
+      if ($options["flat_fields"]) { // assumes all fields are flat, so we don't need to specify the [1] index every time 
+        $newitem[$newkey] = $value[1];
+      } else {
+        $newitem[$newkey] = $value;
+      } 
+
+    }
+    
+    $ret[] = $newitem;
+    
+  }
+
+  return $ret;
+}
+
 function get_group($name_group,$post_id=NULL){
 	global $wpdb, $post, $FIELD_TYPES;
 	
