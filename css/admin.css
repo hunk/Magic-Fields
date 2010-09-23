@@ -106,3 +106,7 @@ textarea#custom-field-options {
   height: 170px;
 }
 
+input#custom-field-helptext {
+  width: 98%;
+}
+

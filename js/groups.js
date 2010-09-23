@@ -1,4 +1,52 @@
+
+function smartTrim(string, maxLength) {
+  if (!string) return string;
+  if (maxLength < 1) return string;
+  if (string.length <= maxLength) return string;
+  if (maxLength == 1) return string.substring(0,1) + ' &hellip; ';
+
+  var midpoint = Math.ceil(string.length / 2);
+  var toremove = string.length - maxLength;
+  var lstrip = Math.ceil(toremove/2);
+  var rstrip = toremove - lstrip;
+  return string.substring(0, midpoint-lstrip) + ' &hellip; ' + string.substring(midpoint+rstrip);
+}
+    
 (function($) { // closure and $ portability
+
+
+  
+  // ajax file uploader customisation
+  
+  qq.FileUploader.prototype._formatSize = function(bytes) {
+    var i = -1;                                    
+
+    do {
+        bytes = bytes / 1024;
+        i++;  
+    } while (bytes > 99);
+        
+    return "( " + Math.max(bytes, 0.1).toFixed(1) + " " + ['kB', 'MB', 'GB', 'TB', 'PB', 'EB'][i] + " )";          
+  }
+
+  qq.FileUploader.prototype._addToList = function(id, fileName) {
+
+      var item = qq.toElement(this._options.fileTemplate);                
+      item.qqFileId = id;
+      
+      var fileElement = this._find(item, 'file');        
+      qq.setText(fileElement, this._formatFileName(fileName));
+      
+      this._find(item, 'size').style.display = 'none';        
+      $(this._listElement).html(item);
+   };
+  
+   qq.UploadDropZone.prototype.onDrop = function(e){
+     $('.ajax-upload-drop-area').hide().removeClass(self._classes.dropActive);
+     self._uploadFileList(e.dataTransfer.files);    
+   }
+
+
 
 
   $.stripTags = function(str) { return $.trim(str.replace(/<\/?[^>]+>/gi, '')); };
@@ -77,16 +125,18 @@
           
             case "textbox" : {
               var orig = $.trim(f.find("input[type=text]").val());
-              content = $.stripTags(orig).substring(0, 70);
+              //content = $.stripTags(orig).substring(0, 70);
             
+              content = smartTrim($.stripTags(orig), 70);
+              
               if (content == "") {
                 content = "( empty )";
                 td.addClass("none");
                 th.addClass("none");
               } else {
-                if (orig != content) {
-                  content = content + "&hellip;";
-                }
+                //if (orig != content) {
+                //  content = content + "&hellip;";
+                //}
                 if (!def) { el.removeClass("empty"); }
               }
             
@@ -217,7 +267,9 @@
         		  }
       		
       		    var orig = $.stripTags(ta.val());
-              content = orig.substring(0, 150);
+              //content = orig.substring(0, 150);
+              content = smartTrim(orig, 150);
+
 
               if (content == "") {
                 content = "( empty )";
@@ -226,9 +278,9 @@
               } else {
                 if (!def) { el.removeClass("empty"); }
                 
-                if (orig != content) {
+                /*if (orig != content) {
                   content += "&hellip;";
-                }
+                }*/
               }
             
               break;
@@ -413,7 +465,206 @@
       
     });
   };
+
+    
+  $.fn.mf_field_init_uploader = function() {
+    
+    return this.each( function() {
+      
+      // load any internal iframes - this speeds up the intial load time by a whole lot if there are a lot of file upload controls, since the browser doesn't load them all initially!
+        
+      $(this).find('.iframeload').each( function() {
+        var el = $(this);
+
+        var iframe = el.find("iframe");
+      
+        if (!iframe.length) {
+          var md = el.metadata({ type: 'class' });
+        
+          if (md.iframe) {
+            iframe = $($.tmpl('<iframe id="#{id}" src="#{src}" frameborder="" scrolling="no" style="border-width: 0px; height: #{height}px; width: #{width}px;vertical-align:top;"></iframe>', md.iframe));
+            el.append(iframe);
+          }
+        }
+      });
+    
+      
+      // load (alternate) ajax file uploaders instead, if the AJAX uploader is activated
+      
+      $(this).find(".ajaxupload").each( function() {
+        
+        var f = $(this).closest(".mf-field");
+        
+        var t = '';
+        
+        // derive the "type" class
+        var matches = f.attr("class").match(/mf-t-[a-z0-9\-]+/);
+    
+        if (matches.length) {
+          t = matches[0];
+        }
+        
+        var tc = t.replace("mf-t-", "");
+      
+      
+        var md = $(this).metadata({ type: 'class' });
+        
+        var el = $(this);
+        
+        if (!el.data("uploader")) {
+          
+          
+          var allowedExtensions = ["pdf", "doc", "xls", "ppt", "txt", "jpeg", "psd", "jpg", "gif", "png", "docx", "pptx", "xslx", "pps", "zip", "gz", "gzip", "mp3", "aac", "mp4", "wav", "wma", "aif", "aiff", "ogg"];
+          
+          // compile the allowed extensions
+          if (tc) {
+            if (tc == "image") {
+              allowedExtensions = ["jpeg", "jpg", "gif", "png"];
+            } else if (tc == "audio") {
+              allowedExtensions = ["mp3", "aac", "mp4", "wav", "wma", "aif", "aiff", "ogg"];
+            }
+          }
+          
+          
+          //allowedExtensions: [],
+          
+          var input_el = f.find(".mf_custom_field input[type=hidden]");
+          var ival = input_el.val();
+          
+          var uploader = new qq.FileUploader({
+              element: this,
+              multiple: false,
+              action: mf_path + "/RCCWP_upload_ajax.php",
+              allowedExtensions: allowedExtensions,
+              
+              onComplete: function(id, fileName, result) {
+                
+                // hide all drop targets
+                $('.ajax-upload-drop-area').hide()
+
+                var field = el.closest(".mf-field");
+                
+                // get the upload message element
+                var um = field.find(".upload-msg");
+                um.removeClass("mf-upload-success mf-upload-error");
+                
+                if (result.success) {
+                  
+                  field.find(".ajax-upload-button span").html(md.lang.replace);
+
+                  um.addClass("mf-upload-success");
+                  um.html(md.lang.upload_success); // the success string is in metadata
+
+                  field.mf_group_show_save_warning();
+
+
+                  if (input_el.length) {
+                    input_el.val(result.file);
+                  }
+
+                
+                  if (tc == "image") {
+                    // find the image element
+                
+                    var img_el = field.find(".image_photo img");
+                  
+                    if (img_el.length) {
+                      // set the thumbnail preview
+                      img_el.attr("src", $("<div/>").html(result.thumb).text() );
+                    }
+
+                  } else if (tc == "audio") { 
+                    
+                    // add or update the audio player 
+                    
+                    // find the value container (new)
+                    var av = field.find(".mf-audio-value");
+                    
+                    // set html to the flash audio player
+                    av.empty().html(
+                      $.tmpl(
+                        '<div id="obj-#{id}" style="width:260px; padding-top: 3px;">\
+                         <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="99%" height="20" wmode="transparent">\
+                         <param name="movie" value="#{mf_path}js/singlemp3player.swf?file=#{uri}" wmode="transparent" />\
+                         <param name="quality" value="high" wmode="transparent" />\
+                         <embed src="#{mf_path}js/singlemp3player.swf?file=#{uri}" width="99%" height="20" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" wmode="transparent" />\
+                         </embed>\
+                         </object>\
+                         </div>',
+                         { id: input_el.attr("id"), mf_path: mf_path, uri: result.uri }
+                      )
+                    );
+                    
+                    // show the actions
+                    field.find(".actions-audio").show(); 
+                  
+                  } else { // other file
+                    // update the view link
+                    field.find("a.mf-file-view").attr("href", result.uri);
+                  }
+
+                
+                } else {
+                  
+                  um.addClass("mf-upload-error");
+                  um.html(md.lang.upload_error); // the error string is in metadata
+
+                }
+                
+                um.show();
+                
+              },
+            
+              template: '<div class="ajax-uploader">' + 
+                  '<ul class="ajax-upload-list"><li>' + smartTrim(ival, 50) + '</li></ul>' + 
+                  '<div class="ajax-upload-drop-area"><span>' + md.lang.drop + '</span></div>' +
+                  '<div class="ajax-upload-button button"><span>' + (ival && ival != "" ? md.lang.replace : md.lang.upload) + '</span></div>' +
+               '</div>',
+             
+              fileTemplate: '<li>' +
+                  '<span class="ajax-upload-file"></span>' +
+                  '<span class="ajax-upload-spinner"></span>' +
+                  '<span class="ajax-upload-size"></span>' +
+                  '<a class="ajax-upload-cancel" href="#">Cancel</a>' +
+                  '<span class="ajax-upload-failed-text">Failed</span>' +
+              '</li>',        
+            
+              classes: {
+                // used to get elements from templates
+                button: 'ajax-upload-button',
+                drop: 'ajax-upload-drop-area',
+                dropActive: 'ajax-upload-drop-area-active',
+                list: 'ajax-upload-list',
+                        
+                file: 'ajax-upload-file',
+                spinner: 'ajax-upload-spinner',
+                size: 'ajax-upload-size',
+                cancel: 'ajax-upload-cancel',
+
+                // added to list item when upload completes
+                // used in css to hide progress spinner
+                success: 'ajax-upload-success',
+                fail: 'ajax-upload-fail'
+              }
+        
+          });
+        
+          // store the uploader against this element, so it doesn't get created again
+          el.data("uploader", uploader);
+
+        }  
+      });
+            
+            
+    
+    
+    });
+    
+    
+    
+  };
   
+
   $.fn.mf_group_expand = function() {
     return this.each( function() {
 
@@ -429,21 +680,7 @@
   		add_editor_text($(this));
   		add_color_picker($(this));
 
-      // load any internal iframes - this speeds up the intial load time by a whole lot if there are a lot of file upload controls, since the browser doesn't load them all initially!
-      fields.find('.iframeload').each( function() {
-        var el = $(this);
-      
-        var iframe = el.find("iframe");
-      
-        if (!iframe.length) {
-          var md = el.metadata({ type: 'class' });
-        
-          if (md.iframe) {
-            iframe = $($.tmpl('<iframe id="#{id}" src="#{src}" frameborder="" scrolling="no" style="border-width: 0px; height: #{height}px; width: #{width}px;vertical-align:top;"></iframe>', md.iframe));
-            el.append(iframe);
-          }
-        }
-      });
+      fields.mf_field_init_uploader();
       
       fc.show();
 
@@ -532,6 +769,10 @@
       mf_groups.find("input[type=checkbox],input[type=radio]").live("click", fieldchange);
       mf_groups.find("select").live("change", fieldchange);
 
+      $('.ajax-upload-drop-area').live( "mouseleave", function() {
+        $(this).hide();
+      });
+      
       
       
       $('.mf_message_error .error_magicfields').hide();
@@ -540,14 +781,6 @@
       
       wrappers.mf_group_update_count();
 
-      mf_groups.live( "dblclick", function(event) {
-        
-        if (!$(event.target).closest("input,textarea,button,a").length) {
-          // don't collapse if we double click on a summayr, form field, or link!
-          $(this).closest(".magicfield_group").mf_group_summary();
-        }
-        
-      });
 
       $('.mf-group-summary').live( "click", function(event) {
         
@@ -735,8 +968,11 @@
         			add_color_picker(newel);
 			        
               newel.find('.mf_message_error .error_magicfields').hide();
-			        newel.fadeIn();
-              newel.mf_group_show_save_warning();
+              
+              newel
+                .fadeIn()
+                .mf_field_init_uploader()
+                .mf_group_show_save_warning();
 			        
   			//fixing the order in the indexes of the custom fields
   		    fixcounter("counter_"+counter_field);

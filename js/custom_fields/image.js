@@ -21,6 +21,8 @@ remove_photo = function(){
          }
          
          jQuery('#'+id).val('');
+         jQuery('#'+id).closest(".mf-field").find(".ajax-upload-list").html('');
+
          jQuery("#img_thumb_"+id).attr("src",mf_path+"images/noimage.jpg");
          jQuery("#photo_edit_link_"+id).empty();
     }
@@ -37,6 +39,7 @@ remove_photo_media = function(){
          image = jQuery('#'+id).val();
          
          jQuery('#'+id).val('');
+         jQuery('#'+id).closest(".mf-field").find(".ajax-upload-list").html('');
          jQuery("#img_thumb_"+id).attr("src",mf_path+"images/noimage.jpg");
          jQuery("#photo_edit_link_"+id).empty();
     }
