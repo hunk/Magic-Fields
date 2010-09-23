@@ -488,13 +488,7 @@ function get_set($name_group, $options = array("flat_fields" => TRUE, "prefix" =
 
 
 
-function get_group_options($name_group, $options = array(), $post_id = NULL) {
-  
-  $use_options = array("flat_fields" => TRUE, "prefix" => "");
-  
-  if (array_key_exists("flat_fields", $options)) {
-    
-  }
+function get_group_options($name_group, $options = array("flat_fields" => TRUE, "prefix" => ""), $post_id = NULL) {
   
   $ret = array();
   
