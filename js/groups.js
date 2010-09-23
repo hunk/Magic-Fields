@@ -356,9 +356,12 @@ function smartTrim(string, maxLength) {
         });
       
         if (el.hasClass("empty")) {
-          // if no data has been provided yet, hide the "add" button, since it's likely people will click this to try to add the initial record
-          // and this is not what the button does. We will show the button as soon as they expand the initial field.
-          el.find(".duplicate_button").hide();
+          
+          if (el.closest(".write_panel_wrapper").find(".magicfield_group").length == 1) {
+            // if no data has been provided yet and this is the ONLY group, hide the "add" button, since it's likely people will click this to try to add the initial record
+            // and this is not what the button does. We will show the button as soon as they expand the initial field.
+            el.find(".duplicate_button").hide();
+          }
         }
         
         var lth = d.table.find("thead th:last");
@@ -853,16 +856,24 @@ function smartTrim(string, maxLength) {
       });
 
       //duplicate  group
-      jQuery(".duplicate_button").live("click", function(){
+      jQuery(".duplicate_button").live("click", function(event){
           id = jQuery(this).attr("id"); 
           id = id.split("_"); 
           group = id[2];
           customGroupID =  id[3];
           order = id[4];
           order =  parseInt(order) + 1;
-        
+
+          var group = $(this).closest(".magicfield_group");
+          
+          if (event.shiftKey) {
+            // collapse the current group as this one is added
+            group.mf_group_summary();
+          }
+          
           jQuery(this).data("originalText", jQuery(this).html()).html("Adding - Please Wait...");
           GetGroupDuplicate(group,customGroupID,order);
+
         
       });
 

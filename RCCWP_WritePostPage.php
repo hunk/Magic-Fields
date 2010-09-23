@@ -533,7 +533,7 @@ class RCCWP_WritePostPage
 						?>
 							<a class ="delete_duplicate_button" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"><span><?php _e('Remove', $mf_domain); ?></span> <?php echo $sgn ?></a>
 						<?php else:?> 
-							<a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);"><span>Add Another</span> <?=$sgn?></a>
+							<a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);" title="<?php _e('Note: hold down the SHIFT key as you click to collapse this item before the new item is added', $mf_domain); ?>"><span>Add Another</span> <?=$sgn?></a>
 					   <?php endif;?> 
 				</span>
 			</div>
