@@ -125,11 +125,12 @@ class qqFileUploader {
         
         // remove any special characters, since these can cause problems
         $special_chars = array (' ','`','"','\'','\\','/'," ","#","$","%","^","&","*","!","~","‘","\"","’","'","=","?","/","[","]","(",")","|","<",">",";","\\",",","+","-");
-			  $filename = str_replace($special_chars,'', $filename);
-
+			  $filename = strtolower(str_replace($special_chars,'', $filename));
 
         //$filename = md5(uniqid());
-        $ext = $pathinfo['extension'];
+        
+        // convert the extension to lowercase to avoid problems
+        $ext = strtolower($pathinfo['extension']);
 
         if($this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions)){
             $these = implode(', ', $this->allowedExtensions);

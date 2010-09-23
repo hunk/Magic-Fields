@@ -21,7 +21,12 @@ remove_photo = function(){
          }
          
          jQuery('#'+id).val('');
-         jQuery('#'+id).closest(".mf-field").find(".ajax-upload-list").html('');
+         var field = jQuery('#'+id).closest(".mf-field");
+         
+         field.find(".ajax-upload-list").html('');
+         var um = field.find(".upload-msg");
+         um.removeClass("mf-upload-success mf-upload-error").html('');
+                
 
          jQuery("#img_thumb_"+id).attr("src",mf_path+"images/noimage.jpg");
          jQuery("#photo_edit_link_"+id).empty();
