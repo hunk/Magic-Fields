@@ -204,11 +204,16 @@ class RCCWP_WritePostPage
   	  array('markitup')
     );
     
+    wp_enqueue_script('valums_file_uploader',
+  	  MF_URI.'js/valumsfileuploader.js'
+  	);
+  	
+
   	wp_enqueue_script('markitup_setup',
   	  MF_URI.'js/markitup/jquery.markitup.setup.js',
   		array('markitup')
   	);
-  	
+
   	//load script for custom magicfields
   	if (file_exists(MF_UPLOAD_FILES_DIR.DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."magic_fields.js")) {
   	  wp_enqueue_script('custom_magic_fields',
@@ -468,7 +473,7 @@ class RCCWP_WritePostPage
 		<div class="magicfield_group <?php echo $add_class_rep;?>" id="freshpostdiv_group_<?php 
 			
 			echo $customGroup->id.'_'.$groupCounter;?>">
-			<a id="collapse_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="collapse_button" href="javascript:void(0);" title="Note: you can also double click a panel anywhere to collapse">Collapse</a>
+			<a id="collapse_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="collapse_button" href="javascript:void(0);">Collapse</a>
 
       <div class="mf-group-loading">Loading Data&hellip;</div>
       
@@ -528,7 +533,7 @@ class RCCWP_WritePostPage
 						?>
 							<a class ="delete_duplicate_button" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"><span><?php _e('Remove', $mf_domain); ?></span> <?php echo $sgn ?></a>
 						<?php else:?> 
-							<a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);"><span>Add Another</span> <?=$sgn?></a>
+							<a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);" title="<?php _e('Note: hold down the SHIFT key as you click to collapse this item before the new item is added', $mf_domain); ?>"><span>Add Another</span> <?=$sgn?></a>
 					   <?php endif;?> 
 				</span>
 			</div>
@@ -1052,7 +1057,7 @@ class RCCWP_WritePostPage
 
 		?>
 		
-		<p class="error_msg_txt" id="upload_progress_<?php echo $idField;?>" style="display:none;"></p>
+		<p class="error_msg_txt upload-msg" id="upload_progress_<?php echo $idField;?>" style="display:none;"></p>
 		<script type="text/javascript"> 
 			//this script is for remove the  file  related  to the post (using ajax)
 			remove_file = function(){
@@ -1060,6 +1065,9 @@ class RCCWP_WritePostPage
 					//get  the name to the file
 					id = jQuery(this).attr("id").split("-")[1];
 					file = jQuery('#'+id).val();
+					
+					jQuery('#'+id).closest(".mf-field").find(".ajax-upload-list").html('');
+					
 					jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':file},
 								function(message){
 									jQuery('#actions-'+id).empty();
@@ -1068,7 +1076,7 @@ class RCCWP_WritePostPage
 								});
 
 				}
-			}
+			};
 
 
 			jQuery(document).ready(function(){
@@ -1133,19 +1141,24 @@ class RCCWP_WritePostPage
 			$value  = "<img src='{$value}' id='{$imageThumbID}'/>";
 		}
 ?>
-		<p 	class="error_msg_txt" id="upload_progress_<?php echo $idField;?>" style="display:none;">
+		<p 	class="error_msg_txt upload-msg" id="upload_progress_<?php echo $idField;?>" style="display:none;">
 		</p>	
-		<div class="image_photo" style="width:150px; float: left">
+
+		<div class="image_layout">
+
+		<div class="image_photo">
+		  <div class="image_wrap">
 			<?php echo $value;?>
+      </div>
 		<div id="photo_edit_link_<?php echo $idField ?>" class="photo_edit_link"> 
 			<?php
 				if(isset($_REQUEST['post'])){	
-					echo "&nbsp;<strong><a href='#remove' class='remove' id='remove-{$idField}'>".__("Delete",$mf_domain)."</a></strong>";
+					echo '<a href="'.MF_FILES_URI.$hidValue.'" target="_blank">View</a>&nbsp;&nbsp;|&nbsp;&nbsp;<strong><a href="#remove" class="remove" id="remove-'.$idField.'">'.__("Delete",$mf_domain).'</a></strong>';
 				}
 			?>
 		</div>
 		</div>
-		<div class="image_input" style="padding-left: 170px;">
+		<div class="image_input">
 	<?php
 	if(empty($requiredClass)){
 		$requiredClass ='';
@@ -1169,6 +1182,9 @@ class RCCWP_WritePostPage
 			</div>
 		</div>
 		
+	  </div>
+	  <!-- /.image_layout -->
+	  
 		<div style="clear: both; height: 1px;"> </div>
 			<?php if ($customField->required_field){ ?>
 				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
@@ -1321,7 +1337,7 @@ class RCCWP_WritePostPage
 		}
 
 		?>
-		<p class="error_msg_txt" id="upload_progress_<?php echo $idField;?>" style="display:none;"></p>
+		<p class="error_msg_txt upload-msg" id="upload_progress_<?php echo $idField;?>" style="display:none;"></p>
 		<script type="text/javascript">
 			//this script is for remove the audio file using ajax
 			remove_audio = function(){
@@ -1329,7 +1345,8 @@ class RCCWP_WritePostPage
 					//get the name to the image
 					id = jQuery(this).attr('id').split("-")[1];
 					file = jQuery('#'+id).val(); 
-					jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':file},
+          jQuery('#'+id).closest(".mf-field").find(".ajax-upload-list").html('');
+          jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':file},
 								function(message){
 									//if(message =="true"){
 										jQuery('#obj-'+id).empty();
@@ -1344,15 +1361,24 @@ class RCCWP_WritePostPage
 				jQuery("#remove-<?php echo $idField;?>").click(remove_audio);
 			});
 		</script>
+		
+		<div class="mf-audio-value-actions">
 		<?php 
 		if( !empty($$valueOriginalRelative)){ 
-			echo $value; 
-			echo "<div id='actions-{$idField}'><a href='javascript:void(0);' id='remove-{$idField}'>".__("Delete",$mf_domain)."</a></div>";
-		} 
+			echo '<div class="mf-audio-value">'.$value.'</div>'; 
+			echo "<div id='actions-{$idField}' class='actions-audio'><a href='javascript:void(0);' id='remove-{$idField}' class='remove-audio'>".__("Delete",$mf_domain)."</a></div>";
+		} else {
+			echo '<div class="mf-audio-value"></div>'; 
+			echo "<div id='actions-{$idField}' class='actions-audio' style='display: none'><a href='javascript:void(0);' id='remove-{$idField}' class='remove-audio'>".__("Delete",$mf_domain)."</a></div>";
+	  }
+	  
 		if(empty($valueOriginalRelative)){
 			$valueOriginalRelative = '';
 		}
 		?>
+	  </div>
+	  <!-- /.mf-audio-value-actions -->
+	  
 		<div class="mf_custom_field">
 		<input tabindex="3" 
 			id="<?php echo $idField?>" 

@@ -92,3 +92,21 @@ color: #F00;
 color: #666;
 font-style: italic;
 }
+
+
+
+input#custom-field-default-value,
+input#custom-field-name,
+textarea#custom-field-options {
+  font-family: "consolas", "lucida sans", "andale mono", monospace;
+  font-size: 13px;
+}
+
+textarea#custom-field-options {
+  height: 170px;
+}
+
+input#custom-field-helptext {
+  width: 98%;
+}
+
