@@ -648,6 +648,9 @@ class RCCWP_WritePostPage
 				  case 'Markdown Textbox' :
   					RCCWP_WritePostPage::MarkdownTextboxInterface($customField, $inputName, $groupCounter, $fieldCounter);
   					break;
+  				case 'Image (Upload Media)' :
+    				RCCWP_WritePostPage::MediaPhotoInterface($customField, $inputName, $groupCounter, $fieldCounter);
+            break;
 					default:
 						;
 				}
@@ -1520,6 +1523,93 @@ class RCCWP_WritePostPage
   	<?php } ?>
   	<?php
   }
+  
+  function MediaPhotoInterface($customField, $inputName, $groupCounter, $fieldCounter) {
+  		global $mf_domain;
+
+  		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
+
+  		if(!empty($_GET['post'])){
+  			$hidValue = RCCWP_CustomField::GetCustomFieldValues(true,$_GET['post'], $customField->name, $groupCounter, $fieldCounter);
+  		}else{
+  			$hidValue = '';
+  		}
+
+  		$filepath	= $inputName . '_filepath';
+  		//The Image is required?
+  		$requiredClass = "";
+  		if ($customField->required_field) $requiredClass = "field_required";
+
+  		$imageThumbID = "img_thumb_".$idField; 
+  		$value = "<img src='".MF_URI."images/noimage.jpg' id='{$imageThumbID}'/>";
+
+  		if( !empty($hidValue)){
+  			$path = PHPTHUMB."?src=";
+  			$info = wp_get_attachment_image_src($hidValue,'original');
+  			$path_image_media = $info[0];
+  			$value  = $path.$path_image_media."&w=150&h=120&zc=1";
+  			$value  = "<img src='{$value}' id='{$imageThumbID}'/>";
+  		}
+  ?>
+  		<p 	class="error_msg_txt" id="upload_progress_<?php echo $idField;?>" style="visibility:hidden;height:0px">
+  		</p>	
+  		<div id="image_photo" style="width:150px; float: left">
+  			<?php echo $value;?>
+  		<div id="photo_edit_link_<?php echo $idField ?>" class="photo_edit_link"> 
+  			<?php
+  				if($hidValue){	
+  					echo "&nbsp;<strong><a href='#remove' class='remove_media' id='remove-{$idField}'>".__("Remove Image",$mf_domain)."</a></strong>";
+  				}
+  			?>
+  		</div>
+  		</div>
+  		<div id="image_input" style="padding-left: 170px;">
+  	<?php
+  	if(empty($requiredClass)){
+  		$requiredClass ='';
+  	}
+  	?>		
+  			<div class="mf_custom_field">
+  			<input tabindex="3" 
+  				id="<?php echo $idField?>" 
+  				name="<?php echo $inputName;?>" 
+  				type="hidden" 
+  				class="<?php echo $requiredClass;?>"
+  				size="46"
+  				value="<?php echo $hidValue?>"
+  				<?php if ($customField->required_field) echo 'validate="required:true"'; ?>
+  				/>
+  				<?php $thumb_class= 'thickbox1';
+  				if(is_wp30()) $thumb_class= 'thickbox';
+  				?>
+
+  			<a class="<?php echo $thumb_class; ?> update_field_media_upload" id="thumb_<?php echo $idField ?>" href="media-upload.php?post_id=<?php echo $post->ID; ?>&#038;type=image&#038;TB_iframe=1" >Set Image</a>
+  			</div>
+  			<?php
+  			if(!is_wp30()):
+  			?>
+  			<script>
+  			jQuery(document).ready(function(){
+        	tb_init('a#thumb_<?php echo $idField ?>');
+        	jQuery('a#thumb_<?php echo $idField ?>').click( function(){
+        	  window.mf_field_id = jQuery(this).attr('id');
+        	});
+        });
+  			</script>
+  			<?php
+  			endif;
+  			?>
+  		</div>
+
+  		<div style="clear: both; height: 1px;"> </div>
+  			<?php if ($customField->required_field){ ?>
+  				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
+  			<?php
+  			} ?>
+
+  		<?php
+  	}
+  
 	
 	
 
