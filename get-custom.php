@@ -619,9 +619,9 @@ function get_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 	if(!$post_id){ $post_id = $post->ID; }
 	
 	$cache_name = $post_id.'/_fduplicates-'.$fieldName.'--'.$groupIndex.'.txt';
-	$field = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE );
+	$data_fields = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE );
 	
-	if( !$field && !is_null( $field ) ) {
+	if( !$data_fields && !is_null( $data_fields ) ) {
 		$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
 				FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
 							".MF_TABLE_GROUP_FIELDS." cf 
@@ -697,9 +697,9 @@ function get_clean_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 	if(!$post_id){ $post_id = $post->ID; }
 	
 	$cache_name = $post_id.'/_fduplicates-'.$fieldName.'--'.$groupIndex.'.txt';
-	$field = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE );
+	$data_fields = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE );
 	
-	if( !$field && !is_null( $field ) ) {
+	if( !$data_fields && !is_null( $data_fields ) ) {
 		$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
 				FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
 							".MF_TABLE_GROUP_FIELDS." cf 
