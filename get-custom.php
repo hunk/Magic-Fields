@@ -117,6 +117,8 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 	require_once("RCCWP_CustomField.php");
 	global $post, $FIELD_TYPES;
 	
+	if(!$post_id){ $post_id = $post->ID; }
+	
 	$cache_name = $post_id.'/'.$fieldName.'--'.$groupIndex.'--'.$fieldIndex.'.txt';
 	$field = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE );
 	
