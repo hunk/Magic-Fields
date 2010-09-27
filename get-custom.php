@@ -117,9 +117,10 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 	require_once("RCCWP_CustomField.php");
 	global $post, $FIELD_TYPES;
 	
-	if(!$post_id){ $post_id = $post->ID; }
-		$cache_name = $post_id.'/'.$fieldName.'--'.$groupIndex.'--'.$fieldIndex.'.txt';
-	if( !$field = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE ) ) {
+	$cache_name = $post_id.'/'.$fieldName.'--'.$groupIndex.'--'.$fieldIndex.'.txt';
+	$field = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE );
+	
+	if( !$field && !is_null( $field ) ) {
 		$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
 		MF_put_cached_data( $cache_name, json_encode( $field ) );
 	}
