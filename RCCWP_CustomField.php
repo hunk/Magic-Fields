@@ -494,7 +494,7 @@ class RCCWP_CustomField {
 			",ARRAY_A);
 						
 		if (empty($customFieldvalues)) 
-			return false;
+			return null;
 		
 		$customFieldvalues['properties'] = unserialize($customFieldvalues['properties']);
 		
