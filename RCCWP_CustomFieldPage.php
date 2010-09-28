@@ -9,12 +9,31 @@ class RCCWP_CustomFieldPage{
 		$custom_field = RCCWP_CustomField::Get((int)$_GET['custom-field-id']);
 		$customGroupID = $custom_field->group_id;	
 		
+		if (isset($customGroupID)) {
+      $group = RCCWP_CustomGroup::Get($customGroupID);
+      
+      ?>
+      
+      <script type="text/javascript">
+      
+      var mf_create_field = false;
+        
+      var mf_group_info = {
+        'name' : '<?php echo stripslashes($group->name) ?>',
+        'safe_name' : '<?php echo sanitize_title_with_dashes($group->name) ?>'
+      };
+      
+      </script>
+      
+      <?php
+    }
+    
 		if (in_array($custom_field->type, array('Image'))) $cssVlaue = $custom_field->CSS;
 		
   		?>
 	  	
   		<div class="wrap">
-  		<h2><?php _e('Edit Custom Field',$mf_domain); ?> - <?php echo $custom_field->description ?></h2>
+  		<h2><?php _e('Edit Custom Field',$mf_domain); ?> - <em><?php echo $custom_field->description ?></em> <?php if ($group && $group->name != "__default") { _e("In Group", $mf_domain); echo " <em>".$group->name."</em>"; } ?></h2>
   		
   		<br class="clear" />
   		<?php
@@ -36,12 +55,12 @@ class RCCWP_CustomFieldPage{
 		<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6">
 		<tbody>
 		<tr valign="top">
-			<th scope="row"><?php _e('Name',$mf_domain); ?>:</th>
-			<td><input name="custom-field-name" id="custom-field-name" size="40" type="text" value="<?php echo htmlspecialchars($custom_field->name)?>" /></td>
-		</tr>
-		<tr valign="top">
 			<th scope="row"><?php _e('Label',$mf_domain); ?>:</th>
 			<td><input name="custom-field-description" id="custom-field-description" size="40" type="text" value="<?php echo htmlspecialchars($custom_field->description)?>" /></td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><?php _e('Name',$mf_domain); ?>:</th>
+			<td><input name="custom-field-name" id="custom-field-name" size="40" type="text" value="<?php echo htmlspecialchars($custom_field->name)?>" /><button id="bt-custom-field-name-suggest" class="button">Suggest</button></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Help text',$mf_domain); ?>:</th>
