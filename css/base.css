@@ -1285,6 +1285,17 @@ input.button.disabled {
 }
 
 
+/* Extra related type styling */
+
+.mf-t-related-type select optgroup { 
+  font-style: normal;
+  font-weight: normal;
+  color: #999;
+}
+
+.mf-t-related-type select optgroup option {
+  color: #000;
+}
 
 
 .mf-audio-value-actions .actions-audio,
