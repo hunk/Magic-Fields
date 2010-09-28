@@ -174,6 +174,7 @@ class RCCWP_WritePostPage
 							MF_URI.'js/jquery.colorpicker.js'
 						);
 
+
     //load affix plugin (for tooltips)
 		wp_enqueue_script(	'jqueryaffix', 
 							MF_URI.'js/jquery.affix.min.js'
@@ -847,7 +848,7 @@ class RCCWP_WritePostPage
   /* TRAVERSAL ADDITION - Adds grouping of related type fields when all write panels are listed -- */
       $panel_name = "";
 		  $display_panel_name = "";
-		  
+
 		  if ( $panel_id == -5 || $panel_id == -2 || $panel_id == -1 ) {
 		  	
 		  	$panel_name = $pn_cache[$option->meta_value];
@@ -860,12 +861,19 @@ class RCCWP_WritePostPage
           }
 	  	  }
 	  	  
-	  	  
+	  	  $panel = RCCWP_CustomWritePanel::Get($option->meta_value);
+        
         if (!$panel_name) {
           $panel_name = "";
-	  	    $display_panel_name = Inflect::singularize($panel_name);
+	  	    $display_panel_name = "";
         } else {
-  	  	  $display_panel_name = Inflect::singularize($panel_name)." - ";
+          
+          if ($panel->single) {
+  	  	    $display_panel_name = "";
+          }
+          else {
+  	  	    $display_panel_name = "&nbsp;&nbsp;&nbsp;".Inflect::singularize($panel_name)." - ";
+          }
         }
         
         if ($panel_name != "" && $panel_name != $last_panel_name) {
@@ -873,8 +881,12 @@ class RCCWP_WritePostPage
             echo "</optgroup>";
           }
 
-          echo '<optgroup label="'.Inflect::pluralize($panel_name).'">';
-          $last_panel_name = $panel_name;
+          if ($panel->single) {
+            $last_panel_name = "";
+          } else {
+            echo '<optgroup label="'.Inflect::pluralize($panel_name).'">';
+            $last_panel_name = $panel_name;
+          }
         }
       }
       /* END TRAVERSAL ADDITION */
