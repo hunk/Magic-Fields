@@ -46,7 +46,15 @@ jQuery(document).ready(function(){
 	
 	var suggestCustomFieldName = function() {
 	  var desc = jQuery('#custom-field-description').val();
+	  
+	  // first, try to extract bracketed items OUT of the field name 
+	  // so a field labelled "Image File (640 X 480)" would have the extra
+	  // info removed from the suggestion
+	  
+    desc = desc.replace(/\s?\([^\)]*\)/gi, "");   
+
 	  var nv = jQuery.slug(desc, { sep: "_" });
+	  
 	  
     if (mf_group_info && mf_group_info.safe_name && mf_group_info.safe_name != ""  && mf_group_info.safe_name != "__default") {
       var prefix = jQuery.slug(mf_group_info.singular_safe_name, { sep: "_" });
