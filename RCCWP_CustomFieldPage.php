@@ -20,7 +20,8 @@ class RCCWP_CustomFieldPage{
         
       var mf_group_info = {
         'name' : '<?php echo stripslashes($group->name) ?>',
-        'safe_name' : '<?php echo sanitize_title_with_dashes($group->name) ?>'
+        'safe_name' : '<?php echo sanitize_title_with_dashes($group->name) ?>',
+        'singular_safe_name' : '<?php echo sanitize_title_with_dashes(Inflect::singularize($group->name)) ?>'
       };
       
       </script>

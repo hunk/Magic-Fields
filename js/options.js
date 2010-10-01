@@ -49,7 +49,7 @@ jQuery(document).ready(function(){
 	  var nv = jQuery.slug(desc, { sep: "_" });
 	  
     if (mf_group_info && mf_group_info.safe_name && mf_group_info.safe_name != ""  && mf_group_info.safe_name != "__default") {
-      var prefix = jQuery.slug(mf_group_info.safe_name, { sep: "_" });
+      var prefix = jQuery.slug(mf_group_info.singular_safe_name, { sep: "_" });
       
       if (prefix != "" && prefix != "_") {
         nv = prefix + "_" + nv;
