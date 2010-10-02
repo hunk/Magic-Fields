@@ -219,10 +219,14 @@ function getFieldOrder($field_name,$group=1,$post_id=NULL){
  * 
  * @param boolean $safe make the return name 'url safe'
  */
-function get_panel_name($safe=true){
+function get_panel_name($safe=true, $post_id = NULL){
 	global $wpdb, $post;
-
-	$panel_id = $wpdb->get_var("SELECT `meta_value` FROM {$wpdb->postmeta} WHERE post_id = ".$post->ID.' AND meta_key = "'.RC_CWP_POST_WRITE_PANEL_ID_META_KEY.'"');
+  
+  if (!$post_id) {
+    $post_id = $post->ID;
+  }
+  
+	$panel_id = $wpdb->get_var("SELECT `meta_value` FROM {$wpdb->postmeta} WHERE post_id = ".$post_id.' AND meta_key = "'.RC_CWP_POST_WRITE_PANEL_ID_META_KEY.'"');
 	if( (int) $panel_id == 0 )
 		return false;
 	
@@ -462,44 +466,7 @@ function gen_image_for($value, $params_image, $fieldType = 9) {
   return aux_image($name, $params_image, $fieldType);
 }
 
-/* 
 
-New function to get a "set" of values, where a set is simply a group 
-that is not able to be duplicated. This is a common way to related a 
-group of fields together in Magic Fields, and this function is an easier
-and faster way than "get" on each field individually.
-
-*/
-
-
-function get_set($name_group, $options = array(), $post_id = NULL) {
-  
-  $ret = array();
-
-  $options = array_merge( array("flat" => TRUE, "prefix" => ""), (array) $options);
-
-  $group = get_group($name_group, $post_id);
-  
-  if (count($group) > 0) {
-    $single = $group[1];
-    
-    foreach ($single as $key=>$value) {
-      $newkey = $key;
-      
-      if ($options["prefix"] != "") {
-        $newkey = preg_replace("/^".preg_quote($options["prefix"])."/", "", $newkey);
-      }
-      
-      if ($options["flat_fields"]) {
-        $ret[$newkey] = $value[1];
-      } else {
-        $ret[$newkey] = $value;
-      }
-    }
-  }
-
-  return $ret; 
-}
 
 function get_group($name_group,$post_id=NULL){
 	global $wpdb, $post, $FIELD_TYPES;
@@ -728,6 +695,44 @@ function get_clean_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 
 
 
+
+/* 
+  Get a "set" of values, where a set is simply a group that is not able to be duplicated. This is a common way to related a 
+  group of fields together in Magic Fields, and this function is an easier and faster way than "get" on each field individually.
+*/
+
+
+function get_set($name_group, $options = array(), $post_id = NULL) {
+  
+  $ret = array();
+
+  $options = array_merge( array("flatten" => true, "prefix" => ""), (array) $options);
+
+  $group = get_group($name_group, $post_id);
+  
+  if (count($group) > 0) {
+    $single = $group[1];
+    
+    foreach ($single as $key=>$value) {
+      $newkey = $key;
+      
+      if ($options["prefix"] != "") {
+        $newkey = preg_replace("/^".preg_quote($options["prefix"])."/", "", $newkey);
+      }
+      
+      if ($options["flatten"]) {
+        $ret[$newkey] = $value[1];
+      } else {
+        $ret[$newkey] = $value;
+      }
+    }
+  }
+
+  return $ret; 
+}
+
+
+
 /* 
   
   Allows you to specify a few extra options for the get_group call:
@@ -773,6 +778,7 @@ function get_clean_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 
 function get_group_with_options($name_group, $options = array(), $post_id = NULL) {
   
+  
   $options = array_merge( array("flatten" => false, "prefix" => ""), (array) $options);
   
   $ret = array();
@@ -808,7 +814,7 @@ function get_group_with_options($name_group, $options = array(), $post_id = NULL
 
 
 function get_group_with_prefix($name_group, $prefix, $post_id = NULL) {
-  return get_group_options($name_group, array("prefix" => $prefix, "flatten" => FALSE), $post_id);
+  return get_group_with_options($name_group, array("prefix" => $prefix, "flatten" => FALSE), $post_id);
 }
 
 function get_flat_group($name_group, $post_id = NULL) {

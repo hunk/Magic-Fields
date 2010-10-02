@@ -96,6 +96,8 @@ $Inflect_Irregular = array(
     );
 
 $Inflect_Uncountable = array(
+        'details',
+        'people',
         'sheep',
         'fish',
         'deer',

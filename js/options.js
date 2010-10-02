@@ -40,4 +40,48 @@ jQuery(document).ready(function(){
 	jQuery('input[name=supports]').click(function(){
 		jQuery('.supports_options').toggle("slow");	
 	});
+	
+	
+	/* Addition to allow suggestion of a field name based on the label */
+	
+	var suggestCustomFieldName = function() {
+	  var desc = jQuery('#custom-field-description').val();
+	  
+	  // first, try to extract bracketed items OUT of the field name 
+	  // so a field labelled "Image File (640 X 480)" would have the extra
+	  // info removed from the suggestion
+	  
+    desc = desc.replace(/\s?\([^\)]*\)/gi, "");   
+
+	  var nv = jQuery.slug(desc, { sep: "_" });
+	  
+	  
+    if (mf_group_info && mf_group_info.safe_name && mf_group_info.safe_name != ""  && mf_group_info.safe_name != "__default") {
+      var prefix = jQuery.slug(mf_group_info.singular_safe_name, { sep: "_" });
+      
+      if (prefix != "" && prefix != "_") {
+        nv = prefix + "_" + nv;
+      }
+    }
+
+	  jQuery('#custom-field-name').val(nv);
+
+  };
+  
+	jQuery('#custom-field-description').change(function(event) {
+	  if (mf_create_field) { // only suggest names if user is CREATING the field
+	    suggestCustomFieldName();
+	  }
+  });
+  
+	jQuery('#bt-custom-field-name-suggest').click( function() {
+	  
+	  if (jQuery.trim(jQuery('#custom-field-description').val()) != "") { 
+	    suggestCustomFieldName();
+    } else {
+      alert('Please enter a field label first!');
+    }
+	  return false;
+  });
+  
 });
