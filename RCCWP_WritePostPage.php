@@ -576,7 +576,7 @@ class RCCWP_WritePostPage
 				?>
 				<span class="name"><?php echo $customFieldTitle?><em><?php echo $titleCounter ?></em></span>
 				<?php if (!empty($customFieldHelp)) {?>
-					<small class="tip">what's this?<span class="field_help"><?php echo $customFieldHelp; ?></span></small>
+					<small class="tip"><?php _e("what's this?",$mf_domain);?><span class="field_help"><?php echo $customFieldHelp; ?></span></small>
 				<?php } ?>
 				
 			</label>
@@ -1578,7 +1578,7 @@ class RCCWP_WritePostPage
   				if(is_wp30()) $thumb_class= 'thickbox';
   				?>
 
-  			<a class="<?php echo $thumb_class; ?> update_field_media_upload" id="thumb_<?php echo $idField ?>" href="media-upload.php?post_id=<?php echo $post->ID; ?>&#038;type=image&#038;TB_iframe=1" >Set Image</a>
+  			<a class="<?php echo $thumb_class; ?> update_field_media_upload" id="thumb_<?php echo $idField ?>" href="media-upload.php?post_id=<?php echo $post->ID; ?>&#038;type=image&#038;TB_iframe=1" ><?php _e('Set Image',$mf_domain); ?></a>
   			</div>
   			<?php
   			if(!is_wp30()):
@@ -1609,9 +1609,10 @@ class RCCWP_WritePostPage
 	
 
   function CreateAttributesBox() {
+    global $mf_domain;
   
-    add_meta_box('mfattributespage', __('Magic Fields Attributes'), array('RCCWP_WritePostPage','attributesBoxContentPage'), 'page', 'side', 'core');
-    add_meta_box('mfattributespost', __('Magic Fields Attributes'), array('RCCWP_WritePostPage','attributesBoxContentPost'), 'post', 'side', 'core');
+    add_meta_box('mfattributespage', __('Magic Fields Attributes',$mf_domain), array('RCCWP_WritePostPage','attributesBoxContentPage'), 'page', 'side', 'core');
+    add_meta_box('mfattributespost', __('Magic Fields Attributes',$mf_domain), array('RCCWP_WritePostPage','attributesBoxContentPost'), 'post', 'side', 'core');
   }
   
   
