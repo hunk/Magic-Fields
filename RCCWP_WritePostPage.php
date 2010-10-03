@@ -143,23 +143,6 @@ class RCCWP_WritePostPage
 							MF_URI.'js/custom_fields/validate.js'
 						);
 
-    /**
-     *  mousewheel and mwheelintent seems to doesn't work well with wordpress 2.9.X 
-     *  and how this file is not require for the jscrollpane work,
-     *  not  will be included in wordpress 2.9.x 
-     */
-    if( is_wp30() ){
-      //loading jquery mousewheel
-	  	wp_enqueue_script(	'mousewheel',
-		  					MF_URI.'js/jquery.mousewheel.js'
-			  			);
-
-      //loading jquery mousewheel intent
-	    wp_enqueue_script(	'mwheelintent',
-		  					MF_URI.'js/jquery.mwheelintent.js'
-			  			);
-    }
-
     //loading jquery scrollpane (group summaries)
 		wp_enqueue_script(	'jscrollpane',
 							MF_URI.'js/jquery.jscrollpane.js'
