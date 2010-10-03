@@ -11,6 +11,7 @@ function smartTrim(string, maxLength) {
   var rstrip = toremove - lstrip;
   return string.substring(0, midpoint-lstrip) + ' &hellip; ' + string.substring(midpoint+rstrip);
 }
+
     
 (function($) { // closure and $ portability
 
@@ -1079,7 +1080,6 @@ add_editor_text = function(context){
     }
   });
   
-  
   var doInit = true;
   
   if (context && context.length) {
@@ -1097,6 +1097,7 @@ add_editor_text = function(context){
       
       options.elements = ids.join(",");
       options.mode = "exact";
+      options.init_instance_callback = 'mf_resizeEditorBox';
       
     } else {
       options.editor_selector = "pre_editor";
@@ -1169,5 +1170,20 @@ add_color_picker = function(context){
     
     
   });
-    
 }
+
+/** 
+ * Set a Default width/height to the multiline text fields
+ * 
+ */
+mf_resizeEditorBox = function (editor) {
+    // Have this function executed via TinyMCE's init_instance_callback option!
+    // requires TinyMCE3.x
+    var container = editor.contentAreaContainer, /* new in TinyMCE3.x - */
+
+    // extend container by the difference between available width/height and used width/height
+    docFrame = container.children [0] // doesn't seem right : was .style.height;
+    docFrame.style.width = container.style.width =  "100%";
+    docFrame.style.height = container.style.height = "200px";
+}
+
