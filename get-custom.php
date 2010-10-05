@@ -536,6 +536,7 @@ function get_group($name_group,$post_id=NULL){
 				break;
 		}
 	}
+
 	return $info;
 }
 
@@ -785,8 +786,9 @@ function get_group_with_options($name_group, $options = array(), $post_id = NULL
   
   $group = get_group($name_group, $post_id);
   
+  $count = 1;
+  
   foreach ($group as $item) {
-    
     $newitem = array();
     
     foreach ($item as $key => $value) {
@@ -805,8 +807,8 @@ function get_group_with_options($name_group, $options = array(), $post_id = NULL
 
     }
     
-    $ret[] = $newitem;
-    
+    $ret[$count] = $newitem;
+    $count++;
   }
 
   return $ret;
