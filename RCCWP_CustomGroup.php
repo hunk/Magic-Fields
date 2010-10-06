@@ -111,6 +111,7 @@ class RCCWP_CustomGroup
 			" WHERE group_id = " . $customGroupId .
 			" ORDER BY cf.display_order,cf.id ASC";
 
+    
 		$results =$wpdb->get_results($sql);
 		if (!isset($results))
 			$results = array();

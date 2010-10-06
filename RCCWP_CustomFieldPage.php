@@ -9,12 +9,32 @@ class RCCWP_CustomFieldPage{
 		$custom_field = RCCWP_CustomField::Get((int)$_GET['custom-field-id']);
 		$customGroupID = $custom_field->group_id;	
 		
+		if (isset($customGroupID)) {
+      $group = RCCWP_CustomGroup::Get($customGroupID);
+      
+      ?>
+      
+      <script type="text/javascript">
+      
+      var mf_create_field = false;
+        
+      var mf_group_info = {
+        'name' : '<?php echo stripslashes($group->name) ?>',
+        'safe_name' : '<?php echo sanitize_title_with_dashes($group->name) ?>',
+        'singular_safe_name' : '<?php echo sanitize_title_with_dashes(Inflect::singularize($group->name)) ?>'
+      };
+      
+      </script>
+      
+      <?php
+    }
+    
 		if (in_array($custom_field->type, array('Image'))) $cssVlaue = $custom_field->CSS;
 		
   		?>
 	  	
   		<div class="wrap">
-  		<h2><?php _e('Edit Custom Field',$mf_domain); ?> - <?php echo $custom_field->description ?></h2>
+  		<h2><?php _e('Edit Custom Field',$mf_domain); ?> - <em><?php echo $custom_field->description ?></em> <?php if ($group && $group->name != "__default") { _e("In Group", $mf_domain); echo " <em>".$group->name."</em>"; } ?></h2>
   		
   		<br class="clear" />
   		<?php
@@ -36,12 +56,12 @@ class RCCWP_CustomFieldPage{
 		<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6">
 		<tbody>
 		<tr valign="top">
-			<th scope="row"><?php _e('Name',$mf_domain); ?>:</th>
-			<td><input name="custom-field-name" id="custom-field-name" size="40" type="text" value="<?php echo htmlspecialchars($custom_field->name)?>" /></td>
-		</tr>
-		<tr valign="top">
 			<th scope="row"><?php _e('Label',$mf_domain); ?>:</th>
 			<td><input name="custom-field-description" id="custom-field-description" size="40" type="text" value="<?php echo htmlspecialchars($custom_field->description)?>" /></td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><?php _e('Name',$mf_domain); ?>:</th>
+			<td><input name="custom-field-name" id="custom-field-name" size="40" type="text" value="<?php echo htmlspecialchars($custom_field->name)?>" /><button id="bt-custom-field-name-suggest" class="button">Suggest</button></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Help text',$mf_domain); ?>:</th>
@@ -80,6 +100,7 @@ class RCCWP_CustomFieldPage{
 				</select>
 			</td>	
 		</tr>
+
 		
 		<?php } ?>
 		<?php if (in_array($custom_field->type, array('Textbox', 'Listbox'))) : ?>
@@ -154,6 +175,8 @@ class RCCWP_CustomFieldPage{
 		<tr valign="top">
 			<th scope="row"><?php _e('Related Type Panel', $mf_domain); ?>:</th>
 			<td><select name="custom-field-related-type-panel-id" id="custom-field-related-type-panel-id">
+				<option value="-6" <?php if ($custom_field->properties['panel_id']== -6) echo 'selected' ?> >All Posts and Pages</option>
+				<option value="-5" <?php if ($custom_field->properties['panel_id']== -5) echo 'selected' ?> >All Posts and Pages with Write Panel</option>
 				<option value="-4" <?php if ($custom_field->properties['panel_id']== -4) echo 'selected' ?> >All Post</option>
 				<option value="-3" <?php if ($custom_field->properties['panel_id']== -3) echo 'selected' ?> >All Page</option>
 				<option value="-2" <?php if ($custom_field->properties['panel_id']== -2) echo 'selected' ?> >All Post with Write Panel</option>

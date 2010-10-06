@@ -8,11 +8,33 @@ class RCCWP_CreateCustomFieldPage
 	{
 		global $FIELD_TYPES,$mf_domain;
 		$customGroupID = $_REQUEST['custom-group-id'];
+
+    if (isset($customGroupID)) {
+      $group = RCCWP_CustomGroup::Get($customGroupID);
+      
+      ?>
+      
+      <script type="text/javascript">
+        
+      var mf_create_field = true;
+
+      var mf_group_info = {
+        'name' : '<?php echo stripslashes($group->name) ?>',
+        'safe_name' : '<?php echo sanitize_title_with_dashes($group->name) ?>',
+        'singular_safe_name' : '<?php echo sanitize_title_with_dashes(Inflect::singularize($group->name)) ?>'
+      };
+      
+      </script>
+      
+      <?php
+    }
+    
 		?>
   	
+  	  
   		<div class="wrap">
 	  	
-  		<h2><?php _e("Create Custom Field", $mf_domain); ?></h2>
+  		<h2><?php _e("Create Custom Field", $mf_domain); ?> <?php if ($group && $group->name != "__default") { _e("In Group", $mf_domain); echo " <em>".$group->name."</em>"; } ?></h2>
   		<br class="clear" />
   		<?php
 		if (isset($_GET['err_msg'])) :
@@ -25,7 +47,7 @@ class RCCWP_CreateCustomFieldPage
 		endif;
 		?>
   			
-  		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('continue-create-custom-field')?>" method="post" name="create_custom_field_form" id="create-custom-field-form" onsubmit="return checkEmpty();" autocomplete="off">
+  	<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('continue-create-custom-field')?>" method="post" name="create_custom_field_form" id="create-custom-field-form" onsubmit="return checkEmpty();" autocomplete="off">
 
 		<?php if(isset($_GET['custom-group-id']) && !empty($_GET['custom-group-id'])) { ?>
   			<input type="hidden" name="custom-group-id" value="<?php echo $_GET['custom-group-id']?>">
@@ -37,19 +59,6 @@ class RCCWP_CreateCustomFieldPage
 		
 		<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6">
 		<tbody>
-		<tr valign="top">
-			<th scope="row"><?php _e("Name", $mf_domain); ?>:</th> 
-			<td>  
-				<input name="custom-field-name" id="custom-field-name" size="40" type="text" />
-				<input type="hidden" id="custom-field-name_hidden" name="custom-field-name_hidden" onchange="copyField();">
-				<p>
-					<?php _e('Type a unique name for the field, the name must be unique among all fields 
-					in this panel. The name of the field is the key by which you can retrieve 
-					the field value later.',$mf_domain);?>
-					
-				</p>
-			</td>
-		</tr>
 
 		<tr valign="top">
 			<th scope="row"><?php _e("Label", $mf_domain); ?>:</th>
@@ -58,6 +67,21 @@ class RCCWP_CreateCustomFieldPage
 				<p>
 					<?php _e('Type a label for the field. The label of the field is displayed
 					beside the field in Write Panel page.',$mf_domain); ?>
+				</p>
+			</td>
+		</tr>
+
+		<tr valign="top">
+			<th scope="row"><?php _e("Name", $mf_domain); ?>:</th> 
+			<td>  
+				<input name="custom-field-name" id="custom-field-name" size="40" type="text" />
+				<input type="hidden" id="custom-field-name_hidden" name="custom-field-name_hidden" onchange="copyField();" />
+
+				<p>
+					<?php _e('Type a unique name for the field, the name must be unique among all fields 
+					in this panel. The name of the field is the key by which you can retrieve 
+					the field value later.',$mf_domain);?>
+					
 				</p>
 			</td>
 		</tr>
@@ -196,7 +220,9 @@ class RCCWP_CreateCustomFieldPage
 
 		<!-- Hidden value for Image/Photo' Css Class-->
 		<input type="hidden" name="custom-field-css" value="<?php echo $_POST['custom-field-css']?>" />
-
+    
+    
+    
 		<h3><?php echo $current_field->name?></h3>
 		
 		<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6">
@@ -276,6 +302,8 @@ class RCCWP_CreateCustomFieldPage
 		<tr valign="top">
 			<th scope="row"><?php _e('Related Type Panel', $mf_domain); ?>:</th>
 			<td><select name="custom-field-related-type-panel-id" id="custom-field-related-type-panel-id">
+				<option value="-6">All Posts and Pages</option>
+				<option value="-5">All Posts and Pages with Write Panel</option>
 				<option value="-4">All Post</option>
 				<option value="-3">All Page</option>
 				<option value="-2">All Post with Write Panel</option>

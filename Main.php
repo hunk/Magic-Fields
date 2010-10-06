@@ -4,7 +4,7 @@ Plugin Name: Magic-fields
 Plugin URI: http://magicfields.org
 Description: Create custom write panels and easily retrieve their values in your templates.
 Author: Hunk and Gnuget
-Version: 1.4
+Version: 1.4.5
 Author URI: http://magicfields.org
 */
 
@@ -23,7 +23,6 @@ Author URI: http://magicfields.org
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, 
  * Boston, MA 02110-1301 USA
  */
-
 
 // Globals
 global $wpdb,$post,$current_user,$FIELD_TYPES,$current_user,$flag,$is_wordpress_mu;
@@ -67,6 +66,9 @@ require_once 'RCCWP_CreateCustomFieldPage.php';
 //Debug tool
 require_once 'tools/debug.php';
 
+//Inflection class
+require_once 'tools/inflect.php';
+
  /**
   * function for languages
   */
@@ -100,8 +102,9 @@ if (is_admin()) {
 		}
 	}
 
+
 	if (get_option(RC_CWP_OPTION_KEY) !== false) {
-		require_once ('RCCWP_Processor.php');
+    require_once ('RCCWP_Processor.php');
 		add_action('init', array('RCCWP_Processor', 'Main'));
 		
 
@@ -118,6 +121,7 @@ if (is_admin()) {
 
 		// -- Hook all functions related to saving posts in order to save custom fields values
 		require_once ('RCCWP_Post.php');	
+		
 		add_action('save_post', array('RCCWP_Post', 'SaveCustomFields'));
  		add_action('delete_post', array('RCCWP_Post','DeletePostMetaData')) ;
 		
@@ -166,9 +170,10 @@ add_action('edit_page_form','put_write_panel_id');
  */
 function put_write_panel_id(){
 	global $CUSTOM_WRITE_PANEL;
+
+	echo "<input type='hidden' name='rc-custom-write-panel-verify-key' id='rc-custom-write-panel-verify-key' value='".wp_create_nonce('rc-custom-write-panel')."'/>"; // traversal, moved this out of the if to allow posts to be attached to panels 
 	
 	if(!empty($CUSTOM_WRITE_PANEL->id)){
-		echo "<input type='hidden' name='rc-custom-write-panel-verify-key' id='rc-custom-write-panel-verify-key' value='".wp_create_nonce('rc-custom-write-panel')."'/>";
 		echo "<input type='hidden' name='rc-cwp-custom-write-panel-id' value='".$CUSTOM_WRITE_PANEL->id."'/>";
 		echo "<input type='hidden' value='' name='magicfields_remove_files' id='magicfields_remove_files' >";
 	}

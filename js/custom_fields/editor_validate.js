@@ -1,15 +1,70 @@
+var mf_panel_items = {};
+
 jQuery().ready(function() {
 	jQuery("#publish").live('click',check_textarea);
-	//set config for editor
-	tinyMCE.init({
-		mode:"specific_textareas", editor_selector:"pre_editor", width:"100%", theme:"advanced", skin:"wp_theme", theme_advanced_buttons1:"bold,italic,strikethrough,|,bullist,numlist,blockquote,|,justifyleft,justifycenter,justifyright,|,link,unlink,wp_more,|,spellchecker,fullscreen,wp_adv,|,code,|,add_image,add_video,add_audio,add_media", theme_advanced_buttons2:"formatselect,underline,justifyfull,forecolor,|,pastetext,pasteword,removeformat,|,media,charmap,|,outdent,indent,|,undo,redo,wp_help", theme_advanced_buttons3:"", theme_advanced_buttons4:"", language: lan_editor, spellchecker_languages:"+English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr,German=de,Italian=it,Polish=pl,Portuguese=pt,Spanish=es,Swedish=sv", theme_advanced_toolbar_location:"top", theme_advanced_toolbar_align:"left", theme_advanced_statusbar_location:"bottom", theme_advanced_resizing:"1", theme_advanced_resize_horizontal:"", dialog_type:"modal", relative_urls:"", remove_script_host:"", convert_urls:"", apply_source_formatting:"", remove_linebreaks:"1", gecko_spellcheck:"1", entities:"38,amp,60,lt,62,gt", accessibility_focus:"1", tabfocus_elements:"major-publishing-actions", media_strict:"", wpeditimage_disable_captions:"", plugins:"safari,inlinepopups,spellchecker,paste,wordpress,media,fullscreen,wpeditimage,wpgallery,tabfocus"
-	});
-	//set editor for textarea
-	jQuery(":input[type='textarea'].mf_editor").each( function(inputField){
-		var editor_text = jQuery(this).attr('id');
-		tinyMCE.execCommand('mceAddControl', true, editor_text);
-		jQuery('#'+editor_text).removeClass('pre_editor');
-	});
+	
+	// traversal: setup magic fields options panel
+  
+  function mfCustomWritePanelChange() {
+    
+    if (mf_panel_items) {
+      
+      var sel = jQuery('#rc-cwp-change-custom-write-panel-id');
+      var info = mf_panel_items[sel.val()];
+
+      jQuery('#rc-cwp-set-page-template').removeAttr("disabled").removeClass("disabled").removeAttr("title");
+      jQuery('#rc-cwp-set-page-parent').removeAttr("disabled").removeClass("disabled").removeAttr("title");
+    
+    
+      jQuery('#mf-page-template-display').html(info.template_name || '<span class="none">(none)</span>');
+      jQuery('#mf-page-parent-display').html(info.parent_page_title || '<span class="none">(none)</span>');
+    
+      
+      
+      if (info.parent_page == '') {
+        jQuery('#rc-cwp-set-page-parent').attr("disabled", "disabled").addClass("disabled").attr("title", "The selected write panel has no default page parent");
+      }
+
+      if (info.panel_theme == '') {
+          jQuery('#rc-cwp-set-page-template').attr("disabled", "disabled").addClass("disabled").attr("title", "The selected write panel has no default page template");
+      }
+    }
+  }
+
+  if (jQuery('#rc-cwp-set-buttons').length) {
+  
+  	jQuery('#rc-cwp-change-custom-write-panel-id')
+  	  .change( function() {
+  	    var pid = jQuery('#rc-cwp-change-custom-write-panel-id').val();
+	    
+  	      if (pid == -1) {
+            jQuery('#rc-cwp-set-buttons').fadeOut("fast");
+          } else {
+    	      jQuery('#rc-cwp-set-buttons').fadeIn("fast");
+          }
+	    
+    	    mfCustomWritePanelChange();
+  	  } );
+	
+  	mfCustomWritePanelChange();
+	
+	}
+	
+	jQuery('#rc-cwp-set-page-template').click( function() {
+	  var sel = jQuery('#rc-cwp-change-custom-write-panel-id');
+    var info = mf_panel_items[sel.val()];
+	  jQuery('#page_template').val(info.panel_theme);
+    return false;
+  });
+
+	jQuery('#rc-cwp-set-page-parent').click( function() {
+	  var sel = jQuery('#rc-cwp-change-custom-write-panel-id');
+    var info = mf_panel_items[sel.val()];
+	  jQuery('#parent_id').val(info.parent_page);
+    return false;
+  });
+  
+	
 });
 // this function update textarea with value the editor  for validation
 check_textarea = function(){
@@ -27,3 +82,7 @@ function add_editor(id){
 function del_editor(id){
 	tinyMCE.execCommand('mceRemoveControl', false, id);
 }
+
+
+
+

@@ -10,6 +10,13 @@ function manage_js(){
           '0.1',
           TRUE
 				);
+
+    //load jquery slug plugin
+		wp_enqueue_script(	'jqueryslug', 
+							MF_URI.'js/jquery.slug.js'
+						);
+
+
 }
 
 

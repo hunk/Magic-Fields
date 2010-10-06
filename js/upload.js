@@ -42,7 +42,7 @@ uploadurl = function(input_name,file_type){
           
           if(jQuery('#img_thumb_'+input_name)){
              jQuery('#img_thumb_'+input_name).attr('src',phpthumb+"?&w=150&h=120&src="+JS_MF_FILES_PATH+h[1]);
-             var b = "&nbsp;<strong><a href='#remove' class='remove' id='remove-"+input_name+"'>Delete</a></strong>";
+             var b = '<a href="' + h[1] + '" target="_blank">View</a>&nbsp;&nbsp;|&nbsp;&nbsp;<strong><a href="#remove" class="remove" id="remove-'+input_name+'">Delete</a></strong>';
              jQuery('#photo_edit_link'+input_name ).innerHTML = b;
           }
       } 

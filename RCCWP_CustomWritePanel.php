@@ -11,10 +11,14 @@ class RCCWP_CustomWritePanel
 	 * @return array of objects containing all write panels. Each object contains
 	 * 			id, name, description, display_order, capability_name, type, always_show
 	 */
-	function GetCustomWritePanels() {
+	function GetCustomWritePanels($include_global = FALSE) {
 		global $wpdb;
 	
 		$sql = "SELECT id, name, description, display_order, capability_name, type, single  FROM " . MF_TABLE_PANELS;
+    
+    if (!$include_global) { // fix to exclude the global panel from general lists
+      $sql .= " WHERE name <> '_Global' ";  
+    }
 			
 		$sql .= " ORDER BY display_order ASC";
 		$results = $wpdb->get_results($sql);
@@ -511,12 +515,13 @@ class RCCWP_CustomWritePanel
 	 * @return array of objects representing basic information of the group, 
 	 * 				each object contains id, name and module_id   
 	 */
-	function GetCustomGroups($customWritePanelId)
+	function GetCustomGroups($customWritePanelId, $orderby = "name")
 	{
 		global $wpdb;
 		$sql = "SELECT * FROM " . MF_TABLE_PANEL_GROUPS .
 			" WHERE panel_id = " . $customWritePanelId .
-			" ORDER BY name";
+			" OR panel_id IN (SELECT id FROM " . MF_TABLE_PANELS . " WHERE name = '_Global' ) " .
+			" ORDER BY $orderby";
 
 		$results =$wpdb->get_results($sql);
 		if (!isset($results))

@@ -22,7 +22,7 @@ if( $loaded !== true ){
 global $mf_domain,  $wpdb;
 if (!(is_user_logged_in() &&
       (current_user_can('edit_posts') || current_user_can('edit_published_pages'))))
-	die(__("Athentication failed!",$mf_domain));
+	die(__("Authentication failed!",$mf_domain));
 ?>
 
 <html>
@@ -65,7 +65,7 @@ if (isset($_POST['fileframe'])){
 			@move_uploaded_file( $_FILES['file']['tmp_name'], MF_FILES_PATH . $filename );
 			@chmod(MF_FILES_PATH . $filename, 0644);
 
-			$result_msg = "<font color=\"green\"><b>".__("Successful upload!",$mf_domain)."</b></font>" ;
+		  $result_msg = '<span class="mf-upload-success">'.__("Successful upload",$mf_domain).'!</span>' ;
 			
 			//Checking the mimetype of the file
 			if(valid_mime($_FILES['file']['type'],$acceptedExts)){
@@ -79,9 +79,9 @@ if (isset($_POST['fileframe'])){
 				
 			}
 		}elseif ($_FILES['file']['error'] == UPLOAD_ERR_INI_SIZE){
-			$result_msg = __('The uploaded file exceeds the maximum upload limit',$mf_domain);
+		  $result_msg = '<span class="mf-upload-error">'.__('The uploaded file exceeds the maximum upload limit',$mf_domain).'!</span>';
 		}else{ 
-			$result_msg = "<font color=\"red\"><b>".__("Upload Unsuccessful!",$mf_domain)."</b></font>";
+		  $result_msg = '<span class="mf-upload-error">'.__("Upload Unsuccessful",$mf_domain).'!</span>';
 		}
 	}
 
@@ -95,7 +95,7 @@ if (isset($_POST['fileframe'])){
 			$result_msg = __("Failed to upload the file!",$mf_domain);
 		}
 	}else{
-		$result_msg = "<font color=\"red\"><b>".__("Upload Unsuccessful!",$mf_domain)."</b></font>";
+		$result_msg = '<span class="mf-upload-error">'.__("Upload Unsuccessful!",$mf_domain).'</span>';
 	}
 ?>
 
@@ -104,7 +104,6 @@ if (isset($_POST['fileframe'])){
 		<?php
 			$idField = changeNameInput($_POST['input_name']);
 		?>
-		
 		
 		// The code that runs after the file is uploaded
 		var par = window.parent.document;
@@ -161,8 +160,7 @@ function upload(){
 	iframe.style.display="none";
 
 	// update progress
-	par.getElementById('upload_progress_<?php echo $idField;?>').style.visibility = "visible";
-	par.getElementById('upload_progress_<?php echo $idField;?>').style.height = "auto";
+	par.getElementById('upload_progress_<?php echo $idField;?>').style.display = "block";
 	par.getElementById('upload_progress_<?php echo $idField;?>').innerHTML = "Transferring ";
 
 	setTimeout("transferring(0)",1000);
@@ -204,6 +202,16 @@ body {
 body {
 	background: transparent;
 }
+
+input.mf-file {
+ background: #f8f8f8; 
+}
+
+label.label-file {
+  font-size: 12px;
+  padding-left: 2px;
+}
+
 </style>
 
 
@@ -230,11 +238,11 @@ body {
 
 		<tr>
 			<?php if($_GET['canvas']!=0){ ?>
-				<td width=17%><label for="file"><?php _e('File', $mf_domain); ?>:</label><br />
-				<input id="file" type="file" name="file" onchange="upload()" size="<?php echo $inputSize; ?>"/></td>
+				<td width=17%><label for="file" class="label-file"><?php _e('File', $mf_domain); ?>:</label><br />
+				<input id="file" type="file" name="file" onchange="upload()" size="<?php echo $inputSize; ?>" class="mf-file" /></td>
 			<?php }else{ ?>
-				<td width=17%><label for="file"><?php _e('File', $mf_domain); ?>:</label></td>
-				<td><input id="file" type="file" name="file" onchange="upload()" size="<?php echo $inputSize; ?>"/></td>
+				<td width=17%><label for="file" class="label-file"><?php _e('File', $mf_domain); ?>:</label></td>
+				<td><input id="file" type="file" name="file" onchange="upload()" size="<?php echo $inputSize; ?>" class="mf-file" /></td>
 			<?php } ?>
 		</tr>
 

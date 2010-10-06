@@ -300,10 +300,14 @@ function getFieldOrder($field_name,$group=1,$post_id=NULL){
  * 
  * @param boolean $safe make the return name 'url safe'
  */
-function get_panel_name($safe=true){
+function get_panel_name($safe=true, $post_id = NULL){
 	global $wpdb, $post;
-
-	$panel_id = $wpdb->get_var("SELECT `meta_value` FROM {$wpdb->postmeta} WHERE post_id = ".$post->ID.' AND meta_key = "'.RC_CWP_POST_WRITE_PANEL_ID_META_KEY.'"');
+  
+  if (!$post_id) {
+    $post_id = $post->ID;
+  }
+  
+	$panel_id = $wpdb->get_var("SELECT `meta_value` FROM {$wpdb->postmeta} WHERE post_id = ".$post_id.' AND meta_key = "'.RC_CWP_POST_WRITE_PANEL_ID_META_KEY.'"');
 	if( (int) $panel_id == 0 )
 		return false;
 	
@@ -530,6 +534,21 @@ function aux_image($fieldValue,$params_image,$fieldType = NULL){
   return $fieldValue;
 }
 
+
+/* 
+  Get a generated image for a field value that's already known.
+  This is the case for values from the get_group function, which is the 
+  fastest way to iterate over groups.
+*/
+
+function gen_image_for($value, $params_image, $fieldType = 9) {
+  $name = str_replace(MF_FILES_URI, '', $value); // ensure magic fields URI is not appended.
+  
+  return aux_image($name, $params_image, $fieldType);
+}
+
+
+
 function get_group($name_group,$post_id=NULL){
 	global $wpdb, $post, $FIELD_TYPES;
 	
@@ -581,12 +600,15 @@ function get_group($name_group,$post_id=NULL){
 					$format = unserialize($data->properties);
 					if($format) $info[$data->order_id][$data->field_name][$data->field_count]['t'] = aux_image($data->meta_value,$format['params']);
 					$info[$data->order_id][$data->field_name][$data->field_count]['o'] = MF_FILES_URI.$data->meta_value;		
+					$info[$data->order_id][$data->field_name][$data->field_count]['src'] = MF_FILES_URI.$data->meta_value;	// added a more familiar key for HTML devs!	
+					$info[$data->order_id][$data->field_name][$data->field_count]['name'] = $data->meta_value; // a way to get JUST the file name, for use with aux_image
 				}
 				break;
 		  case $FIELD_TYPES['Image (Upload Media)']:
   			if($data->meta_value != ""){
 					$format = unserialize($data->properties);
   				$image = wp_get_attachment_image_src($data->meta_value,'original');
+  				
   				if($format) $info[$data->order_id][$data->field_name][$data->field_count]['t'] = aux_image($image[0],$format['params'],$data->type);
 
   				$info[$data->order_id][$data->field_name][$data->field_count]['o'] = $image[0];		
@@ -599,6 +621,7 @@ function get_group($name_group,$post_id=NULL){
 				break;
 		}
 	}
+
 	return $info;
 }
 
@@ -766,3 +789,139 @@ function get_clean_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 	}
 	return $info;
 }
+
+
+
+
+
+/* 
+  Get a "set" of values, where a set is simply a group that is not able to be duplicated. This is a common way to related a 
+  group of fields together in Magic Fields, and this function is an easier and faster way than "get" on each field individually.
+*/
+
+
+function get_set($name_group, $options = array(), $post_id = NULL) {
+  
+  $ret = array();
+
+  $options = array_merge( array("flatten" => true, "prefix" => ""), (array) $options);
+
+  $group = get_group($name_group, $post_id);
+  
+  if (count($group) > 0) {
+    $single = $group[1];
+    
+    foreach ($single as $key=>$value) {
+      $newkey = $key;
+      
+      if ($options["prefix"] != "") {
+        $newkey = preg_replace("/^".preg_quote($options["prefix"])."/", "", $newkey);
+      }
+      
+      if ($options["flatten"]) {
+        $ret[$newkey] = $value[1];
+      } else {
+        $ret[$newkey] = $value;
+      }
+    }
+  }
+
+  return $ret; 
+}
+
+
+
+/* 
+  
+  Allows you to specify a few extra options for the get_group call:
+  
+  * flatten: field values will be assumed to have fields that have no duplicates, and the values of the fields will be stored directly against the keys, rather than against $key[1] 
+  * prefix: this will be removed from the beginning of the key of each field in the group, to help readability of code in an example like that below:
+  
+
+  Suppose we a group name "People", with fields named "person_given_name", "person_family_name", "person_title"
+  all of these fields are not duplicatable, but the group may be duplicated.
+  (we add the person_ prefix to "namespace" the field, to ensure it is unique across all fields in the panel)
+  
+  Using get_group to iterate over them, code without a prefix, and might look like this:
+
+  > $people = get_group("People");
+  >  
+  > foreach ($people as $person) {
+  >   echo $person["person_title"][1]." ".$person["person_given_name"][1]." ".$person["person_family_name"][1];
+  > }
+  
+  This is fine, but it's laborious to enter both the indexes, and the person_ prefix every time.
+  
+  Using get_group_with_options, with a prefix and flatten option, the code now looks like this:
+
+  > $people = get_group_with_options("People", array("flatten" => true, $prefix => "people_"));
+  >  
+  > foreach ($people as $person) {
+  >   echo $person["title"]." ".$person["given_name"]." ".$person["family_name"];
+  > }
+
+  Note that the get_group_with_options call is a little tricky itself, as array literals in PHP are not great compared to
+  JavaScript so there are some alias functions under this one. The code above could be rewritten as:
+  
+  > $people = get_flat_group_with_prefix("People", "people_");
+   
+  > foreach ($people as $person) {
+  >  echo $person["title"]." ".$person["given_name"]." ".$person["family_name"];
+  > }
+
+    
+
+*/
+
+function get_group_with_options($name_group, $options = array(), $post_id = NULL) {
+  
+  
+  $options = array_merge( array("flatten" => false, "prefix" => ""), (array) $options);
+  
+  $ret = array();
+  
+  $group = get_group($name_group, $post_id);
+  
+  $count = 1;
+  
+  foreach ($group as $item) {
+    $newitem = array();
+    
+    foreach ($item as $key => $value) {
+      
+      $newkey = $key;
+      
+      if ($options["prefix"] != "") {
+          $newkey = preg_replace("/^".preg_quote($options["prefix"])."/", "", $newkey);
+      }
+      
+      if ($options["flatten"]) { // fields with only 1 element will be set on the key directly, so we don't need to specify the [1] index in this common case 
+        $newitem[$newkey] = $value[1];
+      } else {
+        $newitem[$newkey] = $value;
+      } 
+
+    }
+    
+    $ret[$count] = $newitem;
+    $count++;
+  }
+
+  return $ret;
+}
+
+
+function get_group_with_prefix($name_group, $prefix, $post_id = NULL) {
+  return get_group_with_options($name_group, array("prefix" => $prefix, "flatten" => FALSE), $post_id);
+}
+
+function get_flat_group($name_group, $post_id = NULL) {
+  return get_group_with_options($name_group, array("flatten" => TRUE), $post_id);
+}
+
+function get_flat_group_with_prefix($name_group, $prefix, $post_id = NULL) {
+  return get_group_with_options($name_group, array("prefix" => $prefix, "flatten" => TRUE), $post_id);
+}
+
+

@@ -70,9 +70,9 @@ if (!empty($_POST['upload_url'])) {
 	$filename = DownloadFile();
 
 	if ($filename ==  false) {			
-		$result_msg = "<font color='red'><b>".__("Upload Unsuccessful",$mf_domain)."!</b></font>";
+		$result_msg = '<span class="mf-upload-error">'.__("Upload Unsuccessful",$mf_domain).'!</span>';
 	} else {
-		$result_msg = "<font color='green'><b>".__("Successful upload",$mf_domain)."!</b></font>" ;
+		$result_msg = '<span class="mf-upload-success">'.__("Successful upload",$mf_domain).'!</span>' ;
 		$operationSuccess = "true";
 	}
 	
