@@ -608,7 +608,7 @@ class RCCWP_WritePostPage
 					}else {
 						$charsRemainingSize = $customField->properties['size'];
 					}
-				?><span class="charsRemaining" title="<?php _e('Characters Left', $mf_domain); ?>"><?=$charsRemainingSize?></span><?php
+				?><small class="remaining"><?php _e( 'Characters left: ', $mf_domain )?><span class="charsRemaining" title="<?php _e('Characters left', $mf_domain); ?>"><?=$charsRemainingSize?></span><small><?php
 				}
 				?>
 			</label>

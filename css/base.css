@@ -94,8 +94,12 @@
   color: #666;
   font-weight: normal;
 }
+.mf-field label .remaining {
+	float: left;
+	line-height: 16px;
+	margin-left: 10px;
+	}
 .mf-field label .charsRemaining {
-	position: absolute;
 	right: 10px;
 	color: #999;
 	}
