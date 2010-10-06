@@ -98,10 +98,11 @@
 	float: left;
 	line-height: 16px;
 	margin-left: 10px;
+	color: #999;
 	}
 .mf-field label .charsRemaining {
 	right: 10px;
-	color: #999;
+	color: #666;
 	}
 	.mf-field label .charsRemaining.extreme {
 		color: #F00;
