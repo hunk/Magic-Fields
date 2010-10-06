@@ -933,8 +933,8 @@ function smartTrim(string, maxLength) {
           div  = "c"+inputNameId+"Duplicate";
           counter_field = inputName +"_"+ groupCounter;
        	
-  		getDuplicate(customFieldId,counter,div,groupCounter,groupId,counter_field);
-      });
+		getDuplicate(customFieldId,counter,div,groupCounter,groupId,counter_field);
+    });
 
 	//validate maxlength
 	jQuery('.mf-field.maxlength input, .mf-field.maxlength textarea').keyup(function(){
@@ -952,7 +952,6 @@ function smartTrim(string, maxLength) {
 		}
 		jQuery(this).parents(".mf-field").find('.charsRemaining').html(maximal - actual);
 	});
-});
 
   });
 
