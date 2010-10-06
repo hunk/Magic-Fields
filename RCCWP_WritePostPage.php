@@ -599,9 +599,9 @@ class RCCWP_WritePostPage
 				<span class="name"><?php echo $customFieldTitle?><em><?php echo $titleCounter ?></em></span>
 				<?php
 				if( $customField->required_field == 1 ) { ?> <span class="required">*</span><?php }
-				<?php if (!empty($customFieldHelp)) {?>
+				if (!empty($customFieldHelp)) {?>
 					<small class="tip"><?php _e("what's this?",$mf_domain);?><span class="field_help"><?php echo $customFieldHelp; ?></span></small>
-				<?php } ?>
+				<?php }
 				if( isset( $customField->properties['strict-max-length'] ) && $customField->properties['strict-max-length'] == 1 ) {
 					if( $customField->type == 'Multiline Textbox' ) {
 						$charsRemainingSize = $customField->properties['height']*$customField->properties['width'];
