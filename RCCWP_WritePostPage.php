@@ -1134,14 +1134,20 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		<p class="error_msg_txt upload-msg" id="upload_progress_<?php echo $idField;?>" style="display:none;"></p>
 		<script type="text/javascript"> 
 			//this script is for remove the  file  related  to the post (using ajax)
+      //@todo is neccessary refactor remove_file, the audio type file and the type file use exactly the same function.
+
 			remove_file = function(){
 				if(confirm("Are you sure?")){
 					//get  the name to the file
-					id = jQuery(this).attr("id").split("-")[1];
+          pattern = /remove\-([a-z0-9\-\_]+)/i;
+					id = jQuery(this).attr("id");
+          id = pattern.exec(id);
+          id = id[1];
 					file = jQuery('#'+id).val();
 					
 					jQuery('#'+id).closest(".mf-field").find(".ajax-upload-list").html('');
 					
+          //@ the file SHOULD be removed AFTER to save the post not inmediately
 					jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':file},
 								function(message){
 									jQuery('#actions-'+id).empty();
@@ -1417,7 +1423,12 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 			remove_audio = function(){
 				if(confirm("<?php _e('Are you sure?', $mf_domain); ?>")){
 					//get the name to the image
-					id = jQuery(this).attr('id').split("-")[1];
+				  //id = jQuery(this).attr('id').split("-")[1];
+          pattern = /remove\-([a-z0-9\-\_]+)/i;
+					id = jQuery(this).attr("id");
+          id = pattern.exec(id);
+          id = id[1];
+
 					file = jQuery('#'+id).val(); 
           jQuery('#'+id).closest(".mf-field").find(".ajax-upload-list").html('');
           jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':file},
