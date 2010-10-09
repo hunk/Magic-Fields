@@ -576,7 +576,7 @@ class RCCWP_WritePostPage
 				?>
 				<span class="name"><?php echo $customFieldTitle?><em><?php echo $titleCounter ?></em></span>
 				<?php if (!empty($customFieldHelp)) {?>
-					<small class="tip"><?php _e("what's this?",$mf_domain);?><span class="field_help"><?php echo $customFieldHelp; ?></span></small>
+					<small class="tip"><?php _e("&nbsp;&nbsp;&nbsp;",$mf_domain);?><span class="field_help"><?php echo $customFieldHelp; ?></span></small>
 				<?php } ?>
 				
 			</label>
@@ -1248,6 +1248,8 @@ class RCCWP_WritePostPage
 			$customFieldId = $customField->id;
 			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
 			
+			$raw_value = $value;
+			
 			if(!empty($value)){
 				$value = date($customField->properties['format'],strtotime($value));
 			}else{	
@@ -1273,32 +1275,37 @@ class RCCWP_WritePostPage
 				type="text" 
 				size="<?php echo $inputSize?>" 
 				class="datepicker_mf"   
-		READONLY/>
+		readonly="readonly" />
 		
 		<input 	id="date_field_<?php echo $idField; ?>" 
 				name="<?php echo $inputName?>" 
-				value="<?php echo $value?>" type="hidden" 
+				value="<?php echo $raw_value?>" type="hidden" 
 		/>
 		<input 	type="button" 
 				value="Pick..." 
 				id="pick_<?php echo $idField; ?>" 
-				class="datebotton_mf"
+				class="datebotton_mf button" 
 		/>
 		<input 	type="button" 
 				id="today_<?php echo $idField; ?>"
 				value="Today" 
-				class="todaybotton_mf"
+				class="todaybotton_mf button"
 		/>
 		<input 	type="button" 
 				id="blank_<?php echo $idField; ?>"
 				value="Blank" 
-				class="blankBotton_mf"
+				class="blankBotton_mf button"
 		/>
 		<input 	type="hidden"
 				value="<?php echo $today;?>"
 				id="tt_<?php echo $idField; ?>"
-				class="todaydatebutton_mf"
+				class="todaydatebutton_mf button"
 		/>
+		<input 	type="hidden"
+				value="<?php echo date("Y-m-d");?>"
+				id="tt_raw_<?php echo $idField; ?>"
+		/>
+
 		<input 
 				type="hidden"
 				name="rc_cwp_meta_date[]" 

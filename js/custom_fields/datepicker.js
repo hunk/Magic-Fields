@@ -10,16 +10,18 @@ jQuery(document).ready(function(){
 				
         picker = 'display_date_field_' + picker;
         
-        
         jQuery('#'+picker).datepicker({
+            showAnim: 'fadeIn',
             changeYear: true,
             dateFormat: format,
+            altFormat: "yy-mm-dd",
+            altField: '#' + the_id.replace(/pick_/,'date_field_'),
             showOn:'focus',
             onClose: function(){
                 input = jQuery(this);
                 date = input.val();
-                id = input.attr('id').replace(/display_/,'');
-                jQuery('#'+id).val(date);
+                //id = input.attr('id').replace(/display_/,'');
+                //jQuery('#'+id).val(date);
                 
                 //unbind the event
                 jQuery(this).datepicker('destroy');
@@ -33,10 +35,12 @@ jQuery(document).ready(function(){
 	    picker = the_id.replace(/today_/,'');
 	    today = 'tt_' + picker;    
 	    today = jQuery('#'+today);
+	    today_raw = jQuery('#tt_raw_' + picker);
 	    date = today.val();
+	    date_raw = today_raw.val();
 	    
       jQuery('#display_date_field_'+picker).val(date);
-			jQuery('#date_field_'+picker).val(date);
+			jQuery('#date_field_'+picker).val(date_raw);
 	});
 	
 	//BLANK Botton
