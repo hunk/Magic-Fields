@@ -222,7 +222,7 @@ if ( !function_exists('sys_get_temp_dir')) {
 	$tempfile=tempnam(uniqid(rand(),TRUE),'');
 	if (file_exists($tempfile)) {
 		unlink($tempfile);
-		return realpath(dirname($tempfile));
+		return realpath(dirname($tempfile)).DIRECTORY_SEPARATOR;
 	}
   }
 }
