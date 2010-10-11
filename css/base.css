@@ -94,6 +94,19 @@
   color: #666;
   font-weight: normal;
 }
+.mf-field label .remaining {
+	float: left;
+	line-height: 16px;
+	margin-left: 10px;
+	color: #999;
+	}
+.mf-field label .charsRemaining {
+	right: 10px;
+	color: #666;
+	}
+	.mf-field label .charsRemaining.extreme {
+		color: #F00;
+		}
 
 .textboxinterface{
 	/*width: 100%; */

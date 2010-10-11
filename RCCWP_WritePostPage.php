@@ -557,6 +557,28 @@ class RCCWP_WritePostPage
  		if( $fieldCounter > 1) $titleCounter = " (<span class='counter_{$customFieldName}_{$groupCounter}'>$fieldCounter</span>)";
 
  		$field_group = RCCWP_CustomGroup::Get($customField->group_id);
+ 		
+		/* 
+		 * Add the lang attribute if last part of the field name matches defined languages
+		 * 
+		 * define( 'ADMIN_LANGS', 'en|fr|de' );
+		 * example: field name 'the_about_text_en' matches 'en' and sets ' lang="en"'
+		 *
+		 */  
+		if( defined( 'ADMIN_LANGS' ) ) {
+			$customFieldNameParts = explode( '_', $customFieldName );
+			$lang_switch = ( preg_match( '/'.ADMIN_LANGS.'/', $customFieldNameParts[ sizeof( $customFieldNameParts) - 1 ] ) ) ? ' lang="'.$customFieldNameParts[ sizeof( $customFieldNameParts) - 1 ].'"' : '';
+		}else {
+			$lang_switch = '';
+		}
+		
+		if( isset( $customField->properties['strict-max-length'] ) && $customField->properties['strict-max-length'] == 1 ) {
+			$fieldMaxLengthClass = ' maxlength';
+		}else {
+			$fieldMaxLengthClass = '';
+		}
+
+		
     
     $fieldCustomClass = "mf-field-$customFieldName"; // allows some special styling in wordpress filters
     
@@ -566,7 +588,7 @@ class RCCWP_WritePostPage
     }
     
 		?>
-		<div class="mf-field <?php echo $duplicateClass ?> <?php echo $fieldCustomClass ?> mf-t-<?php echo strtolower(str_replace(" ","-",$customField->type)); ?> <?php echo str_replace(" ","_",$customField->type); ?>" id="row_<?php echo $inputCustomName?>">
+		<div class="mf-field <?php echo $duplicateClass ?> <?php echo $fieldCustomClass ?> mf-t-<?php echo strtolower(str_replace(" ","-",$customField->type)); ?> <?php echo str_replace(" ","_",$customField->type); echo $fieldMaxLengthClass; ?>" id="row_<?php echo $inputCustomName?>"<?php echo $lang_switch;?>>
 			<div class="mf-field-title">
 			<label for="<?php echo $inputCustomName?>">
 				<?php
@@ -575,10 +597,20 @@ class RCCWP_WritePostPage
 					}
 				?>
 				<span class="name"><?php echo $customFieldTitle?><em><?php echo $titleCounter ?></em></span>
-				<?php if (!empty($customFieldHelp)) {?>
-					<small class="tip"><?php _e("&nbsp;&nbsp;&nbsp;",$mf_domain);?><span class="field_help"><?php echo $customFieldHelp; ?></span></small>
-				<?php } ?>
-				
+				<?php
+				if( $customField->required_field == 1 ) { ?> <span class="required">*</span><?php }
+				if (!empty($customFieldHelp)) {?>
+					<small class="tip"><?php _e("what's this?",$mf_domain);?><span class="field_help"><?php echo $customFieldHelp; ?></span></small>
+				<?php }
+				if( isset( $customField->properties['strict-max-length'] ) && $customField->properties['strict-max-length'] == 1 ) {
+					if( $customField->type == 'Multiline Textbox' ) {
+						$charsRemainingSize = $customField->properties['height']*$customField->properties['width'];
+					}else {
+						$charsRemainingSize = $customField->properties['size'];
+					}
+				?><small class="remaining"><?php _e( 'Characters left: ', $mf_domain )?><span class="charsRemaining" title="<?php _e('Characters left', $mf_domain); ?>"><?=$charsRemainingSize?></span><small><?php
+				}
+				?>
 			</label>
 			</div>
 			<!-- /.mf-field-title -->
@@ -964,6 +996,12 @@ class RCCWP_WritePostPage
 		$inputWidth = (int)$customField->properties['width'];
 		$hideEditor = (int)$customField->properties['hide-visual-editor'];
 		
+		if( isset( $customField->properties['strict-max-length'] ) && $customField->properties['strict-max-length'] == 1 ) {
+			$maxlength = ' maxlength="'. ($customField->properties['height'] * $customField->properties['width']) .'"';
+		}else {
+			$maxlength = '';
+		}
+		
 		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 		
@@ -985,7 +1023,19 @@ class RCCWP_WritePostPage
 			$pre_text='';
 		} ?>
 		<div class="mul_mf">
-		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> <?php echo $classEditor; ?> <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $idField; ?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"><?php echo $value?></textarea>
+		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> <?php echo $classEditor; ?> <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $idField; ?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"<?php echo $maxlength?>><?php echo $value?></textarea>
+<?php
+if( isset( $customField->properties['strict-max-length'] ) && $customField->properties['strict-max-length'] == 1 ) {
+?>		<script language="javascript">
+			jQuery(document).ready(function(){			
+				var maximal = parseInt(jQuery('#<?php echo $idField; ?>').attr('maxlength'));
+				var actual = parseInt(jQuery('#<?php echo $idField; ?>').val().length);
+				jQuery('#<?php echo $idField; ?>').parents(".mf-field").find('.charsRemaining').html(maximal - actual);
+			});
+		</script>
+<?php
+}
+?>
 		</div><?php if (!$hideEditor){?></div><?php } ?>
 		<?php if ($customField->required_field){ ?>
 			<div class="mf_message_error"><label for="<?php echo $idField; ?>" class="error_magicfields error">This field is required.</label></div>
@@ -1015,9 +1065,28 @@ class RCCWP_WritePostPage
 		if ($field_group->at_right){
 			if ($inputSize>14) $inputSize = 14;
 		}
+
+		if( isset( $customField->properties['strict-max-length'] ) && $customField->properties['strict-max-length'] == 1 ) {
+			$maxlength = ' maxlength="'.$customField->properties['size'].'"';
+		}else {
+			$maxlength = '';
+		}
+
 		?>
 		<div class="mf_custom_field">
-		<input <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> textboxinterface" tabindex="3" id="<?php echo $idField ?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>" />
+		<input <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> textboxinterface" tabindex="3" id="<?php echo $idField ?>" name="<?php echo $inputName?>" value="<?php echo $value?>" type="text" size="<?php echo $inputSize?>"<?php echo $maxlength?> />
+<?php
+if( isset( $customField->properties['strict-max-length'] ) && $customField->properties['strict-max-length'] == 1 ) {
+?>		<script language="javascript">
+			jQuery(document).ready(function(){			
+				var maximal = parseInt(jQuery('#<?php echo $idField; ?>').attr('maxlength'));
+				var actual = parseInt(jQuery('#<?php echo $idField; ?>').val().length);
+				jQuery('#<?php echo $idField; ?>').parents(".mf-field").find('.charsRemaining').html(maximal - actual);
+			});
+		</script>
+<?php
+}
+?>
 		</div>
 			<?php if ($customField->required_field){ ?>
 				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>

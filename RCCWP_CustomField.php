@@ -497,7 +497,7 @@ class RCCWP_CustomField {
     // traversal addition to the query above to support the global panel
     
 		if (empty($customFieldvalues)) 
-			return false;
+			return null;
 		
 		$customFieldvalues['properties'] = unserialize($customFieldvalues['properties']);
 		

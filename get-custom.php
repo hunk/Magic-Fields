@@ -3,6 +3,76 @@
 require_once 'MF_Constant.php';
 require_once 'tools/debug.php';
 
+/*
+ * THE CACHE FUNCTIONS
+ * by martin@attitude.sk 
+ *
+ * When online you can end up with tons of get requests in theme files and site tends to get slow.
+ * The simple caching mechanism makes it like 6-times faster depending on your server configuration.
+ *
+ */
+
+	/*
+	 * Function to return data if not older than Time To Live
+	 * 
+	 * @param string $file - Relative path to cached folder
+	 * @param int $ttl - Duration in seconds file is considered to be up to date. Defaut is 5 minutes.
+	 */
+	function MF_get_cached_data( $file, $ttl = 300 ) {
+		if( !MF_GET_CACHE_IS_ON ) return FALSE;
+		
+		if( file_exists( MF_GET_CACHE_DIR . $file ) ) {
+			// If you set $ttl to FALSE or negative value, no mod. file time is checked
+			if( !$ttl || $ttl <= 0 ) {
+				return file_get_contents( MF_GET_CACHE_DIR . $file );
+			}
+			
+			if( ( time() - filemtime( MF_GET_CACHE_DIR . $file ) ) < $ttl ) {
+				return file_get_contents( MF_GET_CACHE_DIR . $file );
+			}
+		}
+	return FALSE;
+	}
+	
+	/*
+	 * Function to cache data to specified file
+	 * 
+	 * @param string $file - Relative path to cached folder
+	 * @param string $data - String data to store.
+	 */
+	function MF_put_cached_data( $file, $data ) {
+		if( !MF_GET_CACHE_IS_ON ) return FALSE;
+		if( !file_exists( dirname( MF_GET_CACHE_DIR . $file ) ) ) {
+			// Recursion to create directories
+			if( !mkdir( dirname( MF_GET_CACHE_DIR . $file ), 0777, TRUE) ) {
+				return FALSE;
+			}
+		}
+		if( file_put_contents( MF_GET_CACHE_DIR . $file, $data ) ) {
+			return TRUE;
+		}else {
+			return FALSE;
+		}
+	}
+
+	/*
+	 * Purge any files and folder in directiory.
+	 *
+	 * @param string $dir - absolute path to the dir
+	 *
+	 */
+	function purge_cache_dir($dir) {
+		foreach (glob($dir) as $file) {
+			if (is_dir($file)) { 
+				purge_cache_dir("$file/*");
+				rmdir($file);
+			} else {
+				unlink($file);
+			}
+		}
+	}
+
+
 /**
  * Get number of group duplicates given field name. The function returns 1
  * if there are no duplicates (just the original group), 2 if there is one
@@ -48,7 +118,14 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 	global $post, $FIELD_TYPES;
 	
 	if(!$post_id){ $post_id = $post->ID; }
-	$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
+	
+	$cache_name = $post_id.'/'.$fieldName.'--'.$groupIndex.'--'.$fieldIndex.'.txt';
+	$field = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE );
+	
+	if( !$field && !is_null( $field ) ) {
+		$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
+		MF_put_cached_data( $cache_name, json_encode( $field ) );
+	}
 	if(!$field) return FALSE;
 	
 	$fieldType = $field['type'];
@@ -78,7 +155,11 @@ function get_clean($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$
 	global $post, $FIELD_TYPES;
 	
 	if(!$post_id){ $post_id = $post->ID; }
-	$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
+	$cache_name = $post_id.'/_clean-'.$fieldName.'--'.$groupIndex.'--'.$fieldIndex.'.txt';
+	if( !$field = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE ) ) {
+		$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
+		MF_put_cached_data( $cache_name, json_encode( $field ) );
+	}
 	if(!$field) return FALSE;
 	
 	$fieldType = $field['type'];
@@ -473,14 +554,18 @@ function get_group($name_group,$post_id=NULL){
 	
 	if(!$post_id){ $post_id = $post->ID; }
 	
-	$sql = "SELECT		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
-			FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
-						".MF_TABLE_GROUP_FIELDS." cf 
-			LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
-			WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND 
-						g.name='$name_group' AND pm_wp.meta_id=pm.id AND pm_wp.meta_value <> '' 
-			ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
-		$data_groups = $wpdb->get_results($sql);
+	$cache_name = $post_id.'/_groups-'. sanitize_title_with_dashes( $name_group ).'.txt';
+	if( !$data_groups = json_decode( MF_get_cached_data( $cache_name, FALSE ) ) ) {
+		$sql = "SELECT		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
+				FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
+							".MF_TABLE_GROUP_FIELDS." cf 
+				LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
+				WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND 
+							g.name='$name_group' AND pm_wp.meta_id=pm.id AND pm_wp.meta_value <> '' 
+				ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
+			$data_groups = $wpdb->get_results($sql);
+		MF_put_cached_data( $cache_name, json_encode( $data_groups ) );
+	}
 
 	$info = null;
 	foreach($data_groups as $data){
@@ -556,16 +641,22 @@ function get_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 	
 	if(!$post_id){ $post_id = $post->ID; }
 	
-	$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
-			FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
-						".MF_TABLE_GROUP_FIELDS." cf 
-			LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
-			WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND
-						pm_wp.meta_id=pm.id AND pm.field_name='$fieldName' AND pm.group_count = $groupIndex
-						AND pm_wp.meta_value <> '' 
-			ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
+	$cache_name = $post_id.'/_fduplicates-'.$fieldName.'--'.$groupIndex.'.txt';
+	$data_fields = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE );
+	
+	if( !$data_fields && !is_null( $data_fields ) ) {
+		$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
+				FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
+							".MF_TABLE_GROUP_FIELDS." cf 
+				LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
+				WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND
+							pm_wp.meta_id=pm.id AND pm.field_name='$fieldName' AND pm.group_count = $groupIndex
+							AND pm_wp.meta_value <> '' 
+				ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
 			
 		$data_fields = $wpdb->get_results($sql);
+		MF_put_cached_data( $cache_name, json_encode( $data_fields ) );
+	}
 
 	$info = null;
 	foreach($data_fields as $data){
@@ -628,16 +719,22 @@ function get_clean_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 	
 	if(!$post_id){ $post_id = $post->ID; }
 	
-	$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
-			FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
-						".MF_TABLE_GROUP_FIELDS." cf 
-			LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
-			WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND
-						pm_wp.meta_id=pm.id AND pm.field_name='$fieldName' AND pm.group_count = $groupIndex
-						AND pm_wp.meta_value <> '' 
-			ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
+	$cache_name = $post_id.'/_fduplicates-'.$fieldName.'--'.$groupIndex.'.txt';
+	$data_fields = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE );
+	
+	if( !$data_fields && !is_null( $data_fields ) ) {
+		$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
+				FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
+							".MF_TABLE_GROUP_FIELDS." cf 
+				LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
+				WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND
+							pm_wp.meta_id=pm.id AND pm.field_name='$fieldName' AND pm.group_count = $groupIndex
+							AND pm_wp.meta_value <> '' 
+				ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
 			
 		$data_fields = $wpdb->get_results($sql);
+		MF_put_cached_data( $cache_name, json_encode( $data_fields ) );
+	}
 
 	$info = null;
 	foreach($data_fields as $data){

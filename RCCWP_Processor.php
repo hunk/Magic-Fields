@@ -272,12 +272,28 @@ class RCCWP_Processor {
 					if (in_array($current_field->name, array('Textbox', 'Listbox')))
 					{
 						$custom_field_properties['size'] = $_POST['custom-field-size'];
+						if( isset( $_POST['strict-max-length'] ) ) {
+							$custom_field_properties['strict-max-length'] = $_POST['strict-max-length'];
+							if( empty( $custom_field_properties['size'] ) ) {
+								$custom_field_properties['size'] = 10;
+							}
+						}
 					}
 					else if (in_array($current_field->name, array('Multiline Textbox')))
 					{
 						$custom_field_properties['height'] = $_POST['custom-field-height'];
 						$custom_field_properties['width'] = $_POST['custom-field-width'];
 						if( isset($_POST['hide-visual-editor']) ) $custom_field_properties['hide-visual-editor'] = 1;
+						if( isset( $_POST['strict-max-length'] ) ) {
+							$custom_field_properties['hide-visual-editor'] = 1;
+							$custom_field_properties['strict-max-length'] = $_POST['strict-max-length'];
+							if( empty( $custom_field_properties['height'] ) ) {
+								$custom_field_properties['height'] = 4;
+							}
+							if( empty( $custom_field_properties['width'] ) ) {
+								$custom_field_properties['width'] = 64;
+							}
+						}
 					}
 					else if (in_array($current_field->name, array('Date')))
 					{
@@ -375,12 +391,28 @@ class RCCWP_Processor {
 					if (in_array($current_field->name, array('Textbox', 'Listbox')))
 					{
 						$custom_field_properties['size'] = $_POST['custom-field-size'];
+						if( isset( $_POST['strict-max-length'] ) ) {
+							$custom_field_properties['strict-max-length'] = $_POST['strict-max-length'];
+							if( empty( $custom_field_properties['size'] ) ) {
+								$custom_field_properties['size'] = 10;
+							}
+						}
 					}
 					else if (in_array($current_field->name, array('Multiline Textbox')))
 					{
 						$custom_field_properties['height'] = $_POST['custom-field-height'];
 						$custom_field_properties['width'] = $_POST['custom-field-width'];
 						if( isset($_POST['hide-visual-editor']) ) $custom_field_properties['hide-visual-editor'] = 1;
+						if( isset( $_POST['strict-max-length'] ) ) {
+							$custom_field_properties['hide-visual-editor'] = 1;
+							$custom_field_properties['strict-max-length'] = $_POST['strict-max-length'];
+							if( empty( $custom_field_properties['height'] ) ) {
+								$custom_field_properties['height'] = 4;
+							}
+							if( empty( $custom_field_properties['width'] ) ) {
+								$custom_field_properties['width'] = 64;
+							}
+						}
 					}
 					else if( in_array( $current_field->name, array('Image','Image (Upload Media)') ) )
 					{ 
