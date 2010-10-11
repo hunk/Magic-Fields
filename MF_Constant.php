@@ -30,11 +30,15 @@ define("MF_URI", get_bloginfo('wpurl').'/wp-content'.$mfpath[1]);
 define("MF_URI_RELATIVE", 'wp-content'.$mfpath[1]);
 define("PHPTHUMB",MF_URI."thirdparty/phpthumb/phpThumb.php");
 
-//prefix all tables
-if(isset($current_blog)){
-	$mf_prefix=$wpdb->base_prefix;
+if(!is_wp30()) {
+  //prefix all tables
+  if(isset($current_blog)){
+  	$mf_prefix=$wpdb->base_prefix;
+  }else{
+  	$mf_prefix=$wpdb->prefix;
+  }
 }else{
-	$mf_prefix=$wpdb->prefix;
+  $mf_prefix = $wpdb->get_blog_prefix();
 }
 // -- Tables names
 

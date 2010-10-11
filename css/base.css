@@ -600,9 +600,9 @@
 }
 
 .write_panel_wrapper .tab_multi_mf a.current {
-    background-color: #DCEFF7;
-    color: #666666 !important;
-    border-color: #73bee0;
+    background-color: #A5BFD6;
+    color: #FFF !important;
+    border-color: #8aa6c0;
     font-weight: bold;
 }
 
@@ -613,7 +613,8 @@
 
 .write_panel_wrapper input.datepicker_mf {
   margin-left: 0;
-  background-color: #eeeeee
+  background-color: #eeeeee;
+  width: 192px;
 }
 
 .write_panel_wrapper input.datebotton_mf,
@@ -1119,6 +1120,14 @@ input.button.disabled {
 .ui-datepicker td,
 .ui-datepicker th {
   font-size: 11px !important;
+}
+
+.ui-datepicker-year {
+  line-height: 12px !important;
+}
+
+select.ui-datepicker-year option {
+  padding: 0 4px;
 }
 
 .mf-field .colorpicker_submit,

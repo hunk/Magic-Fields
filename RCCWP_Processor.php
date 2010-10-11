@@ -116,7 +116,22 @@ class RCCWP_Processor {
 				require_once('RCCWP_CustomWritePanel.php');	
 				$panelID = $_REQUEST['custom-write-panel-id'];
 				$writePanel = RCCWP_CustomWritePanel::Get($panelID);
-				$exportedFilename = $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR. $writePanel->name . '.pnl';
+
+        /** 
+         * IN many shared-hosting each vhost has  his own tmp folder
+         * For that we will check if upload_tmp_dir is defined
+         * if is defined we will save there the pnl file
+         * if not is defined   we will use sys_get_temp_dir for determine the tmp file
+         */
+         if(ini_get('upload_tmp_dir')) {
+            $tmp_dir = realpath(ini_get('upload_tmp_dir')).DIRECTORY_SEPARATOR; 
+         }else {
+            $tmp_dir =  sys_get_temp_dir();
+         }
+
+
+				$exportedFilename = $tmpPath = $tmp_dir.$writePanel->name . '.pnl';
+
 				
 				RCCWP_CustomWritePanel::Export($panelID, $exportedFilename);
 	
