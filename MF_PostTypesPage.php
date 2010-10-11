@@ -139,7 +139,7 @@ Class MF_PostTypePages{
 							"<input type='checkbox' name='supports' /><label class='label_checkbox' for='supports'>".__('Customize which Fields will be displayed in this post type',$mf_domain)."</label>".
 							"<p></p>".
 							"<div class='sub-options supports_options'>".
-								"<input type='checkbox' name='title'><label class='label_checkbox' for='title'>".__('Titlte',$mf_domain)."</label>".
+								"<input type='checkbox' name='title'><label class='label_checkbox' for='title'>".__('Title',$mf_domain)."</label>".
 								"<p>".__('Title',$mf_domain)."</p>".
 								"<input type='checkbox' name='editor'><label class='label_checkbox' for='editor'>".__('Editor',$mf_domain)."</label>".
 								"<p>".__('The user put here the content of the post',$mf_domain)."</p>".
