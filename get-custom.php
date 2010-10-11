@@ -120,11 +120,11 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 	if(!$post_id){ $post_id = $post->ID; }
 	
 	$cache_name = $post_id.'/'.$fieldName.'--'.$groupIndex.'--'.$fieldIndex.'.txt';
-	$field = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE );
+	$field = unserialize( MF_get_cached_data( $cache_name, FALSE ) );
 	
 	if( !$field && !is_null( $field ) ) {
 		$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
-		MF_put_cached_data( $cache_name, json_encode( $field ) );
+		MF_put_cached_data( $cache_name, serialize( $field ) );
 	}
 	if(!$field) return FALSE;
 	
@@ -156,9 +156,9 @@ function get_clean($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$
 	
 	if(!$post_id){ $post_id = $post->ID; }
 	$cache_name = $post_id.'/_clean-'.$fieldName.'--'.$groupIndex.'--'.$fieldIndex.'.txt';
-	if( !$field = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE ) ) {
+	if( !$field = unserialize( MF_get_cached_data( $cache_name, FALSE ) ) ) {
 		$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
-		MF_put_cached_data( $cache_name, json_encode( $field ) );
+		MF_put_cached_data( $cache_name, serialize( $field ) );
 	}
 	if(!$field) return FALSE;
 	
@@ -555,7 +555,7 @@ function get_group($name_group,$post_id=NULL){
 	if(!$post_id){ $post_id = $post->ID; }
 	
 	$cache_name = $post_id.'/_groups-'. sanitize_title_with_dashes( $name_group ).'.txt';
-	if( !$data_groups = json_decode( MF_get_cached_data( $cache_name, FALSE ) ) ) {
+	if( !$data_groups = unserialize( MF_get_cached_data( $cache_name, FALSE ) ) ) {
 		$sql = "SELECT		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
 				FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
 							".MF_TABLE_GROUP_FIELDS." cf 
@@ -564,7 +564,7 @@ function get_group($name_group,$post_id=NULL){
 							g.name='$name_group' AND pm_wp.meta_id=pm.id AND pm_wp.meta_value <> '' 
 				ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
 			$data_groups = $wpdb->get_results($sql);
-		MF_put_cached_data( $cache_name, json_encode( $data_groups ) );
+		MF_put_cached_data( $cache_name, serialize( $data_groups ) );
 	}
 
 	$info = null;
@@ -642,7 +642,7 @@ function get_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 	if(!$post_id){ $post_id = $post->ID; }
 	
 	$cache_name = $post_id.'/_fduplicates-'.$fieldName.'--'.$groupIndex.'.txt';
-	$data_fields = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE );
+	$data_fields = unserialize( MF_get_cached_data( $cache_name, FALSE ) );
 	
 	if( !$data_fields && !is_null( $data_fields ) ) {
 		$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
@@ -655,7 +655,7 @@ function get_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 				ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
 			
 		$data_fields = $wpdb->get_results($sql);
-		MF_put_cached_data( $cache_name, json_encode( $data_fields ) );
+		MF_put_cached_data( $cache_name, serialize( $data_fields ) );
 	}
 
 	$info = null;
@@ -720,7 +720,7 @@ function get_clean_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 	if(!$post_id){ $post_id = $post->ID; }
 	
 	$cache_name = $post_id.'/_fduplicates-'.$fieldName.'--'.$groupIndex.'.txt';
-	$data_fields = json_decode( MF_get_cached_data( $cache_name, FALSE ), TRUE );
+	$data_fields = unserialize( MF_get_cached_data( $cache_name, FALSE ) );
 	
 	if( !$data_fields && !is_null( $data_fields ) ) {
 		$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
@@ -733,7 +733,7 @@ function get_clean_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 				ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
 			
 		$data_fields = $wpdb->get_results($sql);
-		MF_put_cached_data( $cache_name, json_encode( $data_fields ) );
+		MF_put_cached_data( $cache_name, serialize( $data_fields ) );
 	}
 
 	$info = null;
