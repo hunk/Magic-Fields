@@ -413,7 +413,7 @@ class RCCWP_Menu
         $base = 'edit.php?';
         if($_GET['post_type'] == 'page') $base = 'edit.php?post_type=page&';
   			$submenu_file = $base."filter-posts=1&custom-write-panel-id=$id";
-      }elseif($_GET['custom-write-panel-id'] ){
+      }elseif(@$_GET['custom-write-panel-id'] ){
         $id = $result[0]['meta_value'];
         $base = 'post-new.php?';
         if($_GET['post_type'] == 'page') $base = 'post-new.php?post_type=page&';
