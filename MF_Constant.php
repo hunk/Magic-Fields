@@ -21,11 +21,6 @@ $mfpath = str_replace('\\', '/', $mfpath);
 define('MF_PLUGIN_DIR', dirname(plugin_basename(__FILE__))); 
 define("MF_PATH", dirname(__FILE__));
 
-// Define Cache Bool and Dir
-// Conditionals for overriding on per site basis without touching this file
-if( !defined( "MF_GET_CACHE_IS_ON" ) ) { define("MF_GET_CACHE_IS_ON", TRUE );}
-if( !defined( "MF_GET_CACHE_DIR" ) ) { define("MF_GET_CACHE_DIR", ABSPATH. 'cache/' ); }
-
 define("MF_URI", get_bloginfo('wpurl').'/wp-content'.$mfpath[1]); 
 define("MF_URI_RELATIVE", 'wp-content'.$mfpath[1]);
 define("PHPTHUMB",MF_URI."thirdparty/phpthumb/phpThumb.php");
@@ -288,6 +283,15 @@ if($is_wordpress_mu){
 }
 define('MF_UPLOAD_FILES_DIR', MF_FILES_PATH);
 define('MF_CACHE_DIR', MF_FILES_PATH . MF_CACHE_NAME . DIRECTORY_SEPARATOR);
+
+// Define Cache Bool and Dir
+// Conditionals for overriding on per site basis without touching this file
+if( !defined( "MF_GET_CACHE_IS_ON" ) ) { define("MF_GET_CACHE_IS_ON", TRUE );}
+if( !defined( "MF_GET_CACHE_DIR" ) ) {
+	define("MF_GET_CACHE_DIR", MF_CACHE_DIR );
+}elseif(!file_exists( MF_GET_CACHE_DIR ) ) {
+	wp_die( 'Caching folder '. MF_GET_CACHE_DIR . 'you&rsquo;ve set up does&rsquo;t exist.','Caching Magic Fields');
+}
 
 // Capabilities names
 define('MF_CAPABILITY_PANELS', "Create Magic Fields Panels");
