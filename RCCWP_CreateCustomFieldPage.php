@@ -270,7 +270,7 @@ class RCCWP_CreateCustomFieldPage
 		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Evaluate Max Length',$mf_domain); ?>:</th>
-			<td><input name="strict-max-length" id="strict-max-length" value="1" type="checkbox" ></td>
+			<td><input name="strict-max-length" id="strict-max-length" value="1" type="checkbox" ><br/><small><?php _e('If set, Hide Visual Editor for this field',$mf_domain); ?></small></td>
 		</tr>
 		<?php endif; ?>
 		

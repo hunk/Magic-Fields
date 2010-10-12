@@ -82,9 +82,7 @@ class RCCWP_CustomWritePanelPage
 				
 				<?php
 				$cats = get_categories( "get=all" );
-				if(isset($customWritePanel->id) && !empty($customWritePanel->id)) {
-					RCCWP_CustomWritePanelPage::PrintNestedCats( &$cats, 0, 0, &$customWritePanelCategoryIds );
-				}
+				RCCWP_CustomWritePanelPage::PrintNestedCats( &$cats, 0, 0, &$customWritePanelCategoryIds );
 				?>
 				
 			</td>
@@ -242,7 +240,7 @@ class RCCWP_CustomWritePanelPage
 		foreach ($cats as $cat) : 
 			if( $cat->parent == $parent ) {
 				$checked = "";
-				if (in_array($cat->cat_ID, $customWritePanelCategoryIds))
+				if (@in_array($cat->cat_ID, $customWritePanelCategoryIds))
 				{
 					$checked = "checked=\"checked\"";
 				}
