@@ -21,10 +21,6 @@ $mfpath = str_replace('\\', '/', $mfpath);
 define('MF_PLUGIN_DIR', dirname(plugin_basename(__FILE__))); 
 define("MF_PATH", dirname(__FILE__));
 
-// Define Cache Bool and Dir
-// Conditionals for overriding on per site basis without touching this file
-if( !defined( "MF_GET_CACHE_IS_ON" ) ) { define("MF_GET_CACHE_IS_ON", TRUE );}
-if( !defined( "MF_GET_CACHE_DIR" ) ) { define("MF_GET_CACHE_DIR", ABSPATH. 'cache/' ); }
 define("MF_URI", WP_CONTENT_URL.$mfpath[1]); 
 define("MF_URI_RELATIVE", 'wp-content'.$mfpath[1]);
 define("PHPTHUMB",MF_URI."thirdparty/phpthumb/phpThumb.php");
@@ -290,6 +286,12 @@ define('MF_CACHE_DIR', MF_FILES_PATH . MF_CACHE_NAME . DIRECTORY_SEPARATOR);
 
 // Capabilities names
 define('MF_CAPABILITY_PANELS', "Create Magic Fields Panels");
+
+// Define Cache Bool and Dir
+// Conditionals for overriding on per site basis without touching this file
+if( !defined( "MF_GET_CACHE_IS_ON" ) ) { define("MF_GET_CACHE_IS_ON", FALSE );}  //By Default the cache is false
+if( !defined( "MF_GET_CACHE_DIR" ) ) { define("MF_GET_CACHE_DIR", MF_FILES_PATH. 'fields_cache/' ); }
+
 
 
 //return TRUE is WP version >= 3.0
