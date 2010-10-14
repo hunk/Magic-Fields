@@ -20,7 +20,6 @@ require_once 'tools/debug.php';
 	 */
 	function MF_get_cached_data( $file, $ttl = 300 ) {
 		if( !MF_GET_CACHE_IS_ON ) return FALSE;
-		
 		if( file_exists( MF_GET_CACHE_DIR . $file ) ) {
 			// If you set $ttl to FALSE or negative value, no mod. file time is checked
 			if( !$ttl || $ttl <= 0 ) {
@@ -122,6 +121,8 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 	$cache_name = $post_id.'/'.$fieldName.'--'.$groupIndex.'--'.$fieldIndex.'.txt';
 	$field = unserialize( MF_get_cached_data( $cache_name, FALSE ) );
 	
+	// When field is set, but it's empty, it gets a NULL value, but still this value is cached
+	// therefore: if !is_null condition
 	if( !$field && !is_null( $field ) ) {
 		$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
 		MF_put_cached_data( $cache_name, serialize( $field ) );
@@ -156,7 +157,12 @@ function get_clean($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$
 	
 	if(!$post_id){ $post_id = $post->ID; }
 	$cache_name = $post_id.'/_clean-'.$fieldName.'--'.$groupIndex.'--'.$fieldIndex.'.txt';
-	if( !$field = unserialize( MF_get_cached_data( $cache_name, FALSE ) ) ) {
+
+	$field = unserialize( MF_get_cached_data( $cache_name, FALSE ) );
+	
+	// When field is set, but it's empty, it gets a NULL value, but still this value is cached
+	// therefore: if !is_null condition
+	if( !$field && !is_null( $field ) ) {
 		$field = RCCWP_CustomField::GetDataField($fieldName,$groupIndex, $fieldIndex,$post_id);
 		MF_put_cached_data( $cache_name, serialize( $field ) );
 	}
@@ -644,6 +650,8 @@ function get_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 	$cache_name = $post_id.'/_fduplicates-'.$fieldName.'--'.$groupIndex.'.txt';
 	$data_fields = unserialize( MF_get_cached_data( $cache_name, FALSE ) );
 	
+	// When field is set, but it's empty, it gets a NULL value, but still this value is cached
+	// therefore: if !is_null condition
 	if( !$data_fields && !is_null( $data_fields ) ) {
 		$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
 				FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
@@ -722,6 +730,8 @@ function get_clean_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 	$cache_name = $post_id.'/_fduplicates-'.$fieldName.'--'.$groupIndex.'.txt';
 	$data_fields = unserialize( MF_get_cached_data( $cache_name, FALSE ) );
 	
+	// When field is set, but it's empty, it gets a NULL value, but still this value is cached
+	// therefore: if !is_null condition
 	if( !$data_fields && !is_null( $data_fields ) ) {
 		$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
 				FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,

@@ -4,7 +4,9 @@ ob_start();
 if( file_exists('../../../../../wp-load.php')){
 	require_once('../../../../../wp-load.php');
 	$loaded = true;
-} elseif( file_exists('./mf_config.php')){
+} elseif( file_exists( dirname(__FILE__).'/../../mf-config.php')){
+    include_once(dirname(__FILE__).'/../../mf-config.php');
+
 	include_once('./mf-config.php');
 	require_once(MF_WP_LOAD);
 	$loaded = true;

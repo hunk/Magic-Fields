@@ -46,6 +46,7 @@ class RCCWP_Application
 			// Giving full rights to folders. thanks Akis Kesoglou 
 			wp_mkdir_p(MF_UPLOAD_FILES_DIR);
 			wp_mkdir_p(MF_CACHE_DIR);
+      wp_mkdir_p(MF_GET_CACHE_DIR);
 			
 			//Initialize options
 			$options['condense-menu'] = 0;
@@ -344,6 +345,7 @@ class RCCWP_Application
 	
 		wp_mkdir_p(MF_UPLOAD_FILES_DIR);
 		wp_mkdir_p(MF_CACHE_DIR);
+    wp_mkdir_p(MF_GET_CACHE_DIR);
 	
 		// Giving full rights to folders. thanks Akis Kesoglou 
 		if (!is_dir(MF_CACHE_DIR)){
