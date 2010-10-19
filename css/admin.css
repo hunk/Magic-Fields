@@ -114,3 +114,13 @@ textarea#custom-field-options {
 input#custom-field-helptext {
   width: 98%;
 }
+
+.handler {
+  margin:2px;
+  display:block;
+  cursor:move;
+}
+
+.handler img{
+  height:20px;
+}
