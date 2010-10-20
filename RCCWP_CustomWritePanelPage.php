@@ -374,6 +374,7 @@ class RCCWP_CustomWritePanelPage
         <?php print $group->name;?>
       <?php endif;?>
     </h2>
+		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('save-fields-order')?>" method="post"  id="posts-filter" name="ImportWritePanelForm" enctype="multipart/form-data">
   	<table cellpadding="3" cellspacing="3" width="100%" class="widefat">
   		<thead>
 	  		<tr>
@@ -393,10 +394,12 @@ class RCCWP_CustomWritePanelPage
 	    <?php endforeach;?>
 		</div>
 		<br />
+    <input type="submit" name="save_submit" id="save_order" />
+    </form>
 		<?php
 	}
 	
-	function DisplayGroupFields($customGroupId, $intended = false){
+	function DisplayGroupFields($customGroupId, $intended = false) {
 		global $mf_domain;
 		$custom_fields = RCCWP_CustomGroup::GetCustomFields($customGroupId);
 		foreach ($custom_fields as $field) :
@@ -411,7 +414,10 @@ class RCCWP_CustomWritePanelPage
 			}
 		?>
 			<tr>
-        <td><a  class="handler" href="javascript:void();"><img src="<?php echo MF_URI; ?>/images/mf_arrows.png"></a></td>
+        <td>
+          <a  id="field_<?php echo $field->id; ?>"  class="handler" href="javascript:void();"><img src="<?php echo MF_URI; ?>/images/mf_arrows.png"></a>
+          <input type="hidden" name="mf_order[<?php print $customGroupId;?>][<?php echo $field->id;?>]" value="<?php echo $field->display_order;?>" />
+        </td>
 				<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-field')."&custom-field-id=$field->id"?> " ><?php if ($intended){ ?><img align="top" src="<?php echo MF_URI; ?>images/arrow_right.gif" alt=""/> <?php } ?><?php echo $field->description . $maxlength?></a><?php if( $field->required_field == 1 ) echo ' <span class="required">*</span>'; ?></td>
 		  		<td><tt><?php echo $field->name.' <span style="color: #999;">('.$field->display_order.')</span>';?></tt><?php
 				if( $field->type == 'Textbox' && isset( $field->properties['size'] ) ) { echo ' <sup class="help_text">['.$field->properties['size'].']</sup>'; }
@@ -426,6 +432,24 @@ class RCCWP_CustomWritePanelPage
 		<?php
 		endforeach;
 	}
+
+  function save_order_fields() {
+    global $wpdb;
+    if(!empty($_POST) && is_numeric($_GET['custom-write-panel-id'])) {
+      foreach($_POST['mf_order'] as $group_id => $group) {
+        foreach($group as $field_id =>  $order) {
+            if(is_numeric($group_id) && is_numeric($field_id) && is_numeric($order)) {
+              $wpdb->update(MF_TABLE_GROUP_FIELDS,array('display_order' => $order),array('id' =>  $field_id),array('%d'),array('%d'));
+            }
+        }
+      }
+    }
+
+		echo "<div class='wrap'><h3>".__("The new order was saved.",$mf_domain)."</h3>";
+		echo '<p><a href="' . RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('view-custom-write-panel', $_GET['custom-write-panel-id']).'">'.__('Click here',$mf_domain).' </a> '.__('to edit the write panel.',$mf_domain).'</p>';
+		echo "</div>";
+
+  }
 	
 	function Import()
 	{
