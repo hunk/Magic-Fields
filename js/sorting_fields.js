@@ -1,5 +1,6 @@
 jQuery(function($) {  
   $('.sortable').sortable({
-    handle: '.handler'
+    handle: '.handler',
+    placeholder: 'ui-state-highlight'
   });
 });

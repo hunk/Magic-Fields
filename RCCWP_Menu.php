@@ -160,11 +160,6 @@ class RCCWP_Menu
 				$page_group = 'RCCWP_CustomWritePanelPage';
 				$page_type = 'Import';
 				break;
-
-      case 'save-fields-order':
-        $page_group = 'RCCWP_CustomWritePanelPage';
-        $page_type = 'save_order_fields';
-        break; 
 												
 			default:
 				

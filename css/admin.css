@@ -129,3 +129,8 @@ input#custom-field-helptext {
   width: 100%;
   border:1px solid #DFDFDF;
 } 
+
+.ui-state-highlight {
+  height: 1.5em; 
+  line-height: 1.2em;
+}

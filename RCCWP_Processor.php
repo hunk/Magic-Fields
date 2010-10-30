@@ -493,6 +493,8 @@ class RCCWP_Processor {
 					RCCWP_CustomField::Delete($_REQUEST['custom-field-id']);
 	
 				break;
+      case 'save-fields-order':
+        RCCWP_CustomWritePanelPage::save_order_fields();
 
 			default:
 								

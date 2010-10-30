@@ -362,8 +362,13 @@ class RCCWP_CustomWritePanelPage
 				<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field')."&custom-group-id=$customDefaultGroupId"?>" class="button-secondary">+ <?php _e('Create a Field', $mf_domain)?></a>
 			</p>
 		</form>
-		
-		<br class="clear"/>
+    <br class="clear"/>
+    <?php if($_GET['saved_order'] == "true"):?>
+      <div id="message" class="updated">
+        Saved Order.
+      </div>
+    <?php endif; ?>
+
  		<?php
 	  foreach ($custom_groups as $group) :
     ?> 
@@ -444,10 +449,13 @@ class RCCWP_CustomWritePanelPage
       }
     }
 
-		echo "<div class='wrap'><h3>".__("The new order was saved.",$mf_domain)."</h3>";
-		echo '<p><a href="' . RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('view-custom-write-panel', $_GET['custom-write-panel-id']).'">'.__('Click here',$mf_domain).' </a> '.__('to edit the write panel.',$mf_domain).'</p>';
-		echo "</div>";
-
+    wp_safe_redirect(
+      add_query_arg(
+        'saved_order',
+        'true',
+        wp_get_referer()
+      )
+    );
   }
 	
 	function Import()
