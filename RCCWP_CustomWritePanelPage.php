@@ -416,7 +416,7 @@ class RCCWP_CustomWritePanelPage
 			<tr>
         <td>
           <a  id="field_<?php echo $field->id; ?>"  class="handler" href="javascript:void();"><img src="<?php echo MF_URI; ?>/images/mf_arrows.png"></a>
-          <input type="hidden" name="mf_order[<?php print $customGroupId;?>][<?php echo $field->id;?>]" value="<?php echo $field->display_order;?>" />
+          <input type="hidden" name="mf_order[<?php print $customGroupId;?>][]" value="<?php echo $field->id; ?>" />
         </td>
 				<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-field')."&custom-field-id=$field->id"?> " ><?php if ($intended){ ?><img align="top" src="<?php echo MF_URI; ?>images/arrow_right.gif" alt=""/> <?php } ?><?php echo $field->description . $maxlength?></a><?php if( $field->required_field == 1 ) echo ' <span class="required">*</span>'; ?></td>
 		  		<td><tt><?php echo $field->name.' <span style="color: #999;">('.$field->display_order.')</span>';?></tt><?php
@@ -428,16 +428,15 @@ class RCCWP_CustomWritePanelPage
 				?></td>
 		  	<td><a onclick="return confirmBeforeDelete();" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-field')."&custom-field-id=$field->id"?>" >&times; <?php _e('Delete',$mf_domain); ?></a></td>
 			</tr>
-			
 		<?php
 		endforeach;
 	}
 
   function save_order_fields() {
     global $wpdb;
-    if(!empty($_POST) && is_numeric($_GET['custom-write-panel-id'])) {
+    if(!empty($_POST) && is_numeric($_GET['custom-write-panel-id'])){
       foreach($_POST['mf_order'] as $group_id => $group) {
-        foreach($group as $field_id =>  $order) {
+        foreach($group as $order => $field_id ) {
             if(is_numeric($group_id) && is_numeric($field_id) && is_numeric($order)) {
               $wpdb->update(MF_TABLE_GROUP_FIELDS,array('display_order' => $order),array('id' =>  $field_id),array('%d'),array('%d'));
             }

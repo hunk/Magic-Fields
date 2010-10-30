@@ -124,3 +124,8 @@ input#custom-field-helptext {
 .handler img{
   height:20px;
 }
+
+.ui-sortable-helper {
+  width: 100%;
+  border:1px solid #DFDFDF;
+} 
