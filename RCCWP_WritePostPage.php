@@ -1344,6 +1344,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 				type="text" 
 				size="<?php echo $inputSize?>" 
 				class="datepicker_mf"   
+			  <?php if ($customField->required_field) echo 'validate="required:true"'; ?>	
 		readonly="readonly" />
 		
 		<input 	id="date_field_<?php echo $idField; ?>" 
@@ -1496,6 +1497,9 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 	function ColorPickerInterface($customField, $inputName, $groupCounter, $fieldCounter,$fieldValue = NULL){
 		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
+    $requiredClass="";
+  	if ($customField->required_field) $requiredClass = "field_required";
+
 		if($fieldValue){
 			$value=$fieldValue;
 		}else{
@@ -1506,8 +1510,9 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 			}
 		}
 		?>
-		<input id="<?php echo $idField; ?>" name="<?php echo $inputName?>" value="<?php echo $value?>" class="mf_color_picker" />
+		<input  <?php if ($customField->required_field) echo 'validate="required:true"'; ?>  id="<?php echo $idField; ?>" name="<?php echo $inputName?>" value="<?php echo $value?>" class="mf_color_picker <?php print $requiredClass;?>" />
     <button class="mf-color-clear">Clear</button>
+    <div class="mf_clear"></div>
 		<div id="mf-cp-<?php echo $idField; ?>" class="mf-cp { el: '#<?php echo $idField; ?>' }"></div>
 		<?php
 	}

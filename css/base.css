@@ -164,6 +164,7 @@
 
 .datepicker_mf{
   margin-left: 15%;
+  float:left;
 }
   
 /*test */
@@ -1142,6 +1143,12 @@ select.ui-datepicker-year option {
 .mf-field input.mf_color_picker {
   border: 1px solid #BFC4CE;
   margin-left: 4px;
+  float:left;
+}
+
+
+.mf-field .mf-color-clear {
+  float:left;
 }
 
 .mf-t-color-picker .mf-color-swatch {
@@ -1463,5 +1470,7 @@ select.ui-datepicker-year option {
   display:inline;
 }
 
-
+.mf_clear {
+  clear:both;
+}
 
