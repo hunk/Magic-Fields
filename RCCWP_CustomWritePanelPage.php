@@ -309,7 +309,7 @@ class RCCWP_CustomWritePanelPage
 	function View()
 	{
 		global $mf_domain;	
-			
+
 		$customWritePanelId = (int)$_REQUEST['custom-write-panel-id'];
 
 		$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
@@ -324,7 +324,6 @@ class RCCWP_CustomWritePanelPage
 				break;
 			}
 		}
-			
 		
 		?>
 
@@ -363,47 +362,49 @@ class RCCWP_CustomWritePanelPage
 				<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field')."&custom-group-id=$customDefaultGroupId"?>" class="button-secondary">+ <?php _e('Create a Field', $mf_domain)?></a>
 			</p>
 		</form>
-		
-		<br class="clear"/>
+    <br class="clear"/>
+    <?php if($_GET['saved_order'] == "true"):?>
+      <div id="message" class="updated">
+        Saved Order.
+      </div>
+    <?php endif; ?>
 
+ 		<?php
+	  foreach ($custom_groups as $group) :
+    ?> 
+    <h2>
+      <?php if($group->name == "__default"):?>
+        Magic Fields
+      <?php else:?> 
+        <?php print $group->name;?>
+      <?php endif;?>
+    </h2>
+		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('save-fields-order')?>" method="post"  id="posts-filter" name="ImportWritePanelForm" enctype="multipart/form-data">
   	<table cellpadding="3" cellspacing="3" width="100%" class="widefat">
   		<thead>
 	  		<tr>
+          <th width="5%"></th>
 	  			<th width="20%" scope="col">Group Name / Field <?php _e('Label', $mf_domain)?></th>
-	  			<th width="10%" scope="col"><?php _e('Name (Order)', $mf_domain)?></th>
-					<th width="30%" scope="col"><?php _e('Help', $mf_domain)?></th>
+	  			<th width="35%" scope="col"><?php _e('Name (Order)', $mf_domain)?></th>
 	  			<th width="20%" scope="col"><?php _e('Type', $mf_domain)?></th>
 					<th width="20%" scope="col"><?php _e('Actions', $mf_domain)?></th>
 				</tr>
   		</thead>
-  		<tbody>
-	  		<?php
-	  		foreach ($custom_groups as $group) :
-	  		
-				if ($group->panel_id == $customWritePanelId && $customDefaultGroupId != $group->id && $group->name != "__default"){			 // added extra conditions to handle global fields
-	  		?>
-		  			<tr>
-		  				<td><strong><a style="color:#D54E21" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-group')."&custom-group-id={$group->id}"?>"><?php echo $group->name?></a></strong>&nbsp;&nbsp;(<a style="font-size:very-small" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field')."&custom-group-id={$group->id}"?>"><?php _e('create field',$mf_domain); ?></a>) </td>
-		  				<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td><?php _e('Group', $mf_domain)?></td>
-		  				<td><a onclick="return confirmBeforeDelete();" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-group')."&custom-group-id={$group->id}"?>">&times; <?php _e('Delete',$mf_domain); ?></a></td>
-		  			</tr>
-	  		<?php
-	  				RCCWP_CustomWritePanelPage::DisplayGroupFields($group->id, true);
-				}
-	  		endforeach;
-	  		
-	  		RCCWP_CustomWritePanelPage::DisplayGroupFields($customDefaultGroupId);
-	  		?>
+  		<tbody class="sortable">
+      <?php
+  	  		RCCWP_CustomWritePanelPage::DisplayGroupFields($group->id);
+	  	?>
   		</tbody>
   		</table>
+	    <?php endforeach;?>
 		</div>
 		<br />
+    <input type="submit" name="save_submit" id="save_order" />
+    </form>
 		<?php
 	}
 	
-	function DisplayGroupFields($customGroupId, $intended = false){
+	function DisplayGroupFields($customGroupId, $intended = false) {
 		global $mf_domain;
 		$custom_fields = RCCWP_CustomGroup::GetCustomFields($customGroupId);
 		foreach ($custom_fields as $field) :
@@ -418,21 +419,44 @@ class RCCWP_CustomWritePanelPage
 			}
 		?>
 			<tr>
+        <td>
+          <a  id="field_<?php echo $field->id; ?>"  class="handler" href="javascript:void();"><img src="<?php echo MF_URI; ?>/images/mf_arrows.png"></a>
+          <input type="hidden" name="mf_order[<?php print $customGroupId;?>][]" value="<?php echo $field->id; ?>" />
+        </td>
 				<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-field')."&custom-field-id=$field->id"?> " ><?php if ($intended){ ?><img align="top" src="<?php echo MF_URI; ?>images/arrow_right.gif" alt=""/> <?php } ?><?php echo $field->description . $maxlength?></a><?php if( $field->required_field == 1 ) echo ' <span class="required">*</span>'; ?></td>
 		  		<td><tt><?php echo $field->name.' <span style="color: #999;">('.$field->display_order.')</span>';?></tt><?php
 				if( $field->type == 'Textbox' && isset( $field->properties['size'] ) ) { echo ' <sup class="help_text">['.$field->properties['size'].']</sup>'; }
 				if( $field->type == 'Multiline Textbox' && isset( $field->properties['height'] ) && isset( $field->properties['width'] ) ) { echo ' <sup class="help_text">['.$field->properties['height']. '&times;'. $field->properties['width'] .']</sup>'; };
 				?></td>
-				<td class="help_text"><?=$field->help_text?></td>
 				<td><?php echo $field->type?><?php
 				if( $field->type == 'Multiline Textbox' && isset( $field->properties['hide-visual-editor'] ) && $field->properties['hide-visual-editor'] == 1 ) { echo ' <sup class="help_text">[simple]</sup>'; }
 				?></td>
 		  	<td><a onclick="return confirmBeforeDelete();" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-field')."&custom-field-id=$field->id"?>" >&times; <?php _e('Delete',$mf_domain); ?></a></td>
 			</tr>
-			
 		<?php
 		endforeach;
 	}
+
+  function save_order_fields() {
+    global $wpdb;
+    if(!empty($_POST) && is_numeric($_GET['custom-write-panel-id'])){
+      foreach($_POST['mf_order'] as $group_id => $group) {
+        foreach($group as $order => $field_id ) {
+            if(is_numeric($group_id) && is_numeric($field_id) && is_numeric($order)) {
+              $wpdb->update(MF_TABLE_GROUP_FIELDS,array('display_order' => $order),array('id' =>  $field_id),array('%d'),array('%d'));
+            }
+        }
+      }
+    }
+
+    wp_safe_redirect(
+      add_query_arg(
+        'saved_order',
+        'true',
+        wp_get_referer()
+      )
+    );
+  }
 	
 	function Import()
 	{

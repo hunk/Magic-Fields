@@ -120,6 +120,15 @@ class RCCWP_Menu
 			case 'view-custom-write-panel':
 				$page_group = 'RCCWP_CustomWritePanelPage';
 				$page_type = 'View';
+
+      /*
+       * Adding JS for sorting the order of the fields
+       * using a drag and drop feature
+       */
+				wp_enqueue_script(	'magic_set_categories',
+					MF_URI.'js/sorting_fields.js',
+					array('jquery','jquery-ui-sortable')
+        );
 				break;
 				
 			case 'create-custom-write-panel':
