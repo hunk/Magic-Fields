@@ -125,7 +125,6 @@ if (is_admin()) {
 		add_action('save_post', array('RCCWP_Post', 'SaveCustomFields'));
  		add_action('delete_post', array('RCCWP_Post','DeletePostMetaData')) ;
 		
-
 		
 		add_filter('wp_redirect', array('RCCWP_Processor', 'Redirect'));
 

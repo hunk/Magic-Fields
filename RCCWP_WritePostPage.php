@@ -19,8 +19,8 @@
     return $orderby;
   }
   
-class RCCWP_WritePostPage 
-{
+class RCCWP_WritePostPage  {
+
 	function ApplyWritePanelAssignedCategoriesOrTemplate(){
 		global $CUSTOM_WRITE_PANEL,$post,$wp_version;
 		
@@ -357,20 +357,24 @@ class RCCWP_WritePostPage
 		global $wpdb;
 		global $post;
 		global $CUSTOM_WRITE_PANEL;
+
+
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 		
 		//we are passing the group_id in the args of the add_meta_box
 		$group = $group['args'];
 		
 			//render the elements
 			$customFields = RCCWP_CustomGroup::GetCustomFields($group->id);
-			
+
+
 			//when will be edit the  Post
-			if(isset( $_REQUEST['post'] ) && count($customFields) > 0){
+			if(isset( $mf_post_id ) && count($customFields) > 0){
 				//using the first field name we can know 
 				//the order  of the groups
 				$firstFieldName = $customFields[0]->name;
 
-				$order = RCCWP_CustomField::GetOrderDuplicates($_REQUEST['post'],$firstFieldName);
+				$order = RCCWP_CustomField::GetOrderDuplicates($mf_post_id,$firstFieldName);
 				?> 
 				<div class="write_panel_wrapper"  id="write_panel_wrap_<?php echo $group->id;?>">
 				
@@ -450,6 +454,8 @@ class RCCWP_WritePostPage
 	function GroupDuplicate($customGroup, $groupCounter,$order,$fromAjax=true){
 		global $mf_domain;
  
+
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 		//getting the custom fields
 		$customFields = RCCWP_CustomGroup::GetCustomFields($customGroup->id);
 		
@@ -479,9 +485,9 @@ class RCCWP_WritePostPage
 						$groupId  = $customGroup->id;
 						$inputName = $field->id."_".$groupCounter."_1_".$groupId."_".$customFieldName;
 						
-						if(isset($_REQUEST['post'])){
-							$fc = RCCWP_CustomField::GetFieldDuplicates($_REQUEST['post'],$field->name,$groupCounter);
-							$fields_order =  RCCWP_CustomField::GetFieldsOrder($_REQUEST['post'],$field->name,$groupCounter);
+						if(isset($mf_post_id)){
+							$fc = RCCWP_CustomField::GetFieldDuplicates($mf_post_id,$field->name,$groupCounter);
+							$fields_order =  RCCWP_CustomField::GetFieldsOrder($mf_post_id,$field->name,$groupCounter);
 							foreach($fields_order as $element){
 								RCCWP_WritePostPage::CustomFieldInterface($field->id,$groupCounter,$element,$customGroup->id); 
 							}   
@@ -693,8 +699,6 @@ class RCCWP_WritePostPage
 				?>
   		  </div>
   		  <!-- ./title-controls -->
-
-
 		</div>
 		</div>
 	<?php
@@ -703,11 +707,14 @@ class RCCWP_WritePostPage
 	function CheckboxInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		$customFieldId = '';
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
+
+
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 		
-		if (isset($_REQUEST['post']))
+		if (isset($mf_post_id))
 		{
 			$customFieldId = $customField->id;
-			$value = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
+			$value = RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter);
 			$checked = $value == 'true' ? 'checked="checked"' : '';
 		}else{
 			$checked = "";
@@ -722,6 +729,8 @@ class RCCWP_WritePostPage
 	}
 	
 	function CheckboxListInterface($customField, $inputName, $groupCounter, $fieldCounter) {
+
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 		$customFieldId = '';
 		
 		$defClass = '';
@@ -729,9 +738,9 @@ class RCCWP_WritePostPage
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
 		$values = array();
-		if (isset($_REQUEST['post'])) {
+		if (isset($mf_post_id)) {
 			$customFieldId = $customField->id;
-			$values = (array) RCCWP_CustomField::GetCustomFieldValues(false, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
+			$values = (array) RCCWP_CustomField::GetCustomFieldValues(false, $mf_post_id, $customField->name, $groupCounter, $fieldCounter);
 		}else{
 		  $defClass = "mf-default";
 			$values = $customField->default_value;
@@ -764,16 +773,14 @@ class RCCWP_WritePostPage
 	{
 		global $mf_domain;
 		$customFieldId = '';
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 		
 		$defClass = '';
 
-		if (isset($_REQUEST['post']))
-		{
+		if (isset($mf_post_id)) {
 			$customFieldId = $customField->id;
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
-		}
-		else
-		{
+			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
+		} else {
 		  $defClass = "mf-default";
 			$value = $customField->default_value[0];
 		}
@@ -805,15 +812,14 @@ class RCCWP_WritePostPage
 
 
 	//eeble
-	function RelatedTypeInterface($customField, $inputName, $groupCounter, $fieldCounter)
-	{
-	  
+	function RelatedTypeInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		global $mf_domain, $wpdb;
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+
 		$customFieldId = '';
-		if (isset($_REQUEST['post']))
-		{
+		if (isset($mf_post_id)) {
 			$customFieldId = $customField->id;
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 		}
 		else
 		{
@@ -941,10 +947,11 @@ class RCCWP_WritePostPage
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		$customFieldId = '';
 		$defClass = "";
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 
-		if (isset($_REQUEST['post'])){
+		if (isset($mf_post_id)){
 			$customFieldId = $customField->id;
-			$values = (array) RCCWP_CustomField::GetCustomFieldValues(false, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
+			$values = (array) RCCWP_CustomField::GetCustomFieldValues(false, $mf_post_id, $customField->name, $groupCounter, $fieldCounter);
 			
 		}else{
 			$values = $customField->default_value;
@@ -979,18 +986,21 @@ class RCCWP_WritePostPage
 	
 	function MultilineTextboxInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		$customFieldId = '';
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
-		if( isset($_REQUEST['post']) ){
+		if( isset($mf_post_id) ){
 			$customFieldId = $customField->id;
-			$value = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
+			$value = RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter);
 			if(!(int)$customField->properties['hide-visual-editor']){
 				$value = apply_filters('the_editor_content', $value);
 			}
 		}else{
 			$value = "";
 		}
+
+    $value = apply_filters('mf_multiline_value',$value,$groupCounter,$fieldCounter);
 		
 		$inputHeight = (int)$customField->properties['height'];
 		$inputWidth = (int)$customField->properties['width'];
@@ -1046,16 +1056,19 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 	
 	function TextboxInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		$customFieldId = '';
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
-		if (isset($_REQUEST['post'])) {
+		if (isset($mf_post_id)) {
 			$customFieldId = $customField->id;
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 		}else{
 			$value = "";
 		}
 
+    $value = apply_filters('mf_textbox_value',$value,$groupCounter,$fieldCounter);
+   
     $requiredClass= '';
 		$inputSize = (int)$customField->properties['size'];
 		if ($customField->required_field) $requiredClass = "field_required";
@@ -1104,15 +1117,16 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		global $mf_domain;
 		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 		
 		$customFieldId = '';
 		$freshPageFolderName = (dirname(plugin_basename(__FILE__)));
 		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
 
-		if (isset($_REQUEST['post'])) {
+		if (isset($mf_post_id)) {
 			$customFieldId = $customField->id;
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 			$path = MF_FILES_URI;
 			$valueRelative = $value;
 			$value = $path.$value;
@@ -1199,9 +1213,10 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		global $mf_domain;
 		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 		
-		if(!empty($_GET['post'])){
-			$hidValue = RCCWP_CustomField::GetCustomFieldValues(true,$_GET['post'], $customField->name, $groupCounter, $fieldCounter);
+		if(!empty($mf_post_id)){
+			$hidValue = RCCWP_CustomField::GetCustomFieldValues(true,$mf_post_id, $customField->name, $groupCounter, $fieldCounter);
 		}else{
 			$hidValue = '';
 		}
@@ -1232,7 +1247,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
       </div>
 		<div id="photo_edit_link_<?php echo $idField ?>" class="photo_edit_link"> 
 			<?php
-				if(isset($_REQUEST['post'])){	
+				if(isset($mf_post_id)){	
 					echo '<a href="'.MF_FILES_URI.$hidValue.'" target="_blank">View</a>&nbsp;&nbsp;|&nbsp;&nbsp;<strong><a href="#remove" class="remove" id="remove-'.$idField.'">'.__("Delete",$mf_domain).'</a></strong>';
 				}
 			?>
@@ -1277,10 +1292,10 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 	function RadiobuttonListInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		$customFieldId = '';
     $defClass = "";
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 
-		if (isset($_REQUEST['post']))
-		{
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+		if (isset($mf_post_id)) {
+			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 		}
 		else
 		{
@@ -1310,12 +1325,13 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 	function DateInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		global $wpdb;
 		$customFieldId = '';
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
-		if (isset($_REQUEST['post'])) {
+		if (isset($mf_post_id)) {
 			$customFieldId = $customField->id;
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 			
 			$raw_value = $value;
 			
@@ -1395,11 +1411,13 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		$customFieldId = '';
 		$freshPageFolderName = (dirname(plugin_basename(__FILE__))); 
 		$requiredClass = "";
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+
 		if ($customField->required_field) $requiredClass = "field_required";
 		
-		if (isset($_REQUEST['post'])) {
+		if (isset($mf_post_id)) {
 			$customFieldId = $customField->id;
-			$valueOriginal = RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter);
+			$valueOriginal = RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter);
 			$path = MF_FILES_URI;
 			if(empty($valueOriginal)){
 				$valueOriginal = '';
@@ -1498,13 +1516,15 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
     $requiredClass="";
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+
   	if ($customField->required_field) $requiredClass = "field_required";
 
 		if($fieldValue){
 			$value=$fieldValue;
 		}else{
-			if(!empty($_REQUEST['post'])){
-				$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+			if(!empty($mf_post_id)){
+				$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 			}else{
 				$value = '';
 			}
@@ -1520,12 +1540,13 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 	function SliderInterface($customField, $inputName, $groupCounter, $fieldCounter,$fieldValue = NULL){
 		
     $defClass = '';
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
 		$customFieldId = $customField->id;
-		if(!empty($_REQUEST['post'])){
-		$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+		if(!empty($mf_post_id)){
+		$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 		}else{
 			$value = 0;
       $defClass = 'mf-default';
@@ -1534,8 +1555,8 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		if($fieldValue){
 			$value=$fieldValue;
 		}else{
-			if(!empty($_REQUEST['post'])){			
-				$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+			if(!empty($mf_post_id)){
+				$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 			}else{
 				$value = 0;
         $defClass = 'mf-default';
@@ -1583,10 +1604,11 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 	
 	function MarkdownTextboxInterface($customField, $inputName, $groupCounter, $fieldCounter) {
     $customFieldId = '';
+    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 
-    if (isset($_REQUEST['post'])) {
+    if (isset($mf_post_id)) {
   	  $customFieldId = $customField->id;
-  		$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $_REQUEST['post'], $customField->name, $groupCounter, $fieldCounter));
+  		$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
   	}else{
   		$value = "";
   	}
