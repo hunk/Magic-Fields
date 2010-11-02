@@ -372,13 +372,13 @@ class RCCWP_CustomWritePanelPage
  		<?php
 	  foreach ($custom_groups as $group) :
     ?> 
-    <h2>
       <?php if($group->name == "__default"):?>
-        Magic Fields
+        <h2>Magic Fields</h2>
       <?php else:?> 
-        <?php print $group->name;?>
+       <h2 class="mf-no-default-group"><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-group')."&custom-group-id={$group->id}"?>"><?php echo $group->name?></a></strong>
+          <span class="mf_add_group_field">(<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field')."&custom-group-id={$group->id}"?>"><?php _e('create field',$mf_domain); ?></a>)</span>
+       </h2>
       <?php endif;?>
-    </h2>
 		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('save-fields-order')?>" method="post"  id="posts-filter" name="ImportWritePanelForm" enctype="multipart/form-data">
   	<table cellpadding="3" cellspacing="3" width="100%" class="widefat">
   		<thead>
