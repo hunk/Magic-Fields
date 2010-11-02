@@ -134,3 +134,11 @@ input#custom-field-helptext {
   height: 1.5em; 
   line-height: 1.2em;
 }
+
+.mf_add_group_field {
+  font-size:10px;
+}
+
+.mf-no-default-group a{
+  text-decoration:none;
+}
