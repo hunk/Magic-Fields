@@ -116,13 +116,16 @@ class RCCWP_Post {
 						add_post_meta($postId, $name, $value);
 							
 						$fieldMetaID = $wpdb->insert_id;
-						
+				
 						// Adding  the referencie in the magic fields post meta table
 						$wpdb->query("INSERT INTO ". MF_TABLE_POST_META .
 										" (id, field_name, group_count, field_count, post_id,order_id) ".
 										" VALUES ({$fieldMetaID}, '{$name}',{$groups_index},{$index},{$postId},{$groups_index})"
 									);
-									
+
+            //pre save value
+            do_action('mf_presave',$fieldMetaID,$name,$groups_index,$index,$postId,$value);
+
 						$index++;
 					}
 					$groups_index++;
