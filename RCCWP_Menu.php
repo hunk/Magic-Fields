@@ -79,6 +79,17 @@ class RCCWP_Menu
 			case 'cancel-create-custom-field':
 			case 'submit-edit-custom-field':
 			case 'copy-custom-field':
+
+
+      /*
+       * Adding JS for sorting the order of the fields
+       * using a drag and drop feature
+       */
+				wp_enqueue_script(	'magic_set_categories',
+					MF_URI.'js/sorting_fields.js',
+					array('jquery','jquery-ui-sortable')
+        );
+
 				$page_group = 'RCCWP_CustomWritePanelPage';
 				$page_type = 'View';
 				break;
