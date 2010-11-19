@@ -6,6 +6,10 @@ class RCCWP_CustomGroupPage
 {
 	function Content($customGroup = null)
 	{
+	  
+	  // add the new expanded column, if it's not there already (Traversal)
+		RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANEL_GROUPS, "expanded", $column_attr = "tinyint after duplicate" );
+
 		global $mf_domain;
 		$customGroupName = $customGroupDuplicate = "";
 		if (isset($_GET['custom-write-panel-id']) )
@@ -17,6 +21,7 @@ class RCCWP_CustomGroupPage
 		{
 			$customGroupName = $customGroup->name;
 			$customGroupDuplicate = $customGroup->duplicate;
+			$customGroupExpanded = $customGroup->expanded;
 		}
 		
   		?>
@@ -36,6 +41,13 @@ class RCCWP_CustomGroupPage
 			<th scope="row" align="right"><?php _e('Duplication', $mf_domain); ?>:</th>
 			<td><input name="custom-group-duplicate" id="custom-group-duplicate" type="checkbox" value="1" <?php echo $customGroupDuplicate == 0 ? "":"checked" ?> />&nbsp;<?php _e('The group can be duplicated', $mf_domain); ?></td>
 		</tr>
+
+		<tr>
+			<th scope="row" align="right"><?php _e('Show as Expanded', $mf_domain); ?>:</th>
+			<td><input name="custom-group-expanded" id="custom-group-expanded" type="checkbox" value="1" <?php echo $customGroupExpanded == 0 ? '': ' checked="checked" ' ?> />&nbsp;<?php _e('Display the full expanded group editing interface instead of the group summary', $mf_domain); ?>
+			  <br /><small><?php _e('Note: the group can still be collapsed by the user, this just determines the default state on load')?></td>
+		</tr>
+
 		</tbody>
 		</table>
 		<br />

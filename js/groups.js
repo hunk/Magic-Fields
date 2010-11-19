@@ -706,6 +706,11 @@ function smartTrim(string, maxLength) {
     $(window).resize();
   });
   
+  jQuery(window).load( function() {
+    // this can't be done in document ready for some reason
+    $('.mf-group-expanded').mf_group_expand();
+  });
+  
   jQuery(document).ready(function(){
     
     var tt_template = 
@@ -781,8 +786,16 @@ function smartTrim(string, maxLength) {
       
       $('.mf_message_error .error_magicfields').hide();
     
-      mf_groups.mf_group_summary({ init: true });
+      //mf_groups.mf_group_summary({ init: true });
       
+      mf_groups.filter(":not(.mf-group-expanded)").mf_group_summary({ init: true });
+      
+      mf_groups.filter(".mf-group-expanded")
+        .find(".collapse_button").show().end()
+        .find(".mf-group-loading").hide().end()
+      
+
+
       wrappers.mf_group_update_count();
 
 
@@ -820,7 +833,6 @@ function smartTrim(string, maxLength) {
         
       moveAddToLast();
 
-      
       //sorteable
       jQuery(".write_panel_wrapper").sortable({ 
           handle: ".sortable_mf",
@@ -856,6 +868,16 @@ function smartTrim(string, maxLength) {
           }
       });
 
+      jQuery(".mf-field").find("input,textarea,select")
+        .live("focus", function(event) {
+          $(this).closest(".mf-fields").find(".mf-field").removeClass("focused");
+          $(this).closest(".mf-field").addClass("focused");
+        })
+        .live("blur", function(event) {
+          $(this).closest(".mf-field").removeClass("focused");
+        });
+        
+      
       //duplicate  group
       jQuery(".duplicate_button").live("click", function(event){
           id = jQuery(this).attr("id"); 
@@ -898,18 +920,39 @@ function smartTrim(string, maxLength) {
 
       //delete  duplicate group
       jQuery(".delete_duplicate_button").live("click",function(event){
+
+        var doIt = true;
+      
+        if (!$(this).closest(".mf_duplicate_group.empty").length) {
+          // this data set is not empty, so we should double-check the removal
+          // get the language for confirm message
+          var md = $(this).metadata({ type: 'class' });
+          var msg = "Are you sure?";
+          
+          if (md && md.lang) {
+            msg = md.lang.confirm || msg;
+          }
+          
+          doIt = confirm(msg);
+        }
+        
+        if (doIt) {
+
           id = jQuery(this).attr("id");
           div = id.split("-")[1];
           deleteGroupDuplicate(div);
 
           recount =  div.split("_")[2];
-        
+      
           kids =  jQuery("#write_panel_wrap_"+recount).children().filter(".postbox1");
           for(i=0;i < kids.length; i++){
               groupCounter =  kids[i].id.split("_")[2];
               ids = kids[i].id.split("_")[3];
               jQuery("#order_"+groupCounter+"_"+ids).val(i+1);
           }
+
+        }
+
       }); 
 
       //duplicate field
@@ -1091,8 +1134,25 @@ add_editor_text = function(context){
         var el = ed.getElement();
         if (el) {
           jQuery(el).mf_group_show_save_warning().mf_group_update_count();
+          jQuery(el).closest(".mf-field").addClass("focused");
         }
-      })
+      });
+      
+      ed.onActivate.add( function(ed, l) {
+        var el = ed.getElement();
+        
+        if (el) {
+          jQuery(el).closest(".mf-field").addClass("focused");
+        }
+      });
+
+      ed.onDeactivate.add( function(ed, l) {
+        var el = ed.getElement();
+        if (el) {
+          jQuery(el).closest(".mf-field").removeClass("focused");
+        }
+      });
+      
     }
   });
   
@@ -1100,6 +1160,7 @@ add_editor_text = function(context){
   
   if (context && context.length) {
     // find textareas inside the context element (much faster than ALL available textareas)
+
     
     var editors = context.find('textarea.pre_editor');
     
@@ -1129,6 +1190,7 @@ add_editor_text = function(context){
   
   	jQuery(".Multiline_Textbox :input[type='textarea'].pre_editor", context).each( function(inputField){
       var editor_text = jQuery(this).attr('id');
+      
   		tinyMCE.execCommand('mceAddControl', true, editor_text); 
   		jQuery('#'+editor_text, context).removeClass('pre_editor');
   	});

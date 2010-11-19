@@ -454,6 +454,7 @@ class RCCWP_WritePostPage  {
 	function GroupDuplicate($customGroup, $groupCounter,$order,$fromAjax=true){
 		global $mf_domain;
  
+		$ex_class = $customGroup->expanded ? "mf-group-expanded" : '';
 
     $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 		//getting the custom fields
@@ -467,7 +468,7 @@ class RCCWP_WritePostPage  {
 			$add_class_rep="mf_duplicate_group";}else{$add_class_rep="";
 		}
 		?>
-		<div class="magicfield_group <?php echo $add_class_rep;?>" id="freshpostdiv_group_<?php 
+		<div class="magicfield_group <?php echo $add_class_rep;?> <?php echo $ex_class ?>" id="freshpostdiv_group_<?php 
 			
 			echo $customGroup->id.'_'.$groupCounter;?>">
 			<a id="collapse_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="collapse_button" href="javascript:void(0);">Collapse</a>
@@ -528,7 +529,7 @@ class RCCWP_WritePostPage  {
 					<?php
 						if($groupCounter != 1):
 						?>
-							<a class ="delete_duplicate_button" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"><span><?php _e('Remove', $mf_domain); ?></span> <?php echo $sgn ?></a>
+							<a class ="delete_duplicate_button { lang: { confirm: '<?php _e("Are you sure?") ?>' } }" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"><span><?php _e('Remove', $mf_domain); ?></span> <?php echo $sgn ?></a>
 						<?php else:?> 
 							<a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);" title="<?php _e('Note: hold down the SHIFT key as you click to collapse this item before the new item is added', $mf_domain); ?>"><span>Add Another</span> <?=$sgn?></a>
 					   <?php endif;?> 

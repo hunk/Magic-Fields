@@ -232,12 +232,17 @@
 }
 
 .write_panel_wrapper .mf-field {
-  padding: 10px 7px 0px 7px;
-  margin-top: 8px;
+  padding: 10px 7px 8px 7px;
+  /*margin-top: 8px;*/
   border-top: 1px solid #eaeaea;
   background: url(../images/mf-field.png) repeat-x;
   padding-bottom: 6px;
 }
+
+.write_panel_wrapper .mf-field.focused {
+  background: #FDFDFD !important;
+}
+
 
 .write_panel_wrapper .mf-field-duplicate {
   background-image: none;
@@ -247,7 +252,6 @@
 
 .write_panel_wrapper .inside .mf-field:first-child {
   border-top: none;
-  padding-top: 0px;
   background: none;
 }
 
@@ -271,6 +275,11 @@
   border: 1px solid #a7c1d9;
   margin-bottom: 0;
 }
+
+.write_panel_wrapper .mf_duplicate_group:hover .mf_toolbox {
+  background-color: #FAFAFA;
+  border-top-color: #F2F2F2; 
+} 
 
 .write_panel_wrapper .magicfield_group {
   position: relative;
@@ -693,10 +702,11 @@ input.button.disabled {
 
 
 .write_panel_wrapper .mf_duplicate_group {
-  border-bottom-color: #ddd;
+  border-bottom-color: #d4d4d4;
   border-top-color: #FFF;
   border-left-color: #FFF;
   border-right: none;
+  
 }
 
 .mf-group-summary {
@@ -710,7 +720,13 @@ input.button.disabled {
 
 
 .mf-group-summary .jspPane:hover,
-.mf-group-summary table:hover {
+.mf-group-summary table:hover,
+.mf_duplicate_group:hover .mf-group-summary table,
+.mf_duplicate_group:hover .mf-group-summary .jspPane,
+.mf_duplicate_group:hover .mf-group-summary table td,
+.mf_duplicate_group:hover .mf-group-summary .jspPane td,
+.mf_duplicate_group:hover .mf-group-summary table th,
+.mf_duplicate_group:hover .mf-group-summary .jspPane th {
   background-color: #FFF;
 }
 
@@ -1008,7 +1024,7 @@ input.button.disabled {
   padding-top: 4px;
   padding-left: 5px;
   padding-right: 5px;
-  height: 20px;
+  height: 21px;
 }
 
 .write_panel_wrapper .mf_toolbox .hndle {
@@ -1019,6 +1035,14 @@ input.button.disabled {
 }
 
 .write_panel_wrapper .magicfield_group .mf-fields {
+  display: none;
+}
+
+.write_panel_wrapper .mf-group-expanded .mf-fields {
+  display: block;
+}
+
+.write_panel_wrapper .mf-group-expanded .mf-group-loading {
   display: none;
 }
 
@@ -1075,7 +1099,7 @@ input.button.disabled {
   margin-left: 14px;
   display: none; 
   position: absolute;
-  top: -8px;
+  top: 0px;
   right: 0px;
   z-index: 10;
 }

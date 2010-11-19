@@ -153,12 +153,13 @@ class RCCWP_Processor {
 				$default = array(
 				  'custom-write-panel-id' => '',
 				  'custom-group-name' => '',
-				  'custom-group-duplicate' => ''
+				  'custom-group-duplicate' => '',
+				  'custom-group-expanded' => ''
 				);
 				$values = array_merge($default,$_POST);
 				
 				$customGroupId = RCCWP_CustomGroup::Create(
-						$values['custom-write-panel-id'], $values['custom-group-name'], $values['custom-group-duplicate'], NULL);
+						$values['custom-write-panel-id'], $values['custom-group-name'], $values['custom-group-duplicate'], $values['custom-group-expanded'], NULL);
 				break;
 				
 			case 'delete-custom-group':
@@ -210,7 +211,8 @@ class RCCWP_Processor {
 				$default = array(
 				  'custom-write-panel-id' => '',
 				  'custom-group-name' => '',
-				  'custom-group-duplicate' => ''
+				  'custom-group-duplicate' => '',
+				  'custom-group-expanded' => ''
 				);
 				$all = $_POST;
 				$all['custom-group-id'] = $_REQUEST['custom-group-id'];
@@ -219,6 +221,7 @@ class RCCWP_Processor {
 					$values['custom-group-id'],
 					$values['custom-group-name'],
 					$values['custom-group-duplicate'],
+					$values['custom-group-expanded'],
 					NULL);
 				break;
 										

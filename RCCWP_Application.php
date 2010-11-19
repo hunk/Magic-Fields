@@ -10,6 +10,20 @@
 class RCCWP_Application
 {
 
+  function AddColumnIfNotExist($db, $column, $column_attr = "VARCHAR( 255 ) NULL" ){
+    $exists = false;
+    $columns = mysql_query("show columns from $db");
+    while($c = mysql_fetch_assoc($columns)){
+        if($c['Field'] == $column){
+            $exists = true;
+            break;
+        }
+    }      
+    if(!$exists){
+        mysql_query("ALTER TABLE `$db` ADD `$column`  $column_attr");
+    }
+  }
+  
 	function ContinueInstallation(){
 		RCCWP_Application::SetCaps();
 	}

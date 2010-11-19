@@ -21,16 +21,17 @@ class RCCWP_CustomGroup
 	 * @param unknown_type $at_right a boolean indicating whether the group should be placed at right side.
 	 * @return the id of the new group
 	 */
-	function Create($customWritePanelId, $name, $duplicate, $at_right)
+	function Create($customWritePanelId, $name, $duplicate, $expanded, $at_right)
 	{
 		require_once('RC_Format.php');
 		global $wpdb;
 		$sql = sprintf(
 			"INSERT INTO " . MF_TABLE_PANEL_GROUPS .
-			" (panel_id, name, duplicate, at_right) values (%d, %s, %d, %d)",
+			" (panel_id, name, duplicate, expanded, at_right) values (%d, %s, %d, %d, %d)",
 			$customWritePanelId,
 			RC_Format::TextToSql($name),
 			$duplicate,
+			$expanded,
 			$at_right
 			);
 		$wpdb->query($sql);
@@ -139,17 +140,18 @@ class RCCWP_CustomGroup
 	 * @param unknown_type $duplicate a boolean indicating whether the group can be duplicated
 	 * @param unknown_type $at_right a boolean indicating whether the group should be placed at right side. 
 	 */	
-	function Update($customGroupId, $name, $duplicate, $at_right)
+	function Update($customGroupId, $name, $duplicate, $expanded, $at_right)
 	{
 		require_once('RC_Format.php');
 		global $wpdb;
 	
 		$sql = sprintf(
 			"UPDATE " . MF_TABLE_PANEL_GROUPS .
-			" SET name = %s , duplicate = %d, at_right = %d".
+			" SET name = %s , duplicate = %d, expanded = %d, at_right = %d".
 			" where id = %d",
 			RC_Format::TextToSql($name),
 			$duplicate,
+			$expanded,
 			$at_right,
 			$customGroupId );
 		$wpdb->query($sql);
