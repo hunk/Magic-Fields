@@ -1804,7 +1804,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
     		?>
     			<option value="<?php echo $panel->id?>" <?php echo $selected?>><?php echo $panel->name?></option>
     		<?php
-    		  $items[$panel->id] = "{ panel_theme: '".$panel_theme."', template_name: '".addslashes($templates_by_filename[$panel_theme])."', parent_page: '".$parent_page."', parent_page_title: '".$parent_page_title."' }";
+    		  $items[$panel->id] = "{ panel_theme: '".$panel_theme."', template_name: '".addslashes($templates_by_filename[$panel_theme])."', parent_page: '".$parent_page."', parent_page_title: '".addslashes($parent_page_title)."' }";
 
           endif;
           
