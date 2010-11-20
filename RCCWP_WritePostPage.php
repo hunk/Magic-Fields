@@ -367,7 +367,6 @@ class RCCWP_WritePostPage  {
 			//render the elements
 			$customFields = RCCWP_CustomGroup::GetCustomFields($group->id);
 
-
 			//when will be edit the  Post
 			if(isset( $mf_post_id ) && count($customFields) > 0){
 				//using the first field name we can know 
@@ -453,9 +452,15 @@ class RCCWP_WritePostPage  {
 	 */ 
 	function GroupDuplicate($customGroup, $groupCounter,$order,$fromAjax=true){
 		global $mf_domain;
- 
+ 		global $CUSTOM_WRITE_PANEL;
+
 		$ex_class = $customGroup->expanded ? "mf-group-expanded" : '';
 
+    if ($customGroup->name == "__default") {
+      // for the default group (top level), check the expand flag on the WRITE PANEL instead
+      $ex_class = $CUSTOM_WRITE_PANEL->expanded ? "mf-group-expanded" : '';
+    }
+    
     $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 		//getting the custom fields
 		$customFields = RCCWP_CustomGroup::GetCustomFields($customGroup->id);

@@ -5,9 +5,14 @@ class RCCWP_CustomWritePanelPage
 {
 	function Content($customWritePanel = null)
 	{
+	  // add the new expanded column, if it's not there already (Traversal)
+		RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANELS, "expanded", $column_attr = "tinyint NOT NULL DEFAULT 1 after type" );
+
+
 		global $mf_domain,$wpdb;
 		$customWritePanelName = "";
 		$customWritePanelDescription = "";
+		$customWritePanelExpanded = 1;
 		$write_panel_category_ids = array();
 		$defaultTagChecked = 'checked="checked"';
 		$customWritePanelAllFieldIds = NULL;
@@ -18,6 +23,7 @@ class RCCWP_CustomWritePanelPage
 		{
 			$customWritePanelName = $customWritePanel->name;
 			$customWritePanelDescription = $customWritePanel->description;
+		  $customWritePanelExpanded = $customWritePanel->expanded;
 			$customWritePanelDisplayOrder = $customWritePanel->display_order;
 			$customWritePanelType = $customWritePanel->type;
 			if ($customWritePanelType == 'page') $showPost = false;
@@ -230,6 +236,14 @@ class RCCWP_CustomWritePanelPage
 			?>
 			<td><input name="custom-write-panel-order" id="custom-write-panel-order" size="2" type="text" value="<?php echo $customWritePanelDisplayOrder?>" /></td>
 		</tr>
+		
+		<tr>
+			<th scope="row" align="right"><?php _e('Top Level Fields Expanded', $mf_domain); ?>:</th>
+			<td><input name="custom-write-panel-expanded" id="custom-write-panel-expanded" type="checkbox" value="1" <?php echo $customWritePanelExpanded == 0 ? '': ' checked="checked" ' ?> />&nbsp;<?php _e('Display the full expanded group editing interface instead of the summary for fields created at the top level (fields not inside a group)', $mf_domain); ?>
+			  <br /><small><?php _e('Note: the group can still be collapsed by the user, this just determines the default state on load')?></td>
+		</tr>
+
+
 		</tbody>
 		</table>
 		

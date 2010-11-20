@@ -55,7 +55,7 @@ class RCCWP_CustomWritePanel
 	 * @param boolean $createDefaultGroup indicates whether to create a default group.
 	 * @return the id of the write panel
 	 */
-	function Create($name, $description = '', $standardFields = array(), $categories = array(), $display_order = 1, $type = FALSE, $createDefaultGroup=true,$single_post = 0, $default_theme_page = NULL, $default_parent_page = NULL) {
+	function Create($name, $description = '', $standardFields = array(), $categories = array(), $display_order = 1, $type = FALSE, $createDefaultGroup=true,$single_post = 0, $default_theme_page = NULL, $default_parent_page = NULL, $expanded = 0) {
 		include_once('RC_Format.php');
 		global $wpdb;
 
@@ -63,15 +63,16 @@ class RCCWP_CustomWritePanel
 		if (!$type) $type = $_POST['radPostPage'];
 		$sql = sprintf(
 			"INSERT INTO " . MF_TABLE_PANELS .
-			" (name, description, display_order, capability_name, type,single)" .
+			" (name, description, display_order, capability_name, type,single,expanded)" .
 			" values" .
-			" (%s, %s, %d, %s, %s,%d)", 
+			" (%s, %s, %d, %s, %s,%d, %d)", 
 			RC_Format::TextToSql($name), 
 			RC_Format::TextToSql($description),
 			$display_order,
 			RC_Format::TextToSql($capabilityName),
 			RC_Format::TextToSql($type),
-			$single_post
+			$single_post,
+			$expanded
 		);
 		
 		$wpdb->query($sql);
@@ -176,7 +177,7 @@ class RCCWP_CustomWritePanel
 	function Get($customWritePanelId) {
 		global $wpdb;
 	
-		$sql = "SELECT id, name, description, display_order, capability_name, type,single FROM " . MF_TABLE_PANELS .
+		$sql = "SELECT id, name, description, display_order, capability_name, type,single, expanded FROM " . MF_TABLE_PANELS .
 			" WHERE id = " . (int)$customWritePanelId;
 		
 		$results = $wpdb->get_row($sql);
@@ -351,7 +352,7 @@ class RCCWP_CustomWritePanel
 	 * @param integer $display_order the order of the panel in Magic Fields > Write Panels tab
 	 * @param string $type 'post' or 'page'
 	 */
-	function Update($customWritePanelId, $name, $description = '', $standardFields = array(), $categories = array(), $display_order = 1, $type = FALSE, $createDefaultGroup=true,$single_post = 0, $default_theme_page = NULL, $default_parent_page = NULL)
+	function Update($customWritePanelId, $name, $description = '', $standardFields = array(), $categories = array(), $display_order = 1, $type = FALSE, $createDefaultGroup=true,$single_post = 0, $default_theme_page = NULL, $default_parent_page = NULL, $expanded = 0)
 	{
 		include_once('RC_Format.php');
 		global $wpdb;
@@ -366,6 +367,7 @@ class RCCWP_CustomWritePanel
 			" , capability_name = %s" .
 			" , type = %s" .
 			" , single = %s" .
+			" , expanded = %d" .
 			" where id = %d",
 			RC_Format::TextToSql($name), 
 			RC_Format::TextToSql($description),
@@ -373,6 +375,7 @@ class RCCWP_CustomWritePanel
 			RC_Format::TextToSql($capabilityName),
 			RC_Format::TextToSql($_POST['radPostPage']),
 			$single_post,
+			$expanded,
 			$customWritePanelId );
 		
 		$wpdb->query($sql);
