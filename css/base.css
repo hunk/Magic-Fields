@@ -730,6 +730,16 @@ input.button.disabled {
   background-color: #FFF;
 }
 
+.magicfield_group .mf-group-summary table,
+.magicfield_group .mf-group-summary .jspPane,
+.magicfield_group .mf-group-summary table td,
+.magicfield_group .mf-group-summary table th,
+.magicfield_group .mf_toolbox {
+  -webkit-transition: background-color 0.3s ease; 
+  -moz-transition: background-color 0.3s ease; 
+}
+
+
 .mf-group-summary .jspPane:hover td,
 .mf-group-summary .jspPane:hover th,
 .mf-group-summary table:hover td,
