@@ -253,6 +253,11 @@ class RCCWP_Application
 				$wpdb->query("DROP TABLE ".$wpdb->prefix."mf_custom_field_types");
 			}
 		}
+
+    if (RC_CWP_DB_VERSION >= 7) {
+      RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANEL_GROUPS, "expanded", $column_attr = "tinyint after duplicate" );
+      RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANELS, "expanded", $column_attr = "tinyint NOT NULL DEFAULT 1 after type" );
+    }
 	}
 
 	/**
