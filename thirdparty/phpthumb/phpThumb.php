@@ -62,7 +62,7 @@ $md5_params =  md5("w=".$params['w']."&h=".$params['h']."&q=".$params['q']."&zc=
 
 
 //The file must be "jpg" or "png" or "gif" 
-if(!in_array($extension,array('jpg','png','gif'))){
+if(!in_array(strtolower($extension),array('jpg','png','gif'))){
 	return false;
 }
 
