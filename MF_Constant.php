@@ -25,16 +25,16 @@ define("MF_URI", WP_CONTENT_URL.$mfpath[1]);
 define("MF_URI_RELATIVE", 'wp-content'.$mfpath[1]);
 define("PHPTHUMB",MF_URI."thirdparty/phpthumb/phpThumb.php");
 
-if(!is_wp30()) {
+//if(!is_wp30()) {
   //prefix all tables
   if(isset($current_blog)){
   	$mf_prefix=$wpdb->base_prefix;
   }else{
   	$mf_prefix=$wpdb->prefix;
   }
-}else{
+/*}else{
   $mf_prefix = $wpdb->get_blog_prefix();
-}
+}*/
 // -- Tables names
 
 // Panels - Groups - Fields
@@ -54,7 +54,6 @@ define('MF_TABLE_CUSTOM_FIELD_PROPERTIES', $mf_prefix  . 'mf_custom_field_proper
 
 // Extra information about post meta values.
 define('MF_TABLE_POST_META', $wpdb->prefix . 'mf_post_meta');
-
 // Post Type table
 define('MF_TABLE_POSTTYPES_TAXONOMIES', $wpdb->prefix. 'mf_posttypes_taxonomies');
 

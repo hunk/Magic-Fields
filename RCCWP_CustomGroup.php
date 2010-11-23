@@ -21,7 +21,7 @@ class RCCWP_CustomGroup
 	 * @param unknown_type $at_right a boolean indicating whether the group should be placed at right side.
 	 * @return the id of the new group
 	 */
-	function Create($customWritePanelId, $name, $duplicate, $expanded, $at_right)
+	function Create($customWritePanelId, $name, $duplicate, $expanded = 1, $at_right = 0)
 	{
 		require_once('RC_Format.php');
 		global $wpdb;
