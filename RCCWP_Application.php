@@ -12,8 +12,8 @@ class RCCWP_Application
 
   function AddColumnIfNotExist($db, $column, $column_attr = "VARCHAR( 255 ) NULL" ){
     $exists = false;
-    $columns = mysql_query("show columns from $db");
-    while($c = mysql_fetch_assoc($columns)){
+    $columns = @mysql_query("show columns from $db");
+    while($c = @mysql_fetch_assoc($columns)){
         if($c['Field'] == $column){
             $exists = true;
             break;
@@ -144,6 +144,7 @@ class RCCWP_Application
 				display_order int(11),
 				capability_name varchar(255) NOT NULL,
 				type varchar(255) NOT NULL,
+        expanded tinyint NOT NULL DEFAULT 1,
 				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 				
 			$qst_tables[] = "CREATE TABLE " . MF_TABLE_GROUP_FIELDS . " (
@@ -189,6 +190,7 @@ class RCCWP_Application
 				panel_id int(11) NOT NULL,
 				name varchar(255) NOT NULL,
 				duplicate tinyint(1) NOT NULL,
+        expanded tinyint,
 				at_right tinyint(1) NOT NULL,
 				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 

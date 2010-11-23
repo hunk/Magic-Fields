@@ -2,7 +2,7 @@
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
 * Contributors: [Astrata Software](http://astrata.mx) [Travis Hensgen](http://traversal.com.au/), [Jeff Minard](http://jrm.cc/ "Jeff Minard"), [Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"), Michael Bayard, [Doc4](doc4design.com/ "Doc4")
 * Tested up to: Wordpress 2.9
-* Stable tag: 1.4
+* Stable tag: 1.5.1
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -17,6 +17,42 @@ Follow the following steps to install this plugin.
 2.	Activate the plugin through the 'Plugins' menu in WordPress.
 
 ## Changelog ##
+
+###1.5.1###
+ * Fixed critical bug in Multisite version and a few more fixes
+
+###1.5###
+ * Related Field Types: Extra selections are now available ‘All Posts AND Pages’ and ‘All Posts AND Pages with Write Panel’.
+ * Added extra CSS class to Write Panel main menus, based on the sanitized write panel name. E.g. the Menu item for panel named ‘Home Page’ will get the extra class ‘mf-menu-home-page’. Ths allows alternative menu images to be attached to the write panel. Currently this is only possible by having an admin CSS file added through a WordPress ‘admin_head’ filter function in your functions.php
+ * Added caching feature to support mostly used functions like get() and get_group();
+ * Count down feature for inputs and textareas showing characters left in twitter style.
+ * Now displaying Categories in hierarchy in the Write Pannel.
+ * Issue 34 fixed
+ * Issue 53 Fixed
+ * Issue 50 Fixed
+ * Issue 57 Fixed
+ * Issue 65 Fixed
+ * New way to sort the order of the fields in the write panel
+ * New Template API Functions: gen_image_for, get_group_with_options,get_group_with_prefix,get_flat_group,get_flat_group_with_prefix
+ * gen_image_for: Gets a generated image for a field value that’s already known, as is the case for values from the “get_group” function.
+ * get_group_with_options: a function that allows certain options to be passed in to make front end code a bit cleaner. Refer to code comments for more details.
+ * Added 'Name (order)' column to the grid, which displays the code-friendly name of the field followed by the field order number in brackets
+ * revamped the entire ui for add posts in the write panels
+ * When CREATING a field, Magic Fields now suggests an appropriate name for the field after the label is entered or changes. This is based on removing all special characters, converting to lowercase, and converting spaces to underscores. Also, if the field is part of a group, the (singularized) group name is appended to the beginning, which ensures it is unique across the set of fields. For example, if we have a group named ”Image Assets” and label a new field “File”, Magic Fields will suggest the field name should be “image_asset_file”.
+ * When CHANGING a field, magic fields can suggest a field name based on the rules above by clicking the "suggest" button.
+ * Tidied up the user interface for (expanded) magic fields groups, which now includes nicer bevels for field groups, better spacing, and nicer icons from the Fugue collection by Yusuke Kamiyamane ( http://p.yusukekamiyamane.com/ )
+ * The terminology for “Duplicating” magic fields groups has been changed to ”Add Another [Item]“, or “Remove [Item]“.
+ * Collapsible fields feature, where magic fields groups are collapsed down into a compact read-only group summary. Clicking group summaries will expand the group for editing. By default, any field groups and data that already exist will be loaded as a summary, meaning that pages and posts edit screens are generally MUCH shorter than before. This also makes it far easier to re-order items within each group, since the group summaries are always only about 150 pixels high.
+ * Group summaries make use of the jScrollPane plug-in from Kevin Luck ( http://jscrollpane.kelvinluck.com/ ) to provide a much neater horizontal scrollbar for long group summaries. These are much smaller and tidier than the native OS widgets.
+ * A new “Magic Fields” attributes panel is now available that allows you to change the write panel for a given page/post.
+ * Added an alternative AJAX file uploader that supports drag and drop, adds an ajax progress spinner, and provides a more consistent file upload UI across all browsers based on Valum’s AJAX uploader ( http://valums.com/ajax-upload/ ). This uploader also improves performance DRAMATICALLY for large numbers of fields, since it does not use an iframe for every file-based field.
+ * AJAX Uploader no longer adds a timestamp prefix to uploaded files, instead saving the file to the server as a lowercase sanitized version of the original file name.
+ * Enhanced the layout of file upload controls, audio controls, image controls for the new uploader.
+ * TinyMCE initilisation has been deferred until the user expands a group summary, to improve load performance.
+ * Enhanced the form validation routines to be more robust, and work correctly with the group summaries. Any fields with errors will have their group summary expanded automatically so that the user can see the errors. Also added a little warning box inside the “Publish” panel when there are validation errors so that it’s easier to see that fields are missing (since they might be scrolled out of view at the bottom).
+ * Added a much improved color picker by Stefan Petre ( http://www.eyecon.ro/colorpicker/ ) which uses a Photoshop-style color picker allowing you to select many more colors than before. This has been slightly customised to work better in the context of magic fields.
+ * Added a “loading data” spinner for the initial load of a group summary.
+
 
 ###1.4.5###
 * Issue  17  fixed. http://bit.ly/b8AMUQ
