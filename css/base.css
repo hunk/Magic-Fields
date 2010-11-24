@@ -240,8 +240,22 @@
 }
 
 .write_panel_wrapper .mf-field.focused {
-  background: #FDFDFD !important;
+  background: #f0f7fd !important;
 }
+
+.write_panel_wrapper input[type=text],
+.write_panel_wrapper textarea,
+.write_panel_wrapper select {
+  outline: none;
+}
+
+.write_panel_wrapper .mf-field.focused input[type=text],
+.write_panel_wrapper .mf-field.focused textarea,
+.write_panel_wrapper .mf-field.focused select,
+.write_panel_wrapper .mf-field.focused table.mceLayout {
+  border-color: #a4c0d9;
+}
+
 
 
 .write_panel_wrapper .mf-field-duplicate {
