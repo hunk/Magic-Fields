@@ -1030,7 +1030,7 @@ class RCCWP_WritePostPage  {
 		<div class="mf_custom_field">
 		<div class="tab_multi_mf">
 			<a onclick="del_editor('<?php echo $idField; ?>');" class="edButtonHTML_mf">HTML</a>		
-			<a onclick="add_editor('<?php echo $idField; ?>');" class="edButtonHTML_mf" >Visual</a>
+			<a onclick="add_editor('<?php echo $idField; ?>');" class="edButtonHTML_mf current" >Visual</a>
 		</div>
 		<?php } } 
 		$classEditor = 'mf_editor';

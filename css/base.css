@@ -232,7 +232,7 @@
 }
 
 .write_panel_wrapper .mf-field {
-  padding: 10px 7px 8px 7px;
+  padding: 0px 7px 8px 7px;
   /*margin-top: 8px;*/
   border-top: 1px solid #eaeaea;
   background: url(../images/mf-field.png) repeat-x;
@@ -1081,6 +1081,7 @@ input.button.disabled {
 .write_panel_wrapper .mf-field-title {
   overflow: hidden;
   zoom: 100%;
+  padding-top: 10px;
 }
 
 .write_panel_wrapper .mf-field-title .duplicate_field,

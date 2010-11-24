@@ -794,7 +794,10 @@ function smartTrim(string, maxLength) {
         .find(".collapse_button").show().end()
         .find(".mf-group-loading").hide().end()
       
-
+      $('.tab_multi_mf a.edButtonHTML_mf').click( function() {
+        $(this).closest(".tab_multi_mf").find(".edButtonHTML_mf").removeClass("current");
+        $(this).addClass("current");
+      });
 
       wrappers.mf_group_update_count();
 
@@ -1155,6 +1158,8 @@ add_editor_text = function(context){
       
     }
   });
+
+  options.theme_advanced_buttons1 = "add_image,add_video,add_audio,add_media,|," + options.theme_advanced_buttons1;
   
   var doInit = true;
   
@@ -1163,6 +1168,7 @@ add_editor_text = function(context){
 
     
     var editors = context.find('textarea.pre_editor');
+    
     
     var ids = [];
     

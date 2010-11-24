@@ -80,10 +80,10 @@ class qqUploadedFileForm {
 
 class qqFileUploader {
     private $allowedExtensions = array();
-    private $sizeLimit = 10485760;
+    private $sizeLimit = 0;
     private $file;
 
-    function __construct(array $allowedExtensions = array(), $sizeLimit = 10485760){
+    function __construct(array $allowedExtensions = array(), $sizeLimit = 0){
         $allowedExtensions = array_map("strtolower", $allowedExtensions);
             
         $this->allowedExtensions = $allowedExtensions;        
@@ -161,8 +161,42 @@ class qqFileUploader {
 // list of valid extensions, ex. array("jpeg", "xml", "bmp")
 $allowedExtensions = array();
 
-// max file size in bytes (we'll hardcode to 100MB)
-$sizeLimit = 100 * 1024 * 1024;
+function fs_let_to_num($v){ //This function transforms the php.ini notation for numbers (like '2M') to an integer (2*1024*1024 in this case)
+    $l = substr($v, -1);
+    $ret = substr($v, 0, -1);
+    switch(strtoupper($l)){
+    case 'P':
+        $ret *= 1024;
+    case 'T':
+        $ret *= 1024;
+    case 'G':
+        $ret *= 1024;
+    case 'M':
+        $ret *= 1024;
+    case 'K':
+        $ret *= 1024;
+        break;
+    }
+    return $ret;
+}
+
+/*
+// max file size in bytes
+$ini_limit = ini_get('upload_max_filesize');
+
+if (ini_limit == "") {
+  // set the limit to 500MB, if we can't find it in INI
+  $ini_limit = 500 * 1024 * 1024;
+} else {
+  // convert the number to bytes
+  $ini_limit = fs_let_to_num($ini_limit);
+}
+*/
+
+// TODO: In a future version, make this uploader honour PHP ini file size.
+// for now, lets hardcode it to 10000M (essentially unlimited for a web site, who is uploading > 10GB files?)
+
+$sizeLimit = 10000 * 1024 * 1024;
 
 $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
 $result = $uploader->handleUpload(MF_FILES_PATH);
