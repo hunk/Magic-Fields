@@ -249,9 +249,9 @@
   outline: none;
 }
 
-.write_panel_wrapper .mf-field.focused input[type=text],
-.write_panel_wrapper .mf-field.focused textarea,
-.write_panel_wrapper .mf-field.focused select,
+.write_panel_wrapper .mf-field.focused input[type=text]:focus,
+.write_panel_wrapper .mf-field.focused textarea:focus,
+.write_panel_wrapper .mf-field.focused select:focus,
 .write_panel_wrapper .mf-field.focused table.mceLayout {
   border-color: #a4c0d9;
 }
