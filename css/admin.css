@@ -135,7 +135,8 @@ input#custom-field-helptext {
   line-height: 1.2em;
 }
 
-.mf_add_group_field {
+.mf_add_group_field,
+.mf_delete_group_field {
   font-size:10px;
 }
 

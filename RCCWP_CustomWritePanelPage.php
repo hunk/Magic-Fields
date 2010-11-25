@@ -346,6 +346,11 @@ class RCCWP_CustomWritePanelPage
 			{
 				return confirm("<?php _e('Are you sure you want to delete this custom Field?', $mf_domain); ?>");
 			}
+			
+			function confirmBeforeDeleteGroup()
+			{
+				return confirm("<?php _e('Are you sure you want to delete this field group?\n\nNote: All fields that are part of this group will also be deleted!', $mf_domain); ?>");
+			}
 		</script>
 		<div class="wrap">
 
@@ -391,6 +396,8 @@ class RCCWP_CustomWritePanelPage
       <?php else:?> 
        <h2 class="mf-no-default-group"><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-group')."&custom-group-id={$group->id}"?>"><?php echo $group->name?></a></strong>
           <span class="mf_add_group_field">(<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field')."&custom-group-id={$group->id}"?>"><?php _e('create field',$mf_domain); ?></a>)</span>
+          <span class="mf_delete_group_field">(<a onclick="return confirmBeforeDeleteGroup();" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-group')."&custom-group-id={$group->id}"?>"><?php _e('delete',$mf_domain); ?></a>)</span>
+
        </h2>
       <?php endif;?>
 		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('save-fields-order')?>" method="post"  id="posts-filter" name="ImportWritePanelForm" enctype="multipart/form-data">
