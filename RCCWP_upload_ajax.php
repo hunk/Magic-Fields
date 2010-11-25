@@ -51,7 +51,7 @@ class qqUploadedFileXhr {
         if (isset($_SERVER["CONTENT_LENGTH"])){
             return (int)$_SERVER["CONTENT_LENGTH"];            
         } else {
-            throw new Exception('Getting content length is not supported.');
+            //throw new Exception('Getting content length is not supported.');
         }      
     }   
 }

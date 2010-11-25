@@ -669,7 +669,7 @@ function smartTrim(string, maxLength) {
   };
   
 
-  $.fn.mf_group_expand = function() {
+  $.fn.mf_group_expand = function(init) {
     return this.each( function() {
 
       var el = $(this);
@@ -688,8 +688,10 @@ function smartTrim(string, maxLength) {
       
       fc.show();
 
-      fc.find("input,textrea,select").eq(0).focus();
-      
+      if (!init) {
+        fc.find("input,textrea,select").eq(0).focus();
+      }
+    
       if (el.data("mf_group_summary")) {
         // remove the group summary
         el.find(".mf-group-summary").remove();
@@ -708,7 +710,7 @@ function smartTrim(string, maxLength) {
   
   jQuery(window).load( function() {
     // this can't be done in document ready for some reason
-    $('.mf-group-expanded').mf_group_expand();
+    $('.mf-group-expanded').mf_group_expand(true);
   });
   
   jQuery(document).ready(function(){
@@ -786,8 +788,6 @@ function smartTrim(string, maxLength) {
       
       $('.mf_message_error .error_magicfields').hide();
     
-      //mf_groups.mf_group_summary({ init: true });
-      
       mf_groups.filter(":not(.mf-group-expanded)").mf_group_summary({ init: true });
       
       mf_groups.filter(".mf-group-expanded")
