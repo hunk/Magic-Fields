@@ -354,6 +354,7 @@
   background: #F3F3F3;
   border-top: 1px solid #EAEAEA;
   border-bottom: 1px solid #EAEAEA;
+  cursor: move;
 }
 
 .write_panel_wrapper a.delete_duplicate_button,
@@ -369,6 +370,7 @@
   background-repeat: no-repeat;
   display: block;
   font-size: 10px;
+  cursor: pointer;
 }
 
 .write_panel_wrapper a.collapse_button {

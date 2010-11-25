@@ -525,7 +525,7 @@ class RCCWP_WritePostPage  {
 			?>
 			
 	    
-			<div class="mf_toolbox">
+			<div class="mf_toolbox sortable_mf">
 				<span class="mf_counter sortable_mf" id="counter_<?php echo $customGroup->id;?>_<?php echo $groupCounter;?>"><?php echo $order;?></span>
 				<span class="hndle sortable_mf row_mf">&nbsp;</span>
 
