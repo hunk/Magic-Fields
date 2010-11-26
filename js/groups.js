@@ -1263,11 +1263,12 @@ add_color_picker = function(context){
 mf_resizeEditorBox = function (editor) {
     // Have this function executed via TinyMCE's init_instance_callback option!
     // requires TinyMCE3.x
-    var container = editor.contentAreaContainer, /* new in TinyMCE3.x - */
+    var container = editor.contentAreaContainer; /* new in TinyMCE3.x - */
 
+    // Traversal note: This code causes big problems when resizing multiline text fields, and in the fullscreen mode (at least on the Mac it does). Commented out for now.
     // extend container by the difference between available width/height and used width/height
-    docFrame = container.children [0] // doesn't seem right : was .style.height;
-    docFrame.style.width = container.style.width =  "100%";
-    docFrame.style.height = container.style.height = "200px";
+    //docFrame = container.children [0] // doesn't seem right : was .style.height;
+    //docFrame.style.width = container.style.width =  "100%";
+    //docFrame.style.height = container.style.height = "200px";
 }
 
