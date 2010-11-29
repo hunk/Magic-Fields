@@ -749,7 +749,10 @@ function smartTrim(string, maxLength) {
       wrappers.find(".mf-expand-all-button").live("click", function() {
 
         if (!$(this).hasClass("disabled")) {
-          $(this).closest(".write_panel_wrapper").find(".magicfield_group").mf_group_expand();
+          $(this).closest(".write_panel_wrapper").find(".magicfield_group")
+            .mf_group_expand(true)
+            .eq(0).find("input[type=text],textarea,select").eq(0).focus();
+          
         }
       
         return false;
