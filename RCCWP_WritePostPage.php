@@ -382,15 +382,15 @@ class RCCWP_WritePostPage  {
         <div class="mf-group-controls">
           <div class="mf-group-count"></div>
           <div class="buttons">
-            <a href="#" class="mf-expand-all-button">Expand All</a>
-            <a href="#" class="mf-collapse-all-button">Collapse All</a>
+            <a href="#" class="mf-expand-all-button"><?php _e('Expand All', $mf_domain);?></a>
+            <a href="#" class="mf-collapse-all-button"><?php _e('Collapse All', $mf_domain);?></a>
           </div>
         
         </div>
         
         <?php endif; ?>
         
-        <div class="mf-group-save-warning">Note: to save your changes you must also <strong>Publish or Update</strong> this <?php echo $post->post_type?>.</div> 
+        <div class="mf-group-save-warning"><?php _e("Note: to save your changes you must also <strong>Publish</strong> or <strong>Update</strong>",$mf_domain);?><?php //echo $post->post_type;?>.</div> 
 
         
 				<?php
@@ -429,7 +429,7 @@ class RCCWP_WritePostPage  {
         
         <?php endif; ?>
         
-        <div class="mf-group-save-warning">Note: to save your changes you must also <strong>Publish or Update</strong> this <?php echo $post->post_type?>.</div> 
+        <div class="mf-group-save-warning"><?php _e("Note: to save your changes you must also <strong>Publish</strong> or <strong>Update</strong>",$mf_domain);?><?php //echo $post->post_type;?>.</div> 
 
 
 				<?php
@@ -478,7 +478,7 @@ class RCCWP_WritePostPage  {
 			echo $customGroup->id.'_'.$groupCounter;?>">
 			<a id="collapse_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="collapse_button" href="javascript:void(0);">Collapse</a>
 
-      <div class="mf-group-loading">Loading Data&hellip;</div>
+      <div class="mf-group-loading"><?php _e('Loading Data&hellip;', $mf_domain);?></div>
       
       <div>
 			<div class="inside">
@@ -525,7 +525,7 @@ class RCCWP_WritePostPage  {
 			?>
 			
 	    
-			<div class="mf_toolbox sortable_mf">
+			<div class="mf_toolbox">
 				<span class="mf_counter sortable_mf" id="counter_<?php echo $customGroup->id;?>_<?php echo $groupCounter;?>"><?php echo $order;?></span>
 				<span class="hndle sortable_mf row_mf">&nbsp;</span>
 
@@ -534,9 +534,9 @@ class RCCWP_WritePostPage  {
 					<?php
 						if($groupCounter != 1):
 						?>
-							<a class ="delete_duplicate_button { lang: { confirm: '<?php _e("Are you sure?") ?>' } }" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"><span><?php _e('Remove', $mf_domain); ?></span> <?php echo $sgn ?></a>
+							<a class ="delete_duplicate_button { lang: { confirm: '<?php _e("Are you sure?", $mf_domain) ?>' } }" href="javascript:void(0);" id="delete_duplicate-freshpostdiv_group_<?php echo $customGroup->id.'_'.$groupCounter; ?>"><span><?php _e('Remove', $mf_domain); ?></span> <?php echo $sgn ?></a>
 						<?php else:?> 
-							<a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);" title="<?php _e('Note: hold down the SHIFT key as you click to collapse this item before the new item is added', $mf_domain); ?>"><span>Add Another</span> <?=$sgn?></a>
+							<a id="add_duplicate_<?php echo $customGroup->id."Duplicate"."_".$customGroup->id."_".$order;?>" class="duplicate_button" href="javascript:void(0);" title="<?php _e('Note: hold down the SHIFT key as you click to collapse this item before the new item is added', $mf_domain); ?>"><span><?php _e('Add Another', $mf_domain);?></span> <?=$sgn?></a>
 					   <?php endif;?> 
 				</span>
 			</div>
@@ -730,7 +730,7 @@ class RCCWP_WritePostPage  {
 		<input  type="hidden" name="<?php echo $inputName?>_1" value="false" />
 		<input tabindex="3" class="checkbox checkbox_mf" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> name="<?php echo $inputName?>" value="true" id="<?php echo $idField;?>" type="checkbox" <?php echo $checked?> /></div>
 		<?php if ($customField->required_field){ ?>
-		<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error block">This field is required.</label></div>
+		<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error block"><?php _e("This field is required",$mf_domain)?></label></div>
 		<?php }
 	}
 	
@@ -770,7 +770,7 @@ class RCCWP_WritePostPage  {
 		endforeach;
 		?></div>
 		<?php if ($customField->required_field){ ?>
-			<div class="mf_message_error"><label for="<?php echo $inputName?>[]" class="error_magicfields error">This field is required.</label></div>
+			<div class="mf_message_error"><label for="<?php echo $inputName?>[]" class="error_magicfields error"><?php _e("This field is required",$mf_domain)?></label></div>
 		<?php } ?>
 		<?php
 	}
@@ -810,7 +810,7 @@ class RCCWP_WritePostPage  {
 		
 		</select>	</div>
 		<?php if ($customField->required_field){ ?>
-			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
+			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error"><?php _e("This field is required",$mf_domain)?></label></div>
 		<?php }
 	}
 	
@@ -943,7 +943,7 @@ class RCCWP_WritePostPage  {
 
 		</select></div>
 		<?php if ($customField->required_field){ ?>
-			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
+			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error"><?php _e("This field is required",$mf_domain)?></label></div>
 		<?php } ?>
 		
 		<?php
@@ -984,7 +984,7 @@ class RCCWP_WritePostPage  {
 		?>
 		</select></div>
 			<?php if ($customField->required_field){ ?>
-				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
+				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error"><?php _e("This field is required",$mf_domain)?></label></div>
 			<?php } ?>
 		
 		<?php
@@ -1030,7 +1030,7 @@ class RCCWP_WritePostPage  {
 		<div class="mf_custom_field">
 		<div class="tab_multi_mf">
 			<a onclick="del_editor('<?php echo $idField; ?>');" class="edButtonHTML_mf">HTML</a>		
-			<a onclick="add_editor('<?php echo $idField; ?>');" class="edButtonHTML_mf current" >Visual</a>
+			<a onclick="add_editor('<?php echo $idField; ?>');" class="edButtonHTML_mf" >Visual</a>
 		</div>
 		<?php } } 
 		$classEditor = 'mf_editor';
@@ -1054,7 +1054,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 ?>
 		</div><?php if (!$hideEditor){?></div><?php } ?>
 		<?php if ($customField->required_field){ ?>
-			<div class="mf_message_error"><label for="<?php echo $idField; ?>" class="error_magicfields error">This field is required.</label></div>
+			<div class="mf_message_error"><label for="<?php echo $idField; ?>" class="error_magicfields error"><?php _e("This field is required",$mf_domain)?></label></div>
 		<?php } ?>
 		
 	<?php
@@ -1108,7 +1108,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 ?>
 		</div>
 			<?php if ($customField->required_field){ ?>
-				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
+				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error"><?php _e("This field is required",$mf_domain)?></label></div>
 			<?php } ?>
 		<?php
 	}
@@ -1157,7 +1157,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
       //@todo is neccessary refactor remove_file, the audio type file and the type file use exactly the same function.
 
 			remove_file = function(){
-				if(confirm("Are you sure?")){
+				if(confirm("<?php _e('Are you sure?', $mf_domain); ?>")){
 					//get  the name to the file
           pattern = /remove\-([a-z0-9\-\_]+)/i;
 					id = jQuery(this).attr("id");
@@ -1211,7 +1211,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		RCCWP_SWFUpload::Body($inputName, 0, $is_canvas, $urlInputSize) ;?>
 		</div>
 		<?php if ($customField->required_field){ ?>
-			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
+			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error"><?php _e("This field is required",$mf_domain)?></label></div>
 		<?php }
 	}
 
@@ -1288,7 +1288,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 	  
 		<div style="clear: both; height: 1px;"> </div>
 			<?php if ($customField->required_field){ ?>
-				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
+				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error"><?php _e("This field is required",$mf_domain)?></label></div>
 			<?php
 			} ?>
 
@@ -1323,7 +1323,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		endforeach; ?>
 		</div>
 		<?php if ($customField->required_field){ ?>
-		<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required</label></div>
+		<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error"><?php _e("This field is required",$mf_domain)?></label></div>
 		<?php
 		}
 	}
@@ -1513,7 +1513,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		RCCWP_SWFUpload::Body($inputName, 2, $is_canvas, $urlInputSize);?>
 		</div>
 		<?php if ($customField->required_field){ ?>
-			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.audio</label></div>
+			<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error"><?php _e("This field is required",$mf_domain)?>.audio</label></div>
 		<?php }
 		
 	}
@@ -1634,7 +1634,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
   	?>
   	</div>
   	<?php if ($customField->required_field){ ?>
-  	  <div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
+  	  <div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error"><?php _e("This field is required",$mf_domain)?></label></div>
   	<?php } ?>
   	<?php
   }
@@ -1718,7 +1718,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 
   		<div style="clear: both; height: 1px;"> </div>
   			<?php if ($customField->required_field){ ?>
-  				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error">This field is required.</label></div>
+  				<div class="mf_message_error"><label for="<?php echo $inputName?>" class="error_magicfields error"><?php _e("This field is required",$mf_domain)?></label></div>
   			<?php
   			} ?>
 
