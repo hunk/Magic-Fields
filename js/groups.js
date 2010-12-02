@@ -518,7 +518,7 @@ function smartTrim(string, maxLength) {
         if (!el.data("uploader")) {
           
           
-          var allowedExtensions = ["pdf", "doc", "xls", "ppt", "txt", "jpeg", "psd", "jpg", "gif", "png", "docx", "pptx", "xslx", "pps", "zip", "gz", "gzip", "mp3", "aac", "mp4", "wav", "wma", "aif", "aiff", "ogg"];
+          var allowedExtensions = ["pdf", "doc", "xls", "ppt", "txt", "jpeg", "psd", "jpg", "gif", "png", "docx", "pptx", "xslx", "pps", "zip", "gz", "gzip", "mp3", "aac", "mp4", "wav", "wma", "aif", "aiff", "ogg", "flv"];
           
           // compile the allowed extensions
           if (tc) {

@@ -405,7 +405,7 @@ class RCCWP_CustomWritePanelPage
   		<thead>
 	  		<tr>
           <th width="5%"></th>
-	  			<th width="20%" scope="col">Group Name / Field <?php _e('Label', $mf_domain)?></th>
+	  			<th width="20%" scope="col"><?php _e('Label', $mf_domain)?></th>
 	  			<th width="35%" scope="col"><?php _e('Name (Order)', $mf_domain)?></th>
 	  			<th width="20%" scope="col"><?php _e('Type', $mf_domain)?></th>
 					<th width="20%" scope="col"><?php _e('Actions', $mf_domain)?></th>
