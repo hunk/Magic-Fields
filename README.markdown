@@ -1,8 +1,8 @@
 # Magic Fields
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
 * Contributors: [Astrata Software](http://astrata.mx) [Travis Hensgen](http://traversal.com.au/), [Jeff Minard](http://jrm.cc/ "Jeff Minard"), [Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"), Michael Bayard, [Doc4](doc4design.com/ "Doc4")
-* Tested up to: Wordpress 2.9
-* Stable tag: 1.5.1
+* Tested up to: Wordpress 3.0.1
+* Stable tag: 1.5.2
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -17,6 +17,20 @@ Follow the following steps to install this plugin.
 2.	Activate the plugin through the 'Plugins' menu in WordPress.
 
 ## Changelog ##
+
+###1.5.2###
+ * Reinstated the insert media buttons in the Multiline text field type. This problem was due to the fact that the init call to TinyMCE was changed so that Magic Fields Visual Editors can now honour any other plug-ins installed. Since the media buttons aren't rendered within the visual editor area for the content block (they sit separately above the TinyMCE control), Magic Fields was now missing them also.
+ * Upload limit for the Ajax uploader has been increased to 10GB to get around problems some people are having.
+ * Fixed some spacing issues with duplicate fields. 
+ * Enhanced the focused field highlight to make the current field stand out better. It's now a subtle shade of blue, with the input having a stronger blue border
+ * Fixed the focus state slightly, to use the :focus pseudo selector, as some field types have multiple controls.
+ * Fixed an issue where the lowest auto-expanded field would receive focus
+ * Removed the Exception throw statement to hopefully address issues with Upload failures with the new uploader.
+ * Restored the delete link for field groups
+ * Made the entire toolbox (footer) for each field group item draggable, rather than just the grip nub.
+ * Fixed a bug with resizing the TinyMCE control in the multiline editor. Fullscreen mode should also now work correctly.
+ * Fixed an issue with focusing when using "Expand All" links.
+
 
 ###1.5.1###
  * Fixed critical bug in Multisite version and a few more fixes
