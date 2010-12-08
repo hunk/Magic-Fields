@@ -83,7 +83,7 @@ class qqFileUploader {
     var $sizeLimit = 0;
     var $file;
 
-    function qqFileUploader(array $allowedExtensions = array(), $sizeLimit = 0){
+    function qqFileUploader($allowedExtensions = array(), $sizeLimit = 0){
         $allowedExtensions = array_map("strtolower", $allowedExtensions);
             
         $this->allowedExtensions = $allowedExtensions;        
