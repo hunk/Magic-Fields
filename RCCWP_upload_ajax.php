@@ -110,6 +110,7 @@ class qqFileUploader {
             return array('error' => 'No files were uploaded.');
         }
         
+        /*
         $size = $this->file->getSize();
         
         if ($size == 0) {
@@ -119,6 +120,7 @@ class qqFileUploader {
         if ($size > $this->sizeLimit) {
             return array('error' => 'File is too large');
         }
+        */
         
         $pathinfo = pathinfo($this->file->getName());
         $filename = $pathinfo['filename'];
