@@ -301,11 +301,9 @@ function smartTrim(string, maxLength) {
 
                 if (tc == "related-type") {
                   var href = document.location.href.split("?")[0];
-                  content += ' ( <a href="' + href + '?action=edit&post=' + val + '" target="_blank" title="Edit related page/post in a new window">Edit Post</a> )';
+                  content += ' (&nbsp;<a href="' + href + '?action=edit&post=' + val + '" target="_blank" title="Edit related page/post in a new window">Edit Post</a>&nbsp;)';
                 }
 
-                var val = sel.val();
-                
                 if (!def) { el.removeClass("empty"); } 
               }
             
