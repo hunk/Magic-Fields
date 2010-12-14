@@ -78,6 +78,15 @@ class RCCWP_OptionsPage {
  		</td>
 	</tr>
 
+  <tr valign="top">
+		<th scope="row"><?php _e('Use Standard File Uploader (non-ajax)', $mf_domain); ?></th>
+		<td>
+			<label for="use-standard-uploader"> 
+			<input name="use-standard-uploader" id="use-standard-uploader" value="1"  <?php echo RCCWP_OptionsPage::GetCheckboxState( $customWritePanelOptions['use-standard-uploader'] )?> type="checkbox">
+			&nbsp; <?php _e('Try using the standard file uploader if the AJAX loader fails to upload to your server', $mf_domain); ?></label> 
+ 		</td>
+	</tr>
+	
 	<tr valign="top">
 		<th scope="row"><?php _e('Editing Prompt', $mf_domain); ?></th>
 		<td>
