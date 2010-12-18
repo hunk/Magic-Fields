@@ -32,7 +32,7 @@ $default = array(
 				);
 				
 //getting the name of the image
-preg_match('/\/wp-content\/([0-9\_a-z\/\-\.]+\.(jpg|png|gif))/i',$_GET['src'],$match);
+preg_match('/\/wp-content\/([0-9\_a-z\/\-\.]+\.(jpg|jpeg|png|gif))/i',$_GET['src'],$match);
 $image_name_clean = $match[1];
 $extension = $match[2];
 
@@ -62,7 +62,7 @@ $md5_params =  md5("w=".$params['w']."&h=".$params['h']."&q=".$params['q']."&zc=
 
 
 //The file must be "jpg" or "png" or "gif" 
-if(!in_array(strtolower($extension),array('jpg','png','gif'))){
+if(!in_array(strtolower($extension),array('jpg','jpeg','png','gif'))){
 	return false;
 }
 
