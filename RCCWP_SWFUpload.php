@@ -25,7 +25,7 @@ class RCCWP_SWFUpload
 
 		$iframePath = MF_URI."RCCWP_upload.php?input_name=".urlencode($inputName)."&type=$fileType&imageThumbID=img_thumb_$idField&canvas=$isCanvas".$inputSizeParam ;
 		?>
-      <?php if (FALSE) : // TODO - Add a switch in the admin area to activate the new ajax uploader ?>
+      <?php if (RCCWP_Options::Get('use-standard-uploader')) : ?>
 			<div id='upload_iframe_<?php echo $idField;?>' class="iframeload { iframe: { id: 'upload_internal_iframe_<?php echo $idField ?>', src: '<?php echo $iframePath;?>', height: <?php echo $iframeHeight ?>, width: <?php echo $iframeWidth ?> } }">
 			</div>
       <?php else: ?>

@@ -79,11 +79,11 @@ class qqUploadedFileForm {
 }
 
 class qqFileUploader {
-    private $allowedExtensions = array();
-    private $sizeLimit = 0;
-    private $file;
+    var $allowedExtensions = array();
+    var $sizeLimit = 0;
+    var $file;
 
-    function __construct(array $allowedExtensions = array(), $sizeLimit = 0){
+    function qqFileUploader($allowedExtensions = array(), $sizeLimit = 0){
         $allowedExtensions = array_map("strtolower", $allowedExtensions);
             
         $this->allowedExtensions = $allowedExtensions;        
@@ -110,6 +110,7 @@ class qqFileUploader {
             return array('error' => 'No files were uploaded.');
         }
         
+        /*
         $size = $this->file->getSize();
         
         if ($size == 0) {
@@ -119,6 +120,7 @@ class qqFileUploader {
         if ($size > $this->sizeLimit) {
             return array('error' => 'File is too large');
         }
+        */
         
         $pathinfo = pathinfo($this->file->getName());
         $filename = $pathinfo['filename'];
