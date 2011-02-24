@@ -109,17 +109,20 @@ class RCCWP_WritePostPage  {
 							MF_URI.'js/custom_fields/datepicker.js'
 						);
 						
+		$slider_js = MF_URI.'js/ui.slider.js';
+		//load slider for wp31 
+		if(is_wp31()) $slider_js = MF_URI.'js/jquery.ui.slider.js';
 		//loading  jquery ui slider
 		wp_enqueue_script(	'slider',
-							MF_URI.'js/ui.slider.js',
+							$slider_js,
 							array('jquery','jquery-ui-core')
+							,NULL,true
 						);
 						
 		//loading the code for delete images
 		wp_enqueue_script(	'mf_colorpicker',
 							MF_URI.'js/custom_fields/colorpicker.js'
-						)
-						;				
+						);				
 		//loading the code for delete images
 		wp_enqueue_script(	'mf_image',
 							MF_URI.'js/custom_fields/image.js'
@@ -134,10 +137,11 @@ class RCCWP_WritePostPage  {
 		wp_enqueue_script( 'mf_metadata',
 							MF_URI.'js/jquery.metadata.js'
 						);
+						
 		///loading handler for validate
 		wp_enqueue_script( 'mf_validate',
 							MF_URI.'js/jquery.validate.pack.js'
-						);
+						); 
 		//loading the code for validation
 		wp_enqueue_script( 'mf_validate_fields',
 							MF_URI.'js/custom_fields/validate.js'

@@ -304,3 +304,13 @@ function is_wp30(){
 	 
 	return FALSE;
 }
+
+//return TRUE is WP version >= 3.1
+function is_wp31(){
+	global $wp_version;
+	
+	if(substr($wp_version, 0, 3) >= 3.1)
+		return TRUE;
+	 
+	return FALSE;
+}
