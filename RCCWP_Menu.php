@@ -460,11 +460,17 @@ class RCCWP_Menu
 		global $wpdb;
 		if (isset($_GET['filter-posts'])) {
 			$panel_id = $_GET['custom-write-panel-id'];
-			$where = $where . " AND 0 < (SELECT count($wpdb->postmeta.meta_value)
-					FROM $wpdb->postmeta
-					WHERE $wpdb->postmeta.post_id = $wpdb->posts.ID and $wpdb->postmeta.meta_key = '_mf_write_panel_id' and $wpdb->postmeta.meta_value = '$panel_id') ";
+				$where .= " and $wpdb->postmeta.meta_key = '_mf_write_panel_id' and $wpdb->postmeta.meta_value = '$panel_id' ";
 		}
 		return $where;
+	}
+	
+	function FilterPostsPagesListJoin($join){
+		global $wpdb;
+		if (isset($_GET['filter-posts'])) {
+		  $join = " JOIN $wpdb->postmeta ON wp_postmeta.post_id = wp_posts.ID ";
+	  }
+		return $join;
 	}
 	
 	function DetachWpWritePanelMenuItems()
