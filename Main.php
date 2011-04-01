@@ -113,6 +113,7 @@ if (is_admin()) {
 		add_action('admin_menu', array('RCCWP_Menu', 'AttachOptionsMenuItem'));
 		
 		add_filter('posts_where', array('RCCWP_Menu', 'FilterPostsPagesList'));
+		add_filter('posts_join_paged', array('RCCWP_Menu', 'FilterPostsPagesListJoin'));
 		add_action('admin_head', array('RCCWP_Menu', 'HighlightCustomPanel'));
 		
 		add_action('admin_head', 'mf_admin_style');

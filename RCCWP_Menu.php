@@ -232,10 +232,10 @@ class RCCWP_Menu
 		$panelsAndModulesFunctions = RCCWP_Menu::PrepareModulesPanelsMenuItems();
 
 		// Add top menu
-		add_menu_page(__('Magic Fields > Manage',$mf_domain), __('Magic Fields',$mf_domain), 10, 'MagicFieldsMenu', $panelsAndModulesFunctions->panelsMenuFunction, plugins_url(MF_PLUGIN_DIR.'/images/wand-hat.png'));
 
+		add_menu_page(__('Magic Fields > Manage',$mf_domain), __('Magic Fields',$mf_domain), 10, 'MagicFieldsMenu', $panelsAndModulesFunctions->panelsMenuFunction, plugins_url(MF_PLUGIN_DIR.'/images/wand-hat.png'));
 		// Add Magic Fields submenus
-		add_submenu_page('MagicFieldsMenu', __('Write Panels',$mf_domain), __('Write Panels',$mf_domain), 10,'MagicFieldsMenu', $panelsAndModulesFunctions->panelsMenuFunction);		
+		add_submenu_page('MagicFieldsMenu', __('Write Panels',$mf_domain), __('Write Panels',$mf_domain), 'edit_pages','MagicFieldsMenu', $panelsAndModulesFunctions->panelsMenuFunction);		
 		
 	}
 
@@ -460,11 +460,17 @@ class RCCWP_Menu
 		global $wpdb;
 		if (isset($_GET['filter-posts'])) {
 			$panel_id = $_GET['custom-write-panel-id'];
-			$where = $where . " AND 0 < (SELECT count($wpdb->postmeta.meta_value)
-					FROM $wpdb->postmeta
-					WHERE $wpdb->postmeta.post_id = $wpdb->posts.ID and $wpdb->postmeta.meta_key = '_mf_write_panel_id' and $wpdb->postmeta.meta_value = '$panel_id') ";
+				$where .= " and $wpdb->postmeta.meta_key = '_mf_write_panel_id' and $wpdb->postmeta.meta_value = '$panel_id' ";
 		}
 		return $where;
+	}
+	
+	function FilterPostsPagesListJoin($join){
+		global $wpdb;
+		if (isset($_GET['filter-posts'])) {
+		  $join = " JOIN $wpdb->postmeta ON wp_postmeta.post_id = wp_posts.ID ";
+	  }
+		return $join;
 	}
 	
 	function DetachWpWritePanelMenuItems()
