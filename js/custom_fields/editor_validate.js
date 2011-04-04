@@ -76,9 +76,9 @@ check_textarea = function(){
 }
 // Add the editor (button)
 function add_editor(id){
-  new_valor = jQuery('#magicfields_texto_1_1').val();
+  new_valor = jQuery('#'+id).val();
   new_valor = switchEditors.wpautop(new_valor);
-  jQuery('#magicfields_texto_1_1').val(new_valor);
+  jQuery('#'+id).val(new_valor);
   tinyMCE.execCommand('mceAddControl', false, id);
 }
 // Remove the editor (button)
