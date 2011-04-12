@@ -1201,7 +1201,7 @@ add_editor_text = function(context){
   }
   
   if (doInit) {
-    tinyMCE.init(options);
+    //tinyMCE.init(options);
   
   	jQuery(".Multiline_Textbox :input[type='textarea'].pre_editor", context).each( function(inputField){
       var editor_text = jQuery(this).attr('id');

@@ -135,6 +135,14 @@ if (is_admin()) {
 		add_action('admin_notices', array('RCCWP_WritePostPage', 'FormError'));
 		
 	}
+
+        //add bottons visual editor
+        add_filter('mce_buttons', 'register_media_button');
+        function register_media_button($buttons) {
+          array_push($buttons, "separator","add_image","add_video","add_audio","add_media");
+          return $buttons;
+        }
+
 }
 
 require_once ('RCCWP_Options.php');
