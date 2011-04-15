@@ -143,6 +143,31 @@ if (is_admin()) {
           return $buttons;
         }
 
+        function tmce_not_remove_p_and_br(){
+          ?>
+          <script type="text/javascript">
+            //<![CDATA[                                                                                     
+            jQuery('body').bind('afterPreWpautop', function(e, o){
+                o.data = o.unfiltered
+                  .replace(/caption\]\[caption/g, 'caption] [caption')
+                  .replace(/<object[\s\S]+?<\/object>/g, function(a) {
+                              return a.replace(/[\r\n]+/g, ' ');
+              });
+              }).bind('afterWpautop', function(e, o){
+                o.data = o.unfiltered;
+              });
+          //]]>                                                                                           
+          </script>
+          <?php
+        }
+        if( RCCWP_Application::InWritePostPanel() ){
+          require_once ('RCCWP_Options.php');
+          $dont_remove = RCCWP_Options::Get('dont-remove-tmce');
+          if($dont_remove){
+            add_action( 'admin_print_footer_scripts', 'tmce_not_remove_p_and_br', 50 );
+          }
+        }
+
 }
 
 require_once ('RCCWP_Options.php');

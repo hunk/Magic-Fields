@@ -139,7 +139,9 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 	
 	//filter for multine line
 	if($fieldType == $FIELD_TYPES['multiline_textbox']){
-		$results = apply_filters('the_content', $results);
+          if( !RCCWP_Options::Get('dont-remove-tmce') ){
+            $results = apply_filters('the_content', $results);
+          }
 	}
 	
 	if($fieldType == $FIELD_TYPES['image']){

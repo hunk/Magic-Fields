@@ -1004,7 +1004,9 @@ class RCCWP_WritePostPage  {
 			$customFieldId = $customField->id;
 			$value = RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter);
 			if(!(int)$customField->properties['hide-visual-editor']){
-				$value = apply_filters('the_editor_content', $value);
+                          if( !RCCWP_Options::Get('dont-remove-tmce') ){
+                            $value = apply_filters('the_editor_content', $value);
+                          }
 			}
 		}else{
 			$value = "";

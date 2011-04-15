@@ -18,7 +18,10 @@ class RCCWP_OptionsPage {
 		global $mf_domain;
 		$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
 		$customWritePanelOptions = RCCWP_Options::Get();
-	
+
+                //check dont-remove p and br
+                if( !isset($customWritePanelOptions['dont-remove-tmce']) )
+                  $customWritePanelOptions['dont-remove-tmce'] = 0;
 
 		if (function_exists('is_site_admin') && !is_site_admin()){
 			update_option("Magic_Fields_notTopAdmin", true);
@@ -78,6 +81,16 @@ class RCCWP_OptionsPage {
  		</td>
 	</tr>
 
+        <tr valign="top">
+          <th scope="row"><?php _e('Do not remove tags tmce. (multiline)', $mf_domain); ?></th>
+          <td>
+            <label for="dont-remove-tmce">
+            <input name="dont-remove-tmce" id="dont-remove-tmce" value="1"  <?php echo RCCWP_OptionsPage::GetCheckboxState( $customWritePanelOptions['dont-remove-tmce'] )?> type="checkbox">
+            &nbsp; <?php _e("Stop removing the &lt;p&gt; and &lt;br /&gt; tags when saving and show them in the HTML editor", $mf_domain); ?></label>
+        </td>
+</tr>
+
+                                                                                             
   <tr valign="top">
 		<th scope="row"><?php _e('Use Standard File Uploader (non-ajax)', $mf_domain); ?></th>
 		<td>

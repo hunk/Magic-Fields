@@ -586,6 +586,7 @@ class RCCWP_Processor {
         			'hide-write-post' => 0,
         			'hide-write-page' => 0,
         			'hide-visual-editor' => 0,
+                          'dont-remove-tmce' => 0,
         			'prompt-editing-post' => 0,
         			'assign-to-role' => 0,
         			'default-custom-write-panel' => 0
