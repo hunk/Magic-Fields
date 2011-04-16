@@ -468,7 +468,7 @@ class RCCWP_Menu
 	function FilterPostsPagesListJoin($join){
 		global $wpdb;
 		if (isset($_GET['filter-posts'])) {
-		  $join = " JOIN $wpdb->postmeta ON wp_postmeta.post_id = wp_posts.ID ";
+		  $join = " JOIN $wpdb->postmeta ON $wpdb->postmeta.post_id = wp_posts.ID ";
 	  }
 		return $join;
 	}

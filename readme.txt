@@ -1,7 +1,7 @@
 === Magic Fields ===
 Contributors: hunk, Gnuget, Astrata Software (http://astrata.mx), Travis Hensgen (http://traversal.com.au)
 Tags: custom write panel, custom, write panel, cms, magic fields
-Tested up to: Wordpress 3.0.1
+Tested up to: Wordpress 3.1
 Requires at least: 2.9
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=edgar%40programador%2ecom&lc=GB&item_name=Donation%20Magic%20Fields&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest
 Stable tag: 1.5.2
