@@ -130,8 +130,11 @@ class RCCWP_Processor {
             $tmp_dir = realpath(ini_get('upload_tmp_dir')).DIRECTORY_SEPARATOR; 
          }else {
             $tmp_dir =  sys_get_temp_dir();
+            //check /
+            $last = substr($tmp_dir,-1);
+            if($last != DIRECTORY_SEPARATOR)
+              $tmp_dir .= DIRECTORY_SEPARATOR;
          }
-
 
 				$exportedFilename = $tmpPath = $tmp_dir.$writePanel->name . '.pnl';
 
