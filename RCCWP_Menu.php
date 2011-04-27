@@ -233,7 +233,7 @@ class RCCWP_Menu
 
 		// Add top menu
 
-		add_menu_page(__('Magic Fields > Manage',$mf_domain), __('Magic Fields',$mf_domain), 10, 'MagicFieldsMenu', $panelsAndModulesFunctions->panelsMenuFunction, plugins_url(MF_PLUGIN_DIR.'/images/wand-hat.png'));
+		add_menu_page(__('Magic Fields > Manage',$mf_domain), __('Magic Fields',$mf_domain), 'edit_pages', 'MagicFieldsMenu', $panelsAndModulesFunctions->panelsMenuFunction, plugins_url(MF_PLUGIN_DIR.'/images/wand-hat.png'));
 		// Add Magic Fields submenus
 		add_submenu_page('MagicFieldsMenu', __('Write Panels',$mf_domain), __('Write Panels',$mf_domain), 'edit_pages','MagicFieldsMenu', $panelsAndModulesFunctions->panelsMenuFunction);		
 		
