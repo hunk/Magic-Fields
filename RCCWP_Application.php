@@ -50,7 +50,7 @@ class RCCWP_Application
 	 *  @return void
 	 */
 	function Install(){
-		
+
 		include_once('RCCWP_Options.php');
 		global $wpdb;
 
@@ -170,7 +170,7 @@ class RCCWP_Application
 			
 			$qst_tables[] = "CREATE TABLE " . MF_TABLE_PANEL_CATEGORY . " (
 				panel_id int(11) NOT NULL,
-				cat_id int(11) NOT NULL,
+				cat_id varchar(100) NOT NULL,
 				PRIMARY KEY (panel_id, cat_id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 				
 						
@@ -231,6 +231,8 @@ class RCCWP_Application
 			require_once(MF_PATH.'/MF_PostTypesPage.php');
 			MF_PostTypePages::CreatePostTypesTables();
 		}
+                RCCWP_Application::UpgradeBlog();
+
 	}
 	
 	/**
@@ -259,6 +261,10 @@ class RCCWP_Application
     if (RC_CWP_DB_VERSION >= 7) {
       RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANEL_GROUPS, "expanded", $column_attr = "tinyint after duplicate" );
       RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANELS, "expanded", $column_attr = "tinyint NOT NULL DEFAULT 1 after type" );
+    }
+
+    if( RC_CWP_DB_VERSION >= 8 ){
+      $wpdb->query('ALTER TABLE '.MF_TABLE_PANEL_CATEGORY.' MODIFY cat_id VARCHAR(100)');
     }
 	}
 

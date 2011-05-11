@@ -140,7 +140,6 @@ class RCCWP_Processor {
 
 				
 				RCCWP_CustomWritePanel::Export($panelID, $exportedFilename);
-	
 				// send file in header
 				header('Content-type: binary');
 				header('Content-Disposition: attachment; filename="'.$writePanel->name.'.pnl"');

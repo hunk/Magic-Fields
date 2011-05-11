@@ -29,6 +29,12 @@ class RCCWP_CustomWritePanelPage
 			$customWritePanelType = $customWritePanel->type;
 			if ($customWritePanelType == 'page') $showPost = false;
 			$customWritePanelCategoryIds = RCCWP_CustomWritePanel::GetAssignedCategoryIds($customWritePanel->id);
+                        foreach($customWritePanelCategoryIds as $key => $c ){
+                          if((int)$c != 0){
+                            $tc = get_category($c);
+                            $customWritePanelCategoryIds[$key] = $tc->slug;
+                          }
+                        }
 			$customWritePanelStandardFieldIds = RCCWP_CustomWritePanel::GetStandardFields($customWritePanel->id);
 			$customWritePanelAllFieldIds = RCCWP_CustomWritePanel::Get($customWritePanel->id);
 			
@@ -37,6 +43,8 @@ class RCCWP_CustomWritePanelPage
 				$customParentPage = RCCWP_CustomWritePanel::GetParentPage($customWritePanel->name);
 			}
 			$defaultTagChecked = '';
+
+                        
 			?>
 			<input type="hidden" name="custom-write-panel-id" value="<?php echo $customWritePanel->id?>" />
 			<?php
@@ -254,13 +262,13 @@ class RCCWP_CustomWritePanelPage
 	function PrintNestedCats( $cats, $parent = 0, $depth = 0, $customWritePanelCategoryIds ) {
 		foreach ($cats as $cat) : 
 			if( $cat->parent == $parent ) {
-				$checked = "";
-				if (@in_array($cat->cat_ID, $customWritePanelCategoryIds))
+                          $checked = "";
+				if (@in_array($cat->slug, $customWritePanelCategoryIds))
 				{
 					$checked = "checked=\"checked\"";
 				}
 				echo str_repeat('&nbsp;', $depth * 4);
-?>					<input type="checkbox" name="custom-write-panel-categories[]" value="<?php echo $cat->cat_ID?>" <?php echo $checked?> /> <?php echo $cat->cat_name ?> <br/>
+?>					<input type="checkbox" name="custom-write-panel-categories[]" value="<?php echo $cat->slug?>" <?php echo $checked?> /> <?php echo $cat->cat_name ?> <br/>
 <?php				
 			RCCWP_CustomWritePanelPage::PrintNestedCats( $cats, $cat->term_id, $depth+1, $customWritePanelCategoryIds );
 			}
