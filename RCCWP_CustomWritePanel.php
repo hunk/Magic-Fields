@@ -85,7 +85,7 @@ class RCCWP_CustomWritePanel
 			$sql = sprintf(
 				"INSERT INTO " . MF_TABLE_PANEL_CATEGORY .
 				" (panel_id, cat_id)" .
-				" values (%d, %d)",
+				" values (%d, '%s')",
 				$customWritePanelId,
 				$cat_id 
 				);
@@ -262,17 +262,15 @@ class RCCWP_CustomWritePanel
 		
 		if( $wpdb->terms != '' )
 		{
-			$sql = "SELECT rc.cat_id, wp.name AS cat_name FROM " . 
-				MF_TABLE_PANEL_CATEGORY . "
-				rc JOIN $wpdb->terms wp ON rc.cat_ID = wp.term_id" . "
-				WHERE panel_id = " . $customWritePanelId;
+				$sql = "SELECT cat_id FROM " .
+						MF_TABLE_PANEL_CATEGORY . "
+						WHERE panel_id = " . $customWritePanelId;
 		}
 		else
 		{
-			$sql = "SELECT rc.cat_id, cat_name FROM " . 
-				MF_TABLE_PANEL_CATEGORY . "
-				rc JOIN $wpdb->categories wp ON rc.cat_ID = wp.cat_ID 
-				WHERE panel_id = " . $customWritePanelId;
+				$sql = "SELECT cat_id FROM " .
+						MF_TABLE_PANEL_CATEGORY . "
+						WHERE panel_id = " . $customWritePanelId;
 		}
 		
 
@@ -387,40 +385,24 @@ class RCCWP_CustomWritePanel
 				" WHERE panel_id = %d",
 				$customWritePanelId
 				);
-			
 			$wpdb->query($sql);
 		}
 		else
 		{
-			$currentCategoryIds = array();
-			$currentCategoryIds = RCCWP_CustomWritePanel::GetAssignedCategoryIds($customWritePanelId);
-			
-			$keepCategoryIds = array_intersect($currentCategoryIds, $categories);
-			$deleteCategoryIds = array_diff($currentCategoryIds, $keepCategoryIds);
-			$insertCategoryIds = array_diff($categories, $keepCategoryIds);
-			
-			foreach ($insertCategoryIds as $cat_id)
-			{
+			$sql = sprintf(
+				"DELETE FROM " . MF_TABLE_PANEL_CATEGORY .
+				" WHERE panel_id = %d",
+				$customWritePanelId
+				);
+			$wpdb->query($sql);
+			foreach($categories as $cat_id){
 				$sql = sprintf(
 					"INSERT INTO " . MF_TABLE_PANEL_CATEGORY .
 					" (panel_id, cat_id)" .
-					" values (%d, %d)",
+					" values (%d, '%s')",
 					$customWritePanelId,
-					$cat_id 
+					$cat_id
 					);
-				$wpdb->query($sql);
-			}
-			
-			if (!empty($deleteCategoryIds))
-			{
-				$sql = sprintf(
-					"DELETE FROM " . MF_TABLE_PANEL_CATEGORY .
-					" WHERE panel_id = %d" .
-					" AND cat_id IN (%s)",
-					$customWritePanelId,
-					implode(',', $deleteCategoryIds)
-					);
-				
 				$wpdb->query($sql);
 			}
 		}
@@ -578,7 +560,8 @@ class RCCWP_CustomWritePanel
 		$assignedCategories = array();
 		if(is_array($imported_data['panel']->assignedCategories)){
 			foreach($imported_data['panel']->assignedCategories as $cat_name){
-				$assignedCategories[] = wp_create_category($cat_name);
+				wp_create_category($cat_name);
+				$assignedCategories[] = $cat_name;
 			}
 		}
 		//Create write panel
@@ -638,9 +621,8 @@ class RCCWP_CustomWritePanel
 				
 		$assignedCategories = RCCWP_CustomWritePanel::GetAssignedCategories($panelID);
 		foreach($assignedCategories as $assignedCategory){
-			$writePanel->assignedCategories[] = $assignedCategory->cat_name;
+			$writePanel->assignedCategories[] = $assignedCategory->cat_id;
 		}
-		
 		$moduleGroups = RCCWP_CustomWritePanel::GetCustomGroups($panelID);
 		foreach( $moduleGroups as $moduleGroup){
 			$fields = RCCWP_CustomGroup::GetCustomFields($moduleGroup->id);
