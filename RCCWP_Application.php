@@ -9,21 +9,20 @@
  */
 class RCCWP_Application
 {
+	function AddColumnIfNotExist($db, $column, $column_attr = "VARCHAR( 255 ) NULL" ){
+		$exists = false;
+		$columns = @mysql_query("show columns from $db");
+		while($c = @mysql_fetch_assoc($columns)){
+			if($c['Field'] == $column){
+				$exists = true;
+				break;
+			}
+		}    
+		if(!$exists){
+			mysql_query("ALTER TABLE `$db` ADD `$column`  $column_attr");
+		}
+	}
 
-  function AddColumnIfNotExist($db, $column, $column_attr = "VARCHAR( 255 ) NULL" ){
-    $exists = false;
-    $columns = @mysql_query("show columns from $db");
-    while($c = @mysql_fetch_assoc($columns)){
-        if($c['Field'] == $column){
-            $exists = true;
-            break;
-        }
-    }      
-    if(!$exists){
-        mysql_query("ALTER TABLE `$db` ADD `$column`  $column_attr");
-    }
-  }
-  
 	function ContinueInstallation(){
 		RCCWP_Application::SetCaps();
 	}
@@ -36,7 +35,6 @@ class RCCWP_Application
 				$role->add_cap(MF_CAPABILITY_PANELS);
 				$role->add_cap(MAGIC_FIELDS_CAPABILITY_MODULES);
 			}
-			
 		}
 	}
 
@@ -60,7 +58,7 @@ class RCCWP_Application
 			// Giving full rights to folders. thanks Akis Kesoglou 
 			wp_mkdir_p(MF_UPLOAD_FILES_DIR);
 			wp_mkdir_p(MF_CACHE_DIR);
-      wp_mkdir_p(MF_GET_CACHE_DIR);
+			wp_mkdir_p(MF_GET_CACHE_DIR);
 			
 			//Initialize options
 			$options['condense-menu'] = 0;
@@ -93,15 +91,16 @@ class RCCWP_Application
 				post_id integer NOT NULL,
 				field_name text NOT NULL,
 				order_id integer NOT NULL,
-				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci" ;
-	
+				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+
 
 			// try to get around
 			// these includes like http://trac.mu.wordpress.org/ticket/384 
 			// and http://www.quirm.net/punbb/viewtopic.php?pid=832#p832
 			if (file_exists(ABSPATH . 'wp-includes/pluggable.php')) {
 				require_once(ABSPATH . 'wp-includes/pluggable.php');
-			} else {
+			}
+			else {
 				require_once(ABSPATH . 'wp-includes/pluggable-functions.php');
 			}
 			require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
@@ -114,7 +113,7 @@ class RCCWP_Application
 		// Upgrade Blog
 		if ($BLOG_DBChanged)	RCCWP_Application::UpgradeBlog();
 
-				
+
 		if (RCCWP_Application::IsWordpressMu()){	
 			if (get_site_option("RC_CWP_DB_VERSION") == '') update_site_option("RC_CWP_DB_VERSION", 0);
 			if (get_site_option("RC_CWP_DB_VERSION") < RC_CWP_DB_VERSION) 
@@ -122,7 +121,7 @@ class RCCWP_Application
 			else
 				$DBChanged = false;
 		}
-		else{
+		else {
 			if (get_option("RC_CWP_DB_VERSION") == '') update_option("RC_CWP_DB_VERSION", 0);
 			if (get_option("RC_CWP_DB_VERSION") < RC_CWP_DB_VERSION) 
 				$DBChanged = true;
@@ -144,9 +143,9 @@ class RCCWP_Application
 				display_order int(11),
 				capability_name varchar(255) NOT NULL,
 				type varchar(255) NOT NULL,
-        expanded tinyint NOT NULL DEFAULT 1,
+				expanded tinyint NOT NULL DEFAULT 1,
 				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
-				
+
 			$qst_tables[] = "CREATE TABLE " . MF_TABLE_GROUP_FIELDS . " (
 				id int(11) NOT NULL auto_increment,
 				group_id int(11) NOT NULL,
@@ -190,7 +189,7 @@ class RCCWP_Application
 				panel_id int(11) NOT NULL,
 				name varchar(255) NOT NULL,
 				duplicate tinyint(1) NOT NULL,
-        expanded tinyint,
+				expanded tinyint,
 				at_right tinyint(1) NOT NULL,
 				PRIMARY KEY (id) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 
@@ -199,7 +198,8 @@ class RCCWP_Application
 			// and http://www.quirm.net/punbb/viewtopic.php?pid=832#p832
 			if (file_exists(ABSPATH . 'wp-includes/pluggable.php')) {
 				require_once(ABSPATH . 'wp-includes/pluggable.php');
-			} else {
+			}
+			else {
 				require_once(ABSPATH . 'wp-includes/pluggable-functions.php');
 			}
 			require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
@@ -208,11 +208,11 @@ class RCCWP_Application
 				dbDelta($qst_table);
 
 			if (RCCWP_Application::IsWordpressMu()) {
-					update_site_option('RC_CWP_DB_VERSION', RC_CWP_DB_VERSION);
-			} else {
-					update_option('RC_CWP_DB_VERSION', RC_CWP_DB_VERSION);
+				update_site_option('RC_CWP_DB_VERSION', RC_CWP_DB_VERSION);
 			}
-
+			else {
+				update_option('RC_CWP_DB_VERSION', RC_CWP_DB_VERSION);
+			}
 		}
 
 		//Import Default modules 
@@ -220,7 +220,8 @@ class RCCWP_Application
 			if (get_site_option('MAGIC_FIELDS_fist_time') == ''){
 				update_site_option('MAGIC_FIELDS_fist_time', '1');
 			}
-		} else {
+		}
+		else {
 			if (get_option('MAGIC_FIELDS_fist_time') == ''){
 				update_option('MAGIC_FIELDS_fist_time', '1');
 			}
@@ -231,8 +232,7 @@ class RCCWP_Application
 			require_once(MF_PATH.'/MF_PostTypesPage.php');
 			MF_PostTypePages::CreatePostTypesTables();
 		}
-                RCCWP_Application::UpgradeBlog();
-
+		RCCWP_Application::UpgradeBlog();
 	}
 	
 	/**
@@ -258,14 +258,14 @@ class RCCWP_Application
 			}
 		}
 
-    if (RC_CWP_DB_VERSION >= 7) {
-      RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANEL_GROUPS, "expanded", $column_attr = "tinyint after duplicate" );
-      RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANELS, "expanded", $column_attr = "tinyint NOT NULL DEFAULT 1 after type" );
-    }
+		if (RC_CWP_DB_VERSION >= 7) {
+			RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANEL_GROUPS, "expanded", $column_attr = "tinyint after duplicate" );
+			RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANELS, "expanded", $column_attr = "tinyint NOT NULL DEFAULT 1 after type" );
+		}
 
-    if( RC_CWP_DB_VERSION >= 8 ){
-      $wpdb->query('ALTER TABLE '.MF_TABLE_PANEL_CATEGORY.' MODIFY cat_id VARCHAR(100)');
-    }
+		if( RC_CWP_DB_VERSION >= 8 ){
+			$wpdb->query('ALTER TABLE '.MF_TABLE_PANEL_CATEGORY.' MODIFY cat_id VARCHAR(100)');
+		}
 	}
 
 	/**
@@ -365,38 +365,39 @@ class RCCWP_Application
 	function CheckInstallation(){
 		global $mf_domain;
 	
-		if (!empty($_GET['page']) && stripos($_GET['page'], "mf") === false && $_GET['page'] != "RCCWP_OptionsPage.php" && !isset($_GET['custom-write-panel-id'])) return;
+		if (!empty($_GET['page']) && stripos($_GET['page'], 'mf') === false && $_GET['page'] != 'RCCWP_OptionsPage.php' && !isset($_GET['custom-write-panel-id'])) return;
 		
-		$dir_list = "";
-		$dir_list2 = "";
+		$dir_list = '';
+		$dir_list2 = '';
 	
 		wp_mkdir_p(MF_UPLOAD_FILES_DIR);
 		wp_mkdir_p(MF_CACHE_DIR);
-    wp_mkdir_p(MF_GET_CACHE_DIR);
+		wp_mkdir_p(MF_GET_CACHE_DIR);
 	
 		// Giving full rights to folders. thanks Akis Kesoglou 
 		if (!is_dir(MF_CACHE_DIR)){
-			$dir_list2.= "<li>".MF_CACHE_DIR . "</li>";
-		}elseif (!is_writable(MF_CACHE_DIR)){
-			$dir_list.= "<li>".MF_CACHE_DIR . "</li>";
+			$dir_list2.= '<li>'.MF_CACHE_DIR . '</li>';
+		}
+		elseif (!is_writable(MF_CACHE_DIR)){
+			$dir_list.= '<li>'.MF_CACHE_DIR . '</li>';
 		}
 
 		if (!is_dir(MF_UPLOAD_FILES_DIR)){
-			$dir_list2.= "<li>".MF_UPLOAD_FILES_DIR . "</li>";
-		}elseif (!is_writable(MF_UPLOAD_FILES_DIR)){
-			$dir_list.= "<li>".MF_UPLOAD_FILES_DIR . "</li>";
+			$dir_list2.= '<li>'.MF_UPLOAD_FILES_DIR . '</li>';
+		}
+		elseif (!is_writable(MF_UPLOAD_FILES_DIR)){
+			$dir_list.= '<li>'.MF_UPLOAD_FILES_DIR . '</li>';
 		}
 		
-		if ($dir_list2 != ""){
-			echo "<div id='magic-fields-install-error-message' class='error'><p><strong>".__('Magic Fields is not ready yet.', $mf_domain)."</strong> ".__('must create the following folders (and must chmod 777):', $mf_domain)."</p><ul>";
+		if ($dir_list2 != ''){
+			echo '<div id="magic-fields-install-error-message" class="error"><p><strong>'.__('Magic Fields is not ready yet.', $mf_domain).'</strong> '.__('must create the following folders (and must chmod 777):', $mf_domain).'</p><ul>';
 			echo $dir_list2;
-			echo "</ul></div>";
+			echo '</ul></div>';
 		}
-		if ($dir_list != ""){
-			echo "<div id='magic-fields-install-error-message-2' class='error'><p><strong>".__('Magic Fields is not ready yet.', $mf_domain)."</strong> ".__('The following folders must be writable (usually chmod 777 is neccesary):', $mf_domain)."</p><ul>";
+		if ($dir_list != ''){
+			echo '<div id="magic-fields-install-error-message-2" class="error"><p><strong>'.__('Magic Fields is not ready yet.', $mf_domain).'</strong> '.__('The following folders must be writable (usually chmod 777 is neccesary):', $mf_domain).'</p><ul>';
 			echo $dir_list;
-			echo "</ul></div>";
+			echo '</ul></div>';
 		}
 	}
-
 }
