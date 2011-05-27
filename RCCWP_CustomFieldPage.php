@@ -175,6 +175,7 @@ class RCCWP_CustomFieldPage{
 		<tr valign="top">
 			<th scope="row"><?php _e('Related Type Panel', $mf_domain); ?>:</th>
 			<td><select name="custom-field-related-type-panel-id" id="custom-field-related-type-panel-id">
+                                <option value="-7" <?php if ($custom_field->properties['panel_id']== -7) echo 'selected' ?> >All Categories</option>
 				<option value="-6" <?php if ($custom_field->properties['panel_id']== -6) echo 'selected' ?> >All Posts and Pages</option>
 				<option value="-5" <?php if ($custom_field->properties['panel_id']== -5) echo 'selected' ?> >All Posts and Pages with Write Panel</option>
 				<option value="-4" <?php if ($custom_field->properties['panel_id']== -4) echo 'selected' ?> >All Post</option>

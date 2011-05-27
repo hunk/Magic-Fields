@@ -866,26 +866,27 @@ class RCCWP_WritePostPage  {
 					$options=get_posts("post_type=page&meta_key=_mf_write_panel_id&numberposts=-1&order=ASC&orderby=title");
 		}elseif($panel_id == -6){
 			$options=get_posts("post_type=any&numberposts=-1");
-    }elseif($panel_id == -5){
+                }elseif($panel_id == -7){
+                  $options=get_categories("hide_empty=0");
+                }elseif($panel_id == -5){
       
-      remove_filter('posts_where', array('RCCWP_Query','ExcludeWritepanelsPosts'));
-      add_filter('posts_fields', 'RelatedTypeFieldsFilter');
-      add_filter('posts_orderby', 'RelatedTypeOrderByFilter');
+                  remove_filter('posts_where', array('RCCWP_Query','ExcludeWritepanelsPosts'));
+                  add_filter('posts_fields', 'RelatedTypeFieldsFilter');
+                  add_filter('posts_orderby', 'RelatedTypeOrderByFilter');
       
-      $options = get_posts( array( 
-        'suppress_filters' => false, 
-        'post_type' => 'any', 
-        'meta_key' =>  '_mf_write_panel_id',
-        'nopaging' => true,
-        'order' => 'ASC'
-      ));
+                  $options = get_posts( array( 
+                                          'suppress_filters' => false, 
+                                          'post_type' => 'any', 
+                                          'meta_key' =>  '_mf_write_panel_id',
+                                          'nopaging' => true,
+                                          'order' => 'ASC'
+                                        ));
       
-      remove_filter('posts_fields', 'RelatedTypeFieldsFilter');
-      remove_filter('posts_orderby', 'RelatedTypeOrderByFilter');
-      add_filter('posts_where', array('RCCWP_Query','ExcludeWritepanelsPosts'));
-    }
-		else{
-			$options=get_posts("post_type=any&meta_key=_mf_write_panel_id&numberposts=-1&meta_value=$panel_id&order=ASC&orderby=title");
+                  remove_filter('posts_fields', 'RelatedTypeFieldsFilter');
+                  remove_filter('posts_orderby', 'RelatedTypeOrderByFilter');
+                  add_filter('posts_where', array('RCCWP_Query','ExcludeWritepanelsPosts'));
+                }else{
+                  $options=get_posts("post_type=any&meta_key=_mf_write_panel_id&numberposts=-1&meta_value=$panel_id&order=ASC&orderby=title");
 		}
 		
 		$last_panel_name = ""; // traversal (for grouping)
@@ -937,11 +938,18 @@ class RCCWP_WritePostPage  {
         }
       }
       /* END TRAVERSAL ADDITION */
+                  if( $panel_id == -7 ) {
+                    $selected = $option->term_id == $value ? 'selected="selected"' : '';
+                    ?>
+                    <option value="<?php echo $option->term_id ?>" <?php echo $selected?>><?php echo $display_panel_name.$option->name ?></option><!-- TRAVERSAL UPDATE, adds display panel name as prefix -->
+                       <?php      
+                       }else {
       
-			$selected = $option->ID == $value ? 'selected="selected"' : '';
-		?>
-			<option value="<?php echo $option->ID ?>" <?php echo $selected?>><?php echo $display_panel_name.$option->post_title ?></option><!-- TRAVERSAL UPDATE, adds display panel name as prefix -->
-		<?php
+                    $selected = $option->ID == $value ? 'selected="selected"' : '';
+                    ?>
+                    <option value="<?php echo $option->ID ?>" <?php echo $selected?>><?php echo $display_panel_name.$option->post_title ?></option><!-- TRAVERSAL UPDATE, adds display panel name as prefix -->
+                       <?php
+                       }
 		endforeach;
 
     // TRAVERSAL ADDITION, closes optgroup 
