@@ -21,6 +21,19 @@
   
 class RCCWP_WritePostPage  {
 
+  function mf_category_order($cats,$parent=0,$depth = 0,$resp = array() ){
+    foreach($cats as $k => $cat){
+      if($cat->parent == $parent){
+        $term_id = $cat->term_id;
+        $resp[$term_id]->term_id = $term_id;
+        $resp[$term_id]->name = sprintf('%s%s',str_repeat('&nbsp;', $depth * 4),$cat->slug);
+        unset($cats[$k]);
+        $resp = RCCWP_WritePostPage::mf_category_order($cats,$term_id,$depth+1,$resp);
+      }
+    }
+    return $resp;
+  }
+
 	function ApplyWritePanelAssignedCategoriesOrTemplate(){
 		global $CUSTOM_WRITE_PANEL,$post,$wp_version;
 		
@@ -868,6 +881,7 @@ class RCCWP_WritePostPage  {
 			$options=get_posts("post_type=any&numberposts=-1");
                 }elseif($panel_id == -7){
                   $options=get_categories("hide_empty=0");
+                  $options = RCCWP_WritePostPage::mf_category_order($options,0,0);
                 }elseif($panel_id == -5){
       
                   remove_filter('posts_where', array('RCCWP_Query','ExcludeWritepanelsPosts'));
