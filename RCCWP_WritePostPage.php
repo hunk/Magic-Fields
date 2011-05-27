@@ -510,7 +510,7 @@ class RCCWP_WritePostPage  {
 					foreach ($customFields as $field) {
 
 						$customFieldName = $field->name;
-						$customFieldTitle = attribute_escape($field->description);
+						$customFieldTitle = esc_attr($field->description);
 						$groupId  = $customGroup->id;
 						$inputName = $field->id."_".$groupCounter."_1_".$groupId."_".$customFieldName;
 						
@@ -581,7 +581,7 @@ class RCCWP_WritePostPage  {
 		require_once("RC_Format.php");
 		$customField = RCCWP_CustomField::Get($customFieldId);
 		$customFieldName = $customField->name;
-		$customFieldTitle = attribute_escape($customField->description);
+		$customFieldTitle = esc_attr($customField->description);
 		$customFieldHelp = $customField->help_text; // htmlentities($customField->help_text,ENT_COMPAT,'UTF-8');
 		$groupId = $customGroup_id;
 		$inputCustomName = $customFieldId."_".$groupCounter."_".$fieldCounter."_".$groupId."_".$customFieldName; // Create input tag name
@@ -781,12 +781,12 @@ class RCCWP_WritePostPage  {
 		<?php
 		foreach ($customField->options as $option) :
 			$checked = in_array($option, (array)$values) ? 'checked="checked"' : '';
-			$option = attribute_escape(trim($option));
+			$option = esc_attr(trim($option));
 		?>
 		<label for="<?php echo $inputName.'_'.$option;?>" class="selectit mf-checkbox-list">
 			<input tabindex="3" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="checkbox_list_mf" id="<?php echo $inputName.'_'.$option;?>" name="<?php echo $inputName?>[]" value="<?php echo $option?>" type="checkbox" <?php echo $checked?> />
 			
-				<?php echo attribute_escape($option)?>
+				<?php echo esc_attr($option)?>
 			</label><br />
 		
 		<?php
@@ -808,7 +808,7 @@ class RCCWP_WritePostPage  {
 
 		if (isset($mf_post_id)) {
 			$customFieldId = $customField->id;
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
+			$value = esc_attr(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 		} else {
 		  $defClass = "mf-default";
 			$value = $customField->default_value[0];
@@ -824,7 +824,7 @@ class RCCWP_WritePostPage  {
 		<?php
 		foreach ($customField->options as $option) :
 			$selected = $option == $value ? 'selected="selected"' : '';
-			$option = attribute_escape(trim($option));
+			$option = esc_attr(trim($option));
 		?>
 			<option value="<?php echo $option?>" <?php echo $selected?>><?php echo $option?></option>
 		<?php
@@ -848,7 +848,7 @@ class RCCWP_WritePostPage  {
 		$customFieldId = '';
 		if (isset($mf_post_id)) {
 			$customFieldId = $customField->id;
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
+			$value = esc_attr(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 		}
 		else
 		{
@@ -1007,7 +1007,7 @@ class RCCWP_WritePostPage  {
 		foreach ($customField->options as $option) {
 			if(!empty($option)){
 				$selected = in_array($option, (array)$values) ? 'selected="selected"' : '';
-				$option = attribute_escape(trim($option));
+				$option = esc_attr(trim($option));
 		?>
 			<option value="<?php echo $option?>" <?php echo $selected?>><?php echo $option?></option>	
 		<?php
@@ -1102,7 +1102,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		
 		if (isset($mf_post_id)) {
 			$customFieldId = $customField->id;
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
+			$value = esc_attr(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 		}else{
 			$value = "";
 		}
@@ -1166,7 +1166,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 
 		if (isset($mf_post_id)) {
 			$customFieldId = $customField->id;
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
+			$value = esc_attr(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 			$path = MF_FILES_URI;
 			$valueRelative = $value;
 			$value = $path.$value;
@@ -1335,7 +1335,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
     $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
 
 		if (isset($mf_post_id)) {
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
+			$value = esc_attr(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 		}
 		else
 		{
@@ -1347,7 +1347,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		<?php
 		foreach ($customField->options as $option) :
 			$checked = $option == $value ? 'checked="checked"' : '';
-			$option = attribute_escape(trim($option));
+			$option = esc_attr(trim($option));
 		?>
 			<label for="<?php echo $inputName.'_'.$option;?>" class="selectit">
 				<input tabindex="3" <?php if ($customField->required_field) echo 'validate="required:true"'; ?> id="<?php echo $inputName.'_'.$option?>" name="<?php echo $inputName?>" value="<?php echo $option?>" type="radio" <?php echo $checked?>/>
@@ -1371,7 +1371,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		
 		if (isset($mf_post_id)) {
 			$customFieldId = $customField->id;
-			$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
+			$value = esc_attr(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 			
 			$raw_value = $value;
 			
@@ -1564,7 +1564,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 			$value=$fieldValue;
 		}else{
 			if(!empty($mf_post_id)){
-				$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
+				$value = esc_attr(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 			}else{
 				$value = '';
 			}
@@ -1586,7 +1586,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		
 		$customFieldId = $customField->id;
 		if(!empty($mf_post_id)){
-		$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
+		$value = esc_attr(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 		}else{
 			$value = 0;
       $defClass = 'mf-default';
@@ -1596,7 +1596,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 			$value=$fieldValue;
 		}else{
 			if(!empty($mf_post_id)){
-				$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
+				$value = esc_attr(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
 			}else{
 				$value = 0;
         $defClass = 'mf-default';
@@ -1648,7 +1648,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 
     if (isset($mf_post_id)) {
   	  $customFieldId = $customField->id;
-  		$value = attribute_escape(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
+  		$value = esc_attr(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
   	}else{
   		$value = "";
   	}
