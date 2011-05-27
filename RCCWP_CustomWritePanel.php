@@ -611,7 +611,7 @@ class RCCWP_CustomWritePanel
          * @param integer $panelID
          * @param string $exportedFilename the full path of the file to which the panel will be exported
          */
-        function Export($panelID, $exportedFilename){
+        function Export($panelID){
 
                 include_once('RCCWP_CustomGroup.php');
                 include_once('RCCWP_CustomField.php');
@@ -646,9 +646,7 @@ class RCCWP_CustomWritePanel
                 $exported_data['panel'] = $writePanel;
                 $exported_data['fields'] = $groupFields;
 
-                $handle = fopen($exportedFilename, "w");
-                $result = fwrite($handle, serialize($exported_data));
-                @fclose($handle);
+                return serialize($exported_data);
         }
 
         /**

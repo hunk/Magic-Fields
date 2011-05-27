@@ -64,8 +64,10 @@ class mfthumb{
 				return new WP_Error('resize_path_invalid', __( 'Resize path invalid' ));
 		} else {
 			// all other formats are converted to jpg
-			if ( !imagejpeg( $newimage, $destfilename, apply_filters( 'jpeg_quality', $jpeg_quality, 'image_resize' ) ) )
-				return new WP_Error('resize_path_invalid', __( 'Resize path invalid' ));
+                  //Todo: add option for use progresive JPG
+                  //imageinterlace($newimage, true); //Progressive JPG 
+                  if ( !imagejpeg( $newimage, $destfilename, apply_filters( 'jpeg_quality', $jpeg_quality, 'image_resize' ) ) )
+                    return new WP_Error('resize_path_invalid', __( 'Resize path invalid' ));
 		}
 
 		imagedestroy( $newimage );
