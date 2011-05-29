@@ -10,7 +10,6 @@ class RCCWP_Post {
 	function SaveCustomFields($postId){
 		global $flag;
 		
-			
 		if($flag == 0){
 			
 			//with this  the save_post action don't will be execute twice
@@ -77,6 +76,7 @@ class RCCWP_Post {
 		if(!empty($_POST['magicfields_remove_files'])){
 			$files = preg_split('/\|\|\|/', $_POST['magicfields_remove_files']);
 			foreach($files as $file){
+        do_action('mf_before_delete_file',$file);
 				@unlink(MF_FILES_PATH.$file);
 			}
 		}
@@ -87,7 +87,6 @@ class RCCWP_Post {
 		}
 		
 		$customfields = $_POST['magicfields'];
-
 
 		if ( $the_post = wp_is_post_revision($postId))
 			$postId = $the_post;
@@ -236,6 +235,7 @@ class RCCWP_Post {
       foreach($images as $image){
         if($image->meta_value != ''){
           $tmp = sprintf('%s%s',MF_FILES_PATH,$image->meta_value);
+          do_action('mf_before_delete_file',$image->meta_value);
 					@unlink($tmp);
         }
       }

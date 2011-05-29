@@ -62,14 +62,21 @@ if (isset($_POST['fileframe'])){
 			$special_chars = array (' ','`','"','\'','\\','/'," ","#","$","%","^","&","*","!","~","‘","\"","’","'","=","?","/","[","]","(",")","|","<",">",";","\\",",","+","-");
 			$filename = str_replace($special_chars,'',$_FILES['file']['name']);
 			$filename = time() . $filename;
+
+      $action_mf_file = $_FILES['file'];
+
 			@move_uploaded_file( $_FILES['file']['tmp_name'], MF_FILES_PATH . $filename );
 			@chmod(MF_FILES_PATH . $filename, 0644);
+    
 
 		  $result_msg = '<span class="mf-upload-success">'.__("Successful upload",$mf_domain).'!</span>' ;
 			
 			//Checking the mimetype of the file
 			if(valid_mime($_FILES['file']['type'],$acceptedExts)){
 				$operationSuccess = "true";
+
+        $action_mf_file['tmp_name'] = MF_FILES_PATH . $filename;
+        do_action( 'mf_after_upload_file', $action_mf_file );
 			}else{
 				$operationSuccess = "false";
 				
