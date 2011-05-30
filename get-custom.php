@@ -440,6 +440,7 @@ function create_image($options)
 	if (empty($fieldObject['params']) && (FALSE === strstr($fieldValue, "&"))){
     if($fieldType == 9){
 		  $fieldValue = MF_FILES_URI.$fieldValue;
+      $fieldValue = apply_filters('mf_source_image', $fieldValue);
 	  }
 	}else{
 	  //generate or check de thumb
@@ -486,13 +487,19 @@ function aux_image($fieldValue,$params_image,$fieldType = NULL){
     $name_image = $data[count($data)-1];
   }
 
-	if (file_exists($thumb_path)) {
+  $exists = file_exists($thumb_path);
+  
+  list($exists, $thumb_url) = apply_filters('mf_source_path_thumb_image',array('exists' => $exists, 'thumb_url' => $thumb_url));
+
+	if ($exists) {
 		$fieldValue = $thumb_url;
 	}else{
 	//generate thumb
 	$create_md5_filename = 'th_'.$md5_params."_".$name_image;
 	$output_filename = MF_CACHE_DIR.$create_md5_filename;
 	$final_filename = MF_CACHE_URI.$create_md5_filename;
+
+  do_action('mf_before_generate_thumb',$image_path);
 
   	$default = array(
     	'zc'=> 1,
@@ -536,10 +543,21 @@ function aux_image($fieldValue,$params_image,$fieldType = NULL){
 	  $default['q']
 	);
         
-	
-	if ( is_wp_error($thumb_path) )
-     return $thumb_path->get_error_message();
-  $fieldValue = $final_filename;
+	  if ( is_wp_error($thumb_path) )
+      return $thumb_path->get_error_message();
+  
+  
+    $fieldValue = $final_filename;
+    list($tm_width, $tm_height, $tm_type, $tm_attr) = getimagesize($output_filename);
+    $file = array( 
+      'tmp_name' => $output_filename,
+      'size'     => filesize($output_filename),
+      'type'     => $tm_type
+    );
+
+    do_action('mf_after_upload_file',$file);
+    do_action('mf_save_thumb_file',$final_filename);
+
   }
   return $fieldValue;
 }
