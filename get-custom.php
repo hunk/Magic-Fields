@@ -558,6 +558,8 @@ function aux_image($fieldValue,$params_image,$fieldType = NULL){
     do_action('mf_after_upload_file',$file);
     do_action('mf_save_thumb_file',$final_filename);
 
+    $fieldValue = apply_filters('mf_source_image', $fieldValue);
+
   }
   return $fieldValue;
 }
