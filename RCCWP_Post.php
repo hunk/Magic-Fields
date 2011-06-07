@@ -16,7 +16,7 @@ class RCCWP_Post {
 			//with this  the save_post action don't will be execute twice
 			$flag = 1;
 			//security
-			if(!wp_verify_nonce($_REQUEST['rc-custom-write-panel-verify-key'], 'rc-custom-write-panel'))
+			if(!wp_verify_nonce(@$_REQUEST['rc-custom-write-panel-verify-key'], 'rc-custom-write-panel'))
 				return $postId;
 			
 			//the user  can edit posts?
