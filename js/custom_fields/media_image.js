@@ -4,7 +4,7 @@ jQuery(document).ready(function(){
 	  id = jQuery(this).next().attr('id');
 	  check = parent.window.mf_field_id;
 	  if(check == ""){}else{
-      jQuery(this).before('<a href="#"  class="mf_media_upload" onclick="mf_set_image_field(\''+id+'\'); return false;">Set image in field</a>');
+      jQuery(this).before('<a href="#"  class="mf_media_upload button" onclick="mf_set_image_field(\''+id+'\'); return false;">Set image in field</a>');
     }
   });
 	
@@ -29,7 +29,7 @@ function mf_set_image_field(id){
      function(data){
        jQuery('#img_thumb_'+data.field_id, top.document).attr('src',data.image);
        jQuery('#'+data.field_id, top.document).attr('value',data.image_value);
-       jQuery('#photo_edit_link_'+data.field_id, top.document).html("&nbsp;<strong><a href='#remove_media' class='remove' id='remove-"+data.field_id+"'>Remove Image</a></strong>");
+       jQuery('#photo_edit_link_'+data.field_id, top.document).html("&nbsp;<strong><a href='#remove_media' class='remove_media' id='remove-"+data.field_id+"'>Remove Image</a></strong>");
        parent.window.mf_field_id = '';
        parent.window.tb_remove();
      }, "json");
@@ -43,7 +43,7 @@ function load_link_in_media_upload(){
     }else{
       check = parent.window.mf_field_id;
       if(check == "" || check == undefined ){}else{
-        jQuery(this).before('<a href="#" class="mf_media_upload" onclick="mf_set_image_field(\''+id+'\'); return false;">Set image in field</a>');
+        jQuery(this).before('<a href="#" class="mf_media_upload button" onclick="mf_set_image_field(\''+id+'\'); return false;">Set image in field</a>');
       }
     }
   });

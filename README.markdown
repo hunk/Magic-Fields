@@ -2,7 +2,7 @@
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
 * Contributors: [Astrata Software](http://astrata.mx) [Travis Hensgen](http://traversal.com.au/), [Jeff Minard](http://jrm.cc/ "Jeff Minard"), [Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"), Michael Bayard, [Doc4](doc4design.com/ "Doc4")
 * Tested up to: Wordpress 3.0.1
-* Stable tag: 1.5.2
+* Stable tag: 1.5.5
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -17,6 +17,25 @@ Follow the following steps to install this plugin.
 2.	Activate the plugin through the 'Plugins' menu in WordPress.
 
 ## Changelog ##
+
+###1.5.5###
+ * Added more file formats as requested by mrhughes (thanks!) for the file uploader
+ * Fixed the label for fields in the group view (was saying Group Name / Field Label) whereas it is now just Label
+ * Fix for AjaxUploader PHP4 issue
+ * Added a option for switch between the traditional file uploader and the ajax uploader
+ * resolved bug with the internal links in wp 3.1 
+ * added new slider.js for wp 3.1
+ * Rewrote query for display the lsit of posts/pages in the Manage page (this improve a lot the performace) 
+ * Added options to create image using native wordpress 'size' (Thanks to bigfive) bigfive@e05275905c26ab4ba096fce3e0639877ffa78f8c
+ * Fixed many warnings and notices in the whole plugin 
+ * Fixed a few bugs related with the multiline field
+ * Added media buttons at the multiline fields
+ * Added option for not remove the br and p tags in the change between visual/html in the multiline field
+ * Fix in how are saved the categories, for fix issue in wpmu
+ * Changed the engine for export write panels (thanks to [Jarl](http://github.com/jarltotland) for this)
+ * Removed deprecated functions (like esc_attr) 
+ * Added Categories option for the Related Type Field thanks Clément Bongibault
+
 
 ###1.5.2###
  * Reinstated the insert media buttons in the Multiline text field type. This problem was due to the fact that the init call to TinyMCE was changed so that Magic Fields Visual Editors can now honour any other plug-ins installed. Since the media buttons aren't rendered within the visual editor area for the content block (they sit separately above the TinyMCE control), Magic Fields was now missing them also.

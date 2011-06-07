@@ -131,6 +131,7 @@ class RCCWP_Application
 		}
 		
 		// -- Create Tables if they don't exist or the database changed
+		$not_installed = false;
 		if(!$wpdb->get_var("SHOW TABLES LIKE '".MF_TABLE_PANELS."'") == MF_TABLE_PANELS) 	$not_installed = true;
 
 		if( $not_installed ||

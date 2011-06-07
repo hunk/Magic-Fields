@@ -391,7 +391,7 @@ class RCCWP_CustomWritePanelPage
 			</p>
 		</form>
     <br class="clear"/>
-    <?php if($_GET['saved_order'] == "true"):?>
+    <?php if(isset($_GET['save_order']) && $_GET['saved_order'] == "true"):?>
       <div id="message" class="updated">
         Saved Order.
       </div>
@@ -429,7 +429,7 @@ class RCCWP_CustomWritePanelPage
 	    <?php endforeach;?>
 		</div>
 		<br />
-    <input type="submit" name="save_submit" id="save_order" />
+    <input type="submit" name="save_submit" value="<?php _e('Save Order',$mf_domain);?>" id="save_order" />
     </form>
 		<?php
 	}
