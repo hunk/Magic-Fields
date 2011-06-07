@@ -1674,7 +1674,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
   }
   
   function MediaPhotoInterface($customField, $inputName, $groupCounter, $fieldCounter) {
-  		global $mf_domain;
+  		global $mf_domain,$post;
 
   		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 
