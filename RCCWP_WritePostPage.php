@@ -382,7 +382,7 @@ class RCCWP_WritePostPage  {
 		global $CUSTOM_WRITE_PANEL;
 
 
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 		
 		//we are passing the group_id in the args of the add_meta_box
 		$group = $group['args'];
@@ -484,7 +484,7 @@ class RCCWP_WritePostPage  {
       $ex_class = $CUSTOM_WRITE_PANEL->expanded ? "mf-group-expanded" : '';
     }
     
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 		//getting the custom fields
 		$customFields = RCCWP_CustomGroup::GetCustomFields($customGroup->id);
 		
@@ -738,7 +738,7 @@ class RCCWP_WritePostPage  {
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 
 
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 		
 		if (isset($mf_post_id))
 		{
@@ -759,7 +759,8 @@ class RCCWP_WritePostPage  {
 	
 	function CheckboxListInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
+
 		$customFieldId = '';
 		
 		$defClass = '';
@@ -802,7 +803,7 @@ class RCCWP_WritePostPage  {
 	{
 		global $mf_domain;
 		$customFieldId = '';
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 		
 		$defClass = '';
 
@@ -843,7 +844,7 @@ class RCCWP_WritePostPage  {
 	//eeble
 	function RelatedTypeInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		global $mf_domain, $wpdb;
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 
 		$customFieldId = '';
 		if (isset($mf_post_id)) {
@@ -985,7 +986,7 @@ class RCCWP_WritePostPage  {
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		$customFieldId = '';
 		$defClass = "";
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 
 		if (isset($mf_post_id)){
 			$customFieldId = $customField->id;
@@ -1024,7 +1025,7 @@ class RCCWP_WritePostPage  {
 	
 	function MultilineTextboxInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		$customFieldId = '';
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
@@ -1096,7 +1097,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 	
 	function TextboxInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		$customFieldId = '';
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
@@ -1157,7 +1158,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		global $mf_domain;
 		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 		
 		$customFieldId = '';
 		$freshPageFolderName = (dirname(plugin_basename(__FILE__)));
@@ -1253,7 +1254,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		global $mf_domain;
 		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 		
 		if(!empty($mf_post_id)){
 			$hidValue = RCCWP_CustomField::GetCustomFieldValues(true,$mf_post_id, $customField->name, $groupCounter, $fieldCounter);
@@ -1332,7 +1333,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 	function RadiobuttonListInterface($customField, $inputName, $groupCounter, $fieldCounter){
 		$customFieldId = '';
     $defClass = "";
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 
 		if (isset($mf_post_id)) {
 			$value = esc_attr(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
@@ -1365,7 +1366,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 	function DateInterface($customField, $inputName, $groupCounter, $fieldCounter) {
 		global $wpdb;
 		$customFieldId = '';
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
@@ -1451,7 +1452,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		$customFieldId = '';
 		$freshPageFolderName = (dirname(plugin_basename(__FILE__))); 
 		$requiredClass = "";
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 
 		if ($customField->required_field) $requiredClass = "field_required";
 		
@@ -1556,7 +1557,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
     $requiredClass="";
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 
   	if ($customField->required_field) $requiredClass = "field_required";
 
@@ -1580,7 +1581,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 	function SliderInterface($customField, $inputName, $groupCounter, $fieldCounter,$fieldValue = NULL){
 		
     $defClass = '';
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 
 		$idField = RCCWP_WritePostPage::changeNameInput($inputName);
 		
@@ -1644,7 +1645,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 	
 	function MarkdownTextboxInterface($customField, $inputName, $groupCounter, $fieldCounter) {
     $customFieldId = '';
-    $mf_post_id =  apply_filters('mf_source_post_data', $_REQUEST['post']);
+    $mf_post_id =  (isset($_REQUEST['post'])) ? apply_filters('mf_source_post_data', $_REQUEST['post']) : null;
 
     if (isset($mf_post_id)) {
   	  $customFieldId = $customField->id;
