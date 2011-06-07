@@ -2,7 +2,7 @@
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
 * Contributors: [Astrata Software](http://astrata.mx) [Travis Hensgen](http://traversal.com.au/), [Jeff Minard](http://jrm.cc/ "Jeff Minard"), [Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"), Michael Bayard, [Doc4](doc4design.com/ "Doc4")
 * Tested up to: Wordpress 3.0.1
-* Stable tag: 1.5.3
+* Stable tag: 1.5.5
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -18,7 +18,7 @@ Follow the following steps to install this plugin.
 
 ## Changelog ##
 
-###1.5.3###
+###1.5.5###
  * Added more file formats as requested by mrhughes (thanks!) for the file uploader
  * Fixed the label for fields in the group view (was saying Group Name / Field Label) whereas it is now just Label
  * Fix for AjaxUploader PHP4 issue

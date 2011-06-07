@@ -4,7 +4,7 @@ Tags: custom write panel, custom, write panel, cms, magic fields
 Tested up to: Wordpress 3.1
 Requires at least: 2.9
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=edgar%40programador%2ecom&lc=GB&item_name=Donation%20Magic%20Fields&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest
-Stable tag: 1.5.3
+Stable tag: 1.5.5
 Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 == Description ==
@@ -28,7 +28,7 @@ Follow the following steps to install this plugin.
 
 == Changelog ==
 
-= 1.5.3 =
+= 1.5.5 =
  * Added more file formats as requested by mrhughes (thanks!) for the file uploader
  * Fixed the label for fields in the group view (was saying Group Name / Field Label) whereas it is now just Label
  * Fix for AjaxUploader PHP4 issue
