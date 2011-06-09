@@ -148,6 +148,11 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 		$results = split('&',$results);
 		$results = $results[0];
 	}
+
+  if($fieldType == $FIELD_TYPES['file'] || $fieldType == $FIELD_TYPES['image']) {
+    $results = apply_filters('mf_source_image',$results);
+  }
+
 	return $results;
 
 }

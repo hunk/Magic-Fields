@@ -135,7 +135,12 @@ if (isset($_POST['fileframe'])){
 			//Set image
 			<?php
 		    //$newImagePath = PHPTHUMB.'?&w=150&h=120&src='.MF_FILES_URI.$filename;
-        $newImagePath = aux_image($filename,'w=150&h=120&zc=1');
+
+        if($acceptedExts == "image") {
+          $newImagePath = aux_image($filename,'w=150&h=120&zc=1');
+        }else{
+          $newImagePath = "";
+        }
 				
 				if (isset($_POST['imageThumbID'])){ 
 			?>
