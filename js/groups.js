@@ -992,7 +992,7 @@ function smartTrim(string, maxLength) {
     });
 
 	//validate maxlength
-	jQuery('.mf-field.maxlength input, .mf-field.maxlength textarea').keyup(function(){
+	jQuery('.mf-field.maxlength input, .mf-field.maxlength textarea').live( 'keyup', function(){
 		var maximal = parseInt(jQuery(this).attr('maxlength'));
 		var actual = parseInt(jQuery(this).val().length);
 		//alert( maximal + ' - ' + actual );
