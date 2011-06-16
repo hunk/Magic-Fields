@@ -66,7 +66,7 @@ if (!(is_user_logged_in() &&
 
 if (!empty($_POST['upload_url'])) { 		
 	// file was send from browser 
-	$_POST['upload_url'] = clean_url($_POST['upload_url']);
+	$_POST['upload_url'] = esc_url($_POST['upload_url']);
 	$filename = DownloadFile();
 
 	if ($filename ==  false) {			
