@@ -6,7 +6,7 @@
  *  - File
  */
 
-uploadurl = function(input_name,file_type){
+uploadurl = function(input_name,file_type,nonce){
     var url     = jQuery('#upload_url_'+input_name).val();
     var progr   = jQuery('#upload_progress_'+input_name);
     var h;
@@ -17,7 +17,7 @@ uploadurl = function(input_name,file_type){
     
     jQuery.ajax({
       type: "POST",
-      data: "upload_url="+url+"&input_name="+input_name+"&type="+file_type,
+      data: "upload_url="+url+"&input_name="+input_name+"&type="+file_type+"&nonce="+nonce,
       url: mf_path+'RCCWP_GetFile.php',
       success: function(msg){
           h = msg.split("*");

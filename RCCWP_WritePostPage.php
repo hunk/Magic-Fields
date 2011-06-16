@@ -111,6 +111,7 @@ class RCCWP_WritePostPage  {
   ?>
 	<script type="text/javascript">
 		var mf_path = "<?php echo MF_URI ?>" ;
+                var nonce_ajax_upload = "<?php echo wp_create_nonce('once_ajax_uplooad') ?>";
 	</script>
 	<?php
 	
