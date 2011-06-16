@@ -38,9 +38,12 @@ function changeNameInput($inputName){
 	
 }
 
-
-
 if (isset($_POST['fileframe'])){
+
+  if ( empty($_POST) || !wp_verify_nonce($_POST['checking'],'nonce_upload_file') ){
+    print 'Sorry, your nonce did not verify.';
+    exit;
+  }
 	$operationSuccess = "false";
 	
 	//type of upload
@@ -248,7 +251,7 @@ label.label-file {
 
 	</table>
 
-	
+<?php wp_nonce_field('nonce_upload_file','checking'); ?>	
 	<input type="hidden" name="fileframe" value="true" />
 	<input type="hidden" name="imgnum" />
 	<input type="hidden" name="input_name" value="<?php echo $_GET["input_name"]?>" />
