@@ -64,9 +64,12 @@ if (!(is_user_logged_in() &&
       (current_user_can('edit_posts') || current_user_can('edit_published_pages'))))
 	die(__("Athentication failed!",$mf_domain));
 
-if (!empty($_POST['upload_url'])) { 		
+if (!empty($_POST['upload_url'])) {
+
+  $nonce=$_POST['nonce'];
+  if (! wp_verify_nonce($nonce, 'nonce_url_file') ) die('Sorry, your nonce did not verify.'); 
 	// file was send from browser 
-	$_POST['upload_url'] = clean_url($_POST['upload_url']);
+	$_POST['upload_url'] = esc_url($_POST['upload_url']);
 	$filename = DownloadFile();
 
 	if ($filename ==  false) {			

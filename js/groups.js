@@ -540,11 +540,12 @@ function smartTrim(string, maxLength) {
           
           var input_el = f.find(".mf_custom_field input[type=hidden]");
           var ival = input_el.val();
-          
+          var nonce_file = nonce_ajax_upload;
+
           var uploader = new qq.FileUploader({
               element: this,
               multiple: false,
-              action: mf_path + "/RCCWP_upload_ajax.php",
+              action: mf_path + "/RCCWP_upload_ajax.php?nonce_ajax=" + nonce_file,
               allowedExtensions: allowedExtensions,
               
               onComplete: function(id, fileName, result) {
@@ -992,7 +993,7 @@ function smartTrim(string, maxLength) {
     });
 
 	//validate maxlength
-	jQuery('.mf-field.maxlength input, .mf-field.maxlength textarea').keyup(function(){
+	jQuery('.mf-field.maxlength input, .mf-field.maxlength textarea').live( 'keyup', function(){
 		var maximal = parseInt(jQuery(this).attr('maxlength'));
 		var actual = parseInt(jQuery(this).val().length);
 		//alert( maximal + ' - ' + actual );

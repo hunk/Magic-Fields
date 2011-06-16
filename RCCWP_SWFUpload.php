@@ -41,7 +41,7 @@ class RCCWP_SWFUpload
 							type="text"
 							size="<?php echo $urlInputSize ?>"
 							class="mf-upload-url" />
-						<input type="button" onclick="uploadurl('<?php echo $idField  ?>','<?php echo $fileType ?>')" value="Upload" class="button" style="width:70px"/>
+                                                        <input type="button" onclick="uploadurl('<?php echo $idField  ?>','<?php echo $fileType ?>','<?php echo wp_create_nonce("nonce_url_file") ?>')" value="Upload" class="button" style="width:70px"/>
 					</td>
 				</tr>
 			</table>

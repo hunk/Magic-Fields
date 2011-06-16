@@ -17,7 +17,18 @@ if( $loaded !== true ){
 	die('Could not load wp-load.php, edit/add mf-config.php and define MF_WP_LOAD to point to a valid wp-load file.');
 }
 
+if (!(is_user_logged_in() &&
+      (current_user_can('edit_posts') || current_user_can('edit_published_pages'))))
+	die(__("Authentication failed!",$mf_domain));
 
+
+/* checking nonce */
+$nonce=$_GET['nonce_ajax'];
+if (! wp_verify_nonce($nonce, 'once_ajax_uplooad') ){
+  $result = array('error' => 'Sorry, your nonce did not verify.');
+  echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+  die; 
+}
 
 /**
  * Handle file uploads via XMLHttpRequest
