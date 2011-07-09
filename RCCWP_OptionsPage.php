@@ -23,6 +23,9 @@ class RCCWP_OptionsPage {
                 if( !isset($customWritePanelOptions['dont-remove-tmce']) )
                   $customWritePanelOptions['dont-remove-tmce'] = 0;
 
+                if( !isset($customWritePanelOptions['use-standard-uploader']) )
+                  $customWritePanelOptions['use-standard-uploader'] = 0;
+
 		if (function_exists('is_site_admin') && !is_site_admin()){
 			update_option("Magic_Fields_notTopAdmin", true);
 		}else{

@@ -81,17 +81,17 @@ class RCCWP_Query
 	{
 		global $wpdb;
 		global $curr_qs_vars; 
-		
-		foreach ($curr_qs_vars as $queryVarKey => $queryVarValue){
-			if (substr($queryVarKey, 0, strlen(RC_CWP_QUERY_PERFIX)) == RC_CWP_QUERY_PERFIX){	
-				$customKey = substr($queryVarKey, strlen(RC_CWP_QUERY_PERFIX));
-				$customVal = $queryVarValue;
-				$where = $where . " AND 0 < (SELECT count($wpdb->postmeta.meta_value)
+		if( is_array($curr_qs_vars) ){
+                  foreach ($curr_qs_vars as $queryVarKey => $queryVarValue){
+                    if (substr($queryVarKey, 0, strlen(RC_CWP_QUERY_PERFIX)) == RC_CWP_QUERY_PERFIX){	
+                      $customKey = substr($queryVarKey, strlen(RC_CWP_QUERY_PERFIX));
+                      $customVal = $queryVarValue;
+                      $where = $where . " AND 0 < (SELECT count($wpdb->postmeta.meta_value)
 						FROM $wpdb->postmeta
 						WHERE $wpdb->postmeta.post_id = $wpdb->posts.ID and $wpdb->postmeta.meta_key = '$customKey' and $wpdb->postmeta.meta_value = '$customVal') ";
-			}
-		}
-
+                    }
+                  }
+                }
 		//Add orderby 
 		if (get_query_var(RC_CWP_QUERY_ORDERBY)){
 			$newOrderby = get_query_var(RC_CWP_QUERY_ORDERBY);
