@@ -1262,7 +1262,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		}else{
 			$hidValue = '';
 		}
-		
+	
 		$filepath	= $inputName . '_filepath';
 		//The Image is required?
 		$requiredClass = "";
@@ -1272,10 +1272,8 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		$value = "<img src='".MF_URI."images/noimage.jpg' id='{$imageThumbID}'/>";
 
 		if( !empty($hidValue)){
-			$path = PHPTHUMB."?src=".MF_FILES_URI;
-			$valueRelative = $hidValue;
-			$value  = $path.$hidValue."&w=150&h=120&zc=1";
-			$value  = "<img src='{$value}' id='{$imageThumbID}'/>";
+      $value = aux_image($hidValue,'w=150&h=120&zc=1');
+			$value = "<img src='{$value}' id='{$imageThumbID}'/>";
 		}
 ?>
 		<p 	class="error_msg_txt upload-msg" id="upload_progress_<?php echo $idField;?>" style="display:none;">
