@@ -319,7 +319,7 @@ class RCCWP_Menu
 				//IF we has unactivated the condenced menu
 				if(!$condence){
 					//adding the top parent menus
-					$new_menu[$base+$offset] = array( __($panel->name), $type_write_panel, $base+$offset.'.php', '', 'mf-menu-'.sanitize_title_with_dashes($panel->name). ' wp-menu-open menu-top mf-menu-'.$type_write_panel, 'mf-menu-'.$panel->id, 'div');
+					$new_menu[$base+$offset] = array( __($panel->name), $type_write_panel, $base+$offset.'.php', '', 'mf-menu-'.sanitize_title_with_dashes($panel->name). ' menu-top mf-menu-'.$type_write_panel, 'mf-menu-'.$panel->id, 'div');
 					
 					//adding submenu options (add new and manage for each write panel)
 					if ($panel->type == "post"){
