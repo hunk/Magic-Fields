@@ -373,7 +373,10 @@ class RCCWP_Menu
 		foreach ($menu as $k => $v) {
 			if($k > 5) $new_menu[$k+$offset]=$v;
 		}
-			
+
+                global $_wp_last_utility_menu;
+                $_wp_last_utility_menu += $offset;
+
 		$menu = $new_menu;
 		RCCWP_Menu::SetCurrentCustomWritePanelMenuItem();
 		
