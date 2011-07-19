@@ -1,8 +1,8 @@
 # Magic Fields
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
 * Contributors: [Astrata Software](http://astrata.mx) [Travis Hensgen](http://traversal.com.au/), [Jeff Minard](http://jrm.cc/ "Jeff Minard"), [Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"), Michael Bayard, [Doc4](doc4design.com/ "Doc4")
-* Tested up to: Wordpress 3.0.1
-* Stable tag: 1.5.5
+* Tested up to: Wordpress 3.2.1
+* Stable tag: 1.5.7
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -17,6 +17,16 @@ Follow the following steps to install this plugin.
 2.	Activate the plugin through the 'Plugins' menu in WordPress.
 
 ## Changelog ##
+
+###1.5.7###
+ * Fixed problems with WP 3.2
+ * add action for mf_before_delete_file, mf_after_upload_file, mf_before_generate_thumb, mf_save_thumb_file
+ * Fixed problems with menus write panels
+ * Little fix for the WPML compatibility 
+ * Fix menu (add_utility_page) 
+
+###1.5.6###
+ * Security bug fixed related with the uploader
 
 ###1.5.5###
  * Added more file formats as requested by mrhughes (thanks!) for the file uploader
@@ -36,6 +46,14 @@ Follow the following steps to install this plugin.
  * Removed deprecated functions (like esc_attr) 
  * Added Categories option for the Related Type Field thanks Clément Bongibault
 
+###1.5.4###
+ * add slider script, sorry
+
+###1.5.3###
+ * Fixed a bug with internal links for WP 3.1 (update jquery validate).
+ * Fixed a bug with slider in WP 3.1
+ * add jpeg format in phpthumb.php
+ * add option for non-ajax upload and bugfixes in uploader
 
 ###1.5.2###
  * Reinstated the insert media buttons in the Multiline text field type. This problem was due to the fact that the init call to TinyMCE was changed so that Magic Fields Visual Editors can now honour any other plug-ins installed. Since the media buttons aren't rendered within the visual editor area for the content block (they sit separately above the TinyMCE control), Magic Fields was now missing them also.

@@ -1205,7 +1205,6 @@ add_editor_text = function(context){
     //tinyMCE.init(options);
   	jQuery(".pre_editor", context).each( function(inputField){
       var editor_text = jQuery(this).attr('id');
-          console.log(editor_text);
   		tinyMCE.execCommand('mceAddControl', true, editor_text); 
   		jQuery('#'+editor_text, context).removeClass('pre_editor');
   	});

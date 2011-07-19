@@ -11,7 +11,7 @@ class RCCWP_CustomGroupPage
 		RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANEL_GROUPS, "expanded", $column_attr = "tinyint after duplicate" );
 
 		global $mf_domain;
-		$customGroupName = $customGroupDuplicate = "";
+		$customGroupName = $customGroupDuplicate = $customGroupExpanded = "";
 		if (isset($_GET['custom-write-panel-id']) )
 			$customWritePanelId = $_GET['custom-write-panel-id'];
 		if (isset($_POST['custom-write-panel-id']) )

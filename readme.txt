@@ -1,10 +1,10 @@
 === Magic Fields ===
 Contributors: hunk, Gnuget, Astrata Software (http://astrata.mx), Travis Hensgen (http://traversal.com.au)
 Tags: custom write panel, custom, write panel, cms, magic fields
-Tested up to: Wordpress 3.1
+Tested up to: Wordpress 3.2.1
 Requires at least: 2.9
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=edgar%40programador%2ecom&lc=GB&item_name=Donation%20Magic%20Fields&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest
-Stable tag: 1.5.5
+Stable tag: 1.5.7
 Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 == Description ==
@@ -28,6 +28,16 @@ Follow the following steps to install this plugin.
 
 == Changelog ==
 
+= 1.5.7 =
+ * Fixed problems with WP 3.2
+ * add action for mf_before_delete_file, mf_after_upload_file, mf_before_generate_thumb, mf_save_thumb_file
+ * Fixed problems with menus write panels
+ * Little fix for the WPML compatibility 
+ * Fix menu (add_utility_page) 
+
+= 1.5.6 =
+ * Security bug fixed related with the uploader
+
 = 1.5.5 =
  * Added more file formats as requested by mrhughes (thanks!) for the file uploader
  * Fixed the label for fields in the group view (was saying Group Name / Field Label) whereas it is now just Label
@@ -46,6 +56,14 @@ Follow the following steps to install this plugin.
  * Removed deprecated functions (like esc_attr) 
  * Added Categories option for the Related Type Field thanks Clément Bongibault
 
+= 1.5.4 =
+ * add slider script, sorry
+
+= 1.5.3 =
+ * Fixed a bug with internal links for WP 3.1 (update jquery validate).
+ * Fixed a bug with slider in WP 3.1
+ * add jpeg format in phpthumb.php
+ * add option for non-ajax upload and bugfixes in uploader
 
 = 1.5.2 =
  * Reinstated the insert media buttons in the Multiline text field type. This problem was due to the fact that the init call to TinyMCE was changed so that Magic Fields Visual Editors can now honour any other plug-ins installed. Since the media buttons aren't rendered within the visual editor area for the content block (they sit separately above the TinyMCE control), Magic Fields was now missing them also.
