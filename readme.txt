@@ -1,10 +1,10 @@
 === Magic Fields ===
-Contributors: hunk, Gnuget, Astrata Software (http://astrata.mx), Travis Hensgen (http://traversal.com.au)
+Contributors: hunk, Gnuget, [Astrata Software] (http://astrata.mx), [Travis Hensgen] (http://traversal.com.au)
 Tags: custom write panel, custom, write panel, cms, magic fields
 Tested up to: Wordpress 3.2.1
 Requires at least: 2.9
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=edgar%40programador%2ecom&lc=GB&item_name=Donation%20Magic%20Fields&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest
-Stable tag: 1.5.7
+Stable tag: 1.5.8.1
 Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 == Description ==
@@ -28,6 +28,12 @@ Follow the following steps to install this plugin.
 
 == Changelog ==
 
+= 1.5.8.1 =
+ * Fix in aux_image function
+ 
+= 1.5.8 =
+ * problem with svn version
+ 
 = 1.5.7 =
  * Fixed problems with WP 3.2
  * add action for mf_before_delete_file, mf_after_upload_file, mf_before_generate_thumb, mf_save_thumb_file

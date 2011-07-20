@@ -2,7 +2,7 @@
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
 * Contributors: [Astrata Software](http://astrata.mx) [Travis Hensgen](http://traversal.com.au/), [Jeff Minard](http://jrm.cc/ "Jeff Minard"), [Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"), Michael Bayard, [Doc4](doc4design.com/ "Doc4")
 * Tested up to: Wordpress 3.2.1
-* Stable tag: 1.5.7
+* Stable tag: 1.5.8.1
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -18,6 +18,12 @@ Follow the following steps to install this plugin.
 
 ## Changelog ##
 
+###1.5.8.1###
+ * Fix in aux_image function
+ 
+###1.5.8###
+  * problem with svn version
+  
 ###1.5.7###
  * Fixed problems with WP 3.2
  * add action for mf_before_delete_file, mf_after_upload_file, mf_before_generate_thumb, mf_save_thumb_file
