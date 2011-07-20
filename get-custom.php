@@ -494,7 +494,7 @@ function aux_image($fieldValue,$params_image,$fieldType = NULL){
 
   $exists = file_exists($thumb_path);
   
-  list($exists, $thumb_url) = apply_filters('mf_source_path_thumb_image',array('exists' => $exists, 'thumb_url' => $thumb_url));
+  list($exists, $thumb_url) = apply_filters('mf_source_path_thumb_image',array($exists, $thumb_url));
 
 	if ($exists) {
 		$fieldValue = $thumb_url;

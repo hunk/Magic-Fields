@@ -258,7 +258,7 @@ label.label-file {
 				<input id="file" type="file" name="file" onchange="upload()" size="<?php echo $inputSize; ?>" class="mf-file" /></td>
 			<?php }else{ ?>
 				<td width=17%><label for="file" class="label-file"><?php _e('File', $mf_domain); ?>:</label></td>
-				<td><input id="file" type="file" name="file" onchange="upload()" size="<?php echo $inputSize; ?>" class="mf-file" /></td>
+				<td><input id="file" type="file" name="file" onchange="upload()" class="mf-file" /></td>
 			<?php } ?>
 		</tr>
 
