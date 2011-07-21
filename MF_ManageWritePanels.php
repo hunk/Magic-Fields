@@ -74,7 +74,7 @@ function change_number_manage($where){
       <script type=\"text/javascript\">
       //<![CDATA[
         jQuery().ready(function() {
-          change_number_manage_wp%s('(%s)','(%s)','(%s)','(%s)','(%s)','(%s)','%s','filter-posts=1&custom-write-panel-id=%s');
+          change_number_manage_wp%s('(%s)','(%s)','(%s)','(%s)','(%s)','(%s)','(%s)','%s','filter-posts=1&custom-write-panel-id=%s');
         });
       //]]>
       </script>",
@@ -85,6 +85,7 @@ function change_number_manage($where){
       $num_posts_mf->draft,
       $num_posts_mf->private,
       $num_posts_mf->trash,
+      $num_posts_mf->future,
       $post_type ,
       $_GET['custom-write-panel-id']
     );
@@ -162,7 +163,7 @@ function change_number_not_write_panel_manage($where){
     <script type=\"text/javascript\">
     //<![CDATA[
       jQuery().ready(function() {
-        change_number_manage_not_write_panel('(%s)','(%s)','(%s)','(%s)','(%s)','(%s)');
+        change_number_manage_not_write_panel('(%s)','(%s)','(%s)','(%s)','(%s)','(%s)','(%s)');
       });
     //]]>
     </script>",
@@ -171,7 +172,8 @@ function change_number_not_write_panel_manage($where){
     $num_posts_mf->pending,
     $num_posts_mf->draft,
     $num_posts_mf->private,
-    $num_posts_mf->trash
+    $num_posts_mf->trash,
+    $num_posts_mf->future
   );
   
   return $where;

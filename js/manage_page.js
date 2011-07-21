@@ -1,4 +1,3 @@
-
 // change url for button new in manage page
 function change_button_new(url_type, add_url,write_panel){
   tmp_url = jQuery(".wrap").children('h2').children('a').attr('href');
@@ -44,8 +43,7 @@ function change_highlight_custom_panel(write_panel){
   jQuery('li#mf-menu-'+write_panel+' > a.wp-has-submenu').addClass('wp-has-current-submenu');
 }
 
-function change_number_manage_wp30(all, published, pending, draft, private_,trash,page,add_url){
-
+function change_number_manage_wp30(all, published, pending, draft, private_,trash,scheduled,page,add_url){
   jQuery('.subsubsub li > a').each(function(){
     element = jQuery(this).text().split(" (");
     url = jQuery(this).attr('href');
@@ -98,11 +96,16 @@ function change_number_manage_wp30(all, published, pending, draft, private_,tras
           jQuery(this).children('span').text(trash);
         }
         break;
+      case "Scheduled":
+        if(url == 'edit.php?post_status=future&post_type='+page) {
+          jQuery(this).attr('href',url+'&'+add_url);
+          jQuery(this).children('span').text(scheduled);
+        }
       }
   });
 }
 
-function change_number_manage_wp29(all, published, pending, draft, private_,trash,page,add_url){
+function change_number_manage_wp29(all, published, pending, draft, private_,trash,scheduled,page,add_url){
 
   jQuery('.subsubsub li > a').each(function(){
     element = jQuery(this).text().split(" (");
@@ -156,6 +159,11 @@ function change_number_manage_wp29(all, published, pending, draft, private_,tras
           jQuery(this).children('span').text(trash);
         }
         break;
+      case "Scheduled":
+        if(url == page+'?post_status=future') {
+          jQuery(this).attr('href',url+'&'+add_url);
+          jQuery(this).children('span').text(scheduled);
+        }
       }
   });
 }
@@ -178,7 +186,7 @@ function add_input_search_manage(write_panel){
   }
 }
 
-function change_number_manage_not_write_panel(all, published, pending, draft, private_,trash){
+function change_number_manage_not_write_panel(all, published, pending, draft, private_,trash,scheduled){
   jQuery('.subsubsub li > a').each(function(){
     element = jQuery(this).text().split(" (");
 
@@ -207,6 +215,8 @@ function change_number_manage_not_write_panel(all, published, pending, draft, pr
       case "Trash":
         jQuery(this).children('span').text(trash);
         break;
+      case "Scheduled":
+        jQuery(this).children('span').text(scheduled);
       }
   });
 }
