@@ -46,12 +46,15 @@ class RCCWP_WritePostPage  {
 	
 			if($post->post_type == "post"){
 				$assignedCategoryIds = RCCWP_CustomWritePanel::GetAssignedCategoryIds($CUSTOM_WRITE_PANEL->id);
-                                foreach($assignedCategoryIds as $key => $cat){
-                                  if((int)$cat == 0){
-                                    $tc = get_category_by_slug($cat);
-                                    $assignedCategoryIds[$key] = $tc->cat_ID;
-                                  }
-                                }
+      
+        foreach($assignedCategoryIds as $key => $cat){
+          if((int)$cat == 0){
+            $tc = get_category_by_slug($cat);
+            $assignedCategoryIds[$key] = $tc->cat_ID;
+          }
+        }
+
+        $assignedCategoryIds = apply_filters('mf_extra_categories',$assignedCategoryIds);
 				?>
 				<script type="text/javascript">
 					var mf_categories = new Array(<?php echo '"'.implode('","',$assignedCategoryIds).'"' ?>); 
