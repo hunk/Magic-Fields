@@ -11,9 +11,9 @@ function manage_js(){
           TRUE
 				);
 
-    //load jquery slug plugin
-		wp_enqueue_script(	'jqueryslug', 
-							MF_URI.'js/jquery.slug.js'
+    //load jquery stringToSlug plugin (special chars power convert)
+		wp_enqueue_script(	'jqueryStringToSlug', 
+							MF_URI.'js/jquery.stringToSlug.min.js'
 						);
 
 
