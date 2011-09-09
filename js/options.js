@@ -44,7 +44,7 @@ jQuery(document).ready(function(){
 	
 	/* Addition to allow suggestion of a field name based on the label */
 	var string_prefix = "";
-	if (mf_group_info && mf_group_info.safe_name && mf_group_info.safe_name != ""  && mf_group_info.safe_name != "__default") {
+	if (typeof mf_group_info !== 'undefined' && mf_group_info && mf_group_info.safe_name && mf_group_info.safe_name != ""  && mf_group_info.safe_name != "__default") {
 		string_prefix = mf_group_info.name + ' ';
 		if (string_prefix == " ") {
 			string_prefix = "";
