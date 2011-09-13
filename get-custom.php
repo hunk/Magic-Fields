@@ -303,6 +303,10 @@ function getFieldOrder($field_name,$group=1,$post_id=NULL){
 		$order[] = $element['field_count']; 
 	} 
 
+  if( !isset($order) || is_null($order) ) {
+    return array(); 
+  }
+
 	$order = array_reverse($order); 
  	sort($order); 
 
