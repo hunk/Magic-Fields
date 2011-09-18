@@ -362,7 +362,7 @@ class RCCWP_WritePostPage  {
 			}
 			
 			if($group->name == "__default"){
-				$name = "Magic Fields Custom Fields";
+				$name = Inflect::singularize($CUSTOM_WRITE_PANEL->name);
 			}else{
 				$name = $group->name;
 			}	
