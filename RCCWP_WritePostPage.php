@@ -362,7 +362,12 @@ class RCCWP_WritePostPage  {
 			}
 			
 			if($group->name == "__default"){
-				$name = Inflect::singularize($CUSTOM_WRITE_PANEL->name);
+        $lang = get_bloginfo('language');
+        $name = "Magic Fields Custom Fields";
+
+        if($lang == "en-US"){
+  				$name = Inflect::singularize($CUSTOM_WRITE_PANEL->name);
+        }
 			}else{
 				$name = $group->name;
 			}	
