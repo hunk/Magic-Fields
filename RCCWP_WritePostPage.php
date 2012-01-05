@@ -1083,6 +1083,14 @@ class RCCWP_WritePostPage  {
 			$pre_text='';
 		} ?>
 		<div class="mul_mf">
+		
+		<div style="display: none" id="wp-<?php echo $idField ?>-media-buttons">
+			<?php 
+			// WP 3.3 changed here, so you need the media buttons on the editor for the tinyMCE plugin to work
+			require_once( ABSPATH . 'wp-admin/includes/media.php' ) ?>
+			<?php media_buttons( $idField ) ?>
+		</div>
+		
 		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> <?php echo $classEditor; ?> <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $idField; ?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"<?php echo $maxlength?>><?php echo $value?></textarea>
 <?php
 if( isset( $customField->properties['strict-max-length'] ) && $customField->properties['strict-max-length'] == 1 ) {
