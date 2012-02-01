@@ -3,7 +3,7 @@ jQuery(document).ready(function(){
 	jQuery('.del-link').each(function(){
 	  id = jQuery(this).next().attr('id');
 	  check = parent.window.mf_field_id;
-	  if(check == ""){}else{
+	  if(check){
       jQuery(this).before('<a href="#"  class="mf_media_upload button" onclick="mf_set_image_field(\''+id+'\'); return false;">Set image in field</a>');
     }
   });
