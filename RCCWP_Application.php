@@ -286,7 +286,7 @@ class RCCWP_Application
 		delete_option('RC_CWP_BLOG_DB_VERSION');
 		
 		//delete post_meta WP and WP MF
-		$sql = "delete a.* from $wpdb->postmeta as a, ".wp_mf_post_meta." as b where b.id = a.meta_id";
+		$sql = "delete a.* from $wpdb->postmeta as a, {$wpdb->prefix}mf_post_meta as b where b.id = a.meta_id";
 		$wpdb->query($sql);
 
 		// Delete meta data
