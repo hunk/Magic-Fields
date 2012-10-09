@@ -145,7 +145,7 @@ function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_
 	}
 	
 	if($fieldType == $FIELD_TYPES['image']){
-		$results = split('&',$results);
+		$results = preg_split("/&/",$results);
 		$results = $results[0];
 	}
 
