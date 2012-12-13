@@ -311,12 +311,20 @@ function mf_load_modules() {
 add_filter('attachment_fields_to_edit', 'charge_link_after_upload_image', 10, 2);
 
 function charge_link_after_upload_image($fields){
-   printf("
-      <script type=\"text/javascript\">
-      //<![CDATA[
-        load_link_in_media_upload();
-      //]]>
-      </script>");
+	$wp_version = floatval(get_bloginfo('version'));
+
+    if(
+        $wp_version < 3.5 ||
+        (( isset($_REQUEST['fetch']) && $_REQUEST['fetch'] ) ||
+        ( isset($_REQUEST['tab']) && $_REQUEST['tab'] == 'library' ))
+      ){
+   		printf("
+      		<script type=\"text/javascript\">
+      		//<![CDATA[
+        	load_link_in_media_upload();
+      		//]]>
+      		</script>");
+		}
       return $fields;
 }
 
