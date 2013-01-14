@@ -205,6 +205,8 @@ class RCCWP_Menu
 				
 		}
 		
+		if( !is_object( $result ) ) { $result = new StdClass; }
+		
 		if ($sub_menu_is_modules){
 			$result->panelsMenuFunction = array('RCCWP_CustomWritePanelPage', 'ViewWritePanels');
 			$result->modulesMenuFunction = array($page_group, $page_type);
