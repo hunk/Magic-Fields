@@ -2,7 +2,7 @@
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
 * Contributors: [Astrata Software](http://astrata.mx) [Travis Hensgen](http://traversal.com.au/), [Jeff Minard](http://jrm.cc/ "Jeff Minard"), [Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"), Michael Bayard, [Doc4](doc4design.com/ "Doc4")
 * Tested up to: Wordpress 3.2.1
-* Stable tag: 1.5.8.1
+* Stable tag: 1.6.1
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -17,6 +17,27 @@ Follow the following steps to install this plugin.
 2.	Activate the plugin through the 'Plugins' menu in WordPress.
 
 ## Changelog ##
+
+###1.6.1###
+* Update ui.datepicker.js
+* fix Warning in php 5.4 (Empty Object Issue)
+* update markdownPReview, clean javascript data
+
+###1.6###
+* Update the Datepicker Plugin
+* fixes for WordPress 3.5 new media uploader conflict
+* Corrected the removal of data from the mf_post_meta table on deletion (@doublesharp)
+* use variable for postmeta table in case it doesn't have the standard  (@doublesharp)
+* fixed: split deprecated in php 5.3
+* And much more bugfixes
+
+###1.5.8.3###
+* Add jquery.stringToSlug.min.js file
+
+###1.5.8.2###
+* Fixed problems with WP 3.3.x
+* Fixed problems with multiline field
+* more fixes
 
 ###1.5.8.1###
  * Fix in aux_image function
