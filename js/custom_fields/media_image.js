@@ -8,7 +8,7 @@ jQuery(document).ready(function(){
     }
   });
 	
-	jQuery('.update_field_media_upload').live('click', function(){
+	jQuery('body').on("click", ".update_field_media_upload",function(){
 	   window.mf_field_id = jQuery(this).attr('id');
 	});
 	

@@ -729,7 +729,7 @@ function smartTrim(string, maxLength) {
     <div class="ttfl"><div class="ttfr"><div class="ttf"></div></div></div> \
     </div>';
 
-    $('small.tip').live("mouseenter", function(event) {
+    $(document).on("mouseenter",'small.tip', function(event) {
       var el = $(this);
 
       if (!el.data("tt")) {
