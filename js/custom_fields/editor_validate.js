@@ -79,9 +79,10 @@ function add_editor(id){
   new_valor = jQuery('#'+id).val();
   new_valor = switchEditors.wpautop(new_valor);
   jQuery('#'+id).val(new_valor);
-  tinyMCE.execCommand('mceAddControl', false, id);
+  tinyMCE.execCommand('mceAdd'+mceString, false, id);
 }
+
 // Remove the editor (button)
 function del_editor(id){
-  tinyMCE.execCommand('mceRemoveControl', false, id);
+  tinyMCE.execCommand('mceRemove'+mceString, false, id);
 }

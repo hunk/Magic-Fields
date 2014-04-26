@@ -114,7 +114,9 @@ class RCCWP_WritePostPage  {
   ?>
 	<script type="text/javascript">
 		var mf_path = "<?php echo MF_URI ?>" ;
-                var nonce_ajax_upload = "<?php echo wp_create_nonce('once_ajax_uplooad') ?>";
+        var nonce_ajax_upload = "<?php echo wp_create_nonce('once_ajax_uplooad') ?>";
+        <?php $mceString = 'Control'; if(is_wp39()){ $mceString = 'Editor'; } ?>
+        var mceString = "<?php echo $mceString ?>";
 	</script>
 	<?php
 	
@@ -1084,12 +1086,16 @@ class RCCWP_WritePostPage  {
 		} ?>
 		<div class="mul_mf">
 		
-		<div style="display: none" id="wp-<?php echo $idField ?>-media-buttons">
-			<?php 
-			// WP 3.3 changed here, so you need the media buttons on the editor for the tinyMCE plugin to work
-			require_once( ABSPATH . 'wp-admin/includes/media.php' ) ?>
-			<?php media_buttons( $idField ) ?>
-		</div>
+		<?php if ($hide_visual_editor == '' || $hide_visual_editor == 0 ){ ?>
+			<?php if(!$hideEditor){ ?>
+				<div id="wp-<?php echo $idField ?>-media-buttons" class="mf_media_button_div">
+					<?php 
+					// WP 3.3 changed here, so you need the media buttons on the editor for the tinyMCE plugin to work
+					require_once( ABSPATH . 'wp-admin/includes/media.php' ) ?>
+					<?php media_buttons( $idField ) ?>
+				</div>
+			<?php } ?>
+		<?php } ?>
 		
 		<textarea  <?php if ($customField->required_field) echo 'validate="required:true"'; ?> class="<?php echo $requiredClass;?> <?php echo $classEditor; ?> <?php echo $pre_text ?>" tabindex="3"  id="<?php echo $idField; ?>" name="<?php echo $inputName?>" rows="<?php echo $inputHeight?>" cols="<?php echo $inputWidth?>"<?php echo $maxlength?>><?php echo $value?></textarea>
 <?php

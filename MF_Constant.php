@@ -314,3 +314,12 @@ function is_wp31(){
 	 
 	return FALSE;
 }
+
+function is_wp39(){
+	global $wp_version;
+	
+	if(substr($wp_version, 0, 3) >= 3.9)
+		return TRUE;
+	 
+	return FALSE;
+}

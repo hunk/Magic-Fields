@@ -851,28 +851,29 @@ function smartTrim(string, maxLength) {
           handle: ".sortable_mf",
   		// function fix the problem of block of the editor visual textareas
   		start: function() { 
+
   			id =  jQuery(this).attr("id");
-  			jQuery("#"+id+" :input[type='textarea'].mf_editor").each( function(inputField){
+  			jQuery("#"+id+" textarea.mf_editor").each( function(inputField){          
   				var editor_text = jQuery(this).attr('id');
   				if(tinyMCE.get(editor_text)){
-  					tinyMCE.execCommand('mceRemoveControl', false, editor_text);
+  					tinyMCE.execCommand('mceRemove'+mceString, false, editor_text);
   					jQuery('#'+editor_text).addClass('temp_remove_editor');
   				}
   			});
   		},
-          stop : function(){
-              id =  jQuery(this).attr("id").split("_")[3];
-              kids =  jQuery("#write_panel_wrap_"+id).children().filter(".magicfield_group");
-              for(i=0;i < kids.length; i++){
-                  groupCounter =  kids[i].id.split("_")[2];
-                  ids = kids[i].id.split("_")[3];
-                  jQuery("#order_"+groupCounter+"_"+ids).val(i+1);
-                  jQuery("#counter_"+groupCounter+"_"+ids).text((i+1));
-              }
+      stop : function(){
+        id =  jQuery(this).attr("id").split("_")[3];
+        kids =  jQuery("#write_panel_wrap_"+id).children().filter(".magicfield_group");
+        for(i=0;i < kids.length; i++){
+            groupCounter =  kids[i].id.split("_")[2];
+            ids = kids[i].id.split("_")[3];
+            jQuery("#order_"+groupCounter+"_"+ids).val(i+1);
+            jQuery("#counter_"+groupCounter+"_"+ids).text((i+1));
+        }
   			//add the editor visual in textareas
-  			jQuery("#"+jQuery(this).attr("id")+" :input[type='textarea'].temp_remove_editor").each( function(inputField){
+  			jQuery("#"+jQuery(this).attr("id")+" textarea.temp_remove_editor").each( function(inputField){
   				var editor_text = jQuery(this).attr('id');
-  				tinyMCE.execCommand('mceAddControl', false, editor_text);
+  				tinyMCE.execCommand('mceAdd'+mceString, false, editor_text);
   				jQuery('#'+editor_text).removeClass('temp_remove_editor');
   			});
 			
@@ -1205,7 +1206,7 @@ add_editor_text = function(context){
     //tinyMCE.init(options);
   	jQuery(".pre_editor", context).each( function(inputField){
       var editor_text = jQuery(this).attr('id');
-  		tinyMCE.execCommand('mceAddControl', true, editor_text); 
+  		tinyMCE.execCommand('mceAdd'+mceString, true, editor_text); 
   		jQuery('#'+editor_text, context).removeClass('pre_editor');
   	});
   }

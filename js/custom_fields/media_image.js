@@ -25,6 +25,15 @@ jQuery(document).ready(function(){
 		  wpActiveEditor = a.id.replace('_add_media', '');
 		}, 500 );
 	});
+
+	//focus for visual editor wp 3.8 
+	jQuery(document).on('click',".mf_media_button_div > .add_media",function(){
+	var idElem = jQuery(this).parent('div.mf_media_button_div').attr('id');
+	console.log(idElem);
+	idElem = idElem.replace(/wp-/, "");
+	idElem = idElem.replace(/-media-buttons/, "");
+	tinyMCE.get(idElem).focus();
+	});
 	
 });
 
