@@ -1,10 +1,10 @@
 === Magic Fields ===
-Contributors: hunk, Gnuget, [Astrata Software] (http://astrata.mx), [Travis Hensgen] (http://traversal.com.au)
+Contributors: hunk, Gnuget
 Tags: custom write panel, custom, write panel, cms, magic fields
-Tested up to: Wordpress 3.2.1
+Tested up to: Wordpress 3.9
 Requires at least: 2.9
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=edgar%40programador%2ecom&lc=GB&item_name=Donation%20Magic%20Fields&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest
-Stable tag: 1.5.8.1
+Stable tag: 1.6.2
 Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 == Description ==
@@ -28,18 +28,47 @@ Follow the following steps to install this plugin.
 
 == Changelog ==
 
+= 1.6.2 =
+	* fix issue visual editor (WP 3.9)
+	* fix issue drag and drop multiline
+
+= 1.6.1.1 =
+	* fix issue image media (WP 3.6)
+
+= 1.6.1 =
+	* Update ui.datepicker.js
+	* fix Warning in php 5.4 (Empty Object Issue)
+	* update markdownPReview, clean javascript data
+
+= 1.6 =
+	* Update the Datepicker Plugin
+	* fixes for Wordpress 3.5 new media uploader conflict
+	* Corrected the removal of data from the mf_post_meta table on deletion (@doublesharp)
+	* use variable for postmeta table in case it doesn't have the standard  (@doublesharp)
+	* fixed: split deprecated in php 5.3
+	* And much more bugfixes
+
+= 1.5.8.3 =
+	* Add jquery.stringToSlug.min.js file
+	
+	
+= 1.5.8.2 =
+	* Fixed problems with WP 3.3.x
+	* Fixed problems with multiline field
+	* more fixes
+
 = 1.5.8.1 =
- * Fix in aux_image function
+ 	* Fix in aux_image function
  
 = 1.5.8 =
- * problem with svn version
+ 	* problem with svn version
  
 = 1.5.7 =
- * Fixed problems with WP 3.2
- * add action for mf_before_delete_file, mf_after_upload_file, mf_before_generate_thumb, mf_save_thumb_file
- * Fixed problems with menus write panels
- * Little fix for the WPML compatibility 
- * Fix menu (add_utility_page) 
+ 	* Fixed problems with WP 3.2
+ 	* add action for mf_before_delete_file, mf_after_upload_file, mf_before_generate_thumb, mf_save_thumb_file
+ 	* Fixed problems with menus write panels
+ 	* Little fix for the WPML compatibility 
+ 	* Fix menu (add_utility_page) 
 
 = 1.5.6 =
  * Security bug fixed related with the uploader
