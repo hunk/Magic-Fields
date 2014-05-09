@@ -9,6 +9,7 @@
 			  
   			submitHandler: function(form) {
   			  $('#mf-publish-errors').remove();
+          $(window).off( 'beforeunload.edit-post' );
           form.submit();
   		  },
 		  
