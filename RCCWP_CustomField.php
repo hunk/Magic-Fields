@@ -486,7 +486,13 @@ class RCCWP_CustomField {
 	function GetDataField($customFieldName, $groupIndex=1, $fieldIndex=1,$postId){
 		global $wpdb, $FIELD_TYPES;
 		$customFieldName = str_replace(" ","_",$customFieldName);
-		
+
+		$groupIndex = (int) $groupIndex;
+		$fieldIndex = (int) $fieldIndex;
+		// we're having troubles receiving NaN
+		$customFieldName = $wpdb->escape($customFieldName);
+		$postId = $wpdb->escape($postId);
+
 		$customFieldvalues = $wpdb->get_row(
 			"SELECT pm.meta_id,pm.meta_value, cf.id, cf.type,cf.CSS,fp.properties,cf.description 
 			FROM ".MF_TABLE_POST_META." pm_mf, ".$wpdb->postmeta." pm, ".MF_TABLE_GROUP_FIELDS." cf LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id 
