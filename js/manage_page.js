@@ -170,10 +170,10 @@ function change_number_manage_wp29(all, published, pending, draft, private_,tras
 
 function change_title_manage(write_panel){
   
-  tmp = jQuery(".wrap").children('h2').html().split(' <');
-  check = jQuery(".wrap").children('h2').text().split(">>");
+  tmp = jQuery(".wrap").children('h1').html().split(' <');
+  check = jQuery(".wrap").children('h1').text().split(">>");
   if(check.length == 1){
-    jQuery(".wrap").children('h2').html('Manage >> ' + write_panel + '<' +tmp[1]);
+    jQuery(".wrap").children('h1').html('Manage >> ' + write_panel + '<' +tmp[1]);
   }
 }
 
