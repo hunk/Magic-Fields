@@ -9,7 +9,7 @@ class RCCWP_Options {
 	 *
 	 *  @params array $options is a  array with the options of Magic Fields
 	 */
-	function Update($options) {
+	public static function Update($options) {
 		$options = serialize($options);
 		update_option(RC_CWP_OPTION_KEY, $options);
 	}
@@ -22,7 +22,7 @@ class RCCWP_Options {
 	 *  @param string $key is the name of the option. 
 	 *
 	 */
-	function Get($key = null) {
+	public static function Get($key = null) {
 		if (get_option(RC_CWP_OPTION_KEY) == "") return "";
 		if (is_array(get_option(RC_CWP_OPTION_KEY)))
 			$options = get_option(RC_CWP_OPTION_KEY);
@@ -43,7 +43,7 @@ class RCCWP_Options {
 	 *  @param string  $key  is the name of the option to will be updated
 	 *  @param string $val is the new value of the option
 	 */
-	function Set($key, $val) {
+	public static function Set($key, $val) {
 		$options = RCCWP_Options::Get();
 		$options[$key] = $val;
 		RCCWP_Options::Update($options);

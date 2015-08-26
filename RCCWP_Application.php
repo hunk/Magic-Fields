@@ -10,7 +10,7 @@
 class RCCWP_Application
 {
 
-  function AddColumnIfNotExist($db, $column, $column_attr = "VARCHAR( 255 ) NULL" ){
+  public static function AddColumnIfNotExist($db, $column, $column_attr = "VARCHAR( 255 ) NULL" ){
     $exists = false;
     $columns = @mysql_query("show columns from $db");
     while($c = @mysql_fetch_assoc($columns)){
@@ -24,11 +24,11 @@ class RCCWP_Application
     }
   }
   
-	function ContinueInstallation(){
+	public static function ContinueInstallation(){
 		RCCWP_Application::SetCaps();
 	}
 
-	function SetCaps(){
+	public static function SetCaps(){
 		// Create capabilities if they are not installed
 		if (!current_user_can(MF_CAPABILITY_PANELS)){
 			$role = get_role('administrator');
@@ -49,7 +49,7 @@ class RCCWP_Application
 	 * 
 	 *  @return void
 	 */
-	function Install(){
+	public static function Install(){
 
 		include_once('RCCWP_Options.php');
 		global $wpdb;
@@ -244,7 +244,7 @@ class RCCWP_Application
 	 *  
 	 *  @return void
 	 */
-	function UpgradeBlog(){
+	public static function UpgradeBlog(){
 		global $wpdb;
 		
 		if (RC_CWP_DB_VERSION <= 2){
@@ -274,7 +274,7 @@ class RCCWP_Application
 	 *  
 	 *  @return void
 	 */
-	function Uninstall(){
+	public static function Uninstall(){
  		global $wpdb;
 
 		if (get_option("Magic_Fields_notTopAdmin")) return;	
@@ -336,7 +336,7 @@ class RCCWP_Application
 	 *   
 	 * @return Bool  
 	 */
-	function InWritePostPanel()
+	public static function InWritePostPanel()
 	{
 		return (strstr($_SERVER['REQUEST_URI'], '/wp-admin/post-new.php') ||
 			strstr($_SERVER['REQUEST_URI'], '/wp-admin/post.php') ||
@@ -349,7 +349,7 @@ class RCCWP_Application
 	 * 
 	 *  @return bool
 	 */
-	function IsWordpressMu(){
+	public static function IsWordpressMu(){
 		global $is_wordpress_mu; 
 
 		if  ($is_wordpress_mu){ 
@@ -363,7 +363,7 @@ class RCCWP_Application
 	 * 
 	 *  @return void
 	 */
-	function CheckInstallation(){
+	public static function CheckInstallation(){
 		global $mf_domain;
 	
 		if (!empty($_GET['page']) && stripos($_GET['page'], "mf") === false && $_GET['page'] != "RCCWP_OptionsPage.php" && !isset($_GET['custom-write-panel-id'])) return;

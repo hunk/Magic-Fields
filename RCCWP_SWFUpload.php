@@ -2,7 +2,7 @@
 
 class RCCWP_SWFUpload
 {
-	function Body($inputName, $fileType, $isCanvas = 0, $urlInputSize = false) {
+	public static function Body($inputName, $fileType, $isCanvas = 0, $urlInputSize = false) {
 		global $mf_domain;
 		include_once('RCCWP_Options.php');
 		

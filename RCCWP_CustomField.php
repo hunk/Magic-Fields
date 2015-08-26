@@ -31,7 +31,7 @@ class RCCWP_CustomField {
 	 * @param array $properties an array containing extra properties of the field.
 	 * @return the new field id
 	 */
-	function Create($customGroupId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null,$duplicate,$helptext = null,$css = null) {
+	public static function Create($customGroupId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null,$duplicate,$helptext = null,$css = null) {
 		global $wpdb;
 		$name = stripslashes(stripslashes($name));
 		$name = addslashes($name);
@@ -106,7 +106,7 @@ class RCCWP_CustomField {
 	 *
 	 * @param integer $customFieldId field id
 	 */
-	function Delete($customFieldId = null)
+	public static function Delete($customFieldId = null)
 	{
 		global $wpdb;
 		
@@ -137,7 +137,7 @@ class RCCWP_CustomField {
 	 * @return an object containing information about fields. The object contains 
 	 * 			3 objects: properties, options and default_value
 	 */
-	function Get($customFieldId) {
+	public static function Get($customFieldId) {
 		global $wpdb,$mf_field_types;
 		$sql = "SELECT cf.group_id, cf.id, cf.name, cf.CSS,cf.type as custom_field_type, cf.description, cf.display_order, cf.required_field, co.options, co.default_option AS default_value, cp.properties,duplicate,cf.help_text FROM " . MF_TABLE_GROUP_FIELDS .
 			" cf LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " co ON cf.id = co.custom_field_id" .
@@ -168,7 +168,7 @@ class RCCWP_CustomField {
 	 * 			includes id, name, description, has_options, has_properties, and
 	 * 			allow_multiple_values (whether fields of that type can have more than one default value)
 	 */
-	function GetCustomFieldTypes($customFieldTypeId = null) {
+	public static function GetCustomFieldTypes($customFieldTypeId = null) {
 		global $wpdb,$mf_field_types;
 	
 		if (isset($customFieldTypeId) && is_numeric($customFieldTypeId)){
@@ -192,7 +192,7 @@ class RCCWP_CustomField {
 	 *  @return integer Return the id from the postmeta table of wordpress
 	 * 					 who  contain the value of the custom field
 	 */
-	function GetMetaID($postId, $customFieldName, $groupIndex=1, $fieldIndex=1) {
+	public static function GetMetaID($postId, $customFieldName, $groupIndex=1, $fieldIndex=1) {
 		global $wpdb;
 		
 		// Given $postId, $customFieldName, $groupIndex and $fieldIndex get meta_id
@@ -213,7 +213,7 @@ class RCCWP_CustomField {
 	 * @return mixed
 	 * @TODO review if is still necessary save the "backward compatibility"
 	 */
-	function GetCustomFieldValues($single, $postId, $customFieldName, $groupIndex=1, $fieldIndex=1) {
+	public static function GetCustomFieldValues($single, $postId, $customFieldName, $groupIndex=1, $fieldIndex=1) {
 		global $wpdb;
 		$customFieldName = str_replace(" ","_",$customFieldName);
 		$fieldMetaID = RCCWP_CustomField::GetMetaID($postId, $customFieldName, $groupIndex, $fieldIndex);
@@ -239,7 +239,7 @@ class RCCWP_CustomField {
 	 * @param integer $fieldID the name of any field in the group
 	 * @return number of groups 
 	 */
-	function GetFieldGroupDuplicates($postId, $fieldName){
+	public static function GetFieldGroupDuplicates($postId, $fieldName){
 		global $wpdb;
 		return $wpdb->get_var("SELECT count(DISTINCT group_count) FROM " . MF_TABLE_POST_META . 
 						" WHERE field_name = '$fieldName' AND post_id = $postId");
@@ -254,7 +254,7 @@ class RCCWP_CustomField {
 	 * @param integer $fieldID the name of any field in the group
 	 * @return number of groups 
 	 */
-	function GetFieldDuplicates($postId, $fieldName, $groupIndex){
+	public static function GetFieldDuplicates($postId, $fieldName, $groupIndex){
 		global $wpdb;
 
 		return $wpdb->get_var("SELECT count(DISTINCT field_count) FROM " . MF_TABLE_POST_META . 
@@ -269,7 +269,7 @@ class RCCWP_CustomField {
 	*  @param $groupId the groupId  
 	*  @return  array  return the order of the field sorted
 	*/ 
-	function GetFieldsOrder($postId,$fieldName,$groupId){
+	public static function GetFieldsOrder($postId,$fieldName,$groupId){
 		global $wpdb;
 
 		$tmp =  $wpdb->get_col("SELECT field_count FROM ".MF_TABLE_POST_META." WHERE field_name = '{$fieldName}' AND post_id = {$postId} AND group_count = {$groupId} GROUP BY field_count ORDER BY field_count ASC");
@@ -292,7 +292,7 @@ class RCCWP_CustomField {
 	 * @param integer $fieldID  the name of any field in the group
 	 * @return order of one group
 	 */
-	function GetOrderDuplicates($postId,$fieldName){
+	public static function GetOrderDuplicates($postId,$fieldName){
 		global $wpdb;
 
 		$tmp =  $wpdb->get_col("SELECT group_count  FROM ".MF_TABLE_POST_META." WHERE field_name = '{$fieldName}' AND   post_id = {$postId} GROUP BY group_count ORDER BY order_id asc");
@@ -323,7 +323,7 @@ class RCCWP_CustomField {
 	 * @return array with custom field id and custom field type
 	 * @author Edgar García - hunk  <ing.edgar@gmail.com>
 	 */
-	function GetInfoByName($customFieldName,$post_id){
+	public static function GetInfoByName($customFieldName,$post_id){
 		global $wpdb, $FIELD_TYPES;
 		
 		$customFieldvalues = $wpdb->get_row(
@@ -370,7 +370,7 @@ class RCCWP_CustomField {
 	 * @param array $properties an array containing extra properties of the field.
 	 */
 
-	function Update($customFieldId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null, $duplicate,$helptext = null) {
+	public static function Update($customFieldId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null, $duplicate,$helptext = null) {
 		global $wpdb;
 		$name = str_replace(" ","_",$name);
 		$oldCustomField = RCCWP_CustomField::Get($customFieldId);
@@ -483,7 +483,7 @@ class RCCWP_CustomField {
 	 *  @param 	integer $fieldIndex
 	 *  @param 	integer	$postId
 	 */
-	function GetDataField($customFieldName, $groupIndex=1, $fieldIndex=1,$postId){
+	public static function GetDataField($customFieldName, $groupIndex=1, $fieldIndex=1,$postId){
 		global $wpdb, $FIELD_TYPES;
 		$customFieldName = str_replace(" ","_",$customFieldName);
 		

@@ -6,7 +6,7 @@ define('RC_CWP_QUERY_ORDERBY', 'customorderby');
 class RCCWP_Query
 {
 
-	function FilterPrepare(&$qs)
+	public static function FilterPrepare(&$qs)
 	{
 		global $curr_qs_vars;
 		$curr_qs_vars = $qs->query_vars;
@@ -59,7 +59,7 @@ class RCCWP_Query
 	 *  Filter all the posts in POST -> Edit  for doesn't display 
 	 *  the posts created using some write panel.
 	 */
-	function ExcludeWritepanelsPosts($where){
+	public static function ExcludeWritepanelsPosts($where){
 		global $wpdb, $parent_file;
 		$types = array('edit.php','edit-pages.php','edit.php?post_type=page');
 		if( !in_array($parent_file, $types) ) return $where;
@@ -77,7 +77,7 @@ class RCCWP_Query
 		return $where;
 	}
 
-	function FilterCustomPostsWhere($where)
+	public static function FilterCustomPostsWhere($where)
 	{
 		global $wpdb;
 		global $curr_qs_vars; 
@@ -102,7 +102,7 @@ class RCCWP_Query
 		return $where;
 	}
 
-	function FilterCustomPostsOrderby($orderby)
+	public static function FilterCustomPostsOrderby($orderby)
 	{
 		global $wpdb;
 		
@@ -116,7 +116,7 @@ class RCCWP_Query
 
 	}
 
-	function FilterCustomPostsFields($fields) {
+	public static function FilterCustomPostsFields($fields) {
 		global $wpdb;
 		if (get_query_var(RC_CWP_QUERY_ORDERBY)){
 			$newOrderby = get_query_var(RC_CWP_QUERY_ORDERBY);
@@ -127,7 +127,7 @@ class RCCWP_Query
 		return $fields;
 	}
 
-	function FilterCustomPostsJoin($join) {
+	public static function FilterCustomPostsJoin($join) {
 		global $wpdb;
 
 		if (get_query_var(RC_CWP_QUERY_ORDERBY)){

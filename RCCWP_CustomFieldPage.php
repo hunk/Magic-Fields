@@ -2,7 +2,7 @@
 
 class RCCWP_CustomFieldPage{
 	
-	function Edit(){
+	public static function Edit(){
 		
 		global $FIELD_TYPES;
 		global $mf_domain;

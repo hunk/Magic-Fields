@@ -4,7 +4,7 @@ include_once('RCCWP_CustomField.php');
 
 class RCCWP_CreateCustomFieldPage
 {
-	function Main()
+	public static function Main()
 	{
 		global $FIELD_TYPES,$mf_domain;
 		$customGroupID = $_REQUEST['custom-group-id'];
@@ -184,7 +184,7 @@ class RCCWP_CreateCustomFieldPage
   		<?php	
 	}
 	
-	function SetOptions()
+	public static function SetOptions()
 	{
 		global $mf_domain;
 		$current_field = RCCWP_CustomField::GetCustomFieldTypes($_POST['custom-field-type']);

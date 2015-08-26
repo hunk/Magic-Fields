@@ -2,13 +2,13 @@
 
 class RC_Format {
 
-	function TextToSql($value) {
+	public static function TextToSql($value) {
 		$value = trim($value);
 		$sql = $value == '' ? 'NULL' : "'$value'";
 		return $sql;
 	}
 	
-	function TrimArrayValues(&$value, $key) {
+	public static function TrimArrayValues(&$value, $key) {
 		$value = trim($value);
 	}
 }

@@ -14,7 +14,7 @@ include_once('RCCWP_Options.php');
 
 class RCCWP_OptionsPage {
 
-	function Main() {
+	public static function Main() {
 		global $mf_domain;
 		$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
 		$customWritePanelOptions = RCCWP_Options::Get();
@@ -178,7 +178,7 @@ class RCCWP_OptionsPage {
 	<?php
 	}
 
-	function GetCheckboxState($optionValue) {
+	public static function GetCheckboxState($optionValue) {
 		if (empty($optionValue)){
 			return '';
 		} else  {

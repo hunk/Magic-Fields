@@ -10,7 +10,7 @@ class RCCWP_Processor {
 	 *  This function is executed every time to something related with the Magic Fields happen
 	 *  this function update,delete,create a customfield,writepanel,group.
 	 */
-	function Main() {
+	public static function Main() {
 		require_once('RC_Format.php');
 		global $CUSTOM_WRITE_PANEL,$wp_version;
 		
@@ -599,7 +599,7 @@ class RCCWP_Processor {
 	/**
 	 *   Flush All the  buffers
 	 */
-	function FlushAllOutputBuffer() { 
+	public static function FlushAllOutputBuffer() { 
 		while (@ob_end_flush()); 
 	} 
 	
@@ -630,7 +630,7 @@ class RCCWP_Processor {
 	 *  @param int  the Write panel ID
 	 *  @return bool
 	 */
-	function CheckFieldName($fieldName, $panelID){
+	public static function CheckFieldName($fieldName, $panelID){
 		global $wpdb;
 		
 		$sql = "SELECT id, group_id FROM " . MF_TABLE_GROUP_FIELDS .

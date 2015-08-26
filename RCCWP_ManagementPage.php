@@ -129,7 +129,7 @@ class RCCWP_ManagementPage
 	 *
 	 * @return unknown
 	 */
-	function GetCustomWritePanelGenericUrl($mfAction, $customWritePanelId = null)
+	public static function GetCustomWritePanelGenericUrl($mfAction, $customWritePanelId = null)
 	{
 		if (empty($customWritePanelId) && isset($_REQUEST['custom-write-panel-id'])){
 			$customWritePanelId = $_REQUEST['custom-write-panel-id'];
@@ -145,7 +145,7 @@ class RCCWP_ManagementPage
 		return $url;
 	}
 	
-	function GetPanelPage(){
+	public static function GetPanelPage(){
 		return '?page=MagicFieldsMenu';
 	}
 }

@@ -4,7 +4,7 @@ include_once('RCCWP_CustomGroup.php');
 
 class RCCWP_CustomGroupPage
 {
-	function Content($customGroup = null)
+	public static function Content($customGroup = null)
 	{
 	  
 	  // add the new expanded column, if it's not there already (Traversal)

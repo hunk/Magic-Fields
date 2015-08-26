@@ -21,7 +21,7 @@ class RCCWP_CustomGroup
 	 * @param unknown_type $at_right a boolean indicating whether the group should be placed at right side.
 	 * @return the id of the new group
 	 */
-	function Create($customWritePanelId, $name, $duplicate, $expanded = 1, $at_right = 0)
+	public static function Create($customWritePanelId, $name, $duplicate, $expanded = 1, $at_right = 0)
 	{
 		require_once('RC_Format.php');
 		global $wpdb;
@@ -45,7 +45,7 @@ class RCCWP_CustomGroup
 	 *
 	 * @param integer $customGroupId
 	 */
-	function Delete($customGroupId = null)
+	public static function Delete($customGroupId = null)
 	{
 		include_once ('RCCWP_CustomField.php');
 		if (isset($customGroupId))
@@ -74,7 +74,7 @@ class RCCWP_CustomGroup
 	 * @return an object representing the group
 	 */
 	
-	function Get($groupId)
+	public static function Get($groupId)
 	{
 		global $wpdb;
 	
@@ -89,7 +89,7 @@ class RCCWP_CustomGroup
 	 *	@param interger $fcustomGroupId the group id
 	 *  @return bool return true if the group has at least one filed false if is empty
 	 */
-	function HasCustomfields($customGroupId){
+	public static function HasCustomfields($customGroupId){
 		global $wpdb;
 		
 		$sql = $wpdb->prepare("SELECT  count(*) FROM ".MF_TABLE_GROUP_FIELDS." WHERE group_id = %d",$customGroupId);
@@ -104,7 +104,7 @@ class RCCWP_CustomGroup
 	 * @return an array of objects containing information about fields. Each object contains 
 	 * 			3 objects: properties, options and default_value   
 	 */
-	function GetCustomFields($customGroupId) {
+	public static function GetCustomFields($customGroupId) {
 		global $wpdb,$mf_field_types;
 		$sql = "SELECT cf.id,cf.type as custom_field_type, cf.name,cf.description, cf.display_order, cf.required_field,cf.css, co.options, co.default_option AS default_value,cp.properties,cf.duplicate,cf.help_text FROM " . MF_TABLE_GROUP_FIELDS .
 			" cf LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " co ON cf.id = co.custom_field_id" .
@@ -140,7 +140,7 @@ class RCCWP_CustomGroup
 	 * @param unknown_type $duplicate a boolean indicating whether the group can be duplicated
 	 * @param unknown_type $at_right a boolean indicating whether the group should be placed at right side. 
 	 */	
-	function Update($customGroupId, $name, $duplicate, $expanded, $at_right)
+	public static function Update($customGroupId, $name, $duplicate, $expanded, $at_right)
 	{
 		require_once('RC_Format.php');
 		global $wpdb;

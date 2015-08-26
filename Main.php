@@ -116,7 +116,7 @@ if (is_admin()) {
 		add_filter('posts_join_paged', array('RCCWP_Menu', 'FilterPostsPagesListJoin'));
 		add_action('admin_head', array('RCCWP_Menu', 'HighlightCustomPanel'));
 		
-		add_action('admin_head', 'mf_admin_style');
+		// add_action('admin_head', 'mf_admin_style');
 	
 
 
@@ -138,11 +138,14 @@ if (is_admin()) {
 
         //add bottons visual editor
         add_filter('mce_buttons', 'register_media_button');
+        if ( !function_exists('register_media_button') ) {
         function register_media_button($buttons) {
           array_push($buttons, "separator","add_image","add_video","add_audio","add_media");
           return $buttons;
         }
+    	}
 
+    	if ( !function_exists('tmce_not_remove_p_and_br') ) {
         function tmce_not_remove_p_and_br(){
           ?>
           <script type="text/javascript">
@@ -160,6 +163,8 @@ if (is_admin()) {
           </script>
           <?php
         }
+    	}
+    	
         if( RCCWP_Application::InWritePostPanel() ){
           require_once ('RCCWP_Options.php');
           $dont_remove = RCCWP_Options::Get('dont-remove-tmce');
@@ -196,59 +201,67 @@ if($condense ){
 add_action('edit_page_form','cwp_add_pages_identifiers');
 add_action('edit_form_advanced','cwp_add_type_identifier');
 
-add_action('edit_form_advanced','put_write_panel_id');
-add_action('edit_page_form','put_write_panel_id');
+add_action('edit_form_advanced','mf_put_write_panel_id');
+add_action('edit_page_form','mf_put_write_panel_id');
 /**
  * put the id of the write panel as a hidden field in the 'create post/page' and 'edit post/page'
  */
-function put_write_panel_id(){
-	global $CUSTOM_WRITE_PANEL;
+if ( !function_exists('mf_put_write_panel_id') ) {
+	function mf_put_write_panel_id(){
+		global $CUSTOM_WRITE_PANEL;
 
-	echo "<input type='hidden' name='rc-custom-write-panel-verify-key' id='rc-custom-write-panel-verify-key' value='".wp_create_nonce('rc-custom-write-panel')."'/>"; // traversal, moved this out of the if to allow posts to be attached to panels 
+		echo "<input type='hidden' name='rc-custom-write-panel-verify-key' id='rc-custom-write-panel-verify-key' value='".wp_create_nonce('rc-custom-write-panel')."'/>"; // traversal, moved this out of the if to allow posts to be attached to panels 
 	
-	if(!empty($CUSTOM_WRITE_PANEL->id)){
-		echo "<input type='hidden' name='rc-cwp-custom-write-panel-id' value='".$CUSTOM_WRITE_PANEL->id."'/>";
-		echo "<input type='hidden' value='' name='magicfields_remove_files' id='magicfields_remove_files' >";
+		if(!empty($CUSTOM_WRITE_PANEL->id)){
+			echo "<input type='hidden' name='rc-cwp-custom-write-panel-id' value='".$CUSTOM_WRITE_PANEL->id."'/>";
+			echo "<input type='hidden' value='' name='magicfields_remove_files' id='magicfields_remove_files' >";
+		}
 	}
 }
 
-function cwp_add_type_identifier(){
+if ( !function_exists('cwp_add_type_identifier') ) {
+	function cwp_add_type_identifier(){
 
-	global $wpdb;
-	global $post;
-	
-	
-	if( isset($_GET['custom-write-panel-id']) && !empty($_GET['custom-write-panel-id'])){
-		$getPostID = $wpdb->get_results("SELECT id, type FROM ". MF_TABLE_PANELS ." WHERE id='".$_GET['custom-write-panel-id']."'");
-		echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"". $getPostID[0]->type ."\" />";
-
-	}else{
-		printf('<input type="hidden" id="post_type" name="post_type" value="%s" />',$post->post_type);
- }
-}
-
-function cwp_add_pages_identifiers(){
-	global $post;
-	global $wpdb;
-
-	$key = wp_create_nonce('rc-custom-write-panel');
-	$id = "";
-	$result = $wpdb->get_results( " SELECT meta_value
-					FROM $wpdb->postmeta
-					WHERE post_id = '$post->ID' and meta_key = '_mf_write_panel_id'", ARRAY_A );
-	
-	if (count($result) > 0)
-		$id = $result[0]['meta_value'];
-	echo 
-<<<EOF
-		<input type="hidden" name="rc-custom-write-panel-verify-key" id="rc-custom-write-panel-verify-key" value="$key" />
+		global $wpdb;
+		global $post;
 		
-EOF;
+		
+		if( isset($_GET['custom-write-panel-id']) && !empty($_GET['custom-write-panel-id'])){
+			$getPostID = $wpdb->get_results("SELECT id, type FROM ". MF_TABLE_PANELS ." WHERE id='".$_GET['custom-write-panel-id']."'");
+			echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"". $getPostID[0]->type ."\" />";
+
+		}else{
+			printf('<input type="hidden" id="post_type" name="post_type" value="%s" />',$post->post_type);
+	 }
+	}
 }
 
-function mf_admin_style() {
-	$url = MF_URI.'css/admin.css';
-	echo '<link rel="stylesheet" type="text/css" href="' . $url . '" />';
+if ( !function_exists('cwp_add_pages_identifiers') ) {
+	function cwp_add_pages_identifiers(){
+		global $post;
+		global $wpdb;
+
+		$key = wp_create_nonce('rc-custom-write-panel');
+		$id = "";
+		$result = $wpdb->get_results( " SELECT meta_value
+						FROM $wpdb->postmeta
+						WHERE post_id = '$post->ID' and meta_key = '_mf_write_panel_id'", ARRAY_A );
+		
+		if (count($result) > 0)
+			$id = $result[0]['meta_value'];
+		echo 
+<<<EOF
+	<input type="hidden" name="rc-custom-write-panel-verify-key" id="rc-custom-write-panel-verify-key" value="$key" />
+	
+EOF;
+	}
+}
+
+if ( !function_exists('cwp_add_pages_identifiers') ) {
+	function cwp_add_pages_identifiers() {
+		$url = MF_URI.'css/admin.css';
+		echo '<link rel="stylesheet" type="text/css" href="' . $url . '" />';
+	}
 }
 
 /**
@@ -258,41 +271,44 @@ function mf_admin_style() {
 *  @param string $mime is the type of file can be "image","audio" or "file"
 *  @param string $file_type  is the mimetype of the field
 */
-function valid_mime($mime,$file_type){
-	$imagesExts = array(
-						'image/gif',
-						'image/jpeg',
-						'image/pjpeg',
-						'image/png',
-						'image/x-png'
-						);
-	$audioExts = array(
-						'audio/mpeg',
-						'audio/mpg',
-						'audio/x-wav',
-						'audio/mp3'
-						);
-						
-	if($file_type == "image"){
-		if(in_array($mime,$imagesExts)){
+if ( !function_exists('valid_mime') ) {
+	function valid_mime($mime,$file_type){
+		$imagesExts = array(
+							'image/gif',
+							'image/jpeg',
+							'image/pjpeg',
+							'image/png',
+							'image/x-png'
+							);
+		$audioExts = array(
+							'audio/mpeg',
+							'audio/mpg',
+							'audio/x-wav',
+							'audio/mp3'
+							);
+							
+		if($file_type == "image"){
+			if(in_array($mime,$imagesExts)){
+				return true;
+			}
+		}elseif($file_type == "audio"){
+			if(in_array($mime,$audioExts)){
+				return true;
+			}
+		}else{
+			//TODO: here users should be set what mime types
+			//are safety for the "files" type of field
 			return true;
 		}
-	}elseif($file_type == "audio"){
-		if(in_array($mime,$audioExts)){
-			return true;
-		}
-	}else{
-		//TODO: here users should be set what mime types
-		//are safety for the "files" type of field
-		return true;
+		return false;
 	}
-	return false;
 }
 
 /* Loading modules */
 
 add_action( 'plugins_loaded', 'mf_load_modules', 1 );
 
+if ( !function_exists('mf_load_modules') ) {
 function mf_load_modules() {
         $dir = WP_PLUGIN_DIR."/".MF_PLUGIN_DIR."/modules";
 
@@ -305,11 +321,13 @@ function mf_load_modules() {
                 }
         }
 }
+}
 
 /* add filter for upload attachment image (new field image)*/
 /* load_link_media_upload in custom_fields/media_image.js */
 add_filter('attachment_fields_to_edit', 'charge_link_after_upload_image', 10, 2);
 
+if ( !function_exists('charge_link_after_upload_image') ) {
 function charge_link_after_upload_image($fields){
 	$wp_version = floatval(get_bloginfo('version'));
 
@@ -326,6 +344,7 @@ function charge_link_after_upload_image($fields){
       		</script>");
 		}
       return $fields;
+}
 }
 
 /* Function for manage page (write panels) */

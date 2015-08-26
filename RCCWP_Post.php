@@ -7,7 +7,7 @@ class RCCWP_Post {
 	/**
 	 *  This function is called when  a post is saves
 	 */
-	function SaveCustomFields($postId){
+	public static function SaveCustomFields($postId){
 		global $flag;
 		
 		if($flag == 0){
@@ -162,7 +162,7 @@ class RCCWP_Post {
 	 *
 	 * @return Custom Write Panel as an object, returns null if there is no write panels.
 	 */
-	function GetCustomWritePanel()
+	public static function GetCustomWritePanel()
 	{
 	    global $wpdb;
 		

@@ -3,7 +3,7 @@ include_once('RCCWP_CustomWritePanel.php');
 
 class RCCWP_CustomWritePanelPage
 {
-	function Content($customWritePanel = null)
+	public static function Content($customWritePanel = null)
 	{
 	  // add the new expanded column, if it's not there already (Traversal)
 		RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANELS, "expanded", $column_attr = "tinyint NOT NULL DEFAULT 1 after type" );
@@ -259,7 +259,7 @@ class RCCWP_CustomWritePanelPage
 		<?php
 	}
 	
-	function PrintNestedCats( $cats, $parent = 0, $depth = 0, $customWritePanelCategoryIds ) {
+	public static function PrintNestedCats( $cats, $parent = 0, $depth = 0, $customWritePanelCategoryIds ) {
 		foreach ($cats as $cat) : 
 			if( $cat->parent == $parent ) {
                           $checked = "";
@@ -275,7 +275,7 @@ class RCCWP_CustomWritePanelPage
 		endforeach;
 	}				
 
-	function Edit()
+	public static function Edit()
 	{
 		global $mf_domain;
 		$customWritePanel = RCCWP_CustomWritePanel::Get((int)$_REQUEST['custom-write-panel-id']);
@@ -329,7 +329,7 @@ class RCCWP_CustomWritePanelPage
 	 * View groups/fields of a write panel
 	 *
 	 */
-	function View()
+	public static function View()
 	{
 		global $mf_domain;	
 
@@ -434,7 +434,7 @@ class RCCWP_CustomWritePanelPage
 		<?php
 	}
 	
-	function DisplayGroupFields($customGroupId, $intended = false) {
+	public static function DisplayGroupFields($customGroupId, $intended = false) {
 		global $mf_domain;
 		$custom_fields = RCCWP_CustomGroup::GetCustomFields($customGroupId);
 		foreach ($custom_fields as $field) :
@@ -514,7 +514,7 @@ class RCCWP_CustomWritePanelPage
 		
 	}
 	
-	function ViewWritePanels()
+	public static function ViewWritePanels()
 	{
 		global $mf_domain;	
 		$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels(TRUE);

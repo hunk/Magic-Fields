@@ -4,7 +4,7 @@ include_once('RCCWP_CustomWritePanelPage.php');
 
 class RCCWP_CreateCustomWritePanelPage
 {
-	function Main()
+	public static function Main()
 	{
 		global $mf_domain;
 		?>

@@ -200,7 +200,7 @@ Class MF_PostTypePages{
 	 * Install Function, add the post types tables into 
 	 * the wordpress instalation
 	 */
-	function CreatePostTypesTables(){
+	public static function CreatePostTypesTables(){
 		global $wpdb;
 		
 		//this table is already installed?

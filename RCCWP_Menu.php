@@ -9,7 +9,7 @@ require_once ('RCCWP_CustomFieldPage.php');
 
 class RCCWP_Menu
 {
-	function PrepareModulesPanelsMenuItems()
+	public static function PrepareModulesPanelsMenuItems()
 	{
 		$sub_menu_is_modules = false;
 		
@@ -204,7 +204,7 @@ class RCCWP_Menu
 				}
 				
 		}
-		
+		$result = null;
 		if( !is_object( $result ) ) { $result = new StdClass; }
 		
 		if ($sub_menu_is_modules){
@@ -226,7 +226,7 @@ class RCCWP_Menu
 	 *
 	 *
 	 */
-	function AttachMagicFieldsMenus()
+	public static function AttachMagicFieldsMenus()
 	{
 		global $mf_domain;
 		require_once ('RCCWP_OptionsPage.php');
@@ -241,7 +241,7 @@ class RCCWP_Menu
 		
 	}
 
-	function AttachOptionsMenuItem()
+	public static function AttachOptionsMenuItem()
 	{
 		global $mf_domain;
 
@@ -249,7 +249,7 @@ class RCCWP_Menu
 		add_options_page(__('Magic Fields Options',$mf_domain), __('Magic Fields',$mf_domain), 'manage_options', 'RCCWP_OptionsPage.php', array('RCCWP_OptionsPage', 'Main'));
 	}
 	
-	function AttachCustomWritePanelMenuItems() {
+	public static function AttachCustomWritePanelMenuItems() {
 		global $submenu,$menu,$wp_version;
 		global $mf_domain,$wpdb;
 		require_once ('RCCWP_Options.php');
@@ -420,7 +420,7 @@ class RCCWP_Menu
 		return $actions;
 	}
 	
-	function HighlightCustomPanel(){
+	public static function HighlightCustomPanel(){
 		global $wpdb, $submenu_file, $post; 
 
 		if(empty($post)){
@@ -436,7 +436,7 @@ class RCCWP_Menu
       if (count($result) > 0 && $currPage =="edit.php" ){
         $id = $result[0]['meta_value'];
         $base = 'edit.php?';
-        if($_GET['post_type'] == 'page') $base = 'edit.php?post_type=page&';
+        if( isset($_GET['post_type']) && $_GET['post_type'] == 'page') $base = 'edit.php?post_type=page&';
   			$submenu_file = $base."filter-posts=1&custom-write-panel-id=$id";
       }elseif(@$_GET['custom-write-panel-id'] ){
         //$id = $result[0]['meta_value'];
@@ -461,7 +461,7 @@ class RCCWP_Menu
 		
 	}
 
-	function FilterPostsPagesList($where){
+	public static function FilterPostsPagesList($where){
 		global $wpdb;
 		if (isset($_GET['filter-posts'])) {
 			$panel_id = $_GET['custom-write-panel-id'];
@@ -470,7 +470,7 @@ class RCCWP_Menu
 		return $where;
 	}
 	
-	function FilterPostsPagesListJoin($join){
+	public static function FilterPostsPagesListJoin($join){
 		global $wpdb;
     
 		if (isset($_GET['filter-posts'])) {
@@ -479,7 +479,7 @@ class RCCWP_Menu
 		return $join;
 	}
 	
-	function DetachWpWritePanelMenuItems()
+	public static function DetachWpWritePanelMenuItems()
 	{
 		global $menu;
 		global $submenu;
@@ -504,7 +504,7 @@ class RCCWP_Menu
 		
 	}
 	
-	function SetCurrentCustomWritePanelMenuItem() {
+	public static function SetCurrentCustomWritePanelMenuItem() {
 		global $submenu_file;
 		global $menu;
 		

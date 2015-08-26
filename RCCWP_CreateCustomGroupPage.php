@@ -4,7 +4,7 @@ include_once('RCCWP_CustomGroupPage.php');
 
 class RCCWP_CreateCustomGroupPage
 {
-	function Main()
+	public static function Main()
 	{
 		global $mf_domain;
 		?>
