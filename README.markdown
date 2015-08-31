@@ -2,7 +2,7 @@
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
 * Contributors: [Astrata Software](http://astrata.mx) [Travis Hensgen](http://traversal.com.au/), [Jeff Minard](http://jrm.cc/ "Jeff Minard"), [Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"), Michael Bayard, [Doc4](doc4design.com/ "Doc4")
 * Tested up to: Wordpress 3.2.1
-* Stable tag: 1.6.1
+* Stable tag: 1.6.3
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -17,6 +17,20 @@ Follow the following steps to install this plugin.
 2.	Activate the plugin through the 'Plugins' menu in WordPress.
 
 ## Changelog ##
+
+###1.6.3###
+* fix for change_title_manage, the wp layout change
+* remove a lot warnigs for static methods
+
+###1.6.2.1###
+* fix alert when update post
+
+###1.6.2###
+* fix issue visual editor (WP 3.9)
+* fix issue drag and drop multiline
+
+###1.6.1.1###
+* fix issue image media (WP 3.6)
 
 ###1.6.1###
 * Update ui.datepicker.js
