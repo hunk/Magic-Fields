@@ -1,18 +1,19 @@
 // change url for button new in manage page
 function change_button_new(url_type, add_url,write_panel){
-  tmp_url = jQuery(".wrap").children('h2').children('a').attr('href');
-  if(tmp_url == url_type){
-    jQuery(".wrap").children('h2').children('a').attr('href',tmp_url+add_url);
+  tmp_url = jQuery(".wrap").children('h1').children('a').attr('href');
+  jQuery(".wrap").children('h1').children('a').attr('href',tmp_url+add_url);
 
-    jQuery('li.wp-has-current-submenu > a.wp-has-current-submenu').removeClass('wp-has-current-submenu');
-    jQuery('li.wp-has-current-submenu').removeClass('wp-has-current-submenu');
-    
-    jQuery('li#mf-menu-'+write_panel).addClass('wp-has-current-submenu');
-    jQuery('li#mf-menu-'+write_panel+' > a.wp-has-submenu').addClass('wp-has-current-submenu');
-  }
+  jQuery('li.wp-has-current-submenu > a.wp-has-current-submenu').removeClass('wp-has-current-submenu');
+  jQuery('li.wp-has-current-submenu').removeClass('wp-has-current-submenu');
+  
+  jQuery('li#mf-menu-'+write_panel).addClass('wp-has-current-submenu');
+  jQuery('li#mf-menu-'+write_panel+' > a.wp-has-submenu').addClass('wp-has-current-submenu');
+  
 }
 
 function unlink_write_panel(){
+
+  console.log(jQuery('span.unlink-writepanel'));
   
   if( jQuery('span.unlink-writepanel').length == 0){
    jQuery('div.row-actions').each(function(){

@@ -18,6 +18,15 @@ function manage_js(){
 
 
 }
+session_start();
+unset($_SESSION['change_title_manage']);
+unset($_SESSION['change_botton_new_in_manage']);
+unset($_SESSION['change_number_manage']);
+unset($_SESSION['add_input_search_manage']);
+
+unset($_SESSION['change_number_not_write_panel_manage']);
+
+
 
 
 // filter for boton new
@@ -25,6 +34,11 @@ add_filter('manage_posts_columns','change_botton_new_in_manage');
 add_filter('manage_pages_columns','change_botton_new_in_manage');
 
 function change_botton_new_in_manage($where){
+
+  if (isset($_SESSION['change_botton_new_in_manage'])) {
+    return $where;
+  }
+
   global $parent_file;
 
   $types = array('edit.php','edit-pages.php','edit.php?post_type=page');
@@ -44,6 +58,8 @@ function change_botton_new_in_manage($where){
         });
       //]]>
       </script>",$type_add_new[$parent_file],$contact,$_GET['custom-write-panel-id'],$_GET['custom-write-panel-id']);
+    $_SESSION['change_botton_new_in_manage'] = "1"; 
+    
   }
   return $where;
 }
@@ -55,6 +71,10 @@ add_filter('manage_pages_columns','change_number_manage');
 
 function change_number_manage($where){
   global $wpdb, $parent_file;
+
+  if (isset($_SESSION['change_number_manage'])) {
+    return $where;
+  }
   
   $types = array('edit.php','edit-pages.php','edit.php?post_type=page');
   if( !in_array($parent_file, $types) ) return $where;
@@ -89,6 +109,7 @@ function change_number_manage($where){
       $post_type ,
       $_GET['custom-write-panel-id']
     );
+    $_SESSION['change_number_manage'] = "1"; 
   }
   return $where;
 }
@@ -98,6 +119,9 @@ add_filter('manage_posts_columns','change_title_manage');
 add_filter('manage_pages_columns','change_title_manage');
 
 function change_title_manage($where){
+  if (isset($_SESSION['change_title_manage'])) {
+    return $where;
+  }
   if(isset($_GET['custom-write-panel-id'])){
     
     $write_panel = RCCWP_CustomWritePanel::Get($_GET['custom-write-panel-id']);
@@ -111,6 +135,7 @@ function change_title_manage($where){
       </script>",
     $write_panel->name
     );
+    $_SESSION['change_title_manage'] = "1"; 
   }
     
   return $where;
@@ -121,6 +146,11 @@ add_filter('manage_posts_columns','add_input_search_manage');
 add_filter('manage_pages_columns','add_input_search_manage');
 
 function add_input_search_manage($where){
+
+  if (isset($_SESSION['add_input_search_manage'])) {
+    return $where;
+  }
+
   if(isset($_GET['custom-write-panel-id'])){
     
     $write_panel = RCCWP_CustomWritePanel::Get($_GET['custom-write-panel-id']);
@@ -134,6 +164,7 @@ function add_input_search_manage($where){
       </script>",
       $_GET['custom-write-panel-id']
     );
+    $_SESSION['add_input_search_manage'] = "1"; 
   }
   return $where;
 }
@@ -144,6 +175,10 @@ add_filter('manage_pages_columns','change_number_not_write_panel_manage');
 
 function change_number_not_write_panel_manage($where){
   global $parent_file;
+
+  if (isset($_SESSION['change_number_not_write_panel_manage'])) {
+    return $where;
+  }
   
   $types = array('edit.php','edit-pages.php','edit.php?post_type=page');
   
@@ -175,6 +210,7 @@ function change_number_not_write_panel_manage($where){
     $num_posts_mf->trash,
     $num_posts_mf->future
   );
+  $_SESSION['change_number_not_write_panel_manage'] = "1"; 
   
   return $where;
 }

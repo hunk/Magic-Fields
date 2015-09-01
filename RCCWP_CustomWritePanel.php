@@ -694,7 +694,7 @@ class RCCWP_CustomWritePanel
         return $stats;
         }
 
-        function GetCountPostNotWritePanel($type){
+        public static function GetCountPostNotWritePanel($type){
           global $wpdb;
 
         $user = wp_get_current_user();
@@ -706,6 +706,8 @@ class RCCWP_CustomWritePanel
         foreach( (array) $count as $row_num => $row ) {
                 $stats[$row['post_status']] = $row['num_posts'];
         }
+
+        $stats['auto-draft'] = 0;
 
         $stats = (object) $stats;
 

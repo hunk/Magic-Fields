@@ -1902,6 +1902,7 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
   public static function attributesBoxContentPost($post) {
     
     global $wpdb;
+    global $mf_domain;
     
     $single_panel = FALSE;
     
