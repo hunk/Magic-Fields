@@ -826,6 +826,8 @@ class RCCWP_WritePostPage  {
 		  $defClass = "mf-default";
 			$value = $customField->default_value[0];
 		}
+
+
 		
 		$requiredClass = "";
 		if ($customField->required_field) $requiredClass = "field_required";
@@ -836,7 +838,7 @@ class RCCWP_WritePostPage  {
 		
 		<?php
 		foreach ($customField->options as $option) :
-			$selected = $option == $value ? 'selected="selected"' : '';
+			$selected = esc_attr($option) == $value ? 'selected="selected"' : '';
 			$option = esc_attr(trim($option));
 		?>
 			<option value="<?php echo $option?>" <?php echo $selected?>><?php echo $option?></option>
