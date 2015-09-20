@@ -4,7 +4,7 @@ Plugin Name: Magic-fields
 Plugin URI: http://magicfields.org
 Description: Create custom write panels and easily retrieve their values in your templates.
 Author: Hunk and Gnuget
-Version: 1.6.3
+Version: 1.6.3.1
 Author URI: http://magicfields.org
 */
 
@@ -183,6 +183,9 @@ add_filter('posts_where', array('RCCWP_Query','ExcludeWritepanelsPosts'));
 add_filter('posts_orderby', array('RCCWP_Query', 'FilterCustomPostsOrderby'));
 add_filter('posts_fields', array('RCCWP_Query', 'FilterCustomPostsFields'));
 add_filter('posts_join_paged', array('RCCWP_Query', 'FilterCustomPostsJoin'));
+
+//in search add conditions for look in postmeta
+add_filter('posts_where_request', array('RCCWP_Query', 'AddConditionForSearchInPostmeta'));
 
 
 $condense = RCCWP_Options::Get('condense-menu');

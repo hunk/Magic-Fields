@@ -74,6 +74,30 @@ class RCCWP_Query
 		if (empty($_GET['filter-posts'])){
 			$where = $where . " AND 0 = (SELECT count($wpdb->postmeta.meta_value) FROM $wpdb->postmeta WHERE $wpdb->postmeta.post_id = $wpdb->posts.ID and $wpdb->postmeta.meta_key = '_mf_write_panel_id')";
 		}
+
+		//is search
+		if (isset($_GET['s']) && isset($_GET['filter-posts']) ) {
+			$remove = "/and wp_postmeta.meta_key = '_mf_write_panel_id' and wp_postmeta.meta_value = '(\w)'/";
+			$where = preg_replace($remove,"",$where);
+
+			$sql = $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_mf_write_panel_id' AND meta_value = '%s'",$_GET['custom-write-panel-id']);
+			$results = $wpdb->get_results($sql);
+
+			if (count($results) == 0){
+				return $where;
+			}
+
+			$postIDs = array();
+			foreach ($results as $result) {
+				$postIDs[] = $result->post_id;
+			}
+
+			if ( count($postIDs) == 1 ) {
+				$postIDs[] = $postIDs[0];
+			}
+			$where .= sprintf(" AND $wpdb->posts.ID IN (%s)",implode(",", $postIDs));
+		}
+
 		return $where;
 	}
 
@@ -136,6 +160,39 @@ class RCCWP_Query
 		}
 		
 		return $join;
+	}
+
+	public static function AddConditionForSearchInPostmeta($where){
+		if( is_search() ) {
+		
+			global $wpdb, $wp;
+		
+			$where = preg_replace(
+				"/($wpdb->posts.post_title (LIKE '%{$wp->query_vars['s']}%'))/i",
+				"$0 OR ( $wpdb->postmeta.meta_value LIKE '%{$wp->query_vars['s']}%' )",
+				$where
+				);
+			
+			add_filter( 'posts_join_request', array('RCCWP_Query','JoinForSearchPostMeta' ));
+			add_filter( 'posts_distinct_request', array('RCCWP_Query', 'DistinctForSearchPostMeta' ));
+		}
+	
+		return $where;
+	}
+
+	public static function JoinForSearchPostMeta( $join ) {
+		global $wpdb;
+		$pattern = '/'.$wpdb->postmeta.'/';
+		preg_match($pattern, $join, $matches);
+		if (count($matches) == 0) {
+			return $join .= " LEFT JOIN $wpdb->postmeta ON ($wpdb->posts.ID = $wpdb->postmeta.post_id) ";
+		}
+
+		return $join;
+	}
+
+	public static function DistinctForSearchPostMeta( $distinct ) {
+		return 'DISTINCT';
 	}
 
 }
