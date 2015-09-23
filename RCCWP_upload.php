@@ -211,9 +211,9 @@ body {
 	vertical-align:top;
 }
 </style>
-<link rel='stylesheet' href='<?php echo get_bloginfo('wpurl');?>/wp-admin/css/global.css' type='text/css' />
-<link rel='stylesheet' href='<?php echo get_bloginfo('wpurl');?>/wp-admin/wp-admin.css' type='text/css' />
-<link rel='stylesheet' href='<?php echo get_bloginfo('wpurl');?>/wp-admin/css/colors-fresh.css' type='text/css' />
+<link rel='stylesheet' href='<?php echo get_bloginfo('wpurl');?>/wp-admin/css/dashboard.css' type='text/css' />
+<link rel='stylesheet' href='<?php echo get_bloginfo('wpurl');?>/wp-admin/css/wp-admin.css' type='text/css' />
+<link rel='stylesheet' href='<?php echo get_bloginfo('wpurl');?>/wp-admin/css/common.css' type='text/css' />
 <style>
 body {
 	background: transparent;
