@@ -1,16 +1,18 @@
 === Magic Fields ===
-Contributors: hunk, Gnuget
+Contributors: hunk
 Tags: custom write panel, custom, write panel, cms, magic fields
-Tested up to: Wordpress 3.9
+Tested up to: Wordpress 4.3.1
 Requires at least: 2.9
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=edgar%40programador%2ecom&lc=GB&item_name=Donation%20Magic%20Fields&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest
-Stable tag: 1.6.3.1
+Stable tag: 1.6.3.2
 Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 == Description ==
 Magic Fields is a Wordpress CMS plugin, focuses in simplifies content management for the admin creating custom write panels also with Magic Fields you will be able to create (in a very easy way) custom fields for your write panels.
 
 You can start to use Magic Fields following our <a href="http://magicfields.org/getting-started/">getting starter tutorial</a> or visiting  [the wiki](http://wiki.magicfields.org).
+
+People who helped at some point to the development of magic fields: Gnuget, Astrata Software, Travis Hensgen, Jeff Minard, Carlos Mendoza, Doc4
 
 == Installation ==
 Follow the following steps to install this plugin.
@@ -27,6 +29,11 @@ Follow the following steps to install this plugin.
 [Magic Fields Wiki](http://wiki.magicfields.org/)
 
 == Changelog ==
+
+= 1.6.3.2 =
+	* Add support search in postmeta for MF fields
+	* Add support for gpx in upload field, fixes for upload iframe
+	* Change text domain for localization ( translate.wordpress.org )
 
 = 1.6.3.1 =
 	* fix problem with js inline on dashboard for write panels

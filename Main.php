@@ -1,12 +1,14 @@
 <?php
 /*
-Plugin Name: Magic-fields
-Plugin URI: http://magicfields.org
-Description: Create custom write panels and easily retrieve their values in your templates.
-Author: Hunk and Gnuget
-Version: 1.6.3.1
-Author URI: http://magicfields.org
-*/
+ * Plugin Name: Magic-fields
+ * Plugin URI: http://magicfields.org
+ * Description: Create custom write panels and easily retrieve their values in your templates.
+ * Author: Hunk and Gnuget
+ * Version: 1.6.3.2
+ * Author URI: http://magicfields.org
+ * Text Domain: magic-fields
+ * Domain Path: /languages
+ */
 
 /**
  * This work is free software; you can redistribute it and/or 
@@ -73,8 +75,13 @@ require_once 'tools/inflect.php';
   * function for languages
   */
 global $mf_domain;
-$mf_domain = 'magic_fields';	
-load_plugin_textdomain($mf_domain, '/'.PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)).'/lang', basename(dirname(__FILE__)).'/lang');
+$mf_domain = 'magic-fields';
+
+function mf_load_plugin_textdomain() {
+	global $mf_domain;
+    load_plugin_textdomain( $mf_domain, FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'plugins_loaded', 'mf_load_plugin_textdomain' );
 
 		
 

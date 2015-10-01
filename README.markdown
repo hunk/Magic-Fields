@@ -1,8 +1,8 @@
 # Magic Fields
-* Authors: [Edgar Garcia](http://hunk.com.mx "Hunk"), [David Valdez](http://gnuget.org "Gnuget")
-* Contributors: [Astrata Software](http://astrata.mx) [Travis Hensgen](http://traversal.com.au/), [Jeff Minard](http://jrm.cc/ "Jeff Minard"), [Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"), Michael Bayard, [Doc4](doc4design.com/ "Doc4")
-* Tested up to: Wordpress 3.2.1
-* Stable tag: 1.6.3.1
+* Authors: [Edgar Garcia](http://hunk.com.mx "Hunk")
+* Old contributors: [Astrata Software](http://astrata.mx) [Travis Hensgen](http://traversal.com.au/), [Jeff Minard](http://jrm.cc/ "Jeff Minard"), [Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"), Michael Bayard, [Doc4](doc4design.com/ "Doc4"), [David Valdez](http://gnuget.org "Gnuget")
+* Tested up to: Wordpress 4.3.1
+* Stable tag: 1.6.3.2
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -17,6 +17,16 @@ Follow the following steps to install this plugin.
 2.	Activate the plugin through the 'Plugins' menu in WordPress.
 
 ## Changelog ##
+
+###1.6.3.2###
+* Add support search in postmeta for MF fields
+* Add support for gpx in upload field, fixes for upload iframe
+* Change text domain for localization ( translate.wordpress.org )
+
+###1.6.3.1###
+* fix problem with js inline on dashboard for write panels
+* fix in dropdown values with some characters for edit page
+
 
 ###1.6.3###
 * fix problem with js inline on dashboard for write panels
