@@ -43,7 +43,6 @@ uploadurl = function(input_name,file_type,nonce){
           }
           jQuery('#'+input_name).val(h[1]);
           if(jQuery('#img_thumb_'+input_name).length){
-            console.log('2');
              jQuery('#img_thumb_'+input_name).attr('src',phpthumb+"?&w=150&h=120&src="+JS_MF_FILES_PATH+h[1]);
               var b = '<a href="' + h[1] + '" target="_blank">View</a>&nbsp;&nbsp;|&nbsp;&nbsp;<strong><a href="#remove" class="remove" id="remove-'+input_name+'">Delete</a></strong>';
              jQuery('#photo_edit_link_'+input_name ).innerHTML = b;

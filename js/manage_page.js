@@ -12,8 +12,6 @@ function change_button_new(url_type, add_url,write_panel){
 }
 
 function unlink_write_panel(){
-
-  console.log(jQuery('span.unlink-writepanel'));
   
   if( jQuery('span.unlink-writepanel').length == 0){
    jQuery('div.row-actions').each(function(){
