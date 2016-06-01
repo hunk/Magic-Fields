@@ -296,6 +296,47 @@ if ( !function_exists('valid_mime') ) {
 							'audio/x-wav',
 							'audio/mp3'
 							);
+		$fileExts = array(
+						"application/pdf",
+						"application/msword",
+						"application/vnd.ms-excel",
+						"application/vnd.ms-powerpoint",
+						"text/plain",
+						"image/jpeg",
+						"image/vnd.adobe.photoshop",
+						"image/gif",
+						"image/png",
+						"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+						"application/vnd.openxmlformats-officedocument.presentationml.presentation",
+						"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+						"application/vnd.ms-powerpoint.slideshow.macroenabled.12",
+						"application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+						"application/zip",
+						"application/x-rar-compressed",
+						"application/x-gzip",
+						"audio/x-mpeg",
+						"application/vnd.americandynamics.acc",
+						"audio/mpeg",
+						"audio/mpg",
+						"audio/x-wav",
+						"audio/mp4",
+						"video/mp4",
+						"application/mp4",
+						"audio/x-wav",
+						"audio/x-ms-wma",
+						"audio/x-wav",
+						"audio/x-aiff",
+						"application/ogg",
+						"audio/ogg",
+						"video/ogg",
+						"video/x-flv",
+						"video/x-f4v",
+						"video/quicktime",
+						"video/msvideo",
+						"video/divx",
+						"video/x-divx",
+						"application/gpx+xml"
+						);
 							
 		if($file_type == "image"){
 			if(in_array($mime,$imagesExts)){
@@ -306,9 +347,9 @@ if ( !function_exists('valid_mime') ) {
 				return true;
 			}
 		}else{
-			//TODO: here users should be set what mime types
-			//are safety for the "files" type of field
-			return true;
+			if(in_array($mime,$fileExts)){
+				return true;
+			}
 		}
 		return false;
 	}
