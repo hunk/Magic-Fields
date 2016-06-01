@@ -17,9 +17,14 @@ if( $loaded !== true ){
 	die('Could not load wp-load.php, edit/add mf-config.php and define MF_WP_LOAD to point to a valid wp-load file.');
 }
 
-if (!(is_user_logged_in() &&
-      (current_user_can('edit_posts') || current_user_can('edit_published_pages'))))
-	die(__("Authentication failed!",$mf_domain));
+if( !( is_user_logged_in() && current_user_can('upload_files') ) ) {
+    echo json_encode(
+        array(
+            'error' => "You don't have permission to upload files, contact to the administrator for more information!",$mf_domain
+            )
+        );
+    die;
+}
 
 
 /* checking nonce */

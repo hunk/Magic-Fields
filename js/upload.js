@@ -17,14 +17,18 @@ uploadurl = function(input_name,file_type,nonce){
     
     jQuery.ajax({
       type: "POST",
+      dataType: 'json',
       data: "upload_url="+url+"&input_name="+input_name+"&type="+file_type+"&nonce="+nonce,
       url: mf_path+'RCCWP_GetFile.php',
-      success: function(msg){
-          h = msg.split("*");
-          
+      success: function(result){
+
+        if (result.success == true) {
+          h = result.msg.split("*");
           progr.html(h[0]);
-          
+          progr.show();
           if(h[1] == "None"){
+              //Alert
+              progr.hide();
               return false;
           }
           
@@ -37,14 +41,21 @@ uploadurl = function(input_name,file_type,nonce){
                 jQuery('#magicfields_remove_files').val(old_file);
             }
           }
-          
           jQuery('#'+input_name).val(h[1]);
-          
-          if(jQuery('#img_thumb_'+input_name)){
+          if(jQuery('#img_thumb_'+input_name).length){
+            console.log('2');
              jQuery('#img_thumb_'+input_name).attr('src',phpthumb+"?&w=150&h=120&src="+JS_MF_FILES_PATH+h[1]);
-             var b = '<a href="' + h[1] + '" target="_blank">View</a>&nbsp;&nbsp;|&nbsp;&nbsp;<strong><a href="#remove" class="remove" id="remove-'+input_name+'">Delete</a></strong>';
-             jQuery('#photo_edit_link'+input_name ).innerHTML = b;
+              var b = '<a href="' + h[1] + '" target="_blank">View</a>&nbsp;&nbsp;|&nbsp;&nbsp;<strong><a href="#remove" class="remove" id="remove-'+input_name+'">Delete</a></strong>';
+             jQuery('#photo_edit_link_'+input_name ).innerHTML = b;
+          } else {            
+            var htmlView = '<span id="actions-' + input_name + '"><a href="' + JS_MF_FILES_PATH + h[1] + '" target="_blank" class="mf-file-view">View Current</a></span>'; 
+            htmlView  +=   '<a href="javascript:void(0);" id="remove-' + input_name + '" class="mf-file-delete">Delete</a>';
+            jQuery('#photo_edit_link_'+input_name).html(htmlView);
           }
+        } else {
+          progr.hide();
+          alert("Error: " + result.error);
+        }
       } 
     });
 }

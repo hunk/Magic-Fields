@@ -20,9 +20,10 @@ if( $loaded !== true ){
 
 
 global $mf_domain,  $wpdb;
-if (!(is_user_logged_in() &&
-      (current_user_can('edit_posts') || current_user_can('edit_published_pages'))))
-	die(__("Authentication failed!",$mf_domain));
+
+if( !( is_user_logged_in() && current_user_can('upload_files') ) )
+	die(__("You don't have permission to upload files, contact to the administrator for more information!",$mf_domain));
+
 ?>
 
 <html>
@@ -119,6 +120,14 @@ if (isset($_POST['fileframe'])){
 		var par = window.parent.document;
 		var iframe = par.getElementById('upload_internal_iframe_<?php echo $idField;?>');
 		par.getElementById('upload_progress_<?php echo $idField;?>').innerHTML = '<?php echo $result_msg?>';
+
+		<?php
+		// update url, only for file
+		$str  = '<span id="actions-'.$idField.'"><a href="'.MF_FILES_URI.$filename.'" target="_blank" class="mf-file-view">'.__("View Current",$mf_domain).'</a></span>'; 
+		$str .='<a href="javascript:void(0);" id="remove-'.$idField.'" class="mf-file-delete">'.__("Delete",$mf_domain).'</a>';
+		?>
+		par.getElementById('photo_edit_link_<?php echo $idField;?>').innerHTML = '<?php echo $str?>';
+
 		iframe.style.display="";
 
 		if ( "<?php echo $operationSuccess;?>" == "true"){

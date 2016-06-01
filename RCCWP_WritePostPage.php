@@ -114,7 +114,12 @@ class RCCWP_WritePostPage  {
   ?>
 	<script type="text/javascript">
 		var mf_path = "<?php echo MF_URI ?>" ;
-        var nonce_ajax_upload = "<?php echo wp_create_nonce('once_ajax_uplooad') ?>";
+		<?php 
+			$nonce = wp_create_nonce('once_ajax_uplooad');
+			if( !( is_user_logged_in() && current_user_can('upload_files') ) )
+				$nonce = 'Ah ah ah, you didn\'t say the magic word';
+		?>
+        var nonce_ajax_upload = "<?php echo $nonce; ?>";
         <?php $mceString = 'Control'; if(is_wp39()){ $mceString = 'Editor'; } ?>
         var mceString = "<?php echo $mceString ?>";
 	</script>
@@ -1241,18 +1246,18 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 
 
 			jQuery(document).ready(function(){
-				jQuery("#remove-<?php echo $idField;?>").click(remove_file);
-
+				jQuery("#remove-<?php echo $idField;?>").live('click',remove_file);
 			});
 		</script>
 		
 		<div class="mf-file-links">
-		  
+		  <div id="photo_edit_link_<?php echo $idField ?>"> 
 		<?php if( $valueRelative ){ 
 				echo '<span id="actions-'.$idField.'"><a href="'.$value.'" target="_blank" class="mf-file-view">'.__("View Current",$mf_domain).'</a></span>'; 
 				echo '<a href="javascript:void(0);" id="remove-'.$idField.'" class="mf-file-delete">'.__("Delete",$mf_domain).'</a>';
 			} 
 		?>
+			</div>
 		</div>
 		<!-- /.mf-file-links -->
 		
