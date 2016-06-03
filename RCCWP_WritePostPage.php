@@ -1225,22 +1225,24 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 			remove_file = function(){
 				if(confirm("<?php _e('Are you sure?', $mf_domain); ?>")){
 					//get  the name to the file
-          pattern = /remove\-([a-z0-9\-\_]+)/i;
+          			pattern = /remove\-([a-z0-9\-\_]+)/i;
 					id = jQuery(this).attr("id");
-          id = pattern.exec(id);
-          id = id[1];
+          			id = pattern.exec(id);
+          			id = id[1];
 					file = jQuery('#'+id).val();
-					
-					jQuery('#'+id).closest(".mf-field").find(".ajax-upload-list").html('');
-					
-          //@ the file SHOULD be removed AFTER to save the post not inmediately
-					jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':file},
-								function(message){
-									jQuery('#actions-'+id).empty();
-									jQuery('#remove-'+id).empty();
-									jQuery('#'+id).val("");
-								});
 
+					delete_field = jQuery('#magicfields_remove_files').val();
+					if(delete_field != ''){
+						jQuery('#magicfields_remove_files').val(delete_field+"|||"+file);
+					}else{
+						jQuery('#magicfields_remove_files').val(file);
+					}
+
+					// set the value to empty
+					jQuery('#actions-'+id).empty();
+					jQuery('#remove-'+id).empty();
+					jQuery('#'+id).val("");
+					jQuery('#'+id).closest(".mf-field").find(".ajax-upload-list").html('');
 				}
 			};
 
@@ -1519,23 +1521,28 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 			remove_audio = function(){
 				if(confirm("<?php _e('Are you sure?', $mf_domain); ?>")){
 					//get the name to the image
-				  //id = jQuery(this).attr('id').split("-")[1];
-          pattern = /remove\-([a-z0-9\-\_]+)/i;
+				  	//id = jQuery(this).attr('id').split("-")[1];
+          			pattern = /remove\-([a-z0-9\-\_]+)/i;
 					id = jQuery(this).attr("id");
-          id = pattern.exec(id);
-          id = id[1];
+          			id = pattern.exec(id);
+          			id = id[1];
 
 					file = jQuery('#'+id).val(); 
-          jQuery('#'+id).closest(".mf-field").find(".ajax-upload-list").html('');
-          jQuery.get('<?php echo MF_URI;?>RCCWP_removeFiles.php',{'action':'delete','file':file},
-								function(message){
-									//if(message =="true"){
-										jQuery('#obj-'+id).empty();
-										jQuery('#actions-'+id).empty();
-										jQuery('#'+id).val("");
-									//}
-								});
-				}						   
+
+					delete_field = jQuery('#magicfields_remove_files').val();
+					if(delete_field != ''){
+						jQuery('#magicfields_remove_files').val(delete_field+"|||"+file);
+					}else{
+						jQuery('#magicfields_remove_files').val(file);
+					}
+
+					// set the value to empty
+					jQuery('#obj-'+id).empty();
+					jQuery('#actions-'+id).empty();
+					jQuery('#remove-'+id).empty();
+					jQuery('#'+id).val("");
+					jQuery('#'+id).closest(".mf-field").find(".ajax-upload-list").html('');
+				} 
 			}
 
 			jQuery(document).ready(function(){

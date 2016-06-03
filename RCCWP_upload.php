@@ -131,16 +131,15 @@ if (isset($_POST['fileframe'])){
 		iframe.style.display="";
 
 		if ( "<?php echo $operationSuccess;?>" == "true"){
-			
 			old_file = par.getElementById("<?php echo $idField; ?>").value;
-      if(old_file != '' ){
-        delete_field = par.getElementById("magicfields_remove_files").value;
+      		if(old_file != '' ){
+        		delete_field = par.getElementById("magicfields_remove_files").value;
 				if(delete_field != ''){
-          par.getElementById("magicfields_remove_files").value = delete_field+"|||"+old_file;
-        }else{
+          			par.getElementById("magicfields_remove_files").value = delete_field+"|||"+old_file;
+        		}else{
 					par.getElementById("magicfields_remove_files").value = old_file;
-        }
-      }
+        		}
+      		}
 					
 			
 			par.getElementById("<?php echo $idField; ?>").value = "<?php echo $filename?>";
@@ -148,23 +147,20 @@ if (isset($_POST['fileframe'])){
 			<?php
 		    //$newImagePath = PHPTHUMB.'?&w=150&h=120&src='.MF_FILES_URI.$filename;
 
-        if($acceptedExts == "image") {
-          $newImagePath = aux_image($filename,'w=150&h=120&zc=1');
-        }else{
-          $newImagePath = "";
-        }
+        	if($acceptedExts == "image") {
+          		$newImagePath = aux_image($filename,'w=150&h=120&zc=1');
+        	}else{
+          		$newImagePath = "";
+        	}
 				
-				if (isset($_POST['imageThumbID'])){ 
-			?>
-				if( par.getElementById('<?php echo $_POST['imageThumbID']; ?>') )
-				{ 
+			if (isset($_POST['imageThumbID'])){  ?>
+				if( par.getElementById('<?php echo $_POST['imageThumbID']; ?>') ) { 
 					par.getElementById('<?php echo $_POST['imageThumbID']; ?>').src = "<?php echo $newImagePath;?>";
-					
 					var b = "&nbsp;<strong><a href='#remove' class='remove' id='remove-<?php echo $idField;?>'>Delete</a></strong>";
-
 					par.getElementById("photo_edit_link_<?php echo $idField; ?>").innerHTML = b ;
 				}
-			<?php } ?>
+			<?php 
+			} ?>
 		}
 	</script>
 <?php

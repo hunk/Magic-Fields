@@ -180,6 +180,16 @@ if (is_admin()) {
           }
         }
 
+        //Ajax
+	add_action( 'wp_ajax_mf1_call', 'mf_callback_ajax_call' );
+	if ( !function_exists('mf_callback_ajax_call') ) {
+    	function mf_callback_ajax_call(){
+    		echo "hello";
+    		wp_die();
+    	}
+    }
+
+
 }
 
 require_once ('RCCWP_Options.php');
