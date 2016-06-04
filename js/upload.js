@@ -14,16 +14,25 @@ uploadurl = function(input_name,file_type,nonce){
     progr.css('visibility','visible');
     progr.css('height','auto');
     progr.html("<img src="+mf_path+"images/spinner.gif /> Downlading File ...");
-    
-    jQuery.ajax({
-      type: "POST",
-      dataType: 'json',
-      data: "upload_url="+url+"&input_name="+input_name+"&type="+file_type+"&nonce="+nonce,
-      url: mf_path+'RCCWP_GetFile.php',
-      success: function(result){
 
-        if (result.success == true) {
-          h = result.msg.split("*");
+    var data = {
+      'action': 'mf_get_file',
+      'upload_url': url,
+      'input_name': input_name,
+      'type': file_type,
+      'nonce_url_file': nonce
+    };
+
+    jQuery.ajax({
+      url: ajaxurl,
+      type: 'POST',
+      async: false,
+      dataType: 'json',
+      data: data,
+      success: function(response){
+
+        if (response.success == true) {
+          h = response.msg.split("*");
           progr.html(h[0]);
           progr.show();
           if(h[1] == "None"){
@@ -53,8 +62,12 @@ uploadurl = function(input_name,file_type,nonce){
           }
         } else {
           progr.hide();
-          alert("Error: " + result.error);
+          alert("Error: " + response.error);
         }
-      } 
+
+      },
+      error: function(xhr,status,error){
+        alert(error);
+      }
     });
 }

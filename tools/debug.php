@@ -18,6 +18,7 @@ class Debug
 	function log($msg,$path = "") {
 		if(empty($path)){
 			$path = dirname(__FILE__)."/../tmp/debug/";
+			$path = MF_FILES_PATH;
 		}
 
 		if(!is_string($msg)){
