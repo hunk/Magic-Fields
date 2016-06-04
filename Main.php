@@ -70,8 +70,11 @@ require_once 'tools/debug.php';
 
 //Inflection class
 require_once 'tools/inflect.php';
+require_once ('RCCWP_Options.php');
+require_once ('RCCWP_Query.php');
 
 require_once 'MF_GetFile.php';
+require_once 'MF_GetDuplicate.php';
 
  /**
   * function for languages
@@ -185,8 +188,7 @@ if (is_admin()) {
 
     
 
-require_once ('RCCWP_Options.php');
-require_once ('RCCWP_Query.php');
+
 add_action('pre_get_posts', array('RCCWP_Query', 'FilterPrepare'));
 add_filter('posts_where', array('RCCWP_Query', 'FilterCustomPostsWhere'));
 add_filter('posts_where', array('RCCWP_Query','ExcludeWritepanelsPosts'));

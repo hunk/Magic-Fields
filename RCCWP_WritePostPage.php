@@ -115,11 +115,15 @@ class RCCWP_WritePostPage  {
 	<script type="text/javascript">
 		var mf_path = "<?php echo MF_URI ?>" ;
 		<?php 
-			$nonce = wp_create_nonce('once_ajax_uplooad');
-			if( !( is_user_logged_in() && current_user_can('upload_files') ) )
-				$nonce = 'Ah ah ah, you didn\'t say the magic word';
+			$nonce_ajax_upload = wp_create_nonce('once_ajax_uplooad');
+			$nonce_ajax_duplicate = wp_create_nonce('nonce_ajax_duplicate');
+			if( !( is_user_logged_in() && current_user_can('upload_files') ) ) {
+				$nonce_ajax_upload = 'Ah ah ah, you didn\'t say the magic word';
+				$nonce_ajax_duplicate = 'Ah ah ah, you didn\'t say the magic word';
+			}
 		?>
-        var nonce_ajax_upload = "<?php echo $nonce; ?>";
+        var nonce_ajax_upload = "<?php echo $nonce_ajax_upload; ?>";
+        var nonce_ajax_duplicate = "<?php echo $nonce_ajax_duplicate; ?>";
         <?php $mceString = 'Control'; if(is_wp39()){ $mceString = 'Editor'; } ?>
         var mceString = "<?php echo $mceString ?>";
 	</script>

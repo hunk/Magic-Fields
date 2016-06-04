@@ -990,7 +990,7 @@ function smartTrim(string, maxLength) {
           div  = "c"+inputNameId+"Duplicate";
           counter_field = inputName +"_"+ groupCounter;
        	
-		getDuplicate(customFieldId,counter,div,groupCounter,groupId,counter_field);
+		  getDuplicate(customFieldId,counter,div,groupCounter,groupId,counter_field);
     });
 
 	//validate maxlength
@@ -1039,10 +1039,11 @@ function smartTrim(string, maxLength) {
    * field duplicate 
    */
   getDuplicate = function(fId,fcounter,div,gcounter,groupId,counter_field){
+
       jQuery.ajax({
           type : "POST",
-          url  : mf_path+'RCCWP_GetDuplicate.php',
-          data : "customFieldId="+fId+"&fieldCounter="+fcounter+"&groupCounter="+gcounter+"&groupId="+groupId,
+          url  : ajaxurl,
+          data : "action=mf_get_duplicate&customFieldId="+fId+"&fieldCounter="+fcounter+"&groupCounter="+gcounter+"&groupId="+groupId+"&nonce_ajax_duplicate="+nonce_ajax_duplicate,
           success: function(msg){
             
               var newel = $(msg);
@@ -1089,8 +1090,8 @@ function smartTrim(string, maxLength) {
     
       jQuery.ajax({
           type    : "POST",
-          url     : mf_path+'RCCWP_GetDuplicate.php',
-          data    : "flag=group&groupId="+customGroupID+"&groupCounter="+customGroupCounter+"&order="+order,
+          url     : ajaxurl,
+          data    : "action=mf_get_duplicate&flag=group&groupId="+customGroupID+"&groupCounter="+customGroupCounter+"&order="+order+"&nonce_ajax_duplicate="+nonce_ajax_duplicate,
           success : function(msg){
               var newel = jQuery(msg);
               jQuery("#write_panel_wrap_"+customGroupID).append(newel);
