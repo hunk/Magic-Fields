@@ -200,9 +200,8 @@ class RCCWP_CustomField {
 		global $wpdb;
 		
 		// Given $postId, $customFieldName, $groupIndex and $fieldIndex get meta_id
-		return $wpdb->get_var("SELECT id FROM " . MF_TABLE_POST_META . 
-						" WHERE field_name = '$customFieldName' AND group_count = $groupIndex ". 
-						" AND field_count = $fieldIndex AND post_id = $postId" );
+		$sql = $wpdb->prepare( "SELECT id FROM " . MF_TABLE_POST_META . " WHERE field_name = %s AND group_count = %d AND field_count = %d AND post_id = %d", array( $customFieldName, $groupIndex, $fieldIndex, $postId ) );
+		return $wpdb->get_var($sql);
 		
 	}
 	
@@ -246,8 +245,8 @@ class RCCWP_CustomField {
 	 */
 	public static function GetFieldGroupDuplicates($postId, $fieldName){
 		global $wpdb;
-		return $wpdb->get_var("SELECT count(DISTINCT group_count) FROM " . MF_TABLE_POST_META . 
-						" WHERE field_name = '$fieldName' AND post_id = $postId");
+		$sql = $wpdb->prepare( "SELECT count(DISTINCT group_count) FROM " . MF_TABLE_POST_META . " WHERE field_name = %s AND post_id = %d", array( $fieldName, $postId ) );
+		return $wpdb->get_var($sql);
 	}
 
 	/**
@@ -262,8 +261,8 @@ class RCCWP_CustomField {
 	public static function GetFieldDuplicates($postId, $fieldName, $groupIndex){
 		global $wpdb;
 
-		return $wpdb->get_var("SELECT count(DISTINCT field_count) FROM " . MF_TABLE_POST_META . 
-						" WHERE field_name = '$fieldName' AND post_id = $postId AND group_count = $groupIndex");
+		$sql = $wpdb->prepare( "SELECT count(DISTINCT field_count) FROM " . MF_TABLE_POST_META . " WHERE field_name = %s AND post_id = %d AND group_count = %d", array( $fieldName, $postId, $groupIndex ) );
+		return $wpdb->get_var($sql);
 	}
 
 	/**

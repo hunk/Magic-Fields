@@ -84,7 +84,7 @@ class RCCWP_Application
 				
 			
 		// Install blog tables
-		if (!$wpdb->get_var("SHOW TABLES LIKE '".MF_TABLE_POST_META."'") == MF_TABLE_POST_META ||
+		if (!$wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE ".MF_TABLE_POST_META ) ) == MF_TABLE_POST_META ||
 				$BLOG_DBChanged){	
 			$blog_tables[] = "CREATE TABLE " . MF_TABLE_POST_META . " (
 				id integer NOT NULL,
@@ -132,7 +132,7 @@ class RCCWP_Application
 		
 		// -- Create Tables if they don't exist or the database changed
 		$not_installed = false;
-		if(!$wpdb->get_var("SHOW TABLES LIKE '".MF_TABLE_PANELS."'") == MF_TABLE_PANELS) 	$not_installed = true;
+		if(!$wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE ".MF_TABLE_PANELS ) ) == MF_TABLE_PANELS) 	$not_installed = true;
 
 		if( $not_installed ||
 			$DBChanged){ 
@@ -254,7 +254,8 @@ class RCCWP_Application
 		}
 
 		if (RC_CWP_DB_VERSION >= 6){
-			if($wpdb->get_var("SHOW TABLES LIKE '".$wpdb->prefix."mf_custom_field_types'") == $wpdb->prefix."mf_custom_field_types"){
+			$table_name = $wpdb->prefix . "mf_custom_field_types";
+			if($wpdb->get_var($wpdb->prepare( "SHOW TABLES LIKE $table_name" ) ) == $table_name){
 				$wpdb->query("DROP TABLE ".$wpdb->prefix."mf_custom_field_types");
 			}
 		}

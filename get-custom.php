@@ -95,7 +95,7 @@ function getGroupDuplicates ($fieldName) {
  * @param integer $groupIndex
  * @return number of field duplicates
  */
-function getFieldDuplicates ($fieldName, $groupIndex) {
+function getFieldDuplicates ($fieldName, $groupIndex = 1) {
 	require_once("RCCWP_CustomField.php");
 	global $post;
 	return RCCWP_CustomField::GetFieldDuplicates($post->ID, $fieldName, $groupIndex);
@@ -112,7 +112,7 @@ function getFieldDuplicates ($fieldName, $groupIndex) {
  * 				in a div that is ready for EIP. The default value is true
  * @return a string or array based on field type
  */
-function get ($fieldName, $groupIndex=1, $fieldIndex=1, $readyForEIP=true,$post_id=NULL) {
+function get ($fieldName, $groupIndex = 1, $fieldIndex = 1, $readyForEIP = true, $post_id = NULL) {
 	require_once("RCCWP_CustomField.php");
 	global $post, $FIELD_TYPES;
 	
@@ -316,18 +316,21 @@ function getFieldOrder($field_name,$group=1,$post_id=NULL){
  * 
  * @param boolean $safe make the return name 'url safe'
  */
-function get_panel_name($safe=true, $post_id = NULL){
+function get_panel_name($safe=true, $post_id = NULL) {
 	global $wpdb, $post;
   
-  if (!$post_id) {
-    $post_id = $post->ID;
-  }
-  
-	$panel_id = $wpdb->get_var("SELECT `meta_value` FROM {$wpdb->postmeta} WHERE post_id = ".$post_id.' AND meta_key = "'.RC_CWP_POST_WRITE_PANEL_ID_META_KEY.'"');
+  	if (!$post_id) {
+    	$post_id = $post->ID;
+  	}
+	
+	$meta_key = RC_CWP_POST_WRITE_PANEL_ID_META_KEY;
+	$sql = $wpdb->prepare( "SELECT meta_value FROM $wpdb->postmeta WHERE post_id = %d AND meta_key = %s" , array( $post_id, $meta_key ) );
+	$panel_id = $wpdb->get_var($sql);
 	if( (int) $panel_id == 0 )
 		return false;
 	
-	$panel_name = $wpdb->get_var("SELECT `name` FROM ".MF_TABLE_PANELS." WHERE id = ".$panel_id);
+	$sql_name = $wpdb->prepare( "SELECT name FROM ".MF_TABLE_PANELS." WHERE id = %d" , array( $panel_id ) );
+	$panel_name = $wpdb->get_var($sql_name);
 	if( ! $panel_name )
 		return false;
 

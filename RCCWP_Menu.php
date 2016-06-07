@@ -259,41 +259,42 @@ class RCCWP_Menu
 
 		$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
 		
-			$new_indicator_text = __('New',$mf_domain);
-			$edit_indicator_text = __('Manage',$mf_domain);
+		$new_indicator_text = __('New',$mf_domain);
+		$edit_indicator_text = __('Manage',$mf_domain);
+	
+	
+		$new_menu = array();
+		ksort($menu); 
+		foreach ($menu as $k => $v) {
+			if($k > 5) break;
+			$new_menu[$k]=$v;
+		}
+	
+		$base=5;
+		$offset=0;
+		$add_post =  false;
 		
-		
-			$new_menu = array();
-			ksort($menu); 
-			foreach ($menu as $k => $v) {
-				if($k > 5) break;
-				$new_menu[$k]=$v;
-			}
-		
-			$base=5;
-			$offset=0;
-			$add_post =  false;
-			
-			// fix for WP 3.0
-			if(substr($wp_version, 0, 3) < 3.0){
-				
+		// fix for WP 3.0
+		if(substr($wp_version, 0, 3) < 3.0){
 			  // WP <= 2.9
-    		$page_new    = "page-new.php?";
-    		$page_edit   = "page.php?";
-    		$page_manage = "edit-pages.php?";
+			$page_new    = "page-new.php?";
+			$page_edit   = "page.php?";
+			$page_manage = "edit-pages.php?";
     	}else{
-    	  // WP > 3.0
-    	  $page_new    = "post-new.php?post_type=page&";
+    	  	// WP > 3.0
+    	  	$page_new    = "post-new.php?post_type=page&";
     		$page_edit   = "post.php?";
     		$page_manage = "edit.php?post_type=page&";
     	}
 			// end fix
 			
-			foreach ($customWritePanels as $panel){
-			  if ($panel->name != '_Global') { // traversal: fix to ignore the global group
+		foreach ($customWritePanels as $panel){
+			if ($panel->name != '_Global') { // traversal: fix to ignore the global group
 				//exists a single write panel? and if exists  this write panel have posts?
 				if($panel->single == 1){
-					$has_posts = $wpdb->get_var('SELECT post_id FROM '.$wpdb->prefix.'postmeta  where meta_key = "_mf_write_panel_id" and  meta_value = '.$panel->id);
+					$table_name = $wpdb->prefix . "postmeta";
+					$sql = $wpdb->prepare( "SELECT post_id FROM $table_name  where meta_key = %s and  meta_value = %d ", array( "_mf_write_panel_id", $panel->id ) );
+					$has_posts = $wpdb->get_var($sql);
 					if(empty($has_posts)){
 						$add_post = true;
 					}else{
@@ -553,10 +554,8 @@ class RCCWP_Menu
 
 		if ($panel->always_show) return true;
 
-
-		if ( 0 < $wpdb->get_var("SELECT count($wpdb->postmeta.meta_value)
-			FROM $wpdb->postmeta
-			WHERE $wpdb->postmeta.meta_key = '_mf_write_panel_id' and $wpdb->postmeta.meta_value = '$panel->id'")){
+		$sql = $wpdb->prepare( "SELECT count($wpdb->postmeta.meta_value) FROM $wpdb->postmeta WHERE $wpdb->postmeta.meta_key = %s and $wpdb->postmeta.meta_value = %d", array( "_mf_write_panel_id",$panel->id ) );		
+		if ( 0 < $wpdb->get_var($sql)){
 				return true;
 		}
 

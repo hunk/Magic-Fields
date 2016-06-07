@@ -480,15 +480,12 @@ class RCCWP_Processor {
 					RCCWP_CustomField::Delete($_REQUEST['custom-field-id']);
 	
 				break;
-      case 'save-fields-order':
-        RCCWP_CustomWritePanelPage::save_order_fields();
+      		case 'save-fields-order':
+        		RCCWP_CustomWritePanelPage::save_order_fields();
 
 			default:
-								
-  			
-  							  
-				if (RCCWP_Application::InWritePostPanel())
-				{
+
+				if (RCCWP_Application::InWritePostPanel()) {
 					include_once('RCCWP_Menu.php');
 					include_once('RCCWP_WritePostPage.php');
 					
@@ -586,12 +583,10 @@ class RCCWP_Processor {
 				
 				if (isset($_REQUEST['post'])) {
   				// traversal addition to change write panel
-          add_action('admin_menu',
-    						array(	'RCCWP_WritePostPage',
-    								'CreateAttributesBox'
-    							 )
-    					  );
-  			}
+          			add_action('admin_menu',
+						array(	'RCCWP_WritePostPage','CreateAttributesBox')
+					);
+  				}
   			
 		}
 		

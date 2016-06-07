@@ -193,7 +193,8 @@ class RCCWP_CustomWritePanel
         function GetIdByName($name) {
                 global $wpdb;
 
-                return $wpdb->get_var("SELECT id FROM ".MF_TABLE_PANELS." WHERE name='".$name."'");
+                $sql = $wpdb->prepare( "SELECT id FROM ".MF_TABLE_PANELS." WHERE name = %s", array( $name ) );
+                return $wpdb->get_var( $sql );
         }
 
 
@@ -661,7 +662,8 @@ class RCCWP_CustomWritePanel
                 }
 
                 //getting the panel id
-                $panel_id = $wpdb->get_var("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = {$post_id} AND meta_key = '_mf_write_panel_id'");
+                $sql = $wpdb->prepare( "SELECT meta_value FROM $wpdb->postmeta WHERE post_id = %s AND meta_key = %s", array( $post_id, '_mf_write_panel_id' ) );
+                $panel_id = $wpdb->get_var($sql);
 
                 if(empty($panel_id)){
                         return false;

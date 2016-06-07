@@ -202,9 +202,9 @@ Class MF_PostTypePages{
 	 */
 	public static function CreatePostTypesTables(){
 		global $wpdb;
-		
 		//this table is already installed?
-		if($wpdb->get_var("SHOW TABLES LIKE '".MF_TABLE_POSTTYPES_TAXONOMIES."'") != MF_TABLE_POSTTYPES_TAXONOMIES) {
+
+		if($wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE ".MF_TABLE_POSTTYPES_TAXONOMIES ) ) != MF_TABLE_POSTTYPES_TAXONOMIES) {
 			$sql =	"CREATE TABLE ".MF_TABLE_POSTTYPES_TAXONOMIES. " (
 						id mediumint(9) NOT NULL AUTO_INCREMENT ,
 						type varchar(10) NOT NULL DEFAULT 'posttype',

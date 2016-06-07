@@ -866,16 +866,15 @@ class RCCWP_WritePostPage  {
 
 	//eeble
 	public static function RelatedTypeInterface($customField, $inputName, $groupCounter, $fieldCounter) {
+
 		global $mf_domain, $wpdb;
-    $mf_post_id = apply_filters('mf_source_post_data', @$_REQUEST['post']);
+    	$mf_post_id = apply_filters('mf_source_post_data', @$_REQUEST['post']);
 
 		$customFieldId = '';
 		if (isset($mf_post_id)) {
 			$customFieldId = $customField->id;
 			$value = esc_attr(RCCWP_CustomField::GetCustomFieldValues(true, $mf_post_id, $customField->name, $groupCounter, $fieldCounter));
-		}
-		else
-		{
+		} else {
 			$value = $customField->default_value[0];
 		}
 		
@@ -891,60 +890,62 @@ class RCCWP_WritePostPage  {
 		
 		<?php
 		
-    $pn_cache = array(); // setup a panel name cache (so we only look up the panel name ONCe for each panel ID)
+    	$pn_cache = array(); // setup a panel name cache (so we only look up the panel name ONCe for each panel ID)
     
 		if($panel_id == -4){
 			$options=get_posts("post_type=post&numberposts=-1&order=ASC&orderby=title");
 		}elseif($panel_id == -3){
 			$options=get_posts("post_type=page&numberposts=-1&order=ASC&orderby=title");
 		}elseif($panel_id == -2){
-				$options=get_posts("post_type=post&meta_key=_mf_write_panel_id&numberposts=-1&order=ASC&orderby=title");
+			$options=get_posts("post_type=post&meta_key=_mf_write_panel_id&numberposts=-1&order=ASC&orderby=title");
 		}elseif($panel_id == -1){
-					$options=get_posts("post_type=page&meta_key=_mf_write_panel_id&numberposts=-1&order=ASC&orderby=title");
+			$options=get_posts("post_type=page&meta_key=_mf_write_panel_id&numberposts=-1&order=ASC&orderby=title");
 		}elseif($panel_id == -6){
 			$options=get_posts("post_type=any&numberposts=-1");
-                }elseif($panel_id == -7){
-                  $options=get_categories("hide_empty=0");
-                  $options = RCCWP_WritePostPage::mf_category_order($options,0,0);
-                }elseif($panel_id == -5){
+		}elseif($panel_id == -7){
+			$options=get_categories("hide_empty=0");
+			$options = RCCWP_WritePostPage::mf_category_order($options,0,0);
+		}elseif($panel_id == -5){
       
-                  remove_filter('posts_where', array('RCCWP_Query','ExcludeWritepanelsPosts'));
-                  add_filter('posts_fields', 'RelatedTypeFieldsFilter');
-                  add_filter('posts_orderby', 'RelatedTypeOrderByFilter');
-      
-                  $options = get_posts( array( 
-                                          'suppress_filters' => false, 
-                                          'post_type' => 'any', 
-                                          'meta_key' =>  '_mf_write_panel_id',
-                                          'nopaging' => true,
-                                          'order' => 'ASC'
-                                        ));
-      
-                  remove_filter('posts_fields', 'RelatedTypeFieldsFilter');
-                  remove_filter('posts_orderby', 'RelatedTypeOrderByFilter');
-                  add_filter('posts_where', array('RCCWP_Query','ExcludeWritepanelsPosts'));
-                }else{
-                  $options=get_posts("post_type=any&meta_key=_mf_write_panel_id&numberposts=-1&meta_value=$panel_id&order=ASC&orderby=title");
+			remove_filter('posts_where', array('RCCWP_Query','ExcludeWritepanelsPosts'));
+			add_filter('posts_fields', 'RelatedTypeFieldsFilter');
+			add_filter('posts_orderby', 'RelatedTypeOrderByFilter');
+
+			$options = get_posts( array( 
+			                      'suppress_filters' => false, 
+			                      'post_type' => 'any', 
+			                      'meta_key' =>  '_mf_write_panel_id',
+			                      'nopaging' => true,
+			                      'order' => 'ASC'
+			                    ));
+
+
+
+			remove_filter('posts_fields', 'RelatedTypeFieldsFilter');
+			remove_filter('posts_orderby', 'RelatedTypeOrderByFilter');
+			add_filter('posts_where', array('RCCWP_Query','ExcludeWritepanelsPosts'));
+		}else{
+			$options=get_posts("post_type=any&meta_key=_mf_write_panel_id&numberposts=-1&meta_value=$panel_id&order=ASC&orderby=title");
 		}
 		
 		$last_panel_name = ""; // traversal (for grouping)
 
 		foreach ($options as $option) :
 
-  /* TRAVERSAL ADDITION - Adds grouping of related type fields when all write panels are listed -- */
-      $panel_name = "";
-		  $display_panel_name = "";
+ 		/* TRAVERSAL ADDITION - Adds grouping of related type fields when all write panels are listed -- */
+		$panel_name = "";
+		$display_panel_name = "";
 
-		  if ( $panel_id == -5 || $panel_id == -2 || $panel_id == -1 ) {
+		if ( $panel_id == -5 || $panel_id == -2 || $panel_id == -1 ) {
 		  	
-		  	$panel_name = $pn_cache[$option->meta_value];
-		  	
+			$panel_name = $pn_cache[$option->meta_value];
 		  	if (!$panel_name) {
-		  	  // look it up
-		  	  $panel_name = $wpdb->get_var("SELECT `name` FROM ".MF_TABLE_PANELS." WHERE id = ".$option->meta_value);
-          if ($panel_name) {
-            $pn_cache[$option->meta_value] = $panel_name;
-          }
+				// look it up
+		  		$sql = $wpdb->prepare( "SELECT name FROM ".MF_TABLE_PANELS." WHERE id = %d", array( $option->meta_value ) );
+		  	  	$panel_name = $wpdb->get_var($sql);
+          	if ($panel_name) {
+            	$pn_cache[$option->meta_value] = $panel_name;
+          	}
 	  	  }
 	  	  
 	  	  $panel = RCCWP_CustomWritePanel::Get($option->meta_value);
@@ -1804,48 +1805,42 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 	
 
 	public static function CreateAttributesBox() {
-    global $mf_domain;
+    	global $mf_domain;
   
-    add_meta_box('mfattributespage', __('Magic Fields Attributes',$mf_domain), array('RCCWP_WritePostPage','attributesBoxContentPage'), 'page', 'side', 'core');
-    add_meta_box('mfattributespost', __('Magic Fields Attributes',$mf_domain), array('RCCWP_WritePostPage','attributesBoxContentPost'), 'post', 'side', 'core');
-  }
+    	add_meta_box('mfattributespage', __('Magic Fields Attributes',$mf_domain), array('RCCWP_WritePostPage','attributesBoxContentPage'), 'page', 'side', 'core');
+    	add_meta_box('mfattributespost', __('Magic Fields Attributes',$mf_domain), array('RCCWP_WritePostPage','attributesBoxContentPost'), 'post', 'side', 'core');
+  	}
   
   
   
 
 	public static function attributesBoxContentPage($post) {
+   
+    	global $wpdb;
     
-    global $wpdb;
+    	$single_panel = FALSE;
+    	$panel_id = get_post_meta($post->ID, "_mf_write_panel_id", TRUE);
     
-    $single_panel = FALSE;
-    $panel_id = get_post_meta($post->ID, "_mf_write_panel_id", TRUE);
-    
-    if ($panel_id) {
-      $panel =  RCCWP_CustomWritePanel::Get($panel_id);
-    }
-      
-  ?>
-    <p><strong><?php _e('Write Panel') ?></strong></p>
-    <label class="screen-reader-text" for="parent_id"><?php _e('Write Panel') ?></label>
-    <?php 
+    	if ($panel_id) {
+      		$panel =  RCCWP_CustomWritePanel::Get($panel_id);
+    	} ?>
+    	<p><strong><?php _e('Write Panel') ?></strong></p>
+    	<label class="screen-reader-text" for="parent_id"><?php _e('Write Panel1111') ?></label>
+    	<?php 
   
-      // get a list of the write panels 
-  
+      	// get a list of the write panels 
         $customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
-    		$promptEditingPost = RCCWP_Options::Get('prompt-editing-post');
-        
+		$promptEditingPost = RCCWP_Options::Get('prompt-editing-post');
         
         $templates_by_filename = array();
-			  $templates = get_page_templates();
+		$templates = get_page_templates();
         // get the reverse map
         
         foreach ($templates as $name => $file) {
-          $templates_by_filename[$file] = $name;
-        }
-        
-        
-        ?>
-    		<select name="rc-cwp-change-custom-write-panel-id" id="rc-cwp-change-custom-write-panel-id">
+			$templates_by_filename[$file] = $name;
+        } ?>
+    	
+    	<select name="rc-cwp-change-custom-write-panel-id" id="rc-cwp-change-custom-write-panel-id">
           <option value="-1"><?php _e('(None)', $mf_domain); ?></option>
           
     		<?php
@@ -1853,35 +1848,34 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
 		    $items = array();
 		    
     		foreach ($customWritePanels as $panel) :
-    			$selected = $panel->id == $panel_id ? 'selected="selected"' : '';
-		      $panel_theme = RCCWP_CustomWritePanel::GetThemePage($panel->name);
-    		  $parent_page = RCCWP_CustomWritePanel::GetParentPage($panel->name);
+				$selected = $panel->id == $panel_id ? 'selected="selected"' : '';
+		      	$panel_theme = RCCWP_CustomWritePanel::GetThemePage($panel->name);
+    		  	$parent_page = RCCWP_CustomWritePanel::GetParentPage($panel->name);
     		  
-    		  if ($parent_page != '') {
-    		    $pp = get_page( $parent_page );
+    		  	if ($parent_page != '') {
+    		    	$pp = get_page( $parent_page );
     		    
-    		    if ($pp) {
-    		      $parent_page_title = $pp->post_title;
-            }
+    		    	if ($pp) {
+    		      		$parent_page_title = $pp->post_title;
+            		}
           
-  		    }
+  		 	   }
   		    
-  		    $allow = $panel->type == "page";
+  		    	$allow = $panel->type == "page";
   		    
-  		    if ($panel->single && $panel->id != $panel_id) {
-  		      // check to see if there are any posts with this panel already. If so, we can't allow it to be used.
-            $sql = "SELECT COUNT(*) FROM $wpdb->postmeta WHERE $wpdb->postmeta.meta_value = ".$panel->id." AND $wpdb->postmeta.meta_key = '_mf_write_panel_id'";
-		        $count = $wpdb->get_var($sql);
-            $allow = $count == 0;
-		      }
+  		    	if ($panel->single && $panel->id != $panel_id) {
+  		      		// check to see if there are any posts with this panel already. If so, we can't allow it to be used.
+            		$sql = $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->postmeta WHERE $wpdb->postmeta.meta_value = %d AND $wpdb->postmeta.meta_key = %s", array( $panel->id, "_mf_write_panel_id" ) );
+		        	$count = $wpdb->get_var($sql);
+            		$allow = $count == 0;
+		     	}
   		    
-  		    if ($allow) :  // cannot change to "single" panels
-    		?>
-    			<option value="<?php echo $panel->id?>" <?php echo $selected?>><?php echo $panel->name?></option>
-    		<?php
-    		  $items[$panel->id] = "{ panel_theme: '".$panel_theme."', template_name: '".addslashes($templates_by_filename[$panel_theme])."', parent_page: '".$parent_page."', parent_page_title: '".addslashes($parent_page_title)."' }";
+  		    	if ($allow) :  // cannot change to "single" panels ?>
+    				<option value="<?php echo $panel->id?>" <?php echo $selected?>><?php echo $panel->name?></option>
+    				<?php
+    			  	$items[$panel->id] = "{ panel_theme: '".$panel_theme."', template_name: '".addslashes($templates_by_filename[$panel_theme])."', parent_page: '".$parent_page."', parent_page_title: '".addslashes($parent_page_title)."' }";
 
-          endif;
+          		endif;
           
     		endforeach;
     		?>
@@ -1951,10 +1945,10 @@ if( isset( $customField->properties['strict-max-length'] ) && $customField->prop
   		    
   		    if ($panel->single && $panel->id != $panel_id) {
   		      // check to see if there are any posts with this panel already. If so, we can't allow it to be used.
-            $sql = "SELECT COUNT(*) FROM $wpdb->postmeta WHERE $wpdb->postmeta.meta_value = ".$panel->id." AND $wpdb->postmeta.meta_key = '_mf_write_panel_id'";
+  		    	$sql = $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->postmeta WHERE $wpdb->postmeta.meta_value = %d AND $wpdb->postmeta.meta_key = %s", array( $panel->id, "_mf_write_panel_id" ) );
 		        $count = $wpdb->get_var($sql);
-            $allow = $count == 0;
-		      }
+				$allow = $count == 0;
+		    }
   		    
   		    if ($allow) :  // cannot change to "single" panels
     		  ?>
