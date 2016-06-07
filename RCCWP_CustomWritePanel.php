@@ -178,11 +178,9 @@ class RCCWP_CustomWritePanel
         public static function Get($customWritePanelId) {
                 global $wpdb;
 
-                $sql = "SELECT id, name, description, display_order, capability_name, type,single, expanded FROM " . MF_TABLE_PANELS .
-                        " WHERE id = " . (int)$customWritePanelId;
-
+                $sql = $wpdb->prepare( "SELECT id, name, description, display_order, capability_name, type,single, expanded FROM " . MF_TABLE_PANELS .
+                        " WHERE id = %d", array( $customWritePanelId ) );
                 $results = $wpdb->get_row($sql);
-
                 return $results;
         }
 
@@ -212,6 +210,7 @@ class RCCWP_CustomWritePanel
                 $sql = "SELECT meta_value FROM " . $wpdb->postmeta .
                                                 " WHERE meta_key = 't_".$customWritePanelName."' AND post_id = 0" ;
 
+                $sql = $wpdb->prepare( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = %s AND post_id = 0", array( "t_".$customWritePanelName ) );
                 $results = $wpdb->get_row($sql);
                 if($results) return $results->meta_value;
                 return false;
@@ -225,14 +224,15 @@ class RCCWP_CustomWritePanel
          *                      id, name, description, display_order, capability_name, type
          */
         public static function GetParentPage($customWritePanelName) {
-                global $wpdb;
+            global $wpdb;
 
-                $sql = "SELECT meta_value FROM " . $wpdb->postmeta .
-                                                " WHERE meta_key = 'p_".$customWritePanelName."' AND post_id = 0" ;
-
-                $results = $wpdb->get_row($sql);
-          if($results) return $results->meta_value;
-          return FALSE;
+            $sql = "SELECT meta_value FROM " . $wpdb->postmeta .
+                                            " WHERE meta_key = 'p_".$customWritePanelName."' AND post_id = 0" ;
+            $sql = $wpdb->prepare( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = %s AND post_id = 0", array( "p_".$customWritePanelName ) );
+                                            
+            $results = $wpdb->get_row($sql);
+            if($results) return $results->meta_value;
+            return FALSE;
         }
 
         /**

@@ -258,8 +258,7 @@ function get_audio ($fieldName, $groupIndex=1, $fieldIndex=1,$post_id=NULL) {
 
 function GetFieldInfo($customFieldId){
 	global $wpdb;
-	$sql = "SELECT properties FROM " . MF_TABLE_CUSTOM_FIELD_PROPERTIES  .
-		" WHERE custom_field_id = '" . $customFieldId."'";
+	$sql = $wpdb->prepare( "SELECT properties FROM " .MF_TABLE_CUSTOM_FIELD_PROPERTIES. " WHERE custom_field_id = %d", array( $customFieldId ) );
 	$results = $wpdb->get_row($sql);
 	//$results->options = unserialize($results->options);
 	$results->properties = unserialize($results->properties);

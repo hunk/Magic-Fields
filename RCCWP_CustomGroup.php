@@ -74,12 +74,10 @@ class RCCWP_CustomGroup
 	 * @return an object representing the group
 	 */
 	
-	public static function Get($groupId)
-	{
+	public static function Get($groupId) {
 		global $wpdb;
-	
-		$sql = "SELECT * FROM " . MF_TABLE_PANEL_GROUPS;
-		$sql .=	" WHERE id = " . (int)$groupId;
+		
+		$sql = $wpdb->prepare( "SELECT * FROM " .MF_TABLE_PANEL_GROUPS. " WHERE id = %d", array( $groupId ) );
 		$results = $wpdb->get_row($sql);
 		return $results;
 	}

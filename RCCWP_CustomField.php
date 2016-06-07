@@ -139,10 +139,14 @@ class RCCWP_CustomField {
 	 */
 	public static function Get($customFieldId) {
 		global $wpdb,$mf_field_types;
-		$sql = "SELECT cf.group_id, cf.id, cf.name, cf.CSS,cf.type as custom_field_type, cf.description, cf.display_order, cf.required_field, co.options, co.default_option AS default_value, cp.properties,duplicate,cf.help_text FROM " . MF_TABLE_GROUP_FIELDS .
+
+		$sql = $wpdb->prepare(
+			"SELECT cf.group_id, cf.id, cf.name, cf.CSS,cf.type as custom_field_type, cf.description, cf.display_order, cf.required_field, co.options, co.default_option AS default_value, cp.properties,duplicate,cf.help_text FROM " . MF_TABLE_GROUP_FIELDS .
 			" cf LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " co ON cf.id = co.custom_field_id" .
 			" LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " cp ON cf.id = cp.custom_field_id" .
-			" WHERE cf.id = " . $customFieldId;
+			" WHERE cf.id = %d"
+			, 
+			array( $customFieldId ) );
 
 		$results = $wpdb->get_row($sql);
 
@@ -225,7 +229,8 @@ class RCCWP_CustomField {
 
 		// Get meta value
 		$mid = (int) $fieldMetaID;
-		$meta = $wpdb->get_row( "SELECT * FROM $wpdb->postmeta WHERE meta_id = '$mid'" );
+		$sql = $wpdb->prepare( "SELECT * FROM $wpdb->postmeta WHERE meta_id = %d", array( $mid ) );
+		$meta = $wpdb->get_row( $sql );
 		if (!$single) return unserialize($meta->meta_value);
 		return $meta->meta_value;
 	}
@@ -325,19 +330,19 @@ class RCCWP_CustomField {
 	 */
 	public static function GetInfoByName($customFieldName,$post_id){
 		global $wpdb, $FIELD_TYPES;
-		
-		$customFieldvalues = $wpdb->get_row(
-			"SELECT cf.id, cf.type,cf.CSS,fp.properties,cf.description 
+
+		$sql = $wpdb->prepare( "SELECT cf.id, cf.type,cf.CSS,fp.properties,cf.description 
 				FROM ". MF_TABLE_GROUP_FIELDS . " cf 
 					LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
-					WHERE cf.name = '$customFieldName' 
+					WHERE cf.name = %s 
 						AND cf.group_id in (
 							SELECT mg.id 
-								FROM ". MF_TABLE_PANEL_GROUPS . " mg, ".$wpdb->postmeta." pm 
+								FROM ". MF_TABLE_PANEL_GROUPS . " mg, $wpdb->postmeta pm 
 									WHERE mg.panel_id = pm.meta_value
 									AND pm.meta_key = '".RC_CWP_POST_WRITE_PANEL_ID_META_KEY."' 
-									AND pm.post_id = $post_id)",ARRAY_A);
-													
+									AND pm.post_id = %d)", array( $customFieldName, $post_id ) );
+		$customFieldvalues = $wpdb->get_row($sql,ARRAY_A);
+
 		if (empty($customFieldvalues)) 
 			return false;
 
@@ -487,14 +492,15 @@ class RCCWP_CustomField {
 		global $wpdb, $FIELD_TYPES;
 		$customFieldName = str_replace(" ","_",$customFieldName);
 		
-		$customFieldvalues = $wpdb->get_row(
-			"SELECT pm.meta_id,pm.meta_value, cf.id, cf.type,cf.CSS,fp.properties,cf.description 
-			FROM ".MF_TABLE_POST_META." pm_mf, ".$wpdb->postmeta." pm, ".MF_TABLE_GROUP_FIELDS." cf LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id 
-			WHERE cf.name = '$customFieldName' AND cf.name = pm_mf.field_name AND group_count = $groupIndex AND field_count = $fieldIndex AND pm_mf.post_id= $postId AND pm_mf.id = pm.meta_id AND ( cf.group_id in ( SELECT mg.id FROM ".MF_TABLE_PANEL_GROUPS." mg, ".$wpdb->postmeta." pm WHERE mg.panel_id = pm.meta_value AND pm.meta_key = '_mf_write_panel_id' AND pm.post_id = $postId)
+		$sql = $wpdb->prepare( "SELECT pm.meta_id,pm.meta_value, cf.id, cf.type,cf.CSS,fp.properties,cf.description 
+			FROM ".MF_TABLE_POST_META." pm_mf, $wpdb->postmeta pm, ".MF_TABLE_GROUP_FIELDS." cf LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id 
+			WHERE cf.name = %s AND cf.name = pm_mf.field_name AND group_count = %d AND field_count = %d AND pm_mf.post_id= %d AND pm_mf.id = pm.meta_id AND ( cf.group_id in ( SELECT mg.id FROM ".MF_TABLE_PANEL_GROUPS." mg, $wpdb->postmeta pm WHERE mg.panel_id = pm.meta_value AND pm.meta_key = '_mf_write_panel_id' AND pm.post_id = %d)
       OR cf.group_id IN (SELECT mg.id FROM ".MF_TABLE_PANEL_GROUPS." mg INNER JOIN ".MF_TABLE_PANELS." mfwp ON mg.panel_id = mfwp.id  WHERE mfwp.name = '_Global'))
-			",ARRAY_A);
+			", array( $customFieldName, $groupIndex, $fieldIndex, $postId, $postId ) );
 
-    // traversal addition to the query above to support the global panel
+		$customFieldvalues = $wpdb->get_row($sql,ARRAY_A);
+
+    	// traversal addition to the query above to support the global panel
     
 		if (empty($customFieldvalues)) 
 			return null;
