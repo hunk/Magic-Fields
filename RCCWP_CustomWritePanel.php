@@ -326,16 +326,14 @@ class RCCWP_CustomWritePanel
          * @param integer $customWritePanelId panel id
          * @return array of ids of the standard fields (see $STANDARD_FIELDS defined in MF_Constant.php)
          */
-        public static function GetStandardFields($customWritePanelId)
-        {
-          global $wpdb;
-          $sql = "SELECT standard_field_id FROM " . MF_TABLE_PANEL_STANDARD_FIELD .
-            " WHERE panel_id = " . $customWritePanelId;
-          $results = $wpdb->get_col($sql);
-          if (!isset($results))
-            $results = array();
+        public static function GetStandardFields($customWritePanelId) {
+            global $wpdb;
+            $sql = $wpdb->prepare( "SELECT standard_field_id FROM " . MF_TABLE_PANEL_STANDARD_FIELD . " WHERE panel_id = %d", array( $customWritePanelId ) );
+            $results = $wpdb->get_col($sql);
+            if (!isset($results))
+                $results = array();
 
-          return $results;
+            return $results;
         }
 
         /**

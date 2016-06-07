@@ -183,9 +183,11 @@ class RCCWP_Post {
 				}
 			}
 		}
-		else if (function_exists('icl_t') && isset($_GET['trid']) )
-		{
-		    $element_id = $wpdb->get_col("SELECT element_id FROM {$wpdb->prefix}icl_translations WHERE element_type='post' AND trid = ".intval($_GET['trid']));
+		else if (function_exists('icl_t') && isset($_GET['trid']) ) {
+
+			$t_name = $wpdb->prefix . "icl_translations";
+			$sql = $wpdb->prepare( "SELECT element_id FROM $t_name WHERE element_type='post' AND trid = %d", array( $_GET['trid'] ) );
+		    $element_id = $wpdb->get_col($sql);
 			$customWritePanelId = get_post_meta((int)$element_id, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, true);
 
 			if (empty($customWritePanelId))

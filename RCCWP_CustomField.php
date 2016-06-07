@@ -277,8 +277,8 @@ class RCCWP_CustomField {
 	public static function GetFieldsOrder($postId,$fieldName,$groupId){
 		global $wpdb;
 
-		$tmp =  $wpdb->get_col("SELECT field_count FROM ".MF_TABLE_POST_META." WHERE field_name = '{$fieldName}' AND post_id = {$postId} AND group_count = {$groupId} GROUP BY field_count ORDER BY field_count ASC");
-
+		$sql = $wpdb->prepare( "SELECT field_count FROM ".MF_TABLE_POST_META." WHERE field_name = %s AND post_id = %d AND group_count = %d GROUP BY field_count ORDER BY field_count ASC", array( $fieldName, $postId,$groupId ) );
+		$tmp =  $wpdb->get_col($sql);
 		// if the array is  empty is because this field is new and don't have
 		// a data related with this post 
 		// then we just create with the index 1
@@ -299,9 +299,8 @@ class RCCWP_CustomField {
 	 */
 	public static function GetOrderDuplicates($postId,$fieldName){
 		global $wpdb;
-
-		$tmp =  $wpdb->get_col("SELECT group_count  FROM ".MF_TABLE_POST_META." WHERE field_name = '{$fieldName}' AND   post_id = {$postId} GROUP BY group_count ORDER BY order_id asc");
-
+		$sql = $wpdb->prepare( "SELECT group_count  FROM ".MF_TABLE_POST_META." WHERE field_name = %s AND   post_id = %d GROUP BY group_count ORDER BY order_id asc", array( $fieldName, $postId ) );
+		$tmp =  $wpdb->get_col($sql);
 		// if the array is  empty is because this field is new and don't have
 		// a data related with this post 
 		// then we just create with the index 1
