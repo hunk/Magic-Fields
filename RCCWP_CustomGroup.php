@@ -104,13 +104,12 @@ class RCCWP_CustomGroup
 	 */
 	public static function GetCustomFields($customGroupId) {
 		global $wpdb,$mf_field_types;
-		$sql = "SELECT cf.id,cf.type as custom_field_type, cf.name,cf.description, cf.display_order, cf.required_field,cf.css, co.options, co.default_option AS default_value,cp.properties,cf.duplicate,cf.help_text FROM " . MF_TABLE_GROUP_FIELDS .
+
+		$sql = $wpdb->prepare( "SELECT cf.id,cf.type as custom_field_type, cf.name,cf.description, cf.display_order, cf.required_field,cf.css, co.options, co.default_option AS default_value,cp.properties,cf.duplicate,cf.help_text FROM " . MF_TABLE_GROUP_FIELDS .
 			" cf LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " co ON cf.id = co.custom_field_id" .
 			" LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " cp ON cf.id = cp.custom_field_id" .
-			" WHERE group_id = " . $customGroupId .
-			" ORDER BY cf.display_order,cf.id ASC";
-
-    
+			" WHERE group_id = %d " .
+			" ORDER BY cf.display_order,cf.id ASC", array( $customGroupId ) );    
 		$results =$wpdb->get_results($sql);
 		if (!isset($results))
 			$results = array();

@@ -80,7 +80,7 @@ class RCCWP_Query
 			$remove = "/and wp_postmeta.meta_key = '_mf_write_panel_id' and wp_postmeta.meta_value = '(\w)'/";
 			$where = preg_replace($remove,"",$where);
 
-			$sql = $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_mf_write_panel_id' AND meta_value = '%s'",$_GET['custom-write-panel-id']);
+			$sql = $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = '%s'",array("_mf_write_panel_id", $_GET['custom-write-panel-id']));
 			$results = $wpdb->get_results($sql);
 
 			if (count($results) == 0){

@@ -116,7 +116,7 @@ if (is_admin()) {
 
 
 	if (get_option(RC_CWP_OPTION_KEY) !== false) {
-    require_once ('RCCWP_Processor.php');
+    	require_once ('RCCWP_Processor.php');
 		add_action('init', array('RCCWP_Processor', 'Main'));
 		
 
@@ -136,8 +136,7 @@ if (is_admin()) {
 		require_once ('RCCWP_Post.php');	
 		
 		add_action('save_post', array('RCCWP_Post', 'SaveCustomFields'));
- 		add_action('delete_post', array('RCCWP_Post','DeletePostMetaData')) ;
-		
+ 		add_action('before_delete_post', array('RCCWP_Post','DeletePostMetaData'));		
 		
 		add_filter('wp_redirect', array('RCCWP_Processor', 'Redirect'));
 
@@ -241,8 +240,9 @@ if ( !function_exists('cwp_add_type_identifier') ) {
 		global $post;
 		
 		
-		if( isset($_GET['custom-write-panel-id']) && !empty($_GET['custom-write-panel-id'])){
-			$getPostID = $wpdb->get_results("SELECT id, type FROM ". MF_TABLE_PANELS ." WHERE id='".$_GET['custom-write-panel-id']."'");
+		if( isset($_GET['custom-write-panel-id']) && !empty($_GET['custom-write-panel-id'])) {
+			$sql = $wpdb->prepare( "SELECT id, type FROM " . MF_TABLE_PANELS ." WHERE id= %d", array( $_GET['custom-write-panel-id'] ) );
+			$getPostID = $wpdb->get_results($sql);
 			echo "<input type=\"hidden\" id=\"post_type\" name=\"post_type\" value=\"". $getPostID[0]->type ."\" />";
 
 		}else{
@@ -258,9 +258,10 @@ if ( !function_exists('cwp_add_pages_identifiers') ) {
 
 		$key = wp_create_nonce('rc-custom-write-panel');
 		$id = "";
-		$result = $wpdb->get_results( " SELECT meta_value
-						FROM $wpdb->postmeta
-						WHERE post_id = '$post->ID' and meta_key = '_mf_write_panel_id'", ARRAY_A );
+		$sql = $wpdb->prepare( "SELECT meta_value
+								FROM $wpdb->postmeta
+								WHERE post_id = %d and meta_key = %s", array( $post->ID, "_mf_write_panel_id" ) );
+		$result = $wpdb->get_results( $sql, ARRAY_A );
 		
 		if (count($result) > 0)
 			$id = $result[0]['meta_value'];

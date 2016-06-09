@@ -2,31 +2,30 @@
 /**
  *  In this Class  can be found it the methods for work with Write Panels.
  */
-class RCCWP_CustomWritePanel
-{
+class RCCWP_CustomWritePanel {
 
-        /**
-         * Get all Write Panels.
-         *
-         * @return array of objects containing all write panels. Each object contains
-         *                      id, name, description, display_order, capability_name, type, always_show
-         */
-        public static function GetCustomWritePanels($include_global = FALSE) {
-                global $wpdb;
+    /**
+     * Get all Write Panels.
+     *
+     * @return array of objects containing all write panels. Each object contains
+     *                      id, name, description, display_order, capability_name, type, always_show
+     */
+    public static function GetCustomWritePanels($include_global = FALSE) {
+        global $wpdb;
 
-                $sql = "SELECT id, name, description, display_order, capability_name, type, single  FROM " . MF_TABLE_PANELS;
+        $sql = "SELECT id, name, description, display_order, capability_name, type, single  FROM " . MF_TABLE_PANELS;
 
-    if (!$include_global) { // fix to exclude the global panel from general lists
-      $sql .= " WHERE name <> '_Global' ";
-    }
-
-                $sql .= " ORDER BY display_order ASC";
-                $results = $wpdb->get_results($sql);
-                if (!isset($results))
-                        $results = array();
-
-                return $results;
+        if (!$include_global) { // fix to exclude the global panel from general lists
+            $sql .= " WHERE name <> '_Global' ";
         }
+        
+        $sql .= " ORDER BY display_order ASC";
+        $results = $wpdb->get_results($sql);
+        if (!isset($results))
+            $results = array();
+
+        return $results;
+    }
 
         /**
          * Assign a specified write panel to a role.
@@ -253,35 +252,22 @@ class RCCWP_CustomWritePanel
                 return $ids;
         }
 
-        /**
-         * Get a list of categories assigned to a write panel
-         *
-         * @param integer $customWritePanelId write panel id
-         * @return array of objects, each object contains cat_id and cat_name
-         */
-        public static function GetAssignedCategories($customWritePanelId) {
-                global $wpdb;
+    /**
+     * Get a list of categories assigned to a write panel
+     *
+     * @param integer $customWritePanelId write panel id
+     * @return array of objects, each object contains cat_id and cat_name
+     */
+    public static function GetAssignedCategories($customWritePanelId) {
+        global $wpdb;
 
-                if( $wpdb->terms != '' )
-                {
-                        $sql = "SELECT cat_id FROM " .
-                                MF_TABLE_PANEL_CATEGORY . "
-                                WHERE panel_id = " . $customWritePanelId;
-                }
-                else
-                {
-                        $sql = "SELECT cat_id FROM " .
-                                MF_TABLE_PANEL_CATEGORY . "
-                                WHERE panel_id = " . $customWritePanelId;
-                }
+        $sql = $wpdb->prepare( "SELECT cat_id FROM " . MF_TABLE_PANEL_CATEGORY . " WHERE panel_id = %d", array( $customWritePanelId ) );
+        $results = $wpdb->get_results($sql);
+        if (!isset($results))
+          $results = array();
 
-
-                $results = $wpdb->get_results($sql);
-                if (!isset($results))
-                  $results = array();
-
-                return $results;
-        }
+        return $results;
+    }
 
         /**
          * Create a capability name for a write panel given its name. This function is
@@ -496,27 +482,25 @@ class RCCWP_CustomWritePanel
 
         }
 
-        /**
-         * Retrieves the groups of a module
-         *
-         * @param integer $customWriteModuleId module id
-         * @return array of objects representing basic information of the group,
-         *                              each object contains id, name and module_id
-         */
-        public static function GetCustomGroups($customWritePanelId, $orderby = "name")
-        {
-                global $wpdb;
-                $sql = "SELECT * FROM " . MF_TABLE_PANEL_GROUPS .
-                        " WHERE panel_id = " . $customWritePanelId .
-                        " OR panel_id IN (SELECT id FROM " . MF_TABLE_PANELS . " WHERE name = '_Global' ) " .
-                        " ORDER BY $orderby";
+    /**
+     * Retrieves the groups of a module
+     *
+     * @param integer $customWriteModuleId module id
+     * @return array of objects representing basic information of the group,
+     *                              each object contains id, name and module_id
+     */
+    public static function GetCustomGroups($customWritePanelId, $orderby = "name") {
+        global $wpdb;
+        $sql = $wpdb->prepare( "SELECT * FROM " . MF_TABLE_PANEL_GROUPS .
+                " WHERE panel_id = %d " .
+                " OR panel_id IN (SELECT id FROM " . MF_TABLE_PANELS . " WHERE name = '_Global' ) " .
+                " ORDER BY %s", array( $customWritePanelId, $orderby ) );
+        $results =$wpdb->get_results($sql);
+        if (!isset($results))
+                $results = array();
 
-                $results =$wpdb->get_results($sql);
-                if (!isset($results))
-                        $results = array();
-
-                return $results;
-        }
+        return $results;
+    }
 
 
         /**
@@ -675,36 +659,34 @@ class RCCWP_CustomWritePanel
                 return $properties->name;
         }
 
-        public static function GetCountPstWritePanel($write_panel_id){
-          global $wpdb;
+    public static function GetCountPstWritePanel($write_panel_id){
+        global $wpdb;
 
         $user = wp_get_current_user();
 
-    $query = "SELECT COUNT(DISTINCT(p.ID)) AS num_posts, p.post_status FROM {$wpdb->posts} p JOIN {$wpdb->postmeta} pm  ON p.id = pm.post_id WHERE meta_key ='_mf_write_panel_id' AND meta_value = '%s' GROUP BY p.post_status";
-
-        $count = $wpdb->get_results( $wpdb->prepare( $query, $write_panel_id ), ARRAY_A );
+        $sql = $wpdb->prepare( "SELECT COUNT(DISTINCT(p.ID)) AS num_posts, p.post_status FROM $wpdb->posts p JOIN $wpdb->postmeta pm  ON p.id = pm.post_id WHERE meta_key = %s AND meta_value = %s GROUP BY p.post_status", array( "_mf_write_panel_id", $write_panel_id ) );
+        $count = $wpdb->get_results( $sql, ARRAY_A );
 
         $stats = array( 'publish' => 0, 'private' => 0, 'draft' => 0, 'pending' => 0, 'future' => 0, 'trash' => 0 );
         foreach( (array) $count as $row_num => $row ) {
-                $stats[$row['post_status']] = $row['num_posts'];
+            $stats[$row['post_status']] = $row['num_posts'];
         }
 
         $stats = (object) $stats;
 
         return $stats;
-        }
+    }
 
-        public static function GetCountPostNotWritePanel($type){
-          global $wpdb;
+    public static function GetCountPostNotWritePanel($type){
+        global $wpdb;
 
         $user = wp_get_current_user();
-
-    $query = "SELECT COUNT(DISTINCT(p.ID)) AS num_posts, p.post_status FROM {$wpdb->posts} p WHERE p.post_type = '%s' AND 0 = (SELECT COUNT(*) FROM {$wpdb->postmeta} pm  WHERE p.id = pm.post_id AND meta_key ='_mf_write_panel_id' ) GROUP BY p.post_status";
-        $count = $wpdb->get_results( $wpdb->prepare( $query, $type ), ARRAY_A );
+        $sql = $wpdb->prepare( "SELECT COUNT(DISTINCT(p.ID)) AS num_posts, p.post_status FROM $wpdb->posts p WHERE p.post_type = %s AND 0 = (SELECT COUNT(*) FROM $wpdb->postmeta pm  WHERE p.id = pm.post_id AND meta_key = %s ) GROUP BY p.post_status", array( $type, "_mf_write_panel_id" ) );
+        $count = $wpdb->get_results( $sql, ARRAY_A );
 
         $stats = array( 'publish' => 0, 'private' => 0, 'draft' => 0, 'pending' => 0, 'future' => 0, 'trash' => 0 );
         foreach( (array) $count as $row_num => $row ) {
-                $stats[$row['post_status']] = $row['num_posts'];
+            $stats[$row['post_status']] = $row['num_posts'];
         }
 
         $stats['auto-draft'] = 0;
@@ -712,6 +694,6 @@ class RCCWP_CustomWritePanel
         $stats = (object) $stats;
 
         return $stats;
-        }
+    }
 
 }

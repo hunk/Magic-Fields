@@ -56,7 +56,8 @@ Class MF_PostTypePages{
 		global $mf_domain,$wpdb;
 
 		//Getting the  Custom types
-		$items = $wpdb->get_results('SELECT id,name FROM '.MF_TABLE_POSTTYPES_TAXONOMIES);
+		$sql = $wpdb->prepare( "SELECT id,name FROM " . MF_TABLE_POSTTYPES_TAXONOMIES );
+		$items = $wpdb->get_results($sql);
 	
 		$customtypes =  "";
 		foreach($items as $key => $value){

@@ -279,8 +279,11 @@ function pt(){
 function getGroupOrder($field_name,$post_id=NULL){
 	global $post,$wpdb;
 
-	if(!$post_id){ $post_id = $post->ID; }
-	$elements  = $wpdb->get_results("SELECT DISTINCT(group_count) FROM ".MF_TABLE_POST_META." WHERE post_id = ".$post_id."  AND field_name = '{$field_name}' ORDER BY order_id ASC");
+	if(!$post_id)
+		$post_id = $post->ID;
+
+	$sql = $wpdb->prepare( "SELECT DISTINCT(group_count) FROM ".MF_TABLE_POST_META." WHERE post_id = %d  AND field_name = %s ORDER BY order_id ASC", array( $post_id,$field_name ) );
+	$elements  = $wpdb->get_results($sql);
    
 	foreach($elements as $element){
 		$order[] =  $element->group_count;
@@ -295,8 +298,11 @@ function getGroupOrder($field_name,$post_id=NULL){
 function getFieldOrder($field_name,$group=1,$post_id=NULL){ 
 	global $post,$wpdb; 
 	
-	if(!$post_id){ $post_id = $post->ID; }
-	$elements = $wpdb->get_results("SELECT field_count FROM ".MF_TABLE_POST_META." WHERE post_id = ".$post_id." AND field_name = '{$field_name}' AND group_count = {$group} ORDER BY order_id DESC",ARRAY_A);  
+	if(!$post_id)
+		$post_id = $post->ID;
+
+	$sql = $wpdb->prepare( "SELECT field_count FROM ".MF_TABLE_POST_META." WHERE post_id = %d AND field_name = %s AND group_count = %d ORDER BY order_id DESC", array( $post_id, $field_name, $group ) );
+	$elements = $wpdb->get_results($sql,ARRAY_A);  
 
 	foreach($elements as $element){ 
 		$order[] = $element['field_count']; 
@@ -597,14 +603,14 @@ function get_group($name_group,$post_id=NULL){
 	
 	$cache_name = $post_id.'/_groups-'. sanitize_title_with_dashes( $name_group ).'.txt';
 	if( !$data_groups = unserialize( MF_get_cached_data( $cache_name, FALSE ) ) ) {
-		$sql = "SELECT		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
-				FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
-							".MF_TABLE_GROUP_FIELDS." cf 
-				LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
-				WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND 
-							g.name='$name_group' AND pm_wp.meta_id=pm.id AND pm_wp.meta_value <> '' 
-				ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
-			$data_groups = $wpdb->get_results($sql);
+		$sql = $wpdb->prepare( "SELECT pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
+				FROM 		" . MF_TABLE_POST_META . " pm, " . MF_TABLE_PANEL_GROUPS . " g, $wpdb->postmeta pm_wp,
+							" . MF_TABLE_GROUP_FIELDS . " cf 
+				LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " fp ON fp.custom_field_id = cf.id
+				WHERE 		pm_wp.post_id = %d AND cf.name = pm.field_name AND cf.group_id=g.id AND 
+							g.name = %s AND pm_wp.meta_id = pm.id AND pm_wp.meta_value <> '' 
+				ORDER BY 	pm.order_id, cf.display_order, pm.field_count", array( $post_id, $name_group ) );
+		$data_groups = $wpdb->get_results($sql);
 		MF_put_cached_data( $cache_name, serialize( $data_groups ) );
 	}
 
@@ -688,15 +694,14 @@ function get_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 	// When field is set, but it's empty, it gets a NULL value, but still this value is cached
 	// therefore: if !is_null condition
 	if( !$data_fields && !is_null( $data_fields ) ) {
-		$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
-				FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
-							".MF_TABLE_GROUP_FIELDS." cf 
-				LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
-				WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND
-							pm_wp.meta_id=pm.id AND pm.field_name='$fieldName' AND pm.group_count = $groupIndex
+		$sql = $wpdb->prepare( "SELECT pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
+				FROM 		" . MF_TABLE_POST_META . " pm, " . MF_TABLE_PANEL_GROUPS . " g, $wpdb->postmeta pm_wp,
+							" . MF_TABLE_GROUP_FIELDS . " cf 
+				LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " fp ON fp.custom_field_id = cf.id
+				WHERE 		pm_wp.post_id = %d AND cf.name = pm.field_name AND cf.group_id = g.id AND
+							pm_wp.meta_id = pm.id AND pm.field_name = %s AND pm.group_count = %d
 							AND pm_wp.meta_value <> '' 
-				ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
-			
+				ORDER BY 	pm.order_id, cf.display_order, pm.field_count", array( $post_id, $fieldName, $groupIndex ) );
 		$data_fields = $wpdb->get_results($sql);
 		MF_put_cached_data( $cache_name, serialize( $data_fields ) );
 	}
@@ -768,14 +773,14 @@ function get_clean_field_duplicate($fieldName, $groupIndex=1,$post_id=NULL){
 	// When field is set, but it's empty, it gets a NULL value, but still this value is cached
 	// therefore: if !is_null condition
 	if( !$data_fields && !is_null( $data_fields ) ) {
-		$sql = "SELECT 		pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
-				FROM 		".MF_TABLE_POST_META." pm, ".MF_TABLE_PANEL_GROUPS." g, {$wpdb->postmeta} pm_wp,
-							".MF_TABLE_GROUP_FIELDS." cf 
-				LEFT JOIN ".MF_TABLE_CUSTOM_FIELD_PROPERTIES." fp ON fp.custom_field_id = cf.id
-				WHERE 		pm_wp.post_id = {$post_id} AND cf.name = pm.field_name AND cf.group_id=g.id AND
-							pm_wp.meta_id=pm.id AND pm.field_name='$fieldName' AND pm.group_count = $groupIndex
+		$sql = $wpdb->prepare( "SELECT pm.field_name, cf.type, pm_wp.meta_value, pm.order_id, pm.field_count, cf.id, fp.properties 
+				FROM 		" . MF_TABLE_POST_META . " pm, " . MF_TABLE_PANEL_GROUPS . " g, $wpdb->postmeta pm_wp,
+							" . MF_TABLE_GROUP_FIELDS . " cf 
+				LEFT JOIN " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " fp ON fp.custom_field_id = cf.id
+				WHERE 		pm_wp.post_id = %d AND cf.name = pm.field_name AND cf.group_id = g.id AND
+							pm_wp.meta_id = pm.id AND pm.field_name = %s AND pm.group_count = %d
 							AND pm_wp.meta_value <> '' 
-				ORDER BY 	pm.order_id, cf.display_order, pm.field_count";
+				ORDER BY 	pm.order_id, cf.display_order, pm.field_count", array( $post_id, $fieldName, $groupIndex ) );
 			
 		$data_fields = $wpdb->get_results($sql);
 		MF_put_cached_data( $cache_name, serialize( $data_fields ) );

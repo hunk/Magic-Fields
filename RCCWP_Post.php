@@ -222,33 +222,26 @@ class RCCWP_Post {
  	 */
 	function DeletePostMetaData($postId) {
 		global $wpdb;
-		
 		//only delete images and postmeta fields with write panels
 		if(count(get_post_meta($postId, RC_CWP_POST_WRITE_PANEL_ID_META_KEY))){
-      $query = sprintf('SELECT wp_pm.meta_value 
-      FROM %s mf_pm, %s mf_cf, %s wp_pm
-      WHERE mf_pm.field_name = mf_cf.name AND mf_cf.type = 9 AND mf_pm.post_id = %d AND wp_pm.meta_id = mf_pm.id',
-      MF_TABLE_POST_META,
-      MF_TABLE_GROUP_FIELDS,
-      $wpdb->postmeta,
-      $postId
-      );
-      $images = $wpdb->get_results($query);
-      foreach($images as $image){
-        if($image->meta_value != ''){
-          $tmp = sprintf('%s%s',MF_FILES_PATH,$image->meta_value);
-          do_action('mf_before_delete_file',$image->meta_value);
-					@unlink($tmp);
-        }
-      }
       
-      //delete all data of postmeta (WP and MF)
-      $query = sprintf('DELETE a,b from %s a INNER JOIN %s b WHERE a.meta_id = b.id AND a.post_id = %d',
-      $wpdb->postmeta,
-      MF_TABLE_POST_META,
-      $postId
-      );
-      $wpdb->query($query);
+      		$sql = $wpdb->prepare( "SELECT wp_pm.meta_value  FROM " . MF_TABLE_POST_META . " mf_pm, " . MF_TABLE_GROUP_FIELDS . " mf_cf, $wpdb->postmeta wp_pm
+      		WHERE mf_pm.field_name = mf_cf.name AND mf_cf.type = 9 AND mf_pm.post_id = %d AND wp_pm.meta_id = mf_pm.id", array( $postId ) );
+      		$images = $wpdb->get_results($sql);
+      		foreach($images as $image) {
+        		if($image->meta_value != '') {
+          			$tmp = sprintf('%s%s',MF_FILES_PATH,$image->meta_value);
+          			do_action('mf_before_delete_file',$image->meta_value);
+					@unlink($tmp);
+        		}
+			}
+      
+      		//delete all data of postmeta (WP and MF)
+      		$sql = $wpdb->prepare( "DELETE a,b from $wpdb->postmeta a INNER JOIN " . MF_TABLE_POST_META . " b WHERE a.meta_id = b.id AND a.post_id = %d", array( $postId ) );
+      		$wpdb->query($query);
+      		
+      		$sql_mf = $wpdb->prepare( "DELETE from " . MF_TABLE_POST_META . " WHERE post_id = %d", array( $postId ) );
+      		$wpdb->query($sql_mf);
 		}
 	}	
 }
