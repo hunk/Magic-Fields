@@ -245,7 +245,7 @@ $STANDARD_FIELDS[5] = new PanelFields(5, 'Post Slug', array('slugdiv'), true, tr
 // Page-specific advanced fields
 $STANDARD_FIELDS[15] = new PanelFields(15, 'Page Attributes', array('pageparentdiv'), true, true, false, true, 1000);
 $STANDARD_FIELDS[16] = new PanelFields(16, 'Page Slug', array('pageslugdiv'), true, true, false, true, 1000);
-$STANDARD_FIELDS[17] = new PanelFields(16, 'Page Revisions', array('revisionsdiv'), true, true, false, true, 1000);
+$STANDARD_FIELDS[17] = new PanelFields(17, 'Page Revisions', array('revisionsdiv'), true, true, false, true, 1000);
 									
 
 

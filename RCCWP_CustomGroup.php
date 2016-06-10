@@ -9,8 +9,7 @@
  *  - Update a Group
  *  - Get the custom fields of a group
  */
-class RCCWP_CustomGroup
-{
+class RCCWP_CustomGroup {
 	
 	/**
 	 * Create a new group in a write panel
@@ -21,21 +20,28 @@ class RCCWP_CustomGroup
 	 * @param unknown_type $at_right a boolean indicating whether the group should be placed at right side.
 	 * @return the id of the new group
 	 */
-	public static function Create($customWritePanelId, $name, $duplicate, $expanded = 1, $at_right = 0)
-	{
+	public static function Create($customWritePanelId, $name, $duplicate, $expanded = 1, $at_right = 0) {
 		require_once('RC_Format.php');
 		global $wpdb;
-		$sql = sprintf(
-			"INSERT INTO " . MF_TABLE_PANEL_GROUPS .
-			" (panel_id, name, duplicate, expanded, at_right) values (%d, %s, %d, %d, %d)",
-			$customWritePanelId,
-			RC_Format::TextToSql($name),
-			$duplicate,
-			$expanded,
-			$at_right
-			);
-		$wpdb->query($sql);
-		
+
+		$wpdb->insert( 
+			MF_TABLE_PANEL_GROUPS, 
+			array( 
+				'panel_id' => $customWritePanelId, 
+				'name' => $name,
+				'duplicate' => $duplicate,
+				'expanded' => $expanded,
+				'at_right' => $at_right
+			), 
+			array( 
+				'%d',
+				'%s',
+				'%d',
+				'%d',
+				'%d'
+			) 
+		);
+
 		$customGroupId = $wpdb->insert_id;
 		return $customGroupId;
 	}
@@ -45,25 +51,17 @@ class RCCWP_CustomGroup
 	 *
 	 * @param integer $customGroupId
 	 */
-	public static function Delete($customGroupId = null)
-	{
+	public static function Delete($customGroupId = null) {
 		include_once ('RCCWP_CustomField.php');
-		if (isset($customGroupId))
-		{
+		if (isset($customGroupId)) {
 			global $wpdb;
 			
 			$customFields = RCCWP_CustomGroup::GetCustomFields($customGroupId);
-			foreach ($customFields as $field) 
-			{
+			foreach ($customFields as $field)  {
 				RCCWP_CustomField::Delete($field->id);
   			}
-		  	
-  			$sql = sprintf(
-				"DELETE FROM " . MF_TABLE_PANEL_GROUPS .
-				" WHERE id = %d",
-				$customGroupId
-				);
-			$wpdb->query($sql);
+
+			$wpdb->delete( MF_TABLE_PANEL_GROUPS, array( 'id' => $customGroupId ), array( '%d' ) );
 		}
 	}
 	
@@ -121,7 +119,7 @@ class RCCWP_CustomGroup
 			$results[$i]->has_properties 		= $mf_field_types[$results[$i]->custom_field_type]['has_properties'];
 			$results[$i]->allow_multiple_values = $mf_field_types[$results[$i]->custom_field_type]['allow_multiple_values'];
 
-			$results[$i]->options = unserialize($results[$i]->options);
+			$results[$i]->options = unserialize(stripslashes($results[$i]->options));
 			$results[$i]->properties = unserialize($results[$i]->properties);
 			$results[$i]->default_value = unserialize($results[$i]->default_value);
 		}
@@ -137,21 +135,27 @@ class RCCWP_CustomGroup
 	 * @param unknown_type $duplicate a boolean indicating whether the group can be duplicated
 	 * @param unknown_type $at_right a boolean indicating whether the group should be placed at right side. 
 	 */	
-	public static function Update($customGroupId, $name, $duplicate, $expanded, $at_right)
-	{
+	public static function Update($customGroupId, $name, $duplicate, $expanded, $at_right) {
 		require_once('RC_Format.php');
 		global $wpdb;
 	
-		$sql = sprintf(
-			"UPDATE " . MF_TABLE_PANEL_GROUPS .
-			" SET name = %s , duplicate = %d, expanded = %d, at_right = %d".
-			" where id = %d",
-			RC_Format::TextToSql($name),
-			$duplicate,
-			$expanded,
-			$at_right,
-			$customGroupId );
-		$wpdb->query($sql);
+		$wpdb->update( 
+			MF_TABLE_PANEL_GROUPS, 
+			array( 
+				'name' => $name,
+				'duplicate' => $duplicate,
+				'expanded' => $expanded,
+				'at_right' => 0
+			), 
+			array( 'id' => $customGroupId ), 
+			array( 
+				'%s',
+				'%d',
+				'%d',
+				'%d'
+			), 
+			array( '%d' )
+		);
 		
 	}
 }

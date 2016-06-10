@@ -11,4 +11,10 @@ class RC_Format {
 	public static function TrimArrayValues(&$value, $key) {
 		$value = trim($value);
 	}
+
+	public static function TextToSqlAlt($value) {
+		$value = trim($value);
+		$sql = $value == '' ? '' : "$value";
+		return $sql;
+	}
 }

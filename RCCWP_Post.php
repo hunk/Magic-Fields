@@ -76,7 +76,7 @@ class RCCWP_Post {
 		if(!empty($_POST['magicfields_remove_files'])){
 			$files = preg_split('/\|\|\|/', $_POST['magicfields_remove_files']);
 			foreach($files as $file){
-        do_action('mf_before_delete_file',$file);
+        	do_action('mf_before_delete_file',$file);
 				@unlink(MF_FILES_PATH.$file);
 			}
 		}
@@ -99,8 +99,7 @@ class RCCWP_Post {
 				delete_post_meta($postId,$name);
 			}
 
-			$wpdb->query("DELETE FROM ". MF_TABLE_POST_META .
-				" WHERE post_id=$postId");
+			$wpdb->delete( MF_TABLE_POST_META, array( 'post_id' => $postId ), array( '%d' ) );
 			
 			//Creating the new values
 			//Iterating the custom fields
@@ -112,18 +111,32 @@ class RCCWP_Post {
 					//Iterating the  duplicates
 					foreach($fields as $value){
 						// Adding field value meta data
-						add_post_meta($postId, $name, $value);
-							
+						add_post_meta($postId, $name, $value);	
 						$fieldMetaID = $wpdb->insert_id;
-				
-						// Adding  the referencie in the magic fields post meta table
-						$wpdb->query("INSERT INTO ". MF_TABLE_POST_META .
-										" (id, field_name, group_count, field_count, post_id,order_id) ".
-										" VALUES ({$fieldMetaID}, '{$name}',{$groups_index},{$index},{$postId},{$groups_index})"
-									);
 
-            //pre save value
-            do_action('mf_presave',$fieldMetaID,$name,$groups_index,$index,$postId,$value,$customWritePanelId);
+						$wpdb->insert( 
+							MF_TABLE_POST_META, 
+							array( 
+								'id' => $fieldMetaID, 
+								'field_name' => $name,
+								'group_count' => $groups_index,
+								'field_count' => $index,
+								'post_id' => $postId,
+								'order_id' => $groups_index
+
+							), 
+							array( 
+								'%d',
+								'%s',
+								'%d',
+								'%d',
+								'%d',
+								'%d', 
+							) 
+						);
+
+            			//pre save value
+            			do_action('mf_presave',$fieldMetaID,$name,$groups_index,$index,$postId,$value,$customWritePanelId);
 
 						$index++;
 					}
@@ -162,23 +175,17 @@ class RCCWP_Post {
 	 *
 	 * @return Custom Write Panel as an object, returns null if there is no write panels.
 	 */
-	public static function GetCustomWritePanel()
-	{
+	public static function GetCustomWritePanel() {
 	    global $wpdb;
 		
-		if (isset($_GET['post']))
-		{
+		if (isset($_GET['post'])) {
 
 			$customWritePanelId = get_post_meta((int)$_GET['post'], RC_CWP_POST_WRITE_PANEL_ID_META_KEY, true);
 		
-	
-			if (empty($customWritePanelId))
-			{
-				if( array_key_exists( 'custom-write-panel-id', $_REQUEST ) )
-				{
+			if (empty($customWritePanelId)) {
+				if( array_key_exists( 'custom-write-panel-id', $_REQUEST ) ) {
 					$customWritePanelId = (int)($_REQUEST['custom-write-panel-id']);
-				}else
-				{
+				} else {
 					$customWritePanelId = 0;
 				}
 			}
@@ -190,20 +197,15 @@ class RCCWP_Post {
 		    $element_id = $wpdb->get_col($sql);
 			$customWritePanelId = get_post_meta((int)$element_id, RC_CWP_POST_WRITE_PANEL_ID_META_KEY, true);
 
-			if (empty($customWritePanelId))
-			{
-				if( array_key_exists( 'custom-write-panel-id', $_REQUEST ) )
-				{
+			if (empty($customWritePanelId)) {
+				if( array_key_exists( 'custom-write-panel-id', $_REQUEST ) ) {
 					$customWritePanelId = (int)($_REQUEST['custom-write-panel-id']);
-				}else
-				{
+				} else {
 					$customWritePanelId = 0;
 				}
 			}
 
-		}
-		else if (isset($_REQUEST['custom-write-panel-id']))
-		{
+		} else if (isset($_REQUEST['custom-write-panel-id'])) {
 			$customWritePanelId = (int)$_REQUEST['custom-write-panel-id'];
 		}
 		

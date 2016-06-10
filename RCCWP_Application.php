@@ -7,20 +7,24 @@
  *   - Uninstall Magic Fields
  *   - Check if Magic Fields was correctly installed 
  */
-class RCCWP_Application
-{
+class RCCWP_Application {
 
   public static function AddColumnIfNotExist($db, $column, $column_attr = "VARCHAR( 255 ) NULL" ){
+  	global $wpdb;
     $exists = false;
-    $columns = @mysql_query("show columns from $db");
-    while($c = @mysql_fetch_assoc($columns)){
-        if($c['Field'] == $column){
+
+    $sql = $wpdb->prepare( "SHOW columns from $db",array());
+    $table_colums = $wpdb->get_results($sql);
+    foreach ($table_colums as $table_colum) {
+    	if($table_colum->Field == $column){
             $exists = true;
             break;
         }
-    }      
+    }
+
     if(!$exists){
-        mysql_query("ALTER TABLE `$db` ADD `$column`  $column_attr");
+    	$sql = $wpdb->prepare( "ALTER TABLE $db ADD $column $column_attr" );
+    	$wpdb->query($sql);
     }
   }
   
@@ -229,8 +233,8 @@ class RCCWP_Application
 
 		//Post types
 		if(is_wp30()){
-			require_once(MF_PATH.'/MF_PostTypesPage.php');
-			MF_PostTypePages::CreatePostTypesTables();
+			// require_once(MF_PATH.'/MF_PostTypesPage.php');
+			// MF_PostTypePages::CreatePostTypesTables();
 		}
                 RCCWP_Application::UpgradeBlog();
 
@@ -256,18 +260,18 @@ class RCCWP_Application
 		if (RC_CWP_DB_VERSION >= 6){
 			$table_name = $wpdb->prefix . "mf_custom_field_types";
 			if($wpdb->get_var($wpdb->prepare( "SHOW TABLES LIKE $table_name" ) ) == $table_name){
-				$wpdb->query("DROP TABLE ".$wpdb->prefix."mf_custom_field_types");
+				$wpdb->query($wpdb->prepare( "DROP TABLE {$wpdb->prefix}mf_custom_field_types" ) );
 			}
 		}
 
-    if (RC_CWP_DB_VERSION >= 7) {
-      RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANEL_GROUPS, "expanded", $column_attr = "tinyint after duplicate" );
-      RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANELS, "expanded", $column_attr = "tinyint NOT NULL DEFAULT 1 after type" );
-    }
+    	if (RC_CWP_DB_VERSION >= 7) {
+      		RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANEL_GROUPS, "expanded", $column_attr = "tinyint after duplicate" );
+      		RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANELS, "expanded", $column_attr = "tinyint NOT NULL DEFAULT 1 after type" );
+    	}
 
-    if( RC_CWP_DB_VERSION >= 8 ){
-      $wpdb->query('ALTER TABLE '.MF_TABLE_PANEL_CATEGORY.' MODIFY cat_id VARCHAR(100)');
-    }
+    	if( RC_CWP_DB_VERSION >= 8 ){
+      		$wpdb->query($wpdb->prepare( 'ALTER TABLE '.MF_TABLE_PANEL_CATEGORY.' MODIFY cat_id VARCHAR(100)' ));
+    	}
 	}
 
 	/**
@@ -287,41 +291,41 @@ class RCCWP_Application
 		delete_option('RC_CWP_BLOG_DB_VERSION');
 		
 		//delete post_meta WP and WP MF
-		$sql = "delete a.* from $wpdb->postmeta as a, {$wpdb->prefix}mf_post_meta as b where b.id = a.meta_id";
+		$sql = $wpdb->prepare( "DELETE a.* FROM $wpdb->postmeta AS a, {$wpdb->prefix}mf_post_meta AS b WHERE b.id = a.meta_id");
 		$wpdb->query($sql);
 
 		// Delete meta data
-		$sql = "DELETE FROM $wpdb->postmeta WHERE meta_key = '" . RC_CWP_POST_WRITE_PANEL_ID_META_KEY . "'";
+		$sql = $wpdb->prepare( "DELETE FROM $wpdb->postmeta WHERE meta_key = '" . RC_CWP_POST_WRITE_PANEL_ID_META_KEY . "'" );
  		$wpdb->query($sql);
 
-		$sql = "DROP TABLE " . MF_TABLE_STANDARD_FIELDS;
+		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_STANDARD_FIELDS);
 		$wpdb->query($sql);
 		
-		$sql = "DROP TABLE " . MF_TABLE_PANELS;
+		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_PANELS);
 		$wpdb->query($sql);
 		
-		$sql = "DROP TABLE " . MF_TABLE_PANEL_GROUPS;
+		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_PANEL_GROUPS );
 		$wpdb->query($sql);
 		
-		$sql = "DROP TABLE " . MF_TABLE_GROUP_FIELDS;
+		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_GROUP_FIELDS );
 		$wpdb->query($sql);
 		
-		$sql = "DROP TABLE " . MF_TABLE_PANEL_CATEGORY;
+		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_PANEL_CATEGORY );
 		$wpdb->query($sql);
 		
-		$sql = "DROP TABLE " . MF_TABLE_PANEL_STANDARD_FIELD;
+		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_PANEL_STANDARD_FIELD );
 		$wpdb->query($sql);
 		
-		$sql = "DROP TABLE " . MF_TABLE_PANEL_HIDDEN_EXTERNAL_FIELD;
+		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_PANEL_HIDDEN_EXTERNAL_FIELD );
 		$wpdb->query($sql);
 		
-		$sql = "DROP TABLE " . MF_TABLE_CUSTOM_FIELD_OPTIONS;
+		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_CUSTOM_FIELD_OPTIONS );
 		$wpdb->query($sql);
 
-		$sql = "DROP TABLE " . MF_TABLE_CUSTOM_FIELD_PROPERTIES; 
+		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_CUSTOM_FIELD_PROPERTIES );
 		$wpdb->query($sql);
 
-		$sql = "DROP TABLE " . MF_TABLE_POST_META; 
+		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_POST_META );
 		$wpdb->query($sql);
 
 		$current = get_option('active_plugins');

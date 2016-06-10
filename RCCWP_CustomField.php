@@ -44,18 +44,20 @@ class RCCWP_CustomField {
 		$helptext = addslashes($helptext);
     
 		if(isset($_POST['custom-field-css'])) $css = $_POST['custom-field-css'];
-		$sql = sprintf(
+		$sql = $wpdb->prepare(
 			"INSERT INTO " . MF_TABLE_GROUP_FIELDS .
 			" (group_id, name, description, display_order, required_field, type, CSS, duplicate,help_text) values (%d, %s, %s, %d, %d, %d, %s, %d, %s)",
-			$customGroupId,
-			RC_Format::TextToSql($name),
-			RC_Format::TextToSql($label),
-			$order,
-			$required_field,
-			$type,
-			"'".$css."'",
-			$duplicate,
-			RC_Format::TextToSql($helptext)
+			array(
+				$customGroupId,
+				RC_Format::TextToSqlAlt($name),
+				RC_Format::TextToSqlAlt($label),
+				$order,
+				$required_field,
+				$type,
+				$css,
+				$duplicate,
+				RC_Format::TextToSqlAlt($helptext)
+				)
 			);
 		$wpdb->query($sql);
 		
@@ -77,24 +79,19 @@ class RCCWP_CustomField {
 			}
 			array_walk($default_value, array("RC_Format", "TrimArrayValues"));
 			$default_value = addslashes(serialize($default_value));
-			
-			$sql = sprintf(
-				"INSERT INTO " . MF_TABLE_CUSTOM_FIELD_OPTIONS .
-				" (custom_field_id, options, default_option) values (%d, %s, %s)",
-				$customFieldId,
-				RC_Format::TextToSql($options),
-				RC_Format::TextToSql($default_value)
-				);	
+				
+			$sql = $wpdb->prepare( "INSERT INTO " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " (custom_field_id, options, default_option) values (%d, %s, %s)",
+				array(
+					$customFieldId,
+					RC_Format::TextToSqlAlt($options),
+					RC_Format::TextToSqlAlt($default_value)
+					)
+			);
 			$wpdb->query($sql);	
 		}
 		
 		if ($field_type->has_properties == "true"){
-			$sql = sprintf(
-				"INSERT INTO " . MF_TABLE_CUSTOM_FIELD_PROPERTIES .
-				" (custom_field_id, properties) values (%d, %s)",
-				$customFieldId,
-				RC_Format::TextToSql(serialize($properties))
-				);
+			$sql = $wpdb->prepare( "INSERT INTO " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " (custom_field_id, properties) values (%d, %s)", array( $customFieldId,RC_Format::TextToSqlAlt(serialize($properties)) ) );
 			$wpdb->query($sql);
 		}
 		
@@ -106,26 +103,21 @@ class RCCWP_CustomField {
 	 *
 	 * @param integer $customFieldId field id
 	 */
-	public static function Delete($customFieldId = null)
-	{
+	public static function Delete($customFieldId = null) {
 		global $wpdb;
 		
 		$customField = RCCWP_CustomField::Get($customFieldId);
 		
-		$sql = sprintf(
-			"DELETE FROM " . MF_TABLE_GROUP_FIELDS .
-			" WHERE id = %d",
-			$customFieldId
-			);
+		$sql = $wpdb->prepare( "DELETE FROM " . MF_TABLE_GROUP_FIELDS . " WHERE id = %d", array( $customFieldId ) );
 		$wpdb->query($sql);
 		
-		if ($customField->has_options == "true")
-		{
-			$sql = sprintf(
-				"DELETE FROM " . MF_TABLE_CUSTOM_FIELD_OPTIONS .
-				" WHERE custom_field_id = %d",
-				$customFieldId
-				);	
+		if ($customField->has_options == "true") {
+			$sql = $wpdb->prepare( "DELETE FROM " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " WHERE custom_field_id = %d", array( $customFieldId ) );
+			$wpdb->query($sql);	
+		}
+
+		if ($customField->has_properties == "true") {
+			$sql = $wpdb->prepare( "DELETE FROM " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " WHERE custom_field_id = %d", array( $customFieldId ) );
 			$wpdb->query($sql);	
 		}
 	}
@@ -149,16 +141,15 @@ class RCCWP_CustomField {
 			array( $customFieldId ) );
 
 		$results = $wpdb->get_row($sql);
-
 		$results->type 					= $mf_field_types[$results->custom_field_type]['name'];
 		$results->type_id 				= $results->custom_field_type;
 		$results->has_options 			= $mf_field_types[$results->custom_field_type]['has_options'];
 		$results->has_properties 		= $mf_field_types[$results->custom_field_type]['has_properties'];
 		$results->allow_multiple_values = $mf_field_types[$results->custom_field_type]['allow_multiple_values'];
 		
-		$results->options = unserialize($results->options);
+		$results->options = unserialize(stripslashes($results->options));
 		$results->properties = unserialize($results->properties);
-		$results->default_value = unserialize($results->default_value);
+		$results->default_value = unserialize(stripslashes($results->default_value));
 
 		return $results;
 	}
@@ -378,22 +369,14 @@ class RCCWP_CustomField {
 		$name = str_replace(" ","_",$name);
 		$oldCustomField = RCCWP_CustomField::Get($customFieldId);
 		
-		if ($oldCustomField->name != $name)
-		{
-			$sql = sprintf(
-				"UPDATE $wpdb->postmeta" .
-				" SET meta_key = %s" .
-				" WHERE meta_key = %s",
-				RC_Format::TextToSql($name),
-				RC_Format::TextToSql($oldCustomField->name)
-				);
-			
+		if ($oldCustomField->name != $name) {
+			$sql = $wpdb->prepare( "UPDATE $wpdb->postmeta SET meta_key = %s WHERE meta_key = %s", array( $name,$oldCustomField->name ) );
 			$wpdb->query($sql);
 		}
 		$css = NULL;
 		if(isset($_POST['custom-field-css'])) $css = $_POST['custom-field-css'];
-		$sql = sprintf(
-			"UPDATE " . MF_TABLE_GROUP_FIELDS .
+
+		$sql = $wpdb->prepare( "UPDATE " . MF_TABLE_GROUP_FIELDS .
 			" SET name = %s" .
 			" , description = %s" .
 			" , display_order = %d" .
@@ -403,22 +386,24 @@ class RCCWP_CustomField {
 			" , duplicate = %d" .
 			" , help_text = %s" .
 			" WHERE id = %d",
-			RC_Format::TextToSql($name),
-			RC_Format::TextToSql($label),
-			$order,
-			$required_field,
-			$type,
-			$css,
-			$duplicate,
-			RC_Format::TextToSql($helptext),
-			$customFieldId
+			array( 
+				RC_Format::TextToSqlAlt($name),
+				RC_Format::TextToSqlAlt($label),
+				$order,
+				$required_field,
+				$type,
+				$css,
+				$duplicate,
+				RC_Format::TextToSqlAlt($helptext),
+				$customFieldId
+				)
 			);
+
 		$wpdb->query($sql);
 
 
 		$field_type = RCCWP_CustomField::GetCustomFieldTypes($type);
-		if ($field_type->has_options == "true")
-		{
+		if ($field_type->has_options == "true") {
 			if (!is_array($options)) {
 				$options = stripslashes($options);
 				$options = explode("\n", $options);
@@ -433,47 +418,37 @@ class RCCWP_CustomField {
 			array_walk($default_value, array("RC_Format", "TrimArrayValues"));
 			$default_value = addslashes(serialize($default_value));
 			
-			$sql = sprintf(
-				"INSERT INTO " . MF_TABLE_CUSTOM_FIELD_OPTIONS .
-				" (custom_field_id, options, default_option) values (%d, %s, %s)" . 
-				" ON DUPLICATE KEY UPDATE options = %s, default_option = %s",
-				$customFieldId,
-				RC_Format::TextToSql($options),
-				RC_Format::TextToSql($default_value),
-				RC_Format::TextToSql($options),
-				RC_Format::TextToSql($default_value)
-				);	
-			$wpdb->query($sql);	
-		}
-		else
-		{
-			$sql = sprintf(
-				"DELETE FROM " . MF_TABLE_CUSTOM_FIELD_OPTIONS .
-				" WHERE custom_field_id = %d",
-				$customFieldId
+			$sql = $wpdb->prepare(
+				"INSERT INTO " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " (custom_field_id, options, default_option) values (%d, %s, %s)" . 
+				" ON DUPLICATE KEY UPDATE options = %s, default_option = %s", 
+				array(
+					$customFieldId,
+					RC_Format::TextToSqlAlt($options),
+					RC_Format::TextToSqlAlt($default_value),
+					RC_Format::TextToSqlAlt($options),
+					RC_Format::TextToSqlAlt($default_value)
+					)
 				);
+			$wpdb->query($sql);	
+		} else {
+			$sql = $wpdb->prepare( "DELETE FROM " . MF_TABLE_CUSTOM_FIELD_OPTIONS . " WHERE custom_field_id = %d", array( $customFieldId ) );
 			$wpdb->query($sql);	
 		}
 		
-		if ($field_type->has_properties == "true")
-		{
-			$sql = sprintf(
+		if ($field_type->has_properties == "true") {
+			$sql = $wpdb->prepare(
 				"INSERT INTO " . MF_TABLE_CUSTOM_FIELD_PROPERTIES .
 				" (custom_field_id, properties) values (%d, %s)" .
 				" ON DUPLICATE KEY UPDATE properties = %s",
-				$customFieldId,
-				RC_Format::TextToSql(serialize($properties)),
-				RC_Format::TextToSql(serialize($properties))
-				);	
-			$wpdb->query($sql);	
-		}
-		else
-		{
-			$sql = sprintf(
-				"DELETE FROM " . MF_TABLE_CUSTOM_FIELD_PROPERTIES .
-				" WHERE custom_field_id = %d",
-				$customFieldId
+				array(
+					$customFieldId,
+					RC_Format::TextToSqlAlt(serialize($properties)),
+					RC_Format::TextToSqlAlt(serialize($properties))
+					)
 				);
+			$wpdb->query($sql);	
+		} else {
+			$sql = $wpdb->prepare( "DELETE FROM " . MF_TABLE_CUSTOM_FIELD_PROPERTIES . " WHERE custom_field_id = %d", array( $customFieldId ) );
 			$wpdb->query($sql);	
 		}
 	}

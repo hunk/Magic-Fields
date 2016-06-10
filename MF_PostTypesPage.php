@@ -219,4 +219,3 @@ Class MF_PostTypePages{
 		}
 	}
 }
-?>

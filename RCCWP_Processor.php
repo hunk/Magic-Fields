@@ -143,7 +143,7 @@ class RCCWP_Processor {
 				$values = array_merge($default,$_POST);
 				
 				$customGroupId = RCCWP_CustomGroup::Create(
-						$values['custom-write-panel-id'], $values['custom-group-name'], $values['custom-group-duplicate'], $values['custom-group-expanded'], NULL);
+						$values['custom-write-panel-id'], $values['custom-group-name'], $values['custom-group-duplicate'], $values['custom-group-expanded'], 0);
 				break;
 				
 			case 'delete-custom-group':
