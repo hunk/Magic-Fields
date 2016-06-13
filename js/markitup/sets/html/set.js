@@ -10,7 +10,7 @@
 // Basic set. Feel free to add more tags
 // ----------------------------------------------------------------------------
 mySettings = {
-  previewParserPath:	mf_path +'markdownPreview.php',
+	previewTemplatePath:	mf_path +'js/markitup/templates/preview.html',
 	previewInWindow: 'width=800, height=600, resizable=yes, scrollbars=yes',
 	onShiftEnter:	{keepDefault:false, replaceWith:'<br />\n'},
 	/*onEnter:	{keepDefault:true, replaceWith:'<br />\n'},*/

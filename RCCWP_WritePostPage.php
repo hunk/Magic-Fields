@@ -3,36 +3,36 @@
  * This class content all  type of fields for the panels
  */
  
- // traversal
-	function RelatedTypeFieldsFilter($fields) {
-    return "*";
-  }
+// traversal
+function RelatedTypeFieldsFilter($fields) {
+	return "*";
+}
 
-  function RelatedTypeWhereFilter($where) {
+function RelatedTypeWhereFilter($where) {
     echo $where;
     return $where;
-  }
+}
   
-  function RelatedTypeOrderByFilter($orderby) {
-	  global $wpdb;
-	  $orderby = "$wpdb->postmeta.meta_value,$wpdb->posts.post_title";
+function RelatedTypeOrderByFilter($orderby) {
+	global $wpdb;
+	$orderby = "$wpdb->postmeta.meta_value,$wpdb->posts.post_title";
     return $orderby;
-  }
+}
   
 class RCCWP_WritePostPage  {
 
-  function mf_category_order($cats,$parent=0,$depth = 0,$resp = array() ){
-    foreach($cats as $k => $cat){
-      if($cat->parent == $parent){
-        $term_id = $cat->term_id;
-        $resp[$term_id]->term_id = $term_id;
-        $resp[$term_id]->name = sprintf('%s%s',str_repeat('&nbsp;', $depth * 4),$cat->slug);
-        unset($cats[$k]);
-        $resp = RCCWP_WritePostPage::mf_category_order($cats,$term_id,$depth+1,$resp);
-      }
-    }
-    return $resp;
-  }
+	function mf_category_order($cats,$parent=0,$depth = 0,$resp = array() ){
+    	foreach($cats as $k => $cat){
+      		if($cat->parent == $parent){
+        		$term_id = $cat->term_id;
+        		$resp[$term_id]->term_id = $term_id;
+        		$resp[$term_id]->name = sprintf('%s%s',str_repeat('&nbsp;', $depth * 4),$cat->slug);
+        		unset($cats[$k]);
+        		$resp = RCCWP_WritePostPage::mf_category_order($cats,$term_id,$depth+1,$resp);
+      		}
+    	}
+    	return $resp;
+  	}
 
 	public static function ApplyWritePanelAssignedCategoriesOrTemplate(){
 		global $CUSTOM_WRITE_PANEL,$post,$wp_version;
@@ -224,18 +224,18 @@ class RCCWP_WritePostPage  {
 		
 		//markitup
 		wp_enqueue_script('markitup',
-  	  MF_URI.'js/markitup/jquery.markitup.pack.js',
-  		array('jquery')
-  	);
+  	  		MF_URI.'js/markitup/jquery.markitup.js',
+  			array('jquery')
+  		);
   	
-  	wp_enqueue_script('markitup_set_markdown',
-  	  MF_URI.'js/markitup/sets/html/set.js',
-  	  array('markitup')
-    );
+  		wp_enqueue_script('markitup_set_markdown',
+  	  		MF_URI.'js/markitup/sets/html/set.js',
+  	  		array('markitup')
+    	);
     
-    wp_enqueue_script('valums_file_uploader',
-  	  MF_URI.'js/valumsfileuploader.js'
-  	);
+    	wp_enqueue_script('valums_file_uploader',
+  	  		MF_URI.'js/valumsfileuploader.js'
+  		);
   	
 
   	wp_enqueue_script('markitup_setup',
