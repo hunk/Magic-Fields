@@ -75,6 +75,7 @@ require_once ('RCCWP_Query.php');
 
 require_once 'MF_GetFile.php';
 require_once 'MF_GetDuplicate.php';
+require_once 'MF_ImageMedia.php';
 
  /**
   * function for languages
@@ -392,13 +393,15 @@ function charge_link_after_upload_image($fields){
         $wp_version < 3.5 ||
         (( isset($_REQUEST['fetch']) && $_REQUEST['fetch'] ) ||
         ( isset($_REQUEST['tab']) && $_REQUEST['tab'] == 'library' ))
-      ){
+      ) {
+      	$nonce_ajax_get_image_media_info = wp_create_nonce('nonce_ajax_get_image_media_info');
    		printf("
       		<script type=\"text/javascript\">
       		//<![CDATA[
         	load_link_in_media_upload();
+        	var nonce_ajax_get_image_media_info = \"%s\";
       		//]]>
-      		</script>");
+      		</script>",$nonce_ajax_get_image_media_info);
 		}
       return $fields;
 }

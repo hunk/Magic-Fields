@@ -10,6 +10,8 @@ wp_enqueue_script( 'mf_media_upload_fiel',
 					MF_URI.'js/custom_fields/media_image.js'
 				);
 
+wp_enqueue_style('mf_media_image',MF_URI.'css/media_image.css',false,'0.1','all');
+
 include_once('RCCWP_Options.php');
 
 class RCCWP_OptionsPage {
