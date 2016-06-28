@@ -2,7 +2,7 @@
 * Authors: [Edgar Garcia](http://hunk.com.mx "Hunk")
 * Old contributors: [Astrata Software](http://astrata.mx) [Travis Hensgen](http://traversal.com.au/), [Jeff Minard](http://jrm.cc/ "Jeff Minard"), [Carlos Mendoza](http://http://github.com/kaziel/Magic-Fields "Carlos Mendoza"), Michael Bayard, [Doc4](doc4design.com/ "Doc4"), [David Valdez](http://gnuget.org "Gnuget")
 * Tested up to: Wordpress 4.5.2
-* Stable tag: 1.7
+* Stable tag: 1.7.1
 * Description: Magic Fields  is a feature rich WordPress CMS plugin.
 
 ## Description
@@ -17,6 +17,15 @@ Follow the following steps to install this plugin.
 2.	Activate the plugin through the 'Plugins' menu in WordPress.
 
 ## Changelog ##
+
+###1.7.1###
+* remove markitup pack and replace with the complete js. remove markdown Preview and replace the preview with the default template
+* get image media info call now uses wp ajax
+* add $wpdb->prepare in $wpdb->get_row, $wpdb->get_col, $wpdb->get_var, $wpdb->get_results, $wpdb->query
+* Duplicate (field and group) calls now uses wp ajax
+* Remove file of old get file
+* Get file now use wp ajax
+* Change remove file for file field and audio field for work the same way the image field
 
 ###1.7###
 * Clean debug console.log
