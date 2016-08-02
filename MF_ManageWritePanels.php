@@ -54,11 +54,18 @@ function change_botton_new_in_manage($where){
       //<![CDATA[
         jQuery().ready(function() {
           change_button_new('%s','%scustom-write-panel-id=%s','%s');
-					unlink_write_panel();
+					unlink_write_panel('%s');
         });
       //]]>
-      </script>",$type_add_new[$parent_file],$contact,$_GET['custom-write-panel-id'],$_GET['custom-write-panel-id']);
-    $_SESSION['change_botton_new_in_manage'] = "1"; 
+      </script>",
+      $type_add_new[$parent_file],
+      $contact,
+      $_GET['custom-write-panel-id'],
+      $_GET['custom-write-panel-id'],
+      wp_create_nonce('unlink-write-panel')
+      );
+
+      $_SESSION['change_botton_new_in_manage'] = "1"; 
     
   }
   return $where;

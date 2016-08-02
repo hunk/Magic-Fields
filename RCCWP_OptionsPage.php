@@ -39,7 +39,7 @@ class RCCWP_OptionsPage {
 	<h2><?php _e('Magic Fields Options', $mf_domain); ?></h2>
 	
 	<form action="#" method="post" id="custom-write-panel-options-form">	
-	
+	<?php wp_nonce_field('update-custom-write-panel-options','checking'); ?> 
 	<h3><?php _e('Write Panel Options', $mf_domain); ?></h3>
 	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6"> 
 	
@@ -170,7 +170,7 @@ class RCCWP_OptionsPage {
 			</td>
 		</tr>
 	</table>
-
+	
 	<p class="submit" ><input name="update-custom-write-panel-options" type="submit" value="<?php _e('Update Options', $mf_domain); ?>" /></p>
 	
 	</form>

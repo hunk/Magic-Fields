@@ -65,7 +65,7 @@ class RCCWP_CustomGroupPage
 		<h2><?php _e('Edit Group', $mf_domain); ?> - <?php echo $customGroup->name?></h2>
 		
 		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('submit-edit-custom-group')."&custom-group-id={$customGroup->id}"?>" method="post" id="edit-custom-group-form">
-		
+		<?php wp_nonce_field('submit-edit-custom-group','checking'); ?> 		
 		<?php
 		RCCWP_CustomGroupPage::Content($customGroup);
 		?>

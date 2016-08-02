@@ -49,6 +49,8 @@ class RCCWP_CreateCustomFieldPage
   			
   	<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('continue-create-custom-field')?>" method="post" name="create_custom_field_form" id="create-custom-field-form" onsubmit="return checkEmpty();" autocomplete="off">
 
+  		<?php wp_nonce_field('continue-create-custom-field','checking'); ?>
+  		
 		<?php if(isset($_GET['custom-group-id']) && !empty($_GET['custom-group-id'])) { ?>
   			<input type="hidden" name="custom-group-id" value="<?php echo $_GET['custom-group-id']?>">
 		<?php } ?>
@@ -209,6 +211,8 @@ class RCCWP_CreateCustomFieldPage
 		
 		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('finish-create-custom-field')?>" method="post" id="continue-create-new-field-form">
 		
+		<?php wp_nonce_field('finish-create-custom-field','checking'); ?> 
+
 		<input type="hidden" name="custom-group-id" 	value="<?php echo $values['custom-group-id']?>" />
 		<input type="hidden" name="custom-field-name" 		value="<?php echo htmlspecialchars($values['custom-field-name'])?>" />
 		<input type="hidden" name="custom-field-description" 	value="<?php echo htmlspecialchars($values['custom-field-description'])?>" />

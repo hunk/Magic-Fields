@@ -14,7 +14,7 @@ class RCCWP_CreateCustomGroupPage
 		<h2><?php _e('Create Custom Group', $mf_domain); ?></h2>
 		
 		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('finish-create-custom-group')?>" method="post" id="create-new-group-form">
-		
+		<?php wp_nonce_field('finish-create-custom-group','checking'); ?> 
 		<?php RCCWP_CustomGroupPage::Content(); ?>
 		
 		<p class="submit" >

@@ -24,6 +24,8 @@ class RCCWP_CustomGroup {
 		require_once('RC_Format.php');
 		global $wpdb;
 
+		$name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+
 		$wpdb->insert( 
 			MF_TABLE_PANEL_GROUPS, 
 			array( 
@@ -138,6 +140,8 @@ class RCCWP_CustomGroup {
 	public static function Update($customGroupId, $name, $duplicate, $expanded, $at_right) {
 		require_once('RC_Format.php');
 		global $wpdb;
+
+		$name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
 	
 		$wpdb->update( 
 			MF_TABLE_PANEL_GROUPS, 

@@ -58,8 +58,16 @@ class RCCWP_CustomWritePanel {
         include_once('RC_Format.php');
         global $wpdb;
 
+        $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+        $description = htmlspecialchars($description, ENT_QUOTES, 'UTF-8');
+
+
         $capabilityName = RCCWP_CustomWritePanel::GetCapabilityName($name);
         if (!$type) $type = $_POST['radPostPage'];
+
+        $type = htmlspecialchars($type, ENT_QUOTES, 'UTF-8');
+        $capabilityName = htmlspecialchars($capabilityName, ENT_QUOTES, 'UTF-8');
+
         $sql = $wpdb->prepare(
             "INSERT INTO " . MF_TABLE_PANELS .
             " (name, description, display_order, capability_name, type,single,expanded)" .
@@ -309,6 +317,9 @@ class RCCWP_CustomWritePanel {
         global $wpdb;
 
         $capabilityName = RCCWP_CustomWritePanel::GetCapabilityName($name);
+
+        $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+        $description = htmlspecialchars($description, ENT_QUOTES, 'UTF-8');
 
         $sql = $wpdb->prepare(
             "UPDATE " . MF_TABLE_PANELS .

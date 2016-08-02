@@ -285,7 +285,7 @@ class RCCWP_CustomWritePanelPage
 		<h2><?php _e('Edit', $mf_domain); ?> <?php echo $customWritePanel->name ?> <?php _e('Write Panel', $mf_domain); ?></h2>
 		
 		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('submit-edit-custom-write-panel')?>" method="post" id="submit-edit-custom-write-panel">
-		
+		<?php wp_nonce_field('submit-edit-custom-write-panel','checking'); ?> 		
 		<?php
 		RCCWP_CustomWritePanelPage::Content($customWritePanel);
 		?>
@@ -369,8 +369,8 @@ class RCCWP_CustomWritePanelPage
 				<span style="font-size:small">
 					&nbsp; &nbsp;
 					<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $customWritePanel->id); ?>" ><?php _e('Edit', $mf_domain); ?></a>|
-					<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-write-panel', $customWritePanel->id); ?>" onclick="return confirmBeforeDelete();"><?php _e('Delete', $mf_domain); ?></a>|
-					<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('export-custom-write-panel', $customWritePanel->id); ?>" ><?php _e('Export', $mf_domain); ?></a>
+					<a href="<?php echo wp_nonce_url(RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-write-panel', $customWritePanel->id),'delete-custom-write-panel', 'checking'); ?>" onclick="return confirmBeforeDelete();"><?php _e('Delete', $mf_domain); ?></a>|
+					<a href="<?php echo wp_nonce_url(RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('export-custom-write-panel', $customWritePanel->id),'export-custom-write-panel', 'checking'); ?>" ><?php _e('Export', $mf_domain); ?></a>
 				</span>
 			</h2>
 			<p id="post-search" style="margin-top:6px">
@@ -405,12 +405,13 @@ class RCCWP_CustomWritePanelPage
       <?php else:?> 
        <h2 class="mf-no-default-group"><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-group')."&custom-group-id={$group->id}"?>"><?php echo $group->name?></a></strong>
           <span class="mf_add_group_field">(<a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field')."&custom-group-id={$group->id}"?>"><?php _e('create field',$mf_domain); ?></a>)</span>
-          <span class="mf_delete_group_field">(<a onclick="return confirmBeforeDeleteGroup();" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-group')."&custom-group-id={$group->id}"?>"><?php _e('delete',$mf_domain); ?></a>)</span>
+          <span class="mf_delete_group_field">(<a onclick="return confirmBeforeDeleteGroup();" href="<?php echo wp_nonce_url(RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-group')."&custom-group-id={$group->id}",'delete-custom-group', 'checking'); ?>"><?php _e('delete',$mf_domain); ?></a>)</span>
 
        </h2>
       <?php endif;?>
 		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('save-fields-order')?>" method="post"  id="posts-filter" name="ImportWritePanelForm" enctype="multipart/form-data">
-  	<table cellpadding="3" cellspacing="3" width="100%" class="widefat">
+			<?php wp_nonce_field('save-fields-order','checking'); ?> 
+  		<table cellpadding="3" cellspacing="3" width="100%" class="widefat">
   		<thead>
 	  		<tr>
           <th width="5%"></th>
@@ -450,7 +451,7 @@ class RCCWP_CustomWritePanelPage
 		?>
 			<tr>
         <td>
-          <a  id="field_<?php echo $field->id; ?>"  class="handler" href="javascript:void();"><img src="<?php echo MF_URI; ?>/images/mf_arrows.png"></a>
+          <a  id="field_<?php echo $field->id; ?>"  class="handler" href="javascript:void(0)"><img src="<?php echo MF_URI; ?>/images/mf_arrows.png"></a>
           <input type="hidden" name="mf_order[<?php print $customGroupId;?>][]" value="<?php echo $field->id; ?>" />
         </td>
 				<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-field')."&custom-field-id=$field->id"?> " ><?php if ($intended){ ?><img align="top" src="<?php echo MF_URI; ?>images/arrow_right.gif" alt=""/> <?php } ?><?php echo $field->description . $maxlength?></a><?php if( $field->required_field == 1 ) echo ' <span class="required">*</span>'; ?></td>
@@ -461,7 +462,7 @@ class RCCWP_CustomWritePanelPage
 				<td><?php echo $field->type?><?php
 				if( $field->type == 'Multiline Textbox' && isset( $field->properties['hide-visual-editor'] ) && $field->properties['hide-visual-editor'] == 1 ) { echo ' <sup class="help_text">[simple]</sup>'; }
 				?></td>
-		  	<td><a onclick="return confirmBeforeDelete();" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-field')."&custom-field-id=$field->id"?>" >&times; <?php _e('Delete',$mf_domain); ?></a></td>
+		  	<td><a onclick="return confirmBeforeDelete();" href="<?php echo wp_nonce_url(RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('delete-custom-field')."&custom-field-id=$field->id",'delete-custom-field', 'checking'); ?>" >&times; <?php _e('Delete',$mf_domain); ?></a></td>
 			</tr>
 		<?php
 		endforeach;
@@ -553,7 +554,8 @@ class RCCWP_CustomWritePanelPage
 						<td><?php echo ucwords( $panel->type ); if( $panel->single != 1 ) echo ' <sup class="multiple" title="Multiple Posts/Pages">[+]</sup>'; ?></td>
 						<td><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('view-custom-write-panel', $panel->id)?>" ><?php _e('Edit Fields/Groups',$mf_domain) ?></a></td>
 						<td><?php if ($panel->name != '_Global'): ?><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $panel->id)?>" ><?php _e('Edit Write Panel',$mf_domain) ?></a>&nbsp;<?php endif; ?></td>
-						<td><?php if ($panel->name != '_Global'): ?><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $panel->id)?>" ><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('export-custom-write-panel', $panel->id); ?>" ><?php _e('Export',$mf_domain); ?></a><?php endif; ?></td>		
+						<td><?php if ($panel->name != '_Global'): ?><a href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-write-panel', $panel->id)?>" >
+							<a href="<?php echo wp_nonce_url(RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('export-custom-write-panel', $panel->id),'export-custom-write-panel', 'checking'); ?>" ><?php _e('Export',$mf_domain); ?></a><?php endif; ?></td>
 					</tr>
 				<?php
 				endforeach;

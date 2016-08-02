@@ -42,10 +42,26 @@ class RCCWP_Processor {
 		}else{
 			$currentAction = $_REQUEST['mf_action'];
 		}
+
+		//is user logged in?
+		if (
+			!( is_user_logged_in() &&
+				 	(current_user_can('edit_posts') || current_user_can('edit_published_pages'))
+				 )
+			) {
+			die(__("Authentication failed!",$mf_domain));
+		}
+
 		switch ($currentAction){
-			
+
 			// ------------ Write Panels
 			case 'finish-create-custom-write-panel':
+				//checking the nonce
+    			if ( !wp_verify_nonce($_POST['checking'],'finish-create-custom-write-panel') ){
+    				print 'Sorry, your nonce did not verify.';
+      				exit;
+    			}
+
 				include_once('RCCWP_CustomWritePanel.php');
 					
 				$default_theme_page=NULL;
@@ -72,6 +88,12 @@ class RCCWP_Processor {
 				break;
 				
 			case 'submit-edit-custom-write-panel':
+				//checking the nonce
+    			if ( !wp_verify_nonce($_POST['checking'],'submit-edit-custom-write-panel') ){
+    				print 'Sorry, your nonce did not verify.';
+      				exit;
+    			}
+
 				include_once('RCCWP_CustomWritePanel.php');
 				
 				$default_theme_page = $default_parent_page = NULL;
@@ -115,7 +137,14 @@ class RCCWP_Processor {
 				break;
 				
 				
-			case 'export-custom-write-panel':				
+			case 'export-custom-write-panel':
+
+				//checking the nonce
+    			if ( !wp_verify_nonce($_GET['checking'],'export-custom-write-panel') ){
+    				print 'Sorry, your nonce did not verify.';
+      				exit;
+    			}
+
 				require_once('RCCWP_CustomWritePanel.php');	
 				$panelID = $_REQUEST['custom-write-panel-id'];
 				$writePanel = RCCWP_CustomWritePanel::Get($panelID);
@@ -128,11 +157,24 @@ class RCCWP_Processor {
 				break;
 				
 			case 'delete-custom-write-panel':
+
+				//checking the nonce
+    			if ( !wp_verify_nonce($_GET['checking'],'delete-custom-write-panel') ){
+    				print 'Sorry, your nonce did not verify.';
+      				exit;
+    			}
+
 				include_once('RCCWP_CustomWritePanel.php');
 				RCCWP_CustomWritePanel::Delete($_GET['custom-write-panel-id']);
 				break;
 			// ------------ Groups
 			case 'finish-create-custom-group':
+				//checking the nonce
+    			if ( !wp_verify_nonce($_POST['checking'],'finish-create-custom-group') ){
+    				print 'Sorry, your nonce did not verify.';
+      				exit;
+    			}
+
 				include_once('RCCWP_CustomGroup.php');
 				$default = array(
 				  'custom-write-panel-id' => '',
@@ -147,12 +189,22 @@ class RCCWP_Processor {
 				break;
 				
 			case 'delete-custom-group':
+				//checking the nonce
+    			if ( !wp_verify_nonce($_GET['checking'],'delete-custom-group') ){
+    				print 'Sorry, your nonce did not verify.';
+      				exit;
+    			}
 				include_once('RCCWP_CustomGroup.php');
 				$customGroup = RCCWP_CustomGroup::Get((int)$_REQUEST['custom-group-id']);
 				RCCWP_CustomGroup::Delete($_GET['custom-group-id']);
 				break;
 			 
 			case 'unlink-write-panel':
+				//checking the nonce
+    			if ( !wp_verify_nonce($_GET['checking'],'unlink-write-panel') ){
+    				print 'Sorry, your nonce did not verify.';
+      				exit;
+    			}
 				global $wpdb;
 				$postId = (int)preg_replace('/post-/','',$_REQUEST['post-id']);
 				$dashboard = $_REQUEST['dashboard'];
@@ -180,7 +232,13 @@ class RCCWP_Processor {
 				}
 			 	break;
 
-			case 'submit-edit-custom-group':				
+			case 'submit-edit-custom-group':
+				//checking the nonce
+    			if ( !wp_verify_nonce($_POST['checking'],'submit-edit-custom-group') ){
+    				print 'Sorry, your nonce did not verify.';
+      				exit;
+    			}
+
 				include_once('RCCWP_CustomGroup.php');
 				$default = array(
 				  'custom-write-panel-id' => '',
@@ -225,6 +283,12 @@ class RCCWP_Processor {
 					);
 				
 			case 'continue-create-custom-field':
+				//checking the nonce
+    			if ( !wp_verify_nonce($_POST['checking'],'continue-create-custom-field') ){
+    				print 'Sorry, your nonce did not verify.';
+      				exit;
+    			}
+
 				if (RCCWP_Processor::CheckFieldName($_POST['custom-field-name'], $_REQUEST['custom-write-panel-id'])){
 					$newURL = RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field').'&custom-group-id='.$_REQUEST['custom-group-id'].'&err_msg=-1';
 					wp_redirect($newURL);
@@ -233,6 +297,12 @@ class RCCWP_Processor {
 				break;
 				
 			case 'finish-create-custom-field':
+				//checking the nonce
+    			if ( !wp_verify_nonce($_POST['checking'],'finish-create-custom-field') ){
+    				print 'Sorry, your nonce did not verify.';
+      				exit;
+    			}
+
 				include_once('RCCWP_CustomField.php');
 				
 				if (RCCWP_Processor::CheckFieldName($_POST['custom-field-name'], $_REQUEST['custom-write-panel-id'])){
@@ -349,6 +419,11 @@ class RCCWP_Processor {
 				break;
 				
 			case 'submit-edit-custom-field':
+				//checking the nonce
+    			if ( !wp_verify_nonce($_POST['checking'],'submit-edit-custom-field') ){
+    				print 'Sorry, your nonce did not verify.';
+      				exit;
+    			}
 				
 				include_once('RCCWP_CustomField.php');
 				
@@ -463,6 +538,12 @@ class RCCWP_Processor {
 				break;
 				
 			case 'delete-custom-field':
+
+				//checking the nonce
+    			if ( !wp_verify_nonce($_GET['checking'],'delete-custom-field') ){
+    				print 'Sorry, your nonce did not verify.';
+      				exit;
+    			}
 				
 				include_once('RCCWP_CustomField.php');
 				
@@ -471,6 +552,11 @@ class RCCWP_Processor {
 	
 				break;
       		case 'save-fields-order':
+      			if ( !wp_verify_nonce($_POST['checking'],'save-fields-order') ){
+    				print 'Sorry, your nonce did not verify.';
+      				exit;
+    			}
+
         		RCCWP_CustomWritePanelPage::save_order_fields();
 
 			default:
@@ -526,6 +612,12 @@ class RCCWP_Processor {
 						}
 					}
 				} else if (isset($_POST['update-custom-write-panel-options'])) {
+
+					if ( !wp_verify_nonce($_POST['checking'],'update-custom-write-panel-options') ){
+    					print 'Sorry, your nonce did not verify.';
+      					exit;
+    				}
+
 					if ($_POST['uninstall-custom-write-panel'] == 'uninstall') {
 						RCCWP_Application::Uninstall();
 						wp_redirect('options-general.php');
@@ -549,25 +641,22 @@ class RCCWP_Processor {
 						include_once('RCCWP_Options.php');
 						
 						$default = array(
-        		  'condense-menu' => 0,
-        			'hide-non-standart-content' => 0,
-        			'hide-write-post' => 0,
-        			'hide-write-page' => 0,
-        			'hide-visual-editor' => 0,
-                          'dont-remove-tmce' => 0,
-        			'prompt-editing-post' => 0,
-        			'assign-to-role' => 0,
-        			'default-custom-write-panel' => 0
-        		);
+        		  			'condense-menu' => 0,
+		        			'hide-non-standart-content' => 0,
+		        			'hide-write-post' => 0,
+		        			'hide-write-page' => 0,
+		        			'hide-visual-editor' => 0,
+		                          'dont-remove-tmce' => 0,
+		        			'prompt-editing-post' => 0,
+		        			'assign-to-role' => 0,
+		        			'default-custom-write-panel' => 0
+        				);
         		
-        		$save_options = $_POST;
+        				$save_options = $_POST;
 						unset($save_options['uninstall-custom-write-panel']);
 						unset($save_options['update-custom-write-panel-options']);
-        		
-        		$save = array_merge($default,$save_options);
-						
+        				$save = array_merge($default,$save_options);
 						RCCWP_Options::Update($save);
-						
 					}
 				}
 				

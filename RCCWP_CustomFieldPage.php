@@ -51,6 +51,8 @@ class RCCWP_CustomFieldPage{
 	  	
   		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('submit-edit-custom-field')."&custom-group-id=$customGroupID"?>" method="post" id="edit-custom-field-form"  onsubmit="return checkEmpty();">
   		<input type="hidden" name="custom-field-id" value="<?php echo $custom_field->id?>">
+  		
+  		<?php wp_nonce_field('submit-edit-custom-field','checking'); ?> 
 		
 		
 		<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6">

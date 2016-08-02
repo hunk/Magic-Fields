@@ -14,7 +14,7 @@ class RCCWP_CreateCustomWritePanelPage
 		<h2><?php _e('Create Custom Write Panel',$mf_domain); ?></h2>
 		
 		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('finish-create-custom-write-panel')?>" method="post" id="create-new-write-panel-form">
-		
+		<?php wp_nonce_field('finish-create-custom-write-panel','checking'); ?> 		
 		<?php RCCWP_CustomWritePanelPage::Content(); ?>
 		
 		<p class="submit" >

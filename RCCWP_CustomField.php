@@ -33,15 +33,12 @@ class RCCWP_CustomField {
 	 */
 	public static function Create($customGroupId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null,$duplicate,$helptext = null,$css = null) {
 		global $wpdb;
-		$name = stripslashes(stripslashes($name));
-		$name = addslashes($name);
+		$name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
 		$name = str_replace(" ","_",$name);
 
-		$label = stripslashes(stripslashes($label));
-		$label = addslashes($label);
+		$label = htmlspecialchars($label, ENT_QUOTES, 'UTF-8');
 		
-		$helptext = stripslashes(stripslashes($helptext));
-		$helptext = addslashes($helptext);
+		$helptext = htmlspecialchars($helptext, ENT_QUOTES, 'UTF-8');
     
 		if(isset($_POST['custom-field-css'])) $css = $_POST['custom-field-css'];
 		$sql = $wpdb->prepare(
@@ -366,8 +363,16 @@ class RCCWP_CustomField {
 
 	public static function Update($customFieldId, $name, $label, $order = 1, $required_field = 0, $type, $options = null, $default_value = null, $properties = null, $duplicate,$helptext = null) {
 		global $wpdb;
-		$name = str_replace(" ","_",$name);
+		
 		$oldCustomField = RCCWP_CustomField::Get($customFieldId);
+
+		$name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+		$name = str_replace(" ","_",$name);
+
+		$label = htmlspecialchars($label, ENT_QUOTES, 'UTF-8');
+		
+		$helptext = htmlspecialchars($helptext, ENT_QUOTES, 'UTF-8');
+
 		
 		if ($oldCustomField->name != $name) {
 			$sql = $wpdb->prepare( "UPDATE $wpdb->postmeta SET meta_key = %s WHERE meta_key = %s", array( $name,$oldCustomField->name ) );
