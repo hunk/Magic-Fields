@@ -1,41 +1,41 @@
 <?php
 
 class RCCWP_CustomFieldPage{
-	
+
 	public static function Edit(){
-		
+
 		global $FIELD_TYPES;
 		global $mf_domain;
 		$custom_field = RCCWP_CustomField::Get((int)$_GET['custom-field-id']);
-		$customGroupID = $custom_field->group_id;	
-		
+		$customGroupID = $custom_field->group_id;
+
 		if (isset($customGroupID)) {
       $group = RCCWP_CustomGroup::Get($customGroupID);
-      
+
       ?>
-      
+
       <script type="text/javascript">
-      
+
       var mf_create_field = false;
-        
+
       var mf_group_info = {
         'name' : '<?php echo stripslashes($group->name) ?>',
         'safe_name' : '<?php echo sanitize_title_with_dashes($group->name) ?>',
         'singular_safe_name' : '<?php echo sanitize_title_with_dashes(Inflect::singularize($group->name)) ?>'
       };
-      
+
       </script>
-      
+
       <?php
     }
-    
+
 		if (in_array($custom_field->type, array('Image'))) $cssVlaue = $custom_field->CSS;
-		
+
   		?>
-	  	
+
   		<div class="wrap">
   		<h2><?php _e('Edit Custom Field',$mf_domain); ?> - <em><?php echo $custom_field->description ?></em> <?php if ($group && $group->name != "__default") { _e("In Group", $mf_domain); echo " <em>".$group->name."</em>"; } ?></h2>
-  		
+
   		<br class="clear" />
   		<?php
 		if (isset($_GET['err_msg'])) :
@@ -47,14 +47,14 @@ class RCCWP_CustomFieldPage{
 				}
 		endif;
 		?>
-  		
-	  	
+
+
   		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('submit-edit-custom-field')."&custom-group-id=$customGroupID"?>" method="post" id="edit-custom-field-form"  onsubmit="return checkEmpty();">
   		<input type="hidden" name="custom-field-id" value="<?php echo $custom_field->id?>">
-  		
-  		<?php wp_nonce_field('submit-edit-custom-field','checking'); ?> 
-		
-		
+
+  		<?php wp_nonce_field('submit-edit-custom-field'); ?> 
+
+
 		<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="6">
 		<tbody>
 		<tr valign="top">
@@ -77,9 +77,9 @@ class RCCWP_CustomFieldPage{
 			<th scope="row"><?php _e('Order',$mf_domain); ?>:</th>
 			<td>
 				<input name="custom-field-order" id="custom-field-order" size="2" type="text" value="<?php echo $custom_field->display_order?>" />
-			</td>	
+			</td>
 		</tr>
-		<?php if (in_array($custom_field->type_id, 
+		<?php if (in_array($custom_field->type_id,
 							array(  $FIELD_TYPES['textbox'],
 									$FIELD_TYPES['multiline_textbox'],
 									$FIELD_TYPES['checkbox'],
@@ -101,23 +101,23 @@ class RCCWP_CustomFieldPage{
 					<option value="0" <?php echo ($custom_field->required_field == 0 ? 'selected="selected"' : ''); ?> ><?php _e('Not Required - can be empty',$mf_domain); ?></option>
 					<option value="1" <?php echo ($custom_field->required_field == 1 ? 'selected="selected"' : ''); ?> ><?php _e('Required - can not be empty',$mf_domain); ?></option>
 				</select>
-			</td>	
+			</td>
 		</tr>
 
-		
+
 		<?php } ?>
 		<?php if (in_array($custom_field->type, array('Textbox', 'Listbox'))) : ?>
 		<tr valign="top">
 			<th scope="row"><?php _e('Size',$mf_domain); ?>:</th>
 			<td><input type="text" name="custom-field-size" id="custom-field-size" size="2" value="<?php echo $custom_field->properties['size']?>" /></td>
-		</tr>	
+		</tr>
 		<?php endif; ?>
 
 		<?php if (in_array($custom_field->type, array('Multiline Textbox'))) : ?>
 		<tr valign="top">
 			<th scope="row"><?php _e('Height',$mf_domain); ?>:</th>
 			<td><input type="text" name="custom-field-height" id="custom-field-height" size="2" value="<?php echo $custom_field->properties['height']?>" /></td>
-		</tr>	
+		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Width',$mf_domain); ?>:</th>
 			<td><input type="text" name="custom-field-width" id="custom-field-width" size="2" value="<?php echo $custom_field->properties['width']?>" /></td>
@@ -125,9 +125,9 @@ class RCCWP_CustomFieldPage{
 		<tr valign="top">
 			<th scope="row"><?php _e('Hide Visual Editor for this field', $mf_domain); ?>:</th>
 			<td><input name="hide-visual-editor" id="hide-visual-editor" value="1" type="checkbox" <?php echo $custom_field->properties['hide-visual-editor']==0 ? "":"checked" ?> ></td>
-		</tr>	
+		</tr>
 		<?php endif; ?>
-		<?php if (in_array($custom_field->type_id, 
+		<?php if (in_array($custom_field->type_id,
 							array(  $FIELD_TYPES['textbox'],
 									$FIELD_TYPES['multiline_textbox']
 							))){  ?>
@@ -152,10 +152,10 @@ class RCCWP_CustomFieldPage{
 					<option value="m.d.y" <?php if ($custom_field->properties['format'] == "m.d.y" ) echo " selected ";?>>4.20.08</option>
 				</select>
 			</td>
-		</tr>	
+		</tr>
 		<?php endif; ?>
-		
-		<?php if (in_array($custom_field->type, array('Slider'))) : ?>	
+
+		<?php if (in_array($custom_field->type, array('Slider'))) : ?>
 		<tr valign="top">
 			<th scope="row"><?php echo _e('Value min', $mf_domain)?>:</th>
 			<td><input type="text" name="custom-field-slider-min" id="custom-field-slider-min" size="2" value="<?php echo $custom_field->properties['min']?>" /></td>
@@ -163,14 +163,14 @@ class RCCWP_CustomFieldPage{
 		<tr valign="top">
 			<th scope="row"><?php echo _e('Value max', $mf_domain)?>:</th>
 			<td><input type="text" name="custom-field-slider-max" id="custom-field-slider-max" size="2" value="<?php echo $custom_field->properties['max']?>" /></td>
-		</tr>		
+		</tr>
 		<tr valign="top">
 			<th scope="row"><?php echo _e('Stepping', $mf_domain)?>:</th>
 			<td><input type="text" name="custom-field-slider-step" id="custom-field-slider-step" size="2" value="<?php echo $custom_field->properties['step']?>" /></td>
 		</tr>
 		<?php endif; ?>
 
-		<?php 
+		<?php
 		//eeble
 		if (in_array($custom_field->type, array('Related Type'))) :
 			$customWritePanels = RCCWP_CustomWritePanel::GetCustomWritePanels();
@@ -255,11 +255,11 @@ class RCCWP_CustomFieldPage{
 					function checkEmpty()
 					{
 						if (submitForm && (document.getElementById('custom-field-name').value == "" || document.getElementById('custom-field-description').value == "")){
-							alert("<?php _e('Please fill in the name and the label of the field',$mf_domain); ?>");	
+							alert("<?php _e('Please fill in the name and the label of the field',$mf_domain); ?>");
 							return false;
 						}
 						return true;
-						
+
 					}
 				</script>
 				<!-- END :: Javascript for Image/Photo' Css Class -->
@@ -267,7 +267,7 @@ class RCCWP_CustomFieldPage{
 				<?php
 				$field_types = RCCWP_CustomField::GetCustomFieldTypes();
 				foreach ($field_types as $field) :
-					$checked = 
+					$checked =
 						$field->name == $custom_field->type ?
 						'checked="checked"' : '';
 				?>
@@ -281,41 +281,41 @@ class RCCWP_CustomFieldPage{
 		<!-- START :: For Image/Photo' Css -->
 		<?php
 		  if ( $custom_field->type == "Image" || $custom_field->type == "Image (Upload Media)" ){
-		    $h = $w = $c = NULL; 
-		    
+		    $h = $w = $c = NULL;
+
 		    if( $custom_field->type == "Image")
 			    $isDisplay = $custom_field->type == "Image" ? 'display:inline;' : 'display:none;';
 
 		    if( $custom_field->type == "Image (Upload Media)")
 		      $isDisplay = $custom_field->type == "Image (Upload Media)" ? 'display:inline;' : 'display:none;';
-		    			  
+
 			  if( isset($custom_field->properties['params']) ){
 			    preg_match('/w\=[0-9]+/',$custom_field->properties['params'],$match_w);
 			    if($match_w){
 				    $w=str_replace("w=",'',$match_w[0]);
 				    $custom_field->properties['params']= str_replace("&".$match_w[0],"",$custom_field->properties['params']);
 			    }
-			
+
 			    preg_match('/h\=[0-9]+/',$custom_field->properties['params'],$match_h);
 			    if($match_h){
 				    $h=str_replace("h=",'',$match_h[0]);
 				    $custom_field->properties['params']= str_replace("&".$match_h[0],"",$custom_field->properties['params']);
 			    }
-			
+
 			    if($custom_field->properties['params']){
 				    if (substr($custom_field->properties['params'],0 ,1) == "&"){
 					    $c = substr($custom_field->properties['params'], 1);
 				    }
 			    }
 		  }
-			
+
 			  $cssVlaue = $custom_field->CSS;
-		  
+
 		?>
 		<tr valign="top">
 			<th scope="row"><span id="lblHeight" style="<?php echo $isDisplay;?>"><?php _e('Max Height',$mf_domain); ?>:</span></th>
 			<td><span id="txtHeight" style="<?php echo $isDisplay;?>"><input type="text" name="custom-field-photo-height" id="custom-field-photo-height" size="3" value="<?php echo $h; ?>" /></span></td>
-		</tr>	
+		</tr>
 		<tr valign="top">
 			<th scope="row"><span id="lblWidth" style="<?php echo $isDisplay;?>"><?php _e('Max Width',$mf_domain); ?>:</span></th>
 			<td><span id="txtWidth" style="<?php echo $isDisplay;?>"><input type="text" name="custom-field-photo-width" id="custom-field-photo-width" size="3" value="<?php echo $w; ?>" /></span></td>
@@ -323,10 +323,10 @@ class RCCWP_CustomFieldPage{
 		<tr valign="top">
 			<th scope="row"><span id="lblWidth" style="<?php echo $isDisplay;?>"><?php _e('Custom',$mf_domain); ?>:</span></th>
 			<td><span id="txtWidth" style="<?php echo $isDisplay;?>"><input type="text" name="custom-field-custom-params" id="custom-field-custom-params" value="<?php echo $c; ?>" /></span>
-		
+
 		</td>
 		</tr>
-		
+
 		<tr valign="top">
 			<th scope="row"><div id="divLbl" style="<?php echo $isDisplay;?>"><?php _e('Css Class',$mf_domain); ?>:</div></th>
 			<td>
@@ -336,20 +336,20 @@ class RCCWP_CustomFieldPage{
 			</td>
 		</tr>
     <?php } ?>
-		<!-- END :: For Image/Photo' Css -->		
+		<!-- END :: For Image/Photo' Css -->
 		</tbody>
 		</table>
-		
+
 		<input name="mf_action" type="hidden" value="submit-edit-custom-field" />
   		<p class="submit" >
-  			<a style="color:black" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('cancel-create-custom-field')."&custom-group-id=$customGroupID"?>" class="button"><?php _e('Cancel',$mf_domain); ?></a> 
+  			<a style="color:black" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('cancel-create-custom-field')."&custom-group-id=$customGroupID"?>" class="button"><?php _e('Cancel',$mf_domain); ?></a>
   			<input type="submit" id="submit-edit-custom-field" value="<?php _e('Update',$mf_domain); ?>" onclick="submitForm=true;" />
   		</p>
-	  	
+
   		</form>
-	  	
+
   		</div>
-	  	
+
   		<?php
 	}
 }

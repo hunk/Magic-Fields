@@ -5,23 +5,23 @@ function change_button_new(url_type, add_url,write_panel){
 
   jQuery('li.wp-has-current-submenu > a.wp-has-current-submenu').removeClass('wp-has-current-submenu');
   jQuery('li.wp-has-current-submenu').removeClass('wp-has-current-submenu');
-  
+
   jQuery('li#mf-menu-'+write_panel).addClass('wp-has-current-submenu');
   jQuery('li#mf-menu-'+write_panel+' > a.wp-has-submenu').addClass('wp-has-current-submenu');
-  
+
 }
 
 function unlink_write_panel(nonce){
-  
+
   if( jQuery('span.unlink-writepanel').length == 0){
    jQuery('div.row-actions').each(function(){
-    
+
     id = jQuery(this).parent().parent().attr('id');
     page = escape(document.location.href);
-     jQuery(this).append(' | <span class="unlink-writepanel"><a title="unlink this post of write panel" onclick="return confirm_unlink_write_panel();" href="?page=MagicFieldsMenu&mf_action=unlink-write-panel&post-id='+id+'&dashboard='+page+'&checking='+nonce+'">Unlink Post of write panel</a></span>');    
+     jQuery(this).append(' | <span class="unlink-writepanel"><a title="unlink this post of write panel" onclick="return confirm_unlink_write_panel();" href="?page=MagicFieldsMenu&mf_action=unlink-write-panel&post-id='+id+'&dashboard='+page+'&_wpnonce='+nonce+'">Unlink Post of write panel</a></span>');    
    });
-  
- 
+
+
   }
 }
 
@@ -37,7 +37,7 @@ function confirm_unlink_write_panel(){
 function change_highlight_custom_panel(write_panel){
   jQuery('li.wp-has-current-submenu > a.wp-has-current-submenu').removeClass('wp-has-current-submenu');
   jQuery('li.wp-has-current-submenu').removeClass('wp-has-current-submenu');
-  
+
   jQuery('li#mf-menu-'+write_panel).addClass('wp-has-current-submenu');
   jQuery('li#mf-menu-'+write_panel+' > a.wp-has-submenu').addClass('wp-has-current-submenu');
 }
@@ -168,7 +168,7 @@ function change_number_manage_wp29(all, published, pending, draft, private_,tras
 }
 
 function change_title_manage(write_panel){
-  
+
   tmp = jQuery(".wrap").children('h1').html().split(' <');
   check = jQuery(".wrap").children('h1').text().split(">>");
   if(check.length == 1){

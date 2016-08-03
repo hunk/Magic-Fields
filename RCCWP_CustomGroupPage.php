@@ -6,7 +6,7 @@ class RCCWP_CustomGroupPage
 {
 	public static function Content($customGroup = null)
 	{
-	  
+
 	  // add the new expanded column, if it's not there already (Traversal)
 		RCCWP_Application::AddColumnIfNotExist(MF_TABLE_PANEL_GROUPS, "expanded", $column_attr = "tinyint after duplicate" );
 
@@ -23,7 +23,7 @@ class RCCWP_CustomGroupPage
 			$customGroupDuplicate = $customGroup->duplicate;
 			$customGroupExpanded = $customGroup->expanded;
 		}
-		
+
   		?>
 		<?php if($customWritePanelId) { ?>
   			<input type="hidden" name="custom-write-panel-id" value="<?php echo $customWritePanelId?>">
@@ -51,31 +51,31 @@ class RCCWP_CustomGroupPage
 		</tbody>
 		</table>
 		<br />
-		
+
 		<?php
 	}
-	
+
 	function Edit()
 	{
 		global $mf_domain;
 		$customGroup = RCCWP_CustomGroup::Get((int)$_REQUEST['custom-group-id']);
 		?>
 		<div class="wrap">
-		
+
 		<h2><?php _e('Edit Group', $mf_domain); ?> - <?php echo $customGroup->name?></h2>
-		
+
 		<form action="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('submit-edit-custom-group')."&custom-group-id={$customGroup->id}"?>" method="post" id="edit-custom-group-form">
-		<?php wp_nonce_field('submit-edit-custom-group','checking'); ?> 		
+		<?php wp_nonce_field('submit-edit-custom-group'); ?> 		
 		<?php
 		RCCWP_CustomGroupPage::Content($customGroup);
 		?>
-		
+
 		<p class="submit" >
-			<a style="color:black" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('cancel-edit-custom-group')?>" class="button"><?php _e('Cancel', $mf_domain); ?></a> 
+			<a style="color:black" href="<?php echo RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('cancel-edit-custom-group')?>" class="button"><?php _e('Cancel', $mf_domain); ?></a>
 			<input type="submit" id="submit-edit-custom-group" value="<?php _e('Update', $mf_domain); ?>" />
 		</p>
 		</form>
-		
+
 		</div>
 		<br />
 		<?php
