@@ -4,7 +4,7 @@
  * Plugin URI: http://magicfields.org
  * Description: Create custom write panels and easily retrieve their values in your templates.
  * Author: Hunk
- * Version: 1.7.1
+ * Version: 1.7.2
  * Author URI: http://magicfields.org
  * Text Domain: magic-fields
  * Domain Path: /languages
