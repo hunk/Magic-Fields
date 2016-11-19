@@ -13,19 +13,23 @@ class RCCWP_Application {
   	global $wpdb;
     $exists = false;
 
-    $sql = $wpdb->prepare( "SHOW columns from $db",array());
-    $table_colums = $wpdb->get_results($sql);
-    foreach ($table_colums as $table_colum) {
-    	if($table_colum->Field == $column){
-            $exists = true;
-            break;
-        }
-    }
+    if($wpdb->get_var($wpdb->prepare( "SHOW TABLES LIKE %s",$db ) ) == $db){
 
-    if(!$exists){
-    	$sql = $wpdb->prepare( "ALTER TABLE $db ADD $column $column_attr" );
-    	$wpdb->query($sql);
-    }
+    	$sql = "SHOW columns from $db";
+    	$table_colums = $wpdb->get_results($sql);
+    	foreach ($table_colums as $table_colum) {
+    		if($table_colum->Field == $column){
+    	        $exists = true;
+	            break;
+        	}
+    	}
+
+    	if(!$exists){
+    		$sql = $wpdb->prepare( "ALTER TABLE $db ADD $column $column_attr" );
+    		$wpdb->query($sql);
+    	}
+
+	}
   }
   
 	public static function ContinueInstallation(){
@@ -64,7 +68,7 @@ class RCCWP_Application {
 			// Giving full rights to folders. thanks Akis Kesoglou 
 			wp_mkdir_p(MF_UPLOAD_FILES_DIR);
 			wp_mkdir_p(MF_CACHE_DIR);
-      wp_mkdir_p(MF_GET_CACHE_DIR);
+      		wp_mkdir_p(MF_GET_CACHE_DIR);
 			
 			//Initialize options
 			$options['condense-menu'] = 0;
@@ -88,7 +92,7 @@ class RCCWP_Application {
 				
 			
 		// Install blog tables
-		if (!$wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE ".MF_TABLE_POST_META ) ) == MF_TABLE_POST_META ||
+		if (!$wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", MF_TABLE_POST_META ) ) == MF_TABLE_POST_META ||
 				$BLOG_DBChanged){	
 			$blog_tables[] = "CREATE TABLE " . MF_TABLE_POST_META . " (
 				id integer NOT NULL,
@@ -108,7 +112,8 @@ class RCCWP_Application {
 			} else {
 				require_once(ABSPATH . 'wp-includes/pluggable-functions.php');
 			}
-			require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+			
 			
 			foreach($blog_tables as $blog_table)
 				dbDelta($blog_table);
@@ -136,7 +141,7 @@ class RCCWP_Application {
 		
 		// -- Create Tables if they don't exist or the database changed
 		$not_installed = false;
-		if(!$wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE ".MF_TABLE_PANELS ) ) == MF_TABLE_PANELS) 	$not_installed = true;
+		if(!$wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s",MF_TABLE_PANELS ) ) == MF_TABLE_PANELS) 	$not_installed = true;
 
 		if( $not_installed ||
 			$DBChanged){ 
@@ -206,8 +211,8 @@ class RCCWP_Application {
 				require_once(ABSPATH . 'wp-includes/pluggable.php');
 			} else {
 				require_once(ABSPATH . 'wp-includes/pluggable-functions.php');
-			}
-			require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
+			};
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			
 			foreach($qst_tables as $qst_table)
 				dbDelta($qst_table);
@@ -236,7 +241,7 @@ class RCCWP_Application {
 			// require_once(MF_PATH.'/MF_PostTypesPage.php');
 			// MF_PostTypePages::CreatePostTypesTables();
 		}
-                RCCWP_Application::UpgradeBlog();
+		RCCWP_Application::UpgradeBlog();
 
 	}
 	
@@ -259,8 +264,8 @@ class RCCWP_Application {
 
 		if (RC_CWP_DB_VERSION >= 6){
 			$table_name = $wpdb->prefix . "mf_custom_field_types";
-			if($wpdb->get_var($wpdb->prepare( "SHOW TABLES LIKE $table_name" ) ) == $table_name){
-				$wpdb->query($wpdb->prepare( "DROP TABLE {$wpdb->prefix}mf_custom_field_types" ) );
+			if($wpdb->get_var($wpdb->prepare( "SHOW TABLES LIKE %s",$table_name ) ) == $table_name){
+				$wpdb->query("DROP TABLE {$wpdb->prefix}mf_custom_field_types");
 			}
 		}
 
@@ -270,7 +275,9 @@ class RCCWP_Application {
     	}
 
     	if( RC_CWP_DB_VERSION >= 8 ){
-      		$wpdb->query($wpdb->prepare( 'ALTER TABLE '.MF_TABLE_PANEL_CATEGORY.' MODIFY cat_id VARCHAR(100)' ));
+    		if($wpdb->get_var($wpdb->prepare( "SHOW TABLES LIKE %s",MF_TABLE_PANEL_CATEGORY ) ) == MF_TABLE_PANEL_CATEGORY){
+      			$wpdb->query('ALTER TABLE '.MF_TABLE_PANEL_CATEGORY.' MODIFY cat_id VARCHAR(120)');
+      		}
     	}
 	}
 
@@ -291,41 +298,38 @@ class RCCWP_Application {
 		delete_option('RC_CWP_BLOG_DB_VERSION');
 		
 		//delete post_meta WP and WP MF
-		$sql = $wpdb->prepare( "DELETE a.* FROM $wpdb->postmeta AS a, {$wpdb->prefix}mf_post_meta AS b WHERE b.id = a.meta_id");
+		$sql = "DELETE a.* FROM $wpdb->postmeta AS a, {$wpdb->prefix}mf_post_meta AS b WHERE b.id = a.meta_id";
 		$wpdb->query($sql);
 
 		// Delete meta data
-		$sql = $wpdb->prepare( "DELETE FROM $wpdb->postmeta WHERE meta_key = '" . RC_CWP_POST_WRITE_PANEL_ID_META_KEY . "'" );
+		$sql = $wpdb->prepare( "DELETE FROM $wpdb->postmeta WHERE meta_key = %s",RC_CWP_POST_WRITE_PANEL_ID_META_KEY );
  		$wpdb->query($sql);
-
-		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_STANDARD_FIELDS);
+		
+		$sql = "DROP TABLE IF EXISTS " . MF_TABLE_PANELS;
 		$wpdb->query($sql);
 		
-		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_PANELS);
+		$sql = "DROP TABLE IF EXISTS " . MF_TABLE_PANEL_GROUPS;
 		$wpdb->query($sql);
 		
-		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_PANEL_GROUPS );
+		$sql = "DROP TABLE IF EXISTS " . MF_TABLE_GROUP_FIELDS;
 		$wpdb->query($sql);
 		
-		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_GROUP_FIELDS );
+		$sql = "DROP TABLE IF EXISTS " . MF_TABLE_PANEL_CATEGORY;
 		$wpdb->query($sql);
 		
-		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_PANEL_CATEGORY );
+		$sql = "DROP TABLE IF EXISTS " . MF_TABLE_PANEL_STANDARD_FIELD;
 		$wpdb->query($sql);
 		
-		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_PANEL_STANDARD_FIELD );
+		$sql = "DROP TABLE IF EXISTS " . MF_TABLE_PANEL_HIDDEN_EXTERNAL_FIELD;
 		$wpdb->query($sql);
 		
-		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_PANEL_HIDDEN_EXTERNAL_FIELD );
-		$wpdb->query($sql);
-		
-		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_CUSTOM_FIELD_OPTIONS );
+		$sql = "DROP TABLE IF EXISTS " . MF_TABLE_CUSTOM_FIELD_OPTIONS;
 		$wpdb->query($sql);
 
-		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_CUSTOM_FIELD_PROPERTIES );
+		$sql = "DROP TABLE IF EXISTS " . MF_TABLE_CUSTOM_FIELD_PROPERTIES;
 		$wpdb->query($sql);
 
-		$sql = $wpdb->prepare( "DROP TABLE " . MF_TABLE_POST_META );
+		$sql = "DROP TABLE IF EXISTS " . MF_TABLE_POST_META;
 		$wpdb->query($sql);
 
 		$current = get_option('active_plugins');

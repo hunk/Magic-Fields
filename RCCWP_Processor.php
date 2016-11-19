@@ -6,6 +6,19 @@
  */
 class RCCWP_Processor {
 
+	public static function checkPermissions() {
+		global $mf_domain;
+		//is user logged in?
+		if (
+			!(
+				is_user_logged_in() &&
+				(current_user_can('edit_posts') || current_user_can('edit_published_pages'))
+			)
+		) {
+			die(__("Authentication failed!",$mf_domain));
+		}
+	}
+
 	/**
 	 *  This function is executed every time to something related with the Magic Fields happen
 	 *  this function update,delete,create a customfield,writepanel,group.
@@ -43,20 +56,11 @@ class RCCWP_Processor {
 			$currentAction = $_REQUEST['mf_action'];
 		}
 
-		//is user logged in?
-		if (
-			!( is_user_logged_in() &&
-				 	(current_user_can('edit_posts') || current_user_can('edit_published_pages'))
-				 )
-			) {
-			die(__("Authentication failed!",$mf_domain));
-		}
-
 		switch ($currentAction){
 
 			// ------------ Write Panels
 			case 'finish-create-custom-write-panel':
-
+				RCCWP_Processor::checkPermissions();
 				check_admin_referer('finish-create-custom-write-panel');
 
 				include_once('RCCWP_CustomWritePanel.php');
@@ -85,7 +89,7 @@ class RCCWP_Processor {
 				break;
 
 			case 'submit-edit-custom-write-panel':
-
+				RCCWP_Processor::checkPermissions();
 				check_admin_referer('submit-edit-custom-write-panel');
 
 				include_once('RCCWP_CustomWritePanel.php');
@@ -132,6 +136,7 @@ class RCCWP_Processor {
 
 
 			case 'export-custom-write-panel':
+				RCCWP_Processor::checkPermissions();
 				check_admin_referer('export-custom-write-panel');
 
 				require_once('RCCWP_CustomWritePanel.php');
@@ -146,6 +151,7 @@ class RCCWP_Processor {
 				break;
 
 			case 'delete-custom-write-panel':
+				RCCWP_Processor::checkPermissions();
 				check_admin_referer('delete-custom-write-panel');
 
 				include_once('RCCWP_CustomWritePanel.php');
@@ -153,6 +159,7 @@ class RCCWP_Processor {
 				break;
 			// ------------ Groups
 			case 'finish-create-custom-group':
+				RCCWP_Processor::checkPermissions();
 				check_admin_referer('finish-create-custom-group');
 
 				include_once('RCCWP_CustomGroup.php');
@@ -169,6 +176,7 @@ class RCCWP_Processor {
 				break;
 
 			case 'delete-custom-group':
+				RCCWP_Processor::checkPermissions();
 				check_admin_referer('delete-custom-group');
 
 				include_once('RCCWP_CustomGroup.php');
@@ -177,6 +185,7 @@ class RCCWP_Processor {
 				break;
 
 			case 'unlink-write-panel':
+				RCCWP_Processor::checkPermissions();
 				check_admin_referer('unlink-write-panel');
 
 				global $wpdb;
@@ -207,6 +216,7 @@ class RCCWP_Processor {
 			 	break;
 
 			case 'submit-edit-custom-group':
+				RCCWP_Processor::checkPermissions();
 				check_admin_referer('submit-edit-custom-group');
 
 				include_once('RCCWP_CustomGroup.php');
@@ -229,6 +239,7 @@ class RCCWP_Processor {
 
 			// ------------ Fields
 			case 'copy-custom-field':
+				RCCWP_Processor::checkPermissions();
 				check_admin_referer('copy-custom-field');
 				include_once('RCCWP_CustomField.php');
 				$fieldToCopy = RCCWP_CustomField::Get($_REQUEST['custom-field-id']);
@@ -254,6 +265,7 @@ class RCCWP_Processor {
 					);
 
 			case 'continue-create-custom-field':
+				RCCWP_Processor::checkPermissions();
 				check_admin_referer('continue-create-custom-field');
 
 				if (RCCWP_Processor::CheckFieldName($_POST['custom-field-name'], $_REQUEST['custom-write-panel-id'])){
@@ -264,6 +276,7 @@ class RCCWP_Processor {
 				break;
 
 			case 'finish-create-custom-field':
+				RCCWP_Processor::checkPermissions();
 				check_admin_referer('finish-create-custom-field');
 
 				include_once('RCCWP_CustomField.php');
@@ -370,6 +383,7 @@ class RCCWP_Processor {
 				break;
 
 			case 'submit-edit-custom-field':
+				RCCWP_Processor::checkPermissions();
 				check_admin_referer('submit-edit-custom-field');
 
 				include_once('RCCWP_CustomField.php');
@@ -483,6 +497,7 @@ class RCCWP_Processor {
 				break;
 
 			case 'delete-custom-field':
+				RCCWP_Processor::checkPermissions();
 				check_admin_referer('delete-custom-field');
 
 				include_once('RCCWP_CustomField.php');
@@ -491,7 +506,8 @@ class RCCWP_Processor {
 
 				break;
       		case 'save-fields-order':
-						check_admin_referer('save-fields-order');
+      			RCCWP_Processor::checkPermissions();
+				check_admin_referer('save-fields-order');
         		RCCWP_CustomWritePanelPage::save_order_fields();
 
 			default:
@@ -547,7 +563,7 @@ class RCCWP_Processor {
 						}
 					}
 				} else if (isset($_POST['update-custom-write-panel-options'])) {
-
+					RCCWP_Processor::checkPermissions();
 					check_admin_referer('update-custom-write-panel-options');
 					if ($_POST['uninstall-custom-write-panel'] == 'uninstall') {
 						RCCWP_Application::Uninstall();
@@ -612,7 +628,7 @@ class RCCWP_Processor {
 	 *  Redirect Function
 	 *  @param string $location
 	 */
-	function Redirect($location)
+	public static function Redirect($location)
 	{
 		global $post_ID;
 		global $page_ID;
