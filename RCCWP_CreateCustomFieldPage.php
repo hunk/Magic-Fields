@@ -7,38 +7,30 @@ class RCCWP_CreateCustomFieldPage
 	public static function Main()
 	{
 		global $FIELD_TYPES,$mf_domain;
-		$customGroupID = $_REQUEST['custom-group-id'];
+		$customGroupID = (int)$_REQUEST['custom-group-id'];
 
-    if (isset($customGroupID)) {
-      $group = RCCWP_CustomGroup::Get($customGroupID);
+    	if (isset($customGroupID)) {
+	      	$group = RCCWP_CustomGroup::Get($customGroupID);
+	      	?>
 
-      ?>
+	      	<script type="text/javascript">
+	      		var mf_create_field = true;
+		      	var mf_group_info = {
+		        	'name' : '<?php echo stripslashes($group->name) ?>',
+		        	'safe_name' : '<?php echo sanitize_title_with_dashes($group->name) ?>',
+		        	'singular_safe_name' : '<?php echo sanitize_title_with_dashes(Inflect::singularize($group->name)) ?>'
+		      	};
+	      	</script>
 
-      <script type="text/javascript">
-
-      var mf_create_field = true;
-
-      var mf_group_info = {
-        'name' : '<?php echo stripslashes($group->name) ?>',
-        'safe_name' : '<?php echo sanitize_title_with_dashes($group->name) ?>',
-        'singular_safe_name' : '<?php echo sanitize_title_with_dashes(Inflect::singularize($group->name)) ?>'
-      };
-
-      </script>
-
-      <?php
-    }
-
-		?>
-
-
+	      <?php
+	    } ?>
   		<div class="wrap">
 
   		<h2><?php _e("Create Custom Field", $mf_domain); ?> <?php if ($group && $group->name != "__default") { _e("In Group", $mf_domain); echo " <em>".$group->name."</em>"; } ?></h2>
   		<br class="clear" />
   		<?php
 		if (isset($_GET['err_msg'])) :
-			switch ($_GET['err_msg']){
+			switch ($_GET['err_msg']) {
 				case -1:
 				?>
 				<div class="error"><p> <?php _e('A field with the same name already exists in this write panel. Please choose a different name.',$mf_domain);?></p></div>
@@ -52,10 +44,10 @@ class RCCWP_CreateCustomFieldPage
   		<?php wp_nonce_field('continue-create-custom-field'); ?>
 
 		<?php if(isset($_GET['custom-group-id']) && !empty($_GET['custom-group-id'])) { ?>
-  			<input type="hidden" name="custom-group-id" value="<?php echo $_GET['custom-group-id']?>">
+  			<input type="hidden" name="custom-group-id" value="<?php echo (int)$_GET['custom-group-id']?>">
 		<?php } ?>
 		<?php if(isset($_POST['custom-group-id']) && !empty($_POST['custom-group-id'])) { ?>
-  			<input type="hidden" name="custom-group-id" value="<?php echo $_POST['custom-group-id']?>">
+  			<input type="hidden" name="custom-group-id" value="<?php echo (int)$_POST['custom-group-id']?>">
 		<?php } ?>
 
 
@@ -189,8 +181,9 @@ class RCCWP_CreateCustomFieldPage
 	public static function SetOptions()
 	{
 		global $mf_domain;
-		$current_field = RCCWP_CustomField::GetCustomFieldTypes($_POST['custom-field-type']);
-		$customGroupID = $_REQUEST['custom-group-id'];
+		$custom_field_type = filter_var($_POST['custom-field-type'], FILTER_SANITIZE_SPECIAL_CHARS);
+		$current_field = RCCWP_CustomField::GetCustomFieldTypes($custom_field_type);
+		$customGroupID = (int)$_REQUEST['custom-group-id'];
 		$default = array(
 		  'custom-group-id' => '',
 		  'custom-field-name' => '',
@@ -223,7 +216,7 @@ class RCCWP_CreateCustomFieldPage
 		<input type="hidden" name="custom-field-helptext" 		value="<?php echo $values['custom-field-helptext']?>" />
 
 		<!-- Hidden value for Image/Photo' Css Class-->
-		<input type="hidden" name="custom-field-css" value="<?php echo $_POST['custom-field-css']?>" />
+		<input type="hidden" name="custom-field-css" value="<?php echo filter_var($_POST['custom-field-css'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
 
 
 

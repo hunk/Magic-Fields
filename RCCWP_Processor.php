@@ -34,7 +34,7 @@ class RCCWP_Processor {
 				$ptype = $type->type;
 			else
 				$ptype = (strpos($_SERVER['REQUEST_URI'], 'page.php') !== FALSE ) ? 'page' : 'post';
-			wp_redirect($ptype.'.php?action=edit&post=' . $_POST['post-id'] . '&no-custom-write-panel');
+			wp_redirect($ptype.'.php?action=edit&post=' . (int)$_POST['post-id'] . '&no-custom-write-panel');
 		}
 		else if (isset($_POST['edit-with-custom-write-panel']) && isset($_POST['custom-write-panel-id']) && (int) $_POST['custom-write-panel-id'] > 0)
 		{
@@ -47,13 +47,13 @@ class RCCWP_Processor {
 					else
 							$ptype = (strpos($_SERVER['REQUEST_URI'], 'page.php') !== FALSE ) ? 'page' : 'post';
 			}
-			wp_redirect($ptype.'.php?action=edit&post=' . $_POST['post-id'] . '&custom-write-panel-id=' . $_POST['custom-write-panel-id']);
+			wp_redirect($ptype.'.php?action=edit&post=' . (int)$_POST['post-id'] . '&custom-write-panel-id=' . (int)$_POST['custom-write-panel-id']);
 		}
 
 		if(empty($_REQUEST['mf_action'])){
 			$currentAction = "";
 		}else{
-			$currentAction = $_REQUEST['mf_action'];
+			$currentAction = filter_var($_REQUEST['mf_action'], FILTER_SANITIZE_SPECIAL_CHARS);
 		}
 
 		switch ($currentAction){
@@ -131,7 +131,7 @@ class RCCWP_Processor {
 					$save['custom-write-panel-expanded']
 				);
 
-				RCCWP_CustomWritePanel::AssignToRole($_POST['custom-write-panel-id'], 'administrator');
+				RCCWP_CustomWritePanel::AssignToRole((int)$_POST['custom-write-panel-id'], 'administrator');
 				break;
 
 
@@ -140,7 +140,7 @@ class RCCWP_Processor {
 				check_admin_referer('export-custom-write-panel');
 
 				require_once('RCCWP_CustomWritePanel.php');
-				$panelID = $_REQUEST['custom-write-panel-id'];
+				$panelID = (int)$_REQUEST['custom-write-panel-id'];
 				$writePanel = RCCWP_CustomWritePanel::Get($panelID);
 
                              	// send file in header
@@ -155,7 +155,7 @@ class RCCWP_Processor {
 				check_admin_referer('delete-custom-write-panel');
 
 				include_once('RCCWP_CustomWritePanel.php');
-				RCCWP_CustomWritePanel::Delete($_GET['custom-write-panel-id']);
+				RCCWP_CustomWritePanel::Delete((int)$_GET['custom-write-panel-id']);
 				break;
 			// ------------ Groups
 			case 'finish-create-custom-group':
@@ -181,7 +181,7 @@ class RCCWP_Processor {
 
 				include_once('RCCWP_CustomGroup.php');
 				$customGroup = RCCWP_CustomGroup::Get((int)$_REQUEST['custom-group-id']);
-				RCCWP_CustomGroup::Delete($_GET['custom-group-id']);
+				RCCWP_CustomGroup::Delete((int)$_GET['custom-group-id']);
 				break;
 
 			case 'unlink-write-panel':
@@ -227,7 +227,7 @@ class RCCWP_Processor {
 				  'custom-group-expanded' => ''
 				);
 				$all = $_POST;
-				$all['custom-group-id'] = $_REQUEST['custom-group-id'];
+				$all['custom-group-id'] = (int)$_REQUEST['custom-group-id'];
 				$values = array_merge($default,$all);
 				RCCWP_CustomGroup::Update(
 					$values['custom-group-id'],
@@ -242,16 +242,16 @@ class RCCWP_Processor {
 				RCCWP_Processor::checkPermissions();
 				check_admin_referer('copy-custom-field');
 				include_once('RCCWP_CustomField.php');
-				$fieldToCopy = RCCWP_CustomField::Get($_REQUEST['custom-field-id']);
+				$fieldToCopy = RCCWP_CustomField::Get((int)$_REQUEST['custom-field-id']);
 
-				if (RCCWP_Processor::CheckFieldName($fieldToCopy->name, $_REQUEST['custom-write-panel-id'])){
-					$newURL = RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field').'&custom-group-id='.$_REQUEST['custom-group-id'].'&err_msg=-1';
+				if (RCCWP_Processor::CheckFieldName($fieldToCopy->name, (int)$_REQUEST['custom-write-panel-id'])){
+					$newURL = RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field').'&custom-group-id='.(int)$_REQUEST['custom-group-id'].'&err_msg=-1';
 					wp_redirect($newURL);
 					exit;
 				}
 
 				RCCWP_CustomField::Create(
-					$_REQUEST['custom-group-id'],
+					(int)$_REQUEST['custom-group-id'],
 					$fieldToCopy->name,
 					$fieldToCopy->description,
 					$fieldToCopy->display_order,
@@ -268,8 +268,8 @@ class RCCWP_Processor {
 				RCCWP_Processor::checkPermissions();
 				check_admin_referer('continue-create-custom-field');
 
-				if (RCCWP_Processor::CheckFieldName($_POST['custom-field-name'], $_REQUEST['custom-write-panel-id'])){
-					$newURL = RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field').'&custom-group-id='.$_REQUEST['custom-group-id'].'&err_msg=-1';
+				if (RCCWP_Processor::CheckFieldName($_POST['custom-field-name'], (int)$_REQUEST['custom-write-panel-id'])){
+					$newURL = RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field').'&custom-group-id='.(int)$_REQUEST['custom-group-id'].'&err_msg=-1';
 					wp_redirect($newURL);
 					exit;
 				}
@@ -281,8 +281,8 @@ class RCCWP_Processor {
 
 				include_once('RCCWP_CustomField.php');
 
-				if (RCCWP_Processor::CheckFieldName($_POST['custom-field-name'], $_REQUEST['custom-write-panel-id'])) {
-					$newURL = RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field').'&custom-group-id='.$_REQUEST['custom-group-id'].'&err_msg=-1';
+				if (RCCWP_Processor::CheckFieldName($_POST['custom-field-name'], (int)$_REQUEST['custom-write-panel-id'])) {
+					$newURL = RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('create-custom-field').'&custom-group-id='.(int)$_REQUEST['custom-group-id'].'&err_msg=-1';
 					wp_redirect($newURL);
 					exit;
 				}
@@ -387,9 +387,9 @@ class RCCWP_Processor {
 				check_admin_referer('submit-edit-custom-field');
 
 				include_once('RCCWP_CustomField.php');
-				$current_field_obj = RCCWP_CustomField::Get($_POST['custom-field-id']);
+				$current_field_obj = RCCWP_CustomField::Get((int)$_POST['custom-field-id']);
 				if ($_POST['custom-field-name']!=$current_field_obj->name && RCCWP_Processor::CheckFieldName($_POST['custom-field-name'], $_REQUEST['custom-write-panel-id'])){
-					$newURL = RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-field').'&custom-field-id='.$_POST['custom-field-id'].'&err_msg=-1';
+					$newURL = RCCWP_ManagementPage::GetCustomWritePanelGenericUrl('edit-custom-field').'&custom-field-id='.(int)$_POST['custom-field-id'].'&err_msg=-1';
 					wp_redirect($newURL);
 					exit;
 				}
@@ -502,7 +502,7 @@ class RCCWP_Processor {
 
 				include_once('RCCWP_CustomField.php');
 				if(isset($_REQUEST['custom-field-id']) && !empty($_REQUEST['custom-field-id']) )
-					RCCWP_CustomField::Delete($_REQUEST['custom-field-id']);
+					RCCWP_CustomField::Delete((int)$_REQUEST['custom-field-id']);
 
 				break;
       		case 'save-fields-order':

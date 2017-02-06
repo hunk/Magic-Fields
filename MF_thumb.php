@@ -20,9 +20,9 @@ class mfthumb{
 	 * This function is almost equal to the image_resize (native function of wordpress)
 	 */
 	function image_resize( $file, $max_w, $max_h, $crop = false, $far = false, $iar = false, $dest_path = null, $jpeg_quality = 90 ) {
-		$image = wp_load_image( $file );
-		if ( !is_resource( $image ) )
-			return new WP_Error('error_loading_image', $image);
+		$image = wp_get_image_editor( $file );
+		if ( is_wp_error( $image ) )
+			return $image;
 
 		$size = @getimagesize( $file );
 		if ( !$size )
@@ -36,19 +36,23 @@ class mfthumb{
 		}
 		list($dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) = $dims;
 
-    $newimage = imagecreatetruecolor( $dst_w, $dst_h );
-    imagealphablending($newimage, false);
-    imagesavealpha($newimage, true);
-    $transparent = imagecolorallocatealpha($newimage, 255, 255, 255, 127);
-    imagefilledrectangle($newimage, 0, 0, $dst_w, $dst_h, $transparent);
-    imagecopyresampled( $newimage, $image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+    	$newimage = imagecreatetruecolor( $dst_w, $dst_h );
+
+    	imagealphablending($newimage, false);
+    	imagesavealpha($newimage, true);
+    	$transparent = imagecolorallocatealpha($newimage, 255, 255, 255, 127);
+    	imagefilledrectangle($newimage, 0, 0, $dst_w, $dst_h, $transparent);
+
+    	@ini_set( 'memory_limit', apply_filters( 'image_memory_limit', WP_MAX_MEMORY_LIMIT ) );
+    	$imageTmp = imagecreatefromstring( file_get_contents( $file ) );
+    	imagecopyresampled( $newimage, $imageTmp, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
 
 		// convert from full colors to index colors, like original PNG.
 		if ( IMAGETYPE_PNG == $orig_type && !imageistruecolor( $image ) )
 			imagetruecolortopalette( $newimage, false, imagecolorstotal( $image ) );
 
 		// we don't need the original in memory anymore
-		imagedestroy( $image );
+		imagedestroy( $imageTmp );
 		$info = pathinfo($dest_path);
 		$dir = $info['dirname'];
 		$ext = $info['extension'];

@@ -13,9 +13,9 @@ class RCCWP_CustomGroupPage
 		global $mf_domain;
 		$customGroupName = $customGroupDuplicate = $customGroupExpanded = "";
 		if (isset($_GET['custom-write-panel-id']) )
-			$customWritePanelId = $_GET['custom-write-panel-id'];
+			$customWritePanelId = filter_var($_GET['custom-write-panel-id'], FILTER_VALIDATE_INT);
 		if (isset($_POST['custom-write-panel-id']) )
-			$customWritePanelId = $_POST['custom-write-panel-id'];
+			$customWritePanelId = filter_var($_POST['custom-write-panel-id'], FILTER_VALIDATE_INT);
 
 		if ($customGroup != null)
 		{
@@ -55,7 +55,7 @@ class RCCWP_CustomGroupPage
 		<?php
 	}
 
-	function Edit()
+	public static function Edit()
 	{
 		global $mf_domain;
 		$customGroup = RCCWP_CustomGroup::Get((int)$_REQUEST['custom-group-id']);

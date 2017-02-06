@@ -63,7 +63,7 @@ class RCCWP_CustomWritePanel {
 
 
         $capabilityName = RCCWP_CustomWritePanel::GetCapabilityName($name);
-        if (!$type) $type = $_POST['radPostPage'];
+        if (!$type) $type = filter_var($_POST['radPostPage'], FILTER_SANITIZE_SPECIAL_CHARS);
 
         $type = htmlspecialchars($type, ENT_QUOTES, 'UTF-8');
         $capabilityName = htmlspecialchars($capabilityName, ENT_QUOTES, 'UTF-8');
@@ -336,7 +336,7 @@ class RCCWP_CustomWritePanel {
                 $description,
                 $display_order,
                 $capabilityName,
-                $_POST['radPostPage'],
+                filter_var($_POST['radPostPage'], FILTER_SANITIZE_SPECIAL_CHARS),
                 $single_post,
                 $expanded,
                 $customWritePanelId
@@ -371,24 +371,10 @@ class RCCWP_CustomWritePanel {
         } else {
             $currentStandardFieldIds = array();
             $currentStandardFieldIds = RCCWP_CustomWritePanel::GetStandardFields($customWritePanelId);
-            Debug::log("currentStandardFieldIds");
-            Debug::log($currentStandardFieldIds);
 
             $keepStandardFieldIds = array_intersect($currentStandardFieldIds, $standardFields);
             $deleteStandardFieldIds = array_diff($currentStandardFieldIds, $keepStandardFieldIds);
             $insertStandardFieldIds = array_diff($standardFields, $keepStandardFieldIds);
-
-            Debug::log("standardFields");
-            Debug::log($standardFields);
-
-            Debug::log("keepStandardFieldIds");
-            Debug::log($keepStandardFieldIds);
-
-            Debug::log("deleteStandardFieldIds");
-            Debug::log($deleteStandardFieldIds);
-
-            Debug::log("insertStandardFieldIds");
-            Debug::log($insertStandardFieldIds);
 
             foreach ($insertStandardFieldIds as $standard_field_id) {
                 $wpdb->insert(

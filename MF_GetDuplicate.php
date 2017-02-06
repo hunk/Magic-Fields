@@ -26,10 +26,10 @@ class MF_GetDuplicate {
 										);
 		}else{
 	
-		 	$customFieldId = $_POST['customFieldId'];
-			$groupCounter = $_POST['groupCounter'];
-			$fieldCounter = $_POST['fieldCounter'];
-			$groupId = $_POST['groupId'];
+		 	$customFieldId = (int)$_POST['customFieldId'];
+			$groupCounter = (int)$_POST['groupCounter'];
+			$fieldCounter = (int)$_POST['fieldCounter'];
+			$groupId = (int)$_POST['groupId'];
 			RCCWP_WritePostPage::CustomFieldInterface(
 														$customFieldId, 
 														$groupCounter, 

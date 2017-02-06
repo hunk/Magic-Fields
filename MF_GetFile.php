@@ -102,8 +102,9 @@ class MF_GetFile {
 		if ($fp_source = @fopen($url, 'rb')) {
 			//Get target filename
 			$exploded_url = explode('.', $url);
-			$ext = array_pop( $exploded_url );	
-			$filename = time() . '_' . str_replace( 'rc_cwp_meta_', '', $_POST["input_name"]) . '.' . $ext;
+			$ext = array_pop( $exploded_url );
+			$input_name = filter_var($_POST["input_name"], FILTER_SANITIZE_SPECIAL_CHARS);
+			$filename = time() . '_' . str_replace( 'rc_cwp_meta_', '', $input_name) . '.' . $ext;
 				
 			$directory = MF_FILES_PATH;
 			

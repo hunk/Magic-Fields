@@ -22,10 +22,12 @@ class MF_ImageMedia {
     	}
 
     	// remove text aditional in attachment
-		$image_id = preg_replace('/del_attachment_/','',$_POST['image_id']);
+        $image_id = filter_var($_POST['image_id'], FILTER_SANITIZE_SPECIAL_CHARS);
+		$image_id = preg_replace('/del_attachment_/','',$image_id);
 		$info = wp_get_attachment_image_src($image_id,'original');
 
-		$field_id = preg_replace('/thumb_/','',$_POST['field_id']);
+        $field_id = filter_var($_POST['field_id'], FILTER_SANITIZE_SPECIAL_CHARS);
+		$field_id = preg_replace('/thumb_/','',$field_id);
 
 		if( count($info) ){
 			$image_thumb = PHPTHUMB.'?&w=150&h=120&src='.$info[0];

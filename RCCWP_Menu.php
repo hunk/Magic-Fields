@@ -15,7 +15,7 @@ class RCCWP_Menu {
 		if(empty($_REQUEST['mf_action'])){
 			$currentAction = "";
 		}else{
-			$currentAction = $_REQUEST['mf_action'];
+			$currentAction = filter_var($_REQUEST['mf_action'], FILTER_SANITIZE_SPECIAL_CHARS);
 		}
 		
 		switch ($currentAction){
@@ -440,7 +440,7 @@ class RCCWP_Menu {
 	    		//$id = $result[0]['meta_value'];
 	    		$base = 'post-new.php?';
 	    		if(isset($_GET['post_type']) && $_GET['post_type'] == 'page') $base = 'post-new.php?post_type=page&';
-				$submenu_file = $base."custom-write-panel-id=".$_GET['custom-write-panel-id'];
+				$submenu_file = $base."custom-write-panel-id=".(int)$_GET['custom-write-panel-id'];
 	  		}elseif (count($result) > 0 && $currPage =="post.php" ){
 	    		$id = $result[0]['meta_value'];
 	    		$base = 'edit.php?';
@@ -462,8 +462,8 @@ class RCCWP_Menu {
 	public static function FilterPostsPagesList($where){
 		global $wpdb;
 		if (isset($_GET['filter-posts'])) {
-			$panel_id = $_GET['custom-write-panel-id'];
-				$where .= " and $wpdb->postmeta.meta_key = '_mf_write_panel_id' and $wpdb->postmeta.meta_value = '$panel_id' ";
+			$panel_id = (int)$_GET['custom-write-panel-id'];
+			$where .= " and $wpdb->postmeta.meta_key = '_mf_write_panel_id' and $wpdb->postmeta.meta_value = '$panel_id' ";
 		}
 		return $where;
 	}

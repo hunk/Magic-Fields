@@ -33,6 +33,8 @@ if( !( is_user_logged_in() && current_user_can('upload_files') ) )
 //Change the nameinput magicfields[type][id gruop index][id field index] => magicfields_{type}_{id group index}_{if field index}
 function changeNameInput($inputName){
 	
+	$inputName = filter_var($inputName, FILTER_SANITIZE_SPECIAL_CHARS);
+
 	$patterns  = array('/\[/','/\]/');
 	$replacements = array('_','');
 	return preg_replace($patterns,$replacements,$inputName);
@@ -154,8 +156,8 @@ if (isset($_POST['fileframe'])){
         	}
 				
 			if (isset($_POST['imageThumbID'])){  ?>
-				if( par.getElementById('<?php echo $_POST['imageThumbID']; ?>') ) { 
-					par.getElementById('<?php echo $_POST['imageThumbID']; ?>').src = "<?php echo $newImagePath;?>";
+				if( par.getElementById('<?php echo filter_var($_POST['imageThumbID'], FILTER_SANITIZE_SPECIAL_CHARS); ?>') ) { 
+					par.getElementById('<?php echo filter_var($_POST['imageThumbID'], FILTER_SANITIZE_SPECIAL_CHARS); ?>').src = "<?php echo $newImagePath;?>";
 					var b = "&nbsp;<strong><a href='#remove' class='remove' id='remove-<?php echo $idField;?>'>Delete</a></strong>";
 					par.getElementById("photo_edit_link_<?php echo $idField; ?>").innerHTML = b ;
 				}
@@ -184,29 +186,13 @@ function upload(){
 	par.getElementById('upload_progress_<?php echo $idField;?>').style.display = "block";
 	par.getElementById('upload_progress_<?php echo $idField;?>').innerHTML = "Transferring ";
 
-	setTimeout("transferring(0)",1000);
+	// setTimeout("transferring(0)",1000);
 	
 	// send 
 	document.iform.submit();
 	
 }
 
-function transferring(dots){
-	
-	newString = "Transferring ";
-	for (var x=1; x<=dots; x++) {
-		newString = newString + ".";
-	} 
-	
-	var par = window.parent.document;
-
-	// update progress
-	if (par.getElementById('upload_progress_<?php echo $idField;?>').innerHTML.substring(0,5) != "Trans") return;
-	par.getElementById('upload_progress_<?php echo $idField;?>').innerHTML = newString;
-	if (dots == 4) dots = 0; else dots = dots + 1;
-	setTimeout("transferring("+dots+")",1000) ;
-	
-}
 
 </script>
 <style>
@@ -246,11 +232,12 @@ label.label-file {
 	
 	<?php	
 	if (isset($_GET['imageThumbID'])) {
-		echo '<input type="hidden" name="imageThumbID" value="'.$_GET['imageThumbID'].'" />';
+		$imageThumbID = filter_var($_GET['imageThumbID'], FILTER_SANITIZE_SPECIAL_CHARS);
+		echo '<input type="hidden" name="imageThumbID" value="'.$imageThumbID.'" />';
 	}
 
 	if (isset($_GET['inputSize'])){
-		$inputSize = $_GET['inputSize'];
+		$inputSize = filter_var($_GET['inputSize'], FILTER_SANITIZE_SPECIAL_CHARS);
 	}
 	?>
 	
@@ -272,8 +259,8 @@ label.label-file {
 <?php wp_nonce_field('nonce_upload_file','checking'); ?>	
 	<input type="hidden" name="fileframe" value="true" />
 	<input type="hidden" name="imgnum" />
-	<input type="hidden" name="input_name" value="<?php echo $_GET["input_name"]?>" />
-	<input type="hidden" name="type" value="<?php echo $_GET["type"]?>" />
+	<input type="hidden" name="input_name" value="<?php echo filter_var($_GET["input_name"], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+	<input type="hidden" name="type" value="<?php echo filter_var($_GET["type"], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
 </form>
 </body>
 </html>

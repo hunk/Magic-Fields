@@ -38,12 +38,12 @@ class RCCWP_Post {
 	 * 
 	 *  @param integer $postId
 	 */
-	function SetCustomWritePanel($postId) {
+	public static function SetCustomWritePanel($postId) {
 	  
 	  if (array_key_exists('rc-cwp-change-custom-write-panel-id', $_POST)) {
-		  $customWritePanelId = $_POST['rc-cwp-change-custom-write-panel-id'];
+		  $customWritePanelId = (int)$_POST['rc-cwp-change-custom-write-panel-id'];
 	  } else {
-		  $customWritePanelId = $_POST['rc-cwp-custom-write-panel-id'];
+		  $customWritePanelId = (int)$_POST['rc-cwp-custom-write-panel-id'];
     }
     
 	  
@@ -67,10 +67,10 @@ class RCCWP_Post {
 	 * @param integer $postId
 	 * @return void
 	 */
-	function SetMetaValues($postId){
+	public static function SetMetaValues($postId){
 		global $wpdb;
 	
-		$customWritePanelId = $_POST['rc-cwp-custom-write-panel-id'];
+		$customWritePanelId = (int)$_POST['rc-cwp-custom-write-panel-id'];
 		
 		//delete file
 		if(!empty($_POST['magicfields_remove_files'])){
@@ -156,7 +156,7 @@ class RCCWP_Post {
 	 * 
 	 *  @param integer postId
 	 */
-	function PrepareFieldsValues($postId) {
+	public static function PrepareFieldsValues($postId) {
 		global $wpdb;
 			
 		// Format Dates

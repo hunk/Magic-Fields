@@ -30,7 +30,7 @@ Class MF_PostTypePages{
 		if(empty($_GET['action'])){
 			$action = "manage";
 		}else{
-			$action = $_GET['action'];
+			$action = filter_var($_GET['action'], FILTER_SANITIZE_SPECIAL_CHARS);
 		}
 		
 		$action = esc_attr($action);
@@ -193,7 +193,6 @@ Class MF_PostTypePages{
  
 			//Saving the new post type
 			$wpdb->insert(MF_TABLE_POSTTYPES_TAXONOMIES,array('type' => 'posttype','name' => $name,'description' => $desc,'settings' => $settings),array('%s','%s','%s','%s'));
-			print_r($_POST);	
 		}
 	}
 

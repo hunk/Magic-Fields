@@ -60,8 +60,8 @@ function change_botton_new_in_manage($where){
       </script>",
       $type_add_new[$parent_file],
       $contact,
-      $_GET['custom-write-panel-id'],
-      $_GET['custom-write-panel-id'],
+      (int)$_GET['custom-write-panel-id'],
+      (int)$_GET['custom-write-panel-id'],
       wp_create_nonce('unlink-write-panel')
       );
 
@@ -91,12 +91,12 @@ function change_number_manage($where){
 		if(is_wp30()){
 			$ver = '30';
 			$post_type = 'post';
-			if( isset($_GET['post_type']) ) $post_type = $_GET['post_type'];
+			if( isset($_GET['post_type']) ) $post_type = filter_var($_GET['post_type'], FILTER_SANITIZE_SPECIAL_CHARS);
 		}else{
 			$ver = '29';
 			$post_type = $parent_file;
 		}
-    $num_posts_mf = RCCWP_CustomWritePanel::GetCountPstWritePanel($_GET['custom-write-panel-id']);
+    $num_posts_mf = RCCWP_CustomWritePanel::GetCountPstWritePanel((int)$_GET['custom-write-panel-id']);
     printf("
       <script type=\"text/javascript\">
       //<![CDATA[
@@ -114,7 +114,7 @@ function change_number_manage($where){
       $num_posts_mf->trash,
       $num_posts_mf->future,
       $post_type ,
-      $_GET['custom-write-panel-id']
+      (int)$_GET['custom-write-panel-id']
     );
     $_SESSION['change_number_manage'] = "1"; 
   }
@@ -131,7 +131,7 @@ function change_title_manage($where){
   }
   if(isset($_GET['custom-write-panel-id'])){
     
-    $write_panel = RCCWP_CustomWritePanel::Get($_GET['custom-write-panel-id']);
+    $write_panel = RCCWP_CustomWritePanel::Get((int)$_GET['custom-write-panel-id']);
     printf("
       <script type=\"text/javascript\">
       //<![CDATA[
@@ -160,7 +160,7 @@ function add_input_search_manage($where){
 
   if(isset($_GET['custom-write-panel-id'])){
     
-    $write_panel = RCCWP_CustomWritePanel::Get($_GET['custom-write-panel-id']);
+    $write_panel = RCCWP_CustomWritePanel::Get((int)$_GET['custom-write-panel-id']);
     printf("
       <script type=\"text/javascript\">
       //<![CDATA[
@@ -169,7 +169,7 @@ function add_input_search_manage($where){
         });
       //]]>
       </script>",
-      $_GET['custom-write-panel-id']
+      (int)$_GET['custom-write-panel-id']
     );
     $_SESSION['add_input_search_manage'] = "1"; 
   }

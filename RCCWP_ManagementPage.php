@@ -131,8 +131,8 @@ class RCCWP_ManagementPage
 	 */
 	public static function GetCustomWritePanelGenericUrl($mfAction, $customWritePanelId = null)
 	{
-		if (empty($customWritePanelId) && isset($_REQUEST['custom-write-panel-id'])){
-			$customWritePanelId = $_REQUEST['custom-write-panel-id'];
+		if (empty($customWritePanelId) && isset($_REQUEST['custom-write-panel-id']) && filter_var($_REQUEST['custom-write-panel-id'], FILTER_VALIDATE_INT)){
+			$customWritePanelId = filter_var($_REQUEST['custom-write-panel-id'], FILTER_VALIDATE_INT);
 		}
 			
 		if (!empty($customWritePanelId)){

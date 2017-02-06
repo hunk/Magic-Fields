@@ -40,7 +40,7 @@ class RCCWP_CustomField {
 		
 		$helptext = htmlspecialchars($helptext, ENT_QUOTES, 'UTF-8');
     
-		if(isset($_POST['custom-field-css'])) $css = $_POST['custom-field-css'];
+		if(isset($_POST['custom-field-css'])) $css = filter_var($_POST['custom-field-css'], FILTER_SANITIZE_SPECIAL_CHARS);
 		$sql = $wpdb->prepare(
 			"INSERT INTO " . MF_TABLE_GROUP_FIELDS .
 			" (group_id, name, description, display_order, required_field, type, CSS, duplicate,help_text) values (%d, %s, %s, %d, %d, %d, %s, %d, %s)",
@@ -379,7 +379,7 @@ class RCCWP_CustomField {
 			$wpdb->query($sql);
 		}
 		$css = NULL;
-		if(isset($_POST['custom-field-css'])) $css = $_POST['custom-field-css'];
+		if(isset($_POST['custom-field-css'])) $css = filter_var($_POST['custom-field-css'], FILTER_SANITIZE_SPECIAL_CHARS);
 
 		$sql = $wpdb->prepare( "UPDATE " . MF_TABLE_GROUP_FIELDS .
 			" SET name = %s" .
