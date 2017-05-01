@@ -31,7 +31,7 @@ class MF_ImageMedia {
 
 		if( count($info) ){
 			$image_thumb = PHPTHUMB.'?&w=150&h=120&src='.$info[0];
-		  	$data = array('image' => $image_thumb,'field_id' => $field_id,'image_value' => $image_id);
+            $data = array('success'=>true,'image' => $image_thumb,'field_id' => $field_id,'image_value' => $image_id);
 		  	echo json_encode($data);
 		} else {
 			echo json_encode(
