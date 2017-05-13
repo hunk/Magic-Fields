@@ -392,7 +392,7 @@ function charge_link_after_upload_image($fields){
     if(
         $wp_version < 3.5 ||
         (( isset($_REQUEST['fetch']) && $_REQUEST['fetch'] ) ||
-        ( isset($_REQUEST['tab']) && $_REQUEST['tab'] == 'library' ))
+        ( isset($_REQUEST['tab']) && ($_REQUEST['tab'] == 'library' || $_REQUEST['tab'] == 'gallery') ))
       ) {
       	$nonce_ajax_get_image_media_info = wp_create_nonce('nonce_ajax_get_image_media_info');
    		printf("
