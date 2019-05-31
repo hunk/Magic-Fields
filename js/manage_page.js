@@ -1,7 +1,7 @@
 // change url for button new in manage page
 function change_button_new(url_type, add_url,write_panel){
-  tmp_url = jQuery(".wrap").children('h1').children('a').attr('href');
-  jQuery(".wrap").children('h1').children('a').attr('href',tmp_url+add_url);
+  tmp_url = jQuery(".wrap").children('a').attr('href');
+  jQuery(".wrap").children('a').attr('href',tmp_url+add_url);
 
   jQuery('li.wp-has-current-submenu > a.wp-has-current-submenu').removeClass('wp-has-current-submenu');
   jQuery('li.wp-has-current-submenu').removeClass('wp-has-current-submenu');
